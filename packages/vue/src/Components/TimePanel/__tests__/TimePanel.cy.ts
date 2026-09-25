@@ -6,14 +6,14 @@ import { TimePanel } from "@/Components/TimePanel";
 
 const TimePanelHarness = defineComponent({
   setup() {
-    const value = ref(new Date(2021, 4, 21, 14, 30));
+    const model = ref(new Date(2021, 4, 21, 14, 30));
 
     return () => {
       return h(TimePanel, {
-        value: value.value,
+        modelValue: model.value,
         onChange: (next: Date | null) => {
           if (next) {
-            value.value = next;
+            model.value = next;
           }
         },
       });
@@ -22,13 +22,13 @@ const TimePanelHarness = defineComponent({
 });
 
 test("it should render time columns", () => {
-  cy.mount(TimePanel, { props: { value: new Date(2021, 4, 21, 14, 30) } });
+  cy.mount(TimePanel, { props: { modelValue: new Date(2021, 4, 21, 14, 30) } });
 
   cy.get("button").should("have.length.greaterThan", 24);
 });
 
 test("it should highlight the selected hour", () => {
-  cy.mount(TimePanel, { props: { value: new Date(2021, 4, 21, 14, 30) } });
+  cy.mount(TimePanel, { props: { modelValue: new Date(2021, 4, 21, 14, 30) } });
 
   cy.get('button[aria-label="Hour 14"]').should(
     "have.attr",

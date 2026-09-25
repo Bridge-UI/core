@@ -339,7 +339,7 @@ export interface FileUploadOwnProps<Multiple extends boolean = false> {
    *
    * @default false
    */
-  multiple?: Multiple;
+  multiple?: Multiple & boolean;
 
   /**
    * Lay each card's media beside the name, or stacked above it.

@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil, omit } from "es-toolkit/compat";
+import { get, omit } from "es-toolkit/compat";
 import {
   computed,
   inject,
@@ -8,6 +8,7 @@ import {
   useAttrs,
   watch,
   type MaybeRefOrGetter,
+  type Ref,
   type SetupContext,
 } from "vue";
 
@@ -38,7 +39,6 @@ const dateRangePickerBridgeKeys = [
   "fill",
   "color",
   "error",
-  "value",
   "classes",
   "maxDate",
   "minDate",
@@ -75,6 +75,7 @@ type DateRangePickerMerged = MergeLibDefaults<
 export function useDateRangePicker(
   props: MaybeRefOrGetter<DateRangePickerOwnProps>,
   libDefaults: DateRangePickerLibDefaults,
+  model: Ref<null | DateRangeValue>,
   emit: SetupContext<DateRangePickerEmits>["emit"],
 ) {
   const attrs = useAttrs();
@@ -111,6 +112,7 @@ export function useDateRangePicker(
       "onApply",
       "onCancel",
       "onChange",
+      "onUpdate:modelValue",
     ]);
   });
 
@@ -120,30 +122,10 @@ export function useDateRangePicker(
       props: () => split.value.componentProps,
     });
 
-  const propsValue = computed(() => {
-    return toValue(props);
-  });
-
-  const isControlled = computed(() => {
-    return !isNil(propsValue.value.value);
-  });
-
-  const uncontrolledValue = ref<null | DateRangeValue>(
-    merged.value.defaultValue ?? null,
-  );
-
-  const committedValue = computed((): null | DateRangeValue => {
-    if (isControlled.value) {
-      return propsValue.value.value ?? null;
-    }
-
-    return uncontrolledValue.value;
-  });
-
-  const draftValue = ref<null | DateRangeValue>(committedValue.value);
+  const draftValue = ref<null | DateRangeValue>(model.value);
 
   watch(
-    () => [committedValue.value, merged.value.showFooter] as const,
+    () => [model.value, merged.value.showFooter] as const,
     ([committed, showFooter]) => {
       if (showFooter) {
         draftValue.value = committed;
@@ -156,14 +138,11 @@ export function useDateRangePicker(
       return draftValue.value;
     }
 
-    return committedValue.value;
+    return model.value;
   });
 
   const commitValue = (next: null | DateRangeValue) => {
-    if (!isControlled.value) {
-      uncontrolledValue.value = next;
-    }
-
+    model.value = next;
     emit("change", next);
   };
 
@@ -184,7 +163,7 @@ export function useDateRangePicker(
   };
 
   const handleCancel = () => {
-    draftValue.value = committedValue.value;
+    draftValue.value = model.value;
     emit("cancel");
     overlayFooter.cancel();
   };

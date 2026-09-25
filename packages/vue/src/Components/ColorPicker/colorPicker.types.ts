@@ -131,6 +131,11 @@ export interface ColorPickerEmits {
    * Emitted when Apply is pressed (`showFooter`) or when the value commits.
    */
   change: [value: null | string];
+
+  /**
+   * Emitted when `v-model` should update.
+   */
+  "update:modelValue": [value: null | string];
 }
 
 export interface ColorPickerOwnProps {
@@ -220,13 +225,6 @@ export interface ColorPickerOwnProps {
    * @default undefined
    */
   swatches?: string[];
-
-  /**
-   * Controlled value.
-   *
-   * @default undefined
-   */
-  value?: null | string;
 }
 
 export interface ColorPickerSlots {
@@ -242,4 +240,11 @@ export interface ColorPickerSlots {
 export type ColorPickerProps = MergeHtmlProps<
   ColorPickerOwnProps,
   HTMLAttributes
->;
+> & {
+  /**
+   * Bound with `v-model` on the component (`defineModel` internally).
+   *
+   * @default undefined
+   */
+  modelValue?: null | string;
+};

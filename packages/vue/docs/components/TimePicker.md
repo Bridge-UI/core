@@ -42,7 +42,6 @@ import { TimePicker } from "@bridge-ui/vue/Components/TimePicker";
 | `showSeconds`  | `boolean`               | `false`     | Shows seconds in the panel and formatted value.       |
 | `slots`        | `TimePickerSlots`       | —           | Named slots (`footer` for Cancel / Apply).            |
 | `timeZone`     | `string`                | —           | IANA time zone.                                       |
-| `value`        | `Date \| null`          | —           | Controlled value.                                     |
 
 ### v-model
 

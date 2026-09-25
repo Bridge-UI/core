@@ -205,6 +205,11 @@ export interface CalendarRangeEmits {
   previewDateChange: [date: Date | null];
 
   /**
+   * Emitted when `v-model` should update.
+   */
+  "update:modelValue": [value: null | DateRangeValue];
+
+  /**
    * Emitted when the start (left) displayed month changes.
    */
   viewDateChange: [date: Date];
@@ -388,13 +393,6 @@ export interface CalendarRangeOwnProps {
   timeZone?: string;
 
   /**
-   * Controlled range value.
-   *
-   * @default undefined
-   */
-  value?: null | DateRangeValue;
-
-  /**
    * Controlled start (left) displayed month. Pair with `viewDateChange` /
    * `v-model:viewDate`. Without a change listener, the prop is used as the
    * initial month only.
@@ -430,4 +428,11 @@ export interface CalendarRangeSlots {
 export type CalendarRangeProps = MergeHtmlProps<
   CalendarRangeOwnProps,
   HTMLAttributes
->;
+> & {
+  /**
+   * Bound with `v-model` on the component (`defineModel` internally).
+   *
+   * @default undefined
+   */
+  modelValue?: null | DateRangeValue;
+};

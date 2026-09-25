@@ -8,6 +8,7 @@ import {
   useAttrs,
   watch,
   type MaybeRefOrGetter,
+  type Ref,
   type SetupContext,
 } from "vue";
 
@@ -45,7 +46,6 @@ const dateTimeRangePickerBridgeKeys = [
   "fill",
   "color",
   "error",
-  "value",
   "classes",
   "maxDate",
   "maxTime",
@@ -111,6 +111,7 @@ function sortDateTimeRangeValue(
 export function useDateTimeRangePicker(
   props: MaybeRefOrGetter<DateTimeRangePickerOwnProps>,
   libDefaults: DateTimeRangePickerLibDefaults,
+  model: Ref<null | DateRangeValue>,
   emit: SetupContext<DateTimeRangePickerEmits>["emit"],
 ) {
   const attrs = useAttrs();
@@ -148,6 +149,7 @@ export function useDateTimeRangePicker(
       "onApply",
       "onCancel",
       "onChange",
+      "onUpdate:modelValue",
     ]);
   });
 
@@ -157,32 +159,14 @@ export function useDateTimeRangePicker(
       props: () => split.value.componentProps,
     });
 
-  const propsValue = computed(() => {
-    return toValue(props);
-  });
-
   const timeZone = computed((): string | undefined => {
     return merged.value.timeZone;
   });
 
-  const isControlled = computed(() => {
-    return !isNil(propsValue.value.value);
-  });
-
-  const uncontrolledValue = ref<null | DateRangeValue>(
-    merged.value.defaultValue ?? null,
-  );
-
-  const committedValue = computed((): null | DateRangeValue => {
-    return isControlled.value
-      ? (propsValue.value.value ?? null)
-      : uncontrolledValue.value;
-  });
-
-  const draftValue = ref<null | DateRangeValue>(committedValue.value);
+  const draftValue = ref<null | DateRangeValue>(model.value);
 
   watch(
-    () => [committedValue.value, merged.value.showFooter] as const,
+    () => [model.value, merged.value.showFooter] as const,
     ([committed, showFooter]) => {
       if (showFooter) {
         draftValue.value = committed;
@@ -191,7 +175,7 @@ export function useDateTimeRangePicker(
   );
 
   const displayValue = computed(() => {
-    return merged.value.showFooter ? draftValue.value : committedValue.value;
+    return merged.value.showFooter ? draftValue.value : model.value;
   });
 
   const startTimeValue = computed(() => {
@@ -203,10 +187,7 @@ export function useDateTimeRangePicker(
   });
 
   const commitValue = (next: null | DateRangeValue) => {
-    if (!isControlled.value) {
-      uncontrolledValue.value = next;
-    }
-
+    model.value = next;
     emit("change", next);
   };
 
@@ -295,7 +276,7 @@ export function useDateTimeRangePicker(
   };
 
   const handleCancel = () => {
-    draftValue.value = committedValue.value;
+    draftValue.value = model.value;
     emit("cancel");
     overlayFooter.cancel();
   };

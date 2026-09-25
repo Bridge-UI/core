@@ -105,8 +105,8 @@ const {
   >
     <DateRangePicker
       :fill="fill"
-      :value="modelValue"
       :class="pickerClass"
+      :model-value="modelValue"
       :show-footer="showFooter"
       :orientation="orientation"
       :read-only="props.readonly"

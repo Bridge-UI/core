@@ -54,6 +54,11 @@ export interface TimePanelEmits {
    * Emitted when the selected time changes.
    */
   change: [value: Date | null];
+
+  /**
+   * Emitted when `v-model` should update.
+   */
+  "update:modelValue": [value: Date | null];
 }
 
 export interface TimePanelOwnProps {
@@ -162,13 +167,17 @@ export interface TimePanelOwnProps {
    * @default undefined
    */
   timeZone?: string;
+}
 
+export type TimePanelProps = MergeHtmlProps<
+  TimePanelOwnProps,
+  HTMLAttributes
+> & {
   /**
-   * Selected time (`Date` wall clock).
+   * Selected time (`Date` wall clock). Bound with `v-model` on the component
+   * (`defineModel` internally).
    *
    * @default undefined
    */
-  value?: null | TimeValue;
-}
-
-export type TimePanelProps = MergeHtmlProps<TimePanelOwnProps, HTMLAttributes>;
+  modelValue?: null | TimeValue;
+};

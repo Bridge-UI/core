@@ -1,7 +1,7 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test, vi } from "vitest";
-import { defineComponent, h } from "vue";
+import { defineComponent, h, ref } from "vue";
 
 // ** Local Imports
 import { useTimePanel, type TimePanelOwnProps } from "@/Components/TimePanel";
@@ -21,15 +21,12 @@ function mountUseTimePanel(
 ) {
   let result!: ReturnType<typeof useTimePanel>;
 
+  const model = ref<Date | null>(new Date(2021, 4, 21, 14, 30));
   const emit = vi.fn();
 
   const Wrapper = defineComponent({
     setup() {
-      result = useTimePanel(
-        { value: new Date(2021, 4, 21, 14, 30), ...props },
-        libDefaults,
-        emit,
-      );
+      result = useTimePanel(props, libDefaults, model, emit);
 
       return () => h("div");
     },

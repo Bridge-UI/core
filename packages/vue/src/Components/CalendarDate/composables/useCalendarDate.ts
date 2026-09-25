@@ -7,6 +7,8 @@ import {
   toValue,
   useAttrs,
   type MaybeRefOrGetter,
+  type Ref,
+  type SetupContext,
 } from "vue";
 
 // ** Core Imports
@@ -53,7 +55,6 @@ const calendarDateBridgeKeys = [
   "color",
   "error",
   "range",
-  "value",
   "classes",
   "maxDate",
   "minDate",
@@ -87,11 +88,8 @@ type CalendarDateMerged = MergeLibDefaults<
 export function useCalendarDate(
   props: MaybeRefOrGetter<CalendarDateOwnProps>,
   libDefaults: CalendarDateLibDefaults,
-  emit: {
-    (event: "viewDateChange", date: Date): void;
-    (event: "change", value: DatePickerModel): void;
-    (event: "previewDateChange", date: Date | null): void;
-  },
+  model: Ref<DatePickerModel>,
+  emit: SetupContext<CalendarDateEmits>["emit"],
 ) {
   const attrs = useAttrs();
   const adapter = useDateAdapter();
@@ -124,6 +122,7 @@ export function useCalendarDate(
       "onChange",
       "onViewDateChange",
       "onPreviewDateChange",
+      "onUpdate:modelValue",
     ]);
   });
 
@@ -149,10 +148,6 @@ export function useCalendarDate(
     return toValue(props);
   });
 
-  const isControlled = computed(() => {
-    return !isNil(propsValue.value.value);
-  });
-
   const isPreviewControlled = computed(() => {
     return !isNil(propsValue.value.previewDate);
   });
@@ -167,10 +162,6 @@ export function useCalendarDate(
     return !isNil(propsValue.value.viewDate) && hasListener;
   });
 
-  const uncontrolledValue = ref<DatePickerModel>(
-    merged.value.defaultValue ?? null,
-  );
-
   const uncontrolledPreview = ref<Date | null>(null);
 
   const uncontrolledViewDate = ref<Date>(
@@ -181,14 +172,6 @@ export function useCalendarDate(
         timeZone.value,
       ),
   );
-
-  const value = computed((): DatePickerModel => {
-    if (isControlled.value) {
-      return propsValue.value.value ?? null;
-    }
-
-    return uncontrolledValue.value;
-  });
 
   const previewDate = computed(() => {
     if (isPreviewControlled.value) {
@@ -272,7 +255,7 @@ export function useCalendarDate(
       const selected = isDateSelected({
         date,
         mode: mode.value,
-        value: value.value,
+        value: model.value,
         adapter: adapter.value,
         timeZone: timeZone.value,
       });
@@ -281,7 +264,7 @@ export function useCalendarDate(
         mode.value === "range" &&
         isDateInRangePreview({
           date,
-          value: value.value,
+          value: model.value,
           adapter: adapter.value,
           timeZone: timeZone.value,
           previewDate: previewDate.value,
@@ -332,15 +315,12 @@ export function useCalendarDate(
     const next = applyDateSelection({
       next: date,
       mode: mode.value,
-      value: value.value,
+      value: model.value,
       adapter: adapter.value,
       timeZone: timeZone.value,
     });
 
-    if (!isControlled.value) {
-      uncontrolledValue.value = next;
-    }
-
+    model.value = next;
     emit("change", next);
 
     if (mode.value === "range") {
@@ -357,11 +337,11 @@ export function useCalendarDate(
   };
 
   const canPreviewRange = computed(() => {
-    if (mode.value !== "range" || !isDateRangeValue(value.value)) {
+    if (mode.value !== "range" || !isDateRangeValue(model.value)) {
       return false;
     }
 
-    const [start, end] = value.value;
+    const [start, end] = model.value;
 
     return adapter.value.isSameDay(start, end, timeZone.value);
   });
@@ -451,7 +431,7 @@ export function useCalendarDate(
   return {
     days,
     mode,
-    value,
+    model,
     merged,
     timeZone,
     rootBind,

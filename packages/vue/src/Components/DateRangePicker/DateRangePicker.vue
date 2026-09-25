@@ -1,4 +1,10 @@
 <script setup lang="ts">
+// ** External Imports
+import { ref } from "vue";
+
+// ** Core Imports
+import type { DateRangeValue } from "@bridge-ui/core/Domain";
+
 // ** Local Imports
 import { ActionFooter } from "@/Components/ActionFooter";
 import CalendarRange from "@/Components/CalendarRange/CalendarRange.vue";
@@ -8,16 +14,25 @@ import type {
   DateRangePickerOwnProps,
   DateRangePickerSlots,
 } from "@/Components/DateRangePicker/dateRangePicker.types";
+import { useOptionalModel } from "@/Utils";
 
 defineSlots<DateRangePickerSlots>();
 
 defineOptions({ inheritAttrs: false });
 
+const emit = defineEmits<DateRangePickerEmits>();
+
+const model = defineModel<null | DateRangeValue>();
+
 const props = withDefaults(defineProps<DateRangePickerOwnProps>(), {
   showFooter: undefined,
 });
 
-const emit = defineEmits<DateRangePickerEmits>();
+const uncontrolledValue = ref<null | DateRangeValue>(
+  props.defaultValue ?? null,
+);
+
+const value = useOptionalModel(model, uncontrolledValue);
 
 const {
   merged,
@@ -38,6 +53,7 @@ const {
     color: "primary",
     orientation: "horizontal",
   },
+  value,
   emit,
 );
 </script>
@@ -48,11 +64,11 @@ const {
       :fill="merged.fill"
       :color="merged.color"
       :error="merged.error"
-      :value="displayValue"
       :rounded="merged.rounded"
       :max-date="merged.maxDate"
       :min-date="merged.minDate"
       :disabled="merged.disabled"
+      :model-value="displayValue"
       :read-only="merged.readOnly"
       :time-zone="merged.timeZone"
       :hide-years="merged.hideYears"

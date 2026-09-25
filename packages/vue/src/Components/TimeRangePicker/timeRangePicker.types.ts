@@ -119,6 +119,11 @@ export interface TimeRangePickerEmits {
    * Emitted when Apply is pressed (`showFooter`) or when the value commits.
    */
   change: [value: null | TimeRangeValue];
+
+  /**
+   * Emitted when `v-model` should update.
+   */
+  "update:modelValue": [value: null | TimeRangeValue];
 }
 
 export interface TimeRangePickerOwnProps {
@@ -262,13 +267,6 @@ export interface TimeRangePickerOwnProps {
    * @default undefined
    */
   timeZone?: string;
-
-  /**
-   * Controlled value.
-   *
-   * @default undefined
-   */
-  value?: null | TimeRangeValue;
 }
 
 export interface TimeRangePickerSlots {
@@ -284,4 +282,11 @@ export interface TimeRangePickerSlots {
 export type TimeRangePickerProps = MergeHtmlProps<
   TimeRangePickerOwnProps,
   HTMLAttributes
->;
+> & {
+  /**
+   * Bound with `v-model` on the component (`defineModel` internally).
+   *
+   * @default undefined
+   */
+  modelValue?: null | TimeRangeValue;
+};

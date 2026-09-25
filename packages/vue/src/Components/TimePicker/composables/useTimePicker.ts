@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil, omit } from "es-toolkit/compat";
+import { get, omit } from "es-toolkit/compat";
 import {
   computed,
   inject,
@@ -8,6 +8,7 @@ import {
   useAttrs,
   watch,
   type MaybeRefOrGetter,
+  type Ref,
   type SetupContext,
 } from "vue";
 
@@ -39,7 +40,6 @@ const timePickerBridgeKeys = [
   "fill",
   "color",
   "error",
-  "value",
   "classes",
   "maxTime",
   "minTime",
@@ -71,6 +71,7 @@ type TimePickerMerged = MergeLibDefaults<
 export function useTimePicker(
   props: MaybeRefOrGetter<TimePickerOwnProps>,
   libDefaults: TimePickerLibDefaults,
+  model: Ref<null | TimeValue>,
   emit: SetupContext<TimePickerEmits>["emit"],
 ) {
   const attrs = useAttrs();
@@ -106,6 +107,7 @@ export function useTimePicker(
       "onApply",
       "onCancel",
       "onChange",
+      "onUpdate:modelValue",
     ]);
   });
 
@@ -114,28 +116,10 @@ export function useTimePicker(
     props: () => split.value.componentProps,
   });
 
-  const propsValue = computed(() => {
-    return toValue(props);
-  });
-
-  const isControlled = computed(() => {
-    return !isNil(propsValue.value.value);
-  });
-
-  const uncontrolledValue = ref<null | TimeValue>(
-    merged.value.defaultValue ?? null,
-  );
-
-  const committedValue = computed((): null | TimeValue => {
-    return isControlled.value
-      ? (propsValue.value.value ?? null)
-      : uncontrolledValue.value;
-  });
-
-  const draftValue = ref<null | TimeValue>(committedValue.value);
+  const draftValue = ref<null | TimeValue>(model.value);
 
   watch(
-    () => [committedValue.value, merged.value.showFooter] as const,
+    () => [model.value, merged.value.showFooter] as const,
     ([committed, showFooter]) => {
       if (showFooter) {
         draftValue.value = committed;
@@ -144,14 +128,11 @@ export function useTimePicker(
   );
 
   const displayValue = computed(() => {
-    return merged.value.showFooter ? draftValue.value : committedValue.value;
+    return merged.value.showFooter ? draftValue.value : model.value;
   });
 
   const commitValue = (next: null | TimeValue) => {
-    if (!isControlled.value) {
-      uncontrolledValue.value = next;
-    }
-
+    model.value = next;
     emit("change", next);
   };
 
@@ -172,7 +153,7 @@ export function useTimePicker(
   };
 
   const handleCancel = () => {
-    draftValue.value = committedValue.value;
+    draftValue.value = model.value;
     emit("cancel");
     overlayFooter.cancel();
   };

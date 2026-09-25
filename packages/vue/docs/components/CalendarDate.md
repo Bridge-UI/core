@@ -48,7 +48,6 @@ import { CalendarDate } from "@bridge-ui/vue/Components/CalendarDate";
 | `slots`           | `{ day?: … }`             | —           | Named slots (`day`).                              |
 | `startOfWeek`     | `StartOfWeek`             | `0`         | First day of the week.                            |
 | `timeZone`        | `string`                  | —           | IANA time zone.                                   |
-| `value`           | `DatePickerModel`         | —           | Controlled selection model.                       |
 | `viewDate`        | `Date`                    | —           | Month currently displayed in the grid.            |
 
 ### v-model

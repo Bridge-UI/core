@@ -123,6 +123,11 @@ export interface CalendarDateEmits {
   previewDateChange: [date: Date | null];
 
   /**
+   * Emitted when `v-model` should update.
+   */
+  "update:modelValue": [value: DatePickerModel];
+
+  /**
    * Emitted when the displayed month should change.
    */
   viewDateChange: [date: Date];
@@ -280,16 +285,9 @@ export interface CalendarDateOwnProps {
   timeZone?: string;
 
   /**
-   * Controlled selection model.
-   *
-   * @default undefined
-   */
-  value?: DatePickerModel;
-
-  /**
    * Month currently displayed in the grid.
    *
-   * @default start of month for `value` / today
+   * @default start of month for `modelValue` / today
    */
   viewDate?: Date;
 }
@@ -297,4 +295,11 @@ export interface CalendarDateOwnProps {
 export type CalendarDateProps = MergeHtmlProps<
   CalendarDateOwnProps,
   HTMLAttributes
->;
+> & {
+  /**
+   * Bound with `v-model` on the component (`defineModel` internally).
+   *
+   * @default undefined
+   */
+  modelValue?: DatePickerModel;
+};

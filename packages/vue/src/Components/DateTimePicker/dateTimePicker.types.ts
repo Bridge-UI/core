@@ -86,6 +86,11 @@ export interface DateTimePickerEmits {
    * Emitted when Apply is pressed (`showFooter`) or when the value commits.
    */
   change: [value: Date | null];
+
+  /**
+   * Emitted when `v-model` should update.
+   */
+  "update:modelValue": [value: Date | null];
 }
 
 export interface DateTimePickerOwnProps {
@@ -292,13 +297,6 @@ export interface DateTimePickerOwnProps {
    * @default undefined
    */
   timeZone?: string;
-
-  /**
-   * Controlled value.
-   *
-   * @default undefined
-   */
-  value?: Date | null;
 }
 
 export interface DateTimePickerSlots {
@@ -321,4 +319,11 @@ export interface DateTimePickerSlots {
 export type DateTimePickerProps = MergeHtmlProps<
   DateTimePickerOwnProps,
   HTMLAttributes
->;
+> & {
+  /**
+   * Bound with `v-model` on the component (`defineModel` internally).
+   *
+   * @default undefined
+   */
+  modelValue?: Date | null;
+};

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 // ** External Imports
 import { isString } from "es-toolkit/compat";
-import { toValue } from "vue";
+import { ref, toValue } from "vue";
 
 // ** Core Imports
+import type { DateRangeValue } from "@bridge-ui/core/Domain";
 import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -18,18 +19,26 @@ import { useCalendarRange } from "@/Components/CalendarRange/composables/useCale
 import CalendarYear from "@/Components/CalendarYear/CalendarYear.vue";
 import { Divider } from "@/Components/Divider";
 import { Icon } from "@/Components/Icon";
+import { useOptionalModel } from "@/Utils";
 
 defineOptions({ inheritAttrs: false });
 
 defineSlots<CalendarRangeSlots>();
 
+const emit = defineEmits<CalendarRangeEmits>();
+
+const model = defineModel<null | DateRangeValue>();
+
 const props = defineProps<CalendarRangeOwnProps>();
 
-const emit = defineEmits<CalendarRangeEmits>();
+const uncontrolledValue = ref<null | DateRangeValue>(
+  props.defaultValue ?? null,
+);
+
+const value = useOptionalModel(model, uncontrolledValue);
 
 const {
   view,
-  value,
   shared,
   merged,
   endBind,
@@ -78,6 +87,7 @@ const {
     color: "primary",
     orientation: "horizontal",
   },
+  value,
   emit,
 );
 
@@ -215,7 +225,7 @@ function chevronClass(open: boolean) {
             <CalendarDate
               v-bind="shared"
               range
-              :value="value"
+              :model-value="value"
               :view-date="viewDate"
               v-on:change="handleChange"
               :preview-date="previewDate"
@@ -267,7 +277,7 @@ function chevronClass(open: boolean) {
               <CalendarDate
                 v-bind="shared"
                 range
-                :value="value"
+                :model-value="value"
                 :view-date="endViewDate"
                 v-on:change="handleChange"
                 :preview-date="previewDate"
@@ -296,8 +306,8 @@ function chevronClass(open: boolean) {
           v-bind="shared"
           range
           :year="monthPanelYear"
-          :value="monthPanelValue"
           :preview-date="previewDate"
+          :model-value="monthPanelValue"
           v-on:change="handleMonthSelect"
           :disable-dates="merged.disableDates"
           :disable-years="merged.disableYears"
@@ -316,7 +326,7 @@ function chevronClass(open: boolean) {
         <CalendarYear
           v-bind="shared"
           range
-          :value="viewYear"
+          :model-value="viewYear"
           :page-size="yearPageSize"
           :start-year="yearPageStart"
           :preview-date="previewDate"

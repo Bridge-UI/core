@@ -37,7 +37,6 @@ import { CalendarMonth } from "@bridge-ui/vue/Components/CalendarMonth";
 | `rounded`       | `CalendarRounded`          | `"md"`       | Border radius of month tiles.                                         |
 | `selection`     | `DatePickerModel`          | —            | Date model used to highlight tiles on the commit panel.               |
 | `timeZone`      | `string`                   | —            | IANA time zone.                                                       |
-| `value`         | `number`                   | —            | Selected month (`0`–`11`).                                            |
 | `year`          | `number`                   | current year | Year context for min/max month disabling.                             |
 
 ### v-model

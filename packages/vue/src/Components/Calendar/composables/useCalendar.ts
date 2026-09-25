@@ -7,6 +7,8 @@ import {
   toValue,
   useAttrs,
   type MaybeRefOrGetter,
+  type Ref,
+  type SetupContext,
 } from "vue";
 
 // ** Core Imports
@@ -37,6 +39,7 @@ import { useDateAdapter } from "@/Adapters/Date";
 import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   CalendarClasses,
+  CalendarEmits,
   CalendarOwnProps,
 } from "@/Components/Calendar/calendar.types";
 import {
@@ -51,7 +54,6 @@ const calendarBridgeKeys = [
   "color",
   "error",
   "range",
-  "value",
   "classes",
   "maxDate",
   "minDate",
@@ -106,11 +108,8 @@ function resolveFocusDate(
 export function useCalendar(
   props: MaybeRefOrGetter<CalendarOwnProps>,
   libDefaults: CalendarLibDefaults,
-  emit: {
-    (event: "change", value: DatePickerModel): void;
-    (event: "viewChange", view: CalendarView): void;
-    (event: "viewDateChange", date: Date): void;
-  },
+  model: Ref<DatePickerModel>,
+  emit: SetupContext<CalendarEmits>["emit"],
 ) {
   const attrs = useAttrs();
   const adapter = useDateAdapter();
@@ -142,6 +141,7 @@ export function useCalendar(
       "onViewChange",
       "onViewDateChange",
       "onPreviewDateChange",
+      "onUpdate:modelValue",
     ]);
   });
 
@@ -167,10 +167,6 @@ export function useCalendar(
     return toValue(props);
   });
 
-  const isValueControlled = computed(() => {
-    return !isNil(propsValue.value.value);
-  });
-
   const isViewControlled = computed(() => {
     const vnodeProps = getCurrentInstance()?.vnode.props ?? {};
 
@@ -190,10 +186,6 @@ export function useCalendar(
     return !isNil(propsValue.value.viewDate) && hasListener;
   });
 
-  const uncontrolledValue = ref<DatePickerModel>(
-    merged.value.defaultValue ?? null,
-  );
-
   const uncontrolledView = ref<CalendarView>(
     resolveCalendarPanelView({
       hideYears: merged.value.hideYears,
@@ -210,25 +202,13 @@ export function useCalendar(
     adapter.value.startOfMonth(
       !isNil(propsValue.value.viewDate)
         ? (propsValue.value.viewDate as Date)
-        : resolveFocusDate(
-            propsValue.value.value ?? merged.value.defaultValue ?? null,
-            adapter.value,
-            timeZone.value,
-          ),
+        : resolveFocusDate(model.value, adapter.value, timeZone.value),
       timeZone.value,
     ),
   );
 
   const yearPageSize = 15;
   const yearPageStart = ref<null | number>(null);
-
-  const value = computed((): DatePickerModel => {
-    if (isValueControlled.value) {
-      return propsValue.value.value ?? null;
-    }
-
-    return uncontrolledValue.value;
-  });
 
   const granularity = computed(() => {
     return merged.value.granularity ?? "day";
@@ -317,10 +297,7 @@ export function useCalendar(
   };
 
   const handleChange = (next: DatePickerModel) => {
-    if (!isValueControlled.value) {
-      uncontrolledValue.value = next;
-    }
-
+    model.value = next;
     emit("change", next);
   };
 
@@ -382,7 +359,7 @@ export function useCalendar(
       handleChange(
         applyDateSelection({
           mode: mode.value,
-          value: value.value,
+          value: model.value,
           granularity: "year",
           adapter: adapter.value,
           timeZone: timeZone.value,
@@ -419,7 +396,7 @@ export function useCalendar(
       handleChange(
         applyDateSelection({
           mode: mode.value,
-          value: value.value,
+          value: model.value,
           granularity: "month",
           adapter: adapter.value,
           timeZone: timeZone.value,
@@ -644,7 +621,7 @@ export function useCalendar(
   return {
     view,
     mode,
-    value,
+    model,
     merged,
     shared,
     showNav,

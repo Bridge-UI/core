@@ -1,7 +1,6 @@
 // ** External Imports
-import { cleanup, renderHook } from "@testing-library/react";
+import { act, cleanup, renderHook } from "@testing-library/react";
 import type { ReactNode } from "react";
-import { act } from "react";
 import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports

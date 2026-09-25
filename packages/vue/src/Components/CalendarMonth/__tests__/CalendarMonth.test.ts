@@ -21,10 +21,13 @@ test("it should emit change when a month is selected", async () => {
   await may?.trigger("click");
 
   expect(wrapper.emitted("change")?.[0]?.[0]).toBe(4);
+  expect(wrapper.emitted("update:modelValue")?.[0]?.[0]).toBe(4);
 });
 
 test("it should mark the selected month", () => {
-  const wrapper = mount(CalendarMonth, { props: { value: 4, year: 2021 } });
+  const wrapper = mount(CalendarMonth, {
+    props: { year: 2021, modelValue: 4 },
+  });
 
   const may = wrapper
     .findAll("button")

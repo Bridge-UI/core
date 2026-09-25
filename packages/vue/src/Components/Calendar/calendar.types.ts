@@ -123,6 +123,11 @@ export interface CalendarEmits {
   previewDateChange: [date: Date | null];
 
   /**
+   * Emitted when `v-model` should update.
+   */
+  "update:modelValue": [value: DatePickerModel];
+
+  /**
    * Emitted when the active panel view changes.
    */
   viewChange: [view: CalendarView];
@@ -322,13 +327,6 @@ export interface CalendarOwnProps {
   timeZone?: string;
 
   /**
-   * Controlled selection model.
-   *
-   * @default undefined
-   */
-  value?: DatePickerModel;
-
-  /**
    * Controlled panel view. Pair with `viewChange` / `v-model:view`.
    *
    * @default undefined
@@ -344,4 +342,11 @@ export interface CalendarOwnProps {
   viewDate?: Date;
 }
 
-export type CalendarProps = MergeHtmlProps<CalendarOwnProps, HTMLAttributes>;
+export type CalendarProps = MergeHtmlProps<CalendarOwnProps, HTMLAttributes> & {
+  /**
+   * Bound with `v-model` on the component (`defineModel` internally).
+   *
+   * @default undefined
+   */
+  modelValue?: DatePickerModel;
+};

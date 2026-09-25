@@ -44,7 +44,6 @@ import { TimeRangePicker } from "@bridge-ui/vue/Components/TimeRangePicker";
 | `slots`        | `TimeRangePickerSlots`       | —              | Named slots (`footer` for Cancel / Apply).            |
 | `startTitle`   | `string`                     | `"Start time"` | Label above the start time panel.                     |
 | `timeZone`     | `string`                     | —              | IANA time zone.                                       |
-| `value`        | `TimeRangeValue \| null`     | —              | Controlled value (`[start, end]`).                    |
 
 ### v-model
 

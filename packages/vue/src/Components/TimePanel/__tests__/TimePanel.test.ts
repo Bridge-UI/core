@@ -7,7 +7,7 @@ import { TimePanel } from "@/Components/TimePanel";
 
 test("it should render hour and minute columns", () => {
   const wrapper = mount(TimePanel, {
-    props: { value: new Date(2021, 4, 21, 14, 30) },
+    props: { modelValue: new Date(2021, 4, 21, 14, 30) },
   });
 
   expect(wrapper.findAll("button").length).toBeGreaterThan(24);
@@ -15,7 +15,7 @@ test("it should render hour and minute columns", () => {
 
 test("it should emit change when an hour is selected", async () => {
   const wrapper = mount(TimePanel, {
-    props: { value: new Date(2021, 4, 21, 14, 30) },
+    props: { modelValue: new Date(2021, 4, 21, 14, 30) },
   });
 
   const hour = wrapper.find('button[aria-label="Hour 15"]');
@@ -23,11 +23,12 @@ test("it should emit change when an hour is selected", async () => {
   await hour.trigger("click");
 
   expect(wrapper.emitted("change")).toBeTruthy();
+  expect(wrapper.emitted("update:modelValue")).toBeTruthy();
 });
 
 test("it should mark the selected hour", () => {
   const wrapper = mount(TimePanel, {
-    props: { value: new Date(2021, 4, 21, 14, 30) },
+    props: { modelValue: new Date(2021, 4, 21, 14, 30) },
   });
 
   const hour = wrapper.find('button[aria-label="Hour 14"]');
@@ -39,7 +40,7 @@ test("it should render AM/PM when ampm is set", () => {
   const wrapper = mount(TimePanel, {
     props: {
       ampm: true,
-      value: new Date(2021, 4, 21, 14, 30),
+      modelValue: new Date(2021, 4, 21, 14, 30),
     },
   });
 
@@ -49,13 +50,13 @@ test("it should render AM/PM when ampm is set", () => {
 
 test("it should render seconds when showSeconds is set", () => {
   const withoutSeconds = mount(TimePanel, {
-    props: { value: new Date(2021, 4, 21, 14, 30, 45) },
+    props: { modelValue: new Date(2021, 4, 21, 14, 30, 45) },
   });
 
   const withSeconds = mount(TimePanel, {
     props: {
       showSeconds: true,
-      value: new Date(2021, 4, 21, 14, 30, 45),
+      modelValue: new Date(2021, 4, 21, 14, 30, 45),
     },
   });
 

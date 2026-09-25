@@ -1,7 +1,10 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test, vi } from "vitest";
-import { defineComponent, h } from "vue";
+import { defineComponent, h, ref } from "vue";
+
+// ** Core Imports
+import type { DateRangeValue } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import {
@@ -19,16 +22,15 @@ const libDefaults = {
 function mountUseCalendarRange(props: Partial<CalendarRangeOwnProps> = {}) {
   let result!: ReturnType<typeof useCalendarRange>;
 
+  const model = ref<null | DateRangeValue>(null);
   const emit = vi.fn();
 
   const Wrapper = defineComponent({
     setup() {
       result = useCalendarRange(
-        {
-          viewDate: new Date(2021, 4, 1),
-          ...props,
-        },
+        { viewDate: new Date(2021, 4, 1), ...props },
         libDefaults,
+        model,
         emit,
       );
 

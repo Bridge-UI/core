@@ -20,12 +20,12 @@ test("it should register a tab item via useTabItem", async () => {
     defineComponent({
       components: { Tabs, Consumer },
       setup() {
-        const value = ref("a");
+        const model = ref("a");
 
-        return { value };
+        return { model };
       },
       template: `
-        <Tabs v-model="value">
+        <Tabs v-model="model">
           <Consumer>Panel</Consumer>
         </Tabs>
       `,

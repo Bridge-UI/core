@@ -8,7 +8,7 @@ test("it should render twelve month buttons", () => {
 });
 
 test("it should highlight the selected month", () => {
-  cy.mount(CalendarMonth, { props: { value: 4, year: 2021 } });
+  cy.mount(CalendarMonth, { props: { year: 2021, modelValue: 4 } });
 
   cy.contains("button", /may/i).should("have.attr", "aria-pressed", "true");
 });

@@ -1,7 +1,7 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test, vi } from "vitest";
-import { defineComponent, h } from "vue";
+import { defineComponent, h, ref } from "vue";
 
 // ** Local Imports
 import {
@@ -23,11 +23,12 @@ function mountUseColorPicker(
 ) {
   let result!: ReturnType<typeof useColorPicker>;
 
+  const model = ref<null | string>(null);
   const emit = vi.fn();
 
   const Consumer = defineComponent({
     setup() {
-      result = useColorPicker(props, libDefaults, emit);
+      result = useColorPicker(props, libDefaults, model, emit);
 
       return () => h("div");
     },
@@ -100,13 +101,8 @@ test("it should apply registry tokens.rounded overrides", () => {
   expect(areaBind.value.class).toContain("rounded-none");
 });
 
-test("it should treat a null value as controlled empty", () => {
-  const { formattedValue, handleSwatchClick } = mountUseColorPicker({
-    value: null,
-    swatches: ["#ea1212"],
-  });
-
-  handleSwatchClick("#ea1212");
+test("it should format a null value as empty", () => {
+  const { formattedValue } = mountUseColorPicker();
 
   expect(formattedValue.value).toBe("#ff0000");
 });

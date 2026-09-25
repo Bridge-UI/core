@@ -99,8 +99,8 @@ const {
   >
     <DateTimePicker
       :fill="fill"
-      :value="modelValue"
       :class="pickerClass"
+      :model-value="modelValue"
       :ampm="dateTimeOnly.ampm"
       :show-footer="showFooter"
       :read-only="props.readonly"

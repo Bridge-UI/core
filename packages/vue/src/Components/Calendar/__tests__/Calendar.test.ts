@@ -48,6 +48,7 @@ test("it should emit change when a day is selected", async () => {
   await day?.trigger("click");
 
   expect(wrapper.emitted("change")).toBeTruthy();
+  expect(wrapper.emitted("update:modelValue")).toBeTruthy();
 });
 
 test("it should hide year selector when hideYears is set", () => {
@@ -90,6 +91,8 @@ test("it should update the date grid after year and month selection", async () =
   await fifteenth?.trigger("click");
 
   const selected = wrapper.emitted("change")?.[0]?.[0] as Date;
+
+  expect(wrapper.emitted("update:modelValue")?.[0]?.[0]).toEqual(selected);
 
   expect(selected.getFullYear()).toBe(2018);
   expect(selected.getMonth()).toBe(2);
@@ -158,8 +161,8 @@ test("it should return to today's month without selecting a date", async () => {
 
   const wrapper = mount(Calendar, {
     props: {
-      value: new Date(2021, 4, 21),
       viewDate: new Date(2021, 4, 1),
+      modelValue: new Date(2021, 4, 21),
     },
   });
 
@@ -181,6 +184,7 @@ test("it should return to today's month without selecting a date", async () => {
 
   expect(todayCell).toBeTruthy();
   expect(wrapper.emitted("change")).toBeUndefined();
+  expect(wrapper.emitted("update:modelValue")).toBeUndefined();
 });
 
 test("it should open on the month panel and commit a month-start date", async () => {
@@ -203,6 +207,8 @@ test("it should open on the month panel and commit a month-start date", async ()
 
   const selected = wrapper.emitted("change")?.[0]?.[0] as Date;
 
+  expect(wrapper.emitted("update:modelValue")?.[0]?.[0]).toEqual(selected);
+
   expect(selected.getFullYear()).toBe(2021);
   expect(selected.getMonth()).toBe(2);
   expect(selected.getDate()).toBe(1);
@@ -222,6 +228,8 @@ test("it should open on the year panel and commit January 1", async () => {
   await year?.trigger("click");
 
   const selected = wrapper.emitted("change")?.[0]?.[0] as Date;
+
+  expect(wrapper.emitted("update:modelValue")?.[0]?.[0]).toEqual(selected);
 
   expect(selected.getFullYear()).toBe(2018);
   expect(selected.getMonth()).toBe(0);

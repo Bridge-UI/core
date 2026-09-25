@@ -8,6 +8,7 @@ import {
   useAttrs,
   watch,
   type MaybeRefOrGetter,
+  type Ref,
   type SetupContext,
 } from "vue";
 
@@ -45,7 +46,6 @@ const dateTimePickerBridgeKeys = [
   "fill",
   "color",
   "error",
-  "value",
   "classes",
   "maxDate",
   "maxTime",
@@ -94,6 +94,7 @@ type DateTimePickerMerged = MergeLibDefaults<
 export function useDateTimePicker(
   props: MaybeRefOrGetter<DateTimePickerOwnProps>,
   libDefaults: DateTimePickerLibDefaults,
+  model: Ref<Date | null>,
   emit: SetupContext<DateTimePickerEmits>["emit"],
 ) {
   const attrs = useAttrs();
@@ -131,6 +132,7 @@ export function useDateTimePicker(
       "onApply",
       "onCancel",
       "onChange",
+      "onUpdate:modelValue",
     ]);
   });
 
@@ -141,30 +143,14 @@ export function useDateTimePicker(
     },
   );
 
-  const propsValue = computed(() => {
-    return toValue(props);
-  });
-
   const timeZone = computed((): string | undefined => {
     return merged.value.timeZone;
   });
 
-  const isControlled = computed(() => {
-    return !isNil(propsValue.value.value);
-  });
-
-  const uncontrolledValue = ref<Date | null>(merged.value.defaultValue ?? null);
-
-  const committedValue = computed((): Date | null => {
-    return isControlled.value
-      ? (propsValue.value.value ?? null)
-      : uncontrolledValue.value;
-  });
-
-  const draftValue = ref<Date | null>(committedValue.value);
+  const draftValue = ref<Date | null>(model.value);
 
   watch(
-    () => [committedValue.value, merged.value.showFooter] as const,
+    () => [model.value, merged.value.showFooter] as const,
     ([committed, showFooter]) => {
       if (showFooter) {
         draftValue.value = committed;
@@ -173,14 +159,11 @@ export function useDateTimePicker(
   );
 
   const displayValue = computed(() => {
-    return merged.value.showFooter ? draftValue.value : committedValue.value;
+    return merged.value.showFooter ? draftValue.value : model.value;
   });
 
   const commitValue = (next: Date | null) => {
-    if (!isControlled.value) {
-      uncontrolledValue.value = next;
-    }
-
+    model.value = next;
     emit("change", next);
   };
 
@@ -235,7 +218,7 @@ export function useDateTimePicker(
   };
 
   const handleCancel = () => {
-    draftValue.value = committedValue.value;
+    draftValue.value = model.value;
     emit("cancel");
     overlayFooter.cancel();
   };

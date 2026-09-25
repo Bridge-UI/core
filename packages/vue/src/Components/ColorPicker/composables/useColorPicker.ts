@@ -8,6 +8,7 @@ import {
   useAttrs,
   watch,
   type MaybeRefOrGetter,
+  type Ref,
   type SetupContext,
 } from "vue";
 
@@ -55,7 +56,6 @@ import {
 const colorPickerBridgeKeys = [
   "fill",
   "alpha",
-  "value",
   "format",
   "classes",
   "rounded",
@@ -87,6 +87,7 @@ function resolveHsva(value: null | string | undefined): HsvaColor {
 export function useColorPicker(
   props: MaybeRefOrGetter<ColorPickerOwnProps>,
   libDefaults: ColorPickerLibDefaults,
+  model: Ref<null | string>,
   emit: SetupContext<ColorPickerEmits>["emit"],
 ) {
   const attrs = useAttrs();
@@ -124,6 +125,7 @@ export function useColorPicker(
       "onApply",
       "onCancel",
       "onChange",
+      "onUpdate:modelValue",
     ]);
   });
 
@@ -132,32 +134,14 @@ export function useColorPicker(
     props: () => split.value.componentProps,
   });
 
-  const propsValue = computed(() => {
-    return toValue(props);
-  });
-
-  const isControlled = computed(() => {
-    return propsValue.value.value !== undefined;
-  });
-
-  const uncontrolledValue = ref<null | string>(
-    merged.value.defaultValue ?? null,
-  );
-
-  const committedValue = computed((): null | string => {
-    return isControlled.value
-      ? (propsValue.value.value ?? null)
-      : uncontrolledValue.value;
-  });
-
   const format = computed((): ColorFormat => {
     return merged.value.format ?? DEFAULT_COLOR_FORMAT;
   });
 
-  const draftHsva = ref<HsvaColor>(resolveHsva(committedValue.value));
+  const draftHsva = ref<HsvaColor>(resolveHsva(model.value));
 
   watch(
-    () => [committedValue.value, merged.value.showFooter] as const,
+    () => [model.value, merged.value.showFooter] as const,
     ([committed, showFooter]) => {
       if (showFooter) {
         draftHsva.value = resolveHsva(committed);
@@ -166,9 +150,7 @@ export function useColorPicker(
   );
 
   const displayHsva = computed((): HsvaColor => {
-    return merged.value.showFooter
-      ? draftHsva.value
-      : resolveHsva(committedValue.value);
+    return merged.value.showFooter ? draftHsva.value : resolveHsva(model.value);
   });
 
   const showAlpha = computed(() => {
@@ -218,10 +200,7 @@ export function useColorPicker(
   });
 
   const commitValue = (next: null | string) => {
-    if (!isControlled.value) {
-      uncontrolledValue.value = next;
-    }
-
+    model.value = next;
     emit("change", next);
   };
 
@@ -256,7 +235,7 @@ export function useColorPicker(
   };
 
   const handleCancel = () => {
-    draftHsva.value = resolveHsva(committedValue.value);
+    draftHsva.value = resolveHsva(model.value);
     emit("cancel");
     overlayFooter.cancel();
   };

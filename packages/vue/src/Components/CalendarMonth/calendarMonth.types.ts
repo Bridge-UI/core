@@ -62,6 +62,11 @@ export interface CalendarMonthEmits {
    * Emitted when the range preview hover date changes.
    */
   previewDateChange: [date: Date | null];
+
+  /**
+   * Emitted when `v-model` should update.
+   */
+  "update:modelValue": [value: number];
 }
 
 export interface CalendarMonthOwnProps {
@@ -173,7 +178,7 @@ export interface CalendarMonthOwnProps {
 
   /**
    * Date selection model used to highlight tiles when this panel is the commit
-   * view. `value` stays the focused month index.
+   * view. `modelValue` stays the focused month index.
    *
    * @default undefined
    */
@@ -187,13 +192,6 @@ export interface CalendarMonthOwnProps {
   timeZone?: string;
 
   /**
-   * Selected month (`0`–`11`).
-   *
-   * @default undefined
-   */
-  value?: number;
-
-  /**
    * Year context for min/max month disabling.
    *
    * @default current year
@@ -204,4 +202,12 @@ export interface CalendarMonthOwnProps {
 export type CalendarMonthProps = MergeHtmlProps<
   CalendarMonthOwnProps,
   HTMLAttributes
->;
+> & {
+  /**
+   * Selected month (`0`–`11`). Bound with `v-model` on the component
+   * (`defineModel` internally).
+   *
+   * @default undefined
+   */
+  modelValue?: number;
+};

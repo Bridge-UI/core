@@ -151,7 +151,7 @@ test("it should open a dialog when overlay is modal", async () => {
 });
 
 test("it should collect declarative AutocompleteOption children", async () => {
-  const value = ref("pending");
+  const model = ref("pending");
 
   const Host = defineComponent({
     components: { Autocomplete, AutocompleteOption },
@@ -160,9 +160,9 @@ test("it should collect declarative AutocompleteOption children", async () => {
         h(
           Autocomplete,
           {
-            modelValue: value.value,
+            modelValue: model.value,
             "onUpdate:modelValue": (next: string) => {
-              value.value = next;
+              model.value = next;
             },
           },
           () => [

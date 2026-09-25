@@ -1,7 +1,10 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test, vi } from "vitest";
-import { defineComponent, h } from "vue";
+import { defineComponent, h, ref } from "vue";
+
+// ** Core Imports
+import type { DatePickerModel } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import { useCalendar, type CalendarOwnProps } from "@/Components/Calendar";
@@ -16,6 +19,7 @@ const libDefaults = {
 function mountUseCalendar(props: Partial<CalendarOwnProps> = {}) {
   let result!: ReturnType<typeof useCalendar>;
 
+  const model = ref<DatePickerModel>(null);
   const emit = vi.fn();
 
   const Wrapper = defineComponent({
@@ -23,6 +27,7 @@ function mountUseCalendar(props: Partial<CalendarOwnProps> = {}) {
       result = useCalendar(
         { viewDate: new Date(2021, 4, 1), ...props },
         libDefaults,
+        model,
         emit,
       );
 

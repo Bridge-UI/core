@@ -102,9 +102,9 @@ const {
   >
     <DatePicker
       :fill="fill"
-      :value="modelValue"
       :class="pickerClass"
       :range="dateOnly.range"
+      :model-value="modelValue"
       :show-footer="showFooter"
       :read-only="props.readonly"
       :max-date="dateOnly.maxDate"

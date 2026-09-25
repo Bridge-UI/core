@@ -38,7 +38,6 @@ import { CalendarYear } from "@bridge-ui/vue/Components/CalendarYear";
 | `selection`    | `DatePickerModel`         | —           | Date model used to highlight tiles on the commit panel.              |
 | `startYear`    | `number`                  | —           | First year of the visible page.                                      |
 | `timeZone`     | `string`                  | —           | IANA time zone.                                                      |
-| `value`        | `number`                  | —           | Selected year.                                                       |
 
 ### v-model
 

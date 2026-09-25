@@ -8,6 +8,7 @@ import {
   useAttrs,
   watch,
   type MaybeRefOrGetter,
+  type Ref,
   type SetupContext,
 } from "vue";
 
@@ -45,7 +46,6 @@ const timeRangePickerBridgeKeys = [
   "fill",
   "color",
   "error",
-  "value",
   "classes",
   "maxTime",
   "minTime",
@@ -79,6 +79,7 @@ type TimeRangePickerMerged = MergeLibDefaults<
 export function useTimeRangePicker(
   props: MaybeRefOrGetter<TimeRangePickerOwnProps>,
   libDefaults: TimeRangePickerLibDefaults,
+  model: Ref<null | TimeRangeValue>,
   emit: SetupContext<TimeRangePickerEmits>["emit"],
 ) {
   const attrs = useAttrs();
@@ -117,6 +118,7 @@ export function useTimeRangePicker(
       "onApply",
       "onCancel",
       "onChange",
+      "onUpdate:modelValue",
     ]);
   });
 
@@ -126,32 +128,14 @@ export function useTimeRangePicker(
       props: () => split.value.componentProps,
     });
 
-  const propsValue = computed(() => {
-    return toValue(props);
-  });
-
   const timeZone = computed(() => {
     return merged.value.timeZone;
   });
 
-  const isControlled = computed(() => {
-    return !isNil(propsValue.value.value);
-  });
-
-  const uncontrolledValue = ref<null | TimeRangeValue>(
-    merged.value.defaultValue ?? null,
-  );
-
-  const committedValue = computed((): null | TimeRangeValue => {
-    return isControlled.value
-      ? (propsValue.value.value ?? null)
-      : uncontrolledValue.value;
-  });
-
-  const draftValue = ref<null | TimeRangeValue>(committedValue.value);
+  const draftValue = ref<null | TimeRangeValue>(model.value);
 
   watch(
-    () => [committedValue.value, merged.value.showFooter] as const,
+    () => [model.value, merged.value.showFooter] as const,
     ([committed, showFooter]) => {
       if (showFooter) {
         draftValue.value = committed;
@@ -160,7 +144,7 @@ export function useTimeRangePicker(
   );
 
   const displayValue = computed(() => {
-    return merged.value.showFooter ? draftValue.value : committedValue.value;
+    return merged.value.showFooter ? draftValue.value : model.value;
   });
 
   const startDisplayValue = computed((): TimeValue => {
@@ -172,10 +156,7 @@ export function useTimeRangePicker(
   });
 
   const commitValue = (next: null | TimeRangeValue) => {
-    if (!isControlled.value) {
-      uncontrolledValue.value = next;
-    }
-
+    model.value = next;
     emit("change", next);
   };
 
@@ -218,7 +199,7 @@ export function useTimeRangePicker(
   };
 
   const handleCancel = () => {
-    draftValue.value = committedValue.value;
+    draftValue.value = model.value;
     emit("cancel");
     overlayFooter.cancel();
   };

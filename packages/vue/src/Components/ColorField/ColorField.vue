@@ -109,9 +109,9 @@ const {
     <ColorPicker
       :fill="fill"
       :format="format"
-      :value="modelValue"
       :class="pickerClass"
       :alpha="colorOnly.alpha"
+      :model-value="modelValue"
       :show-footer="showFooter"
       :read-only="props.readonly"
       :swatches="colorOnly.swatches"

@@ -133,7 +133,7 @@ function writeThumbValue(
 export function useSlider(
   props: MaybeRefOrGetter<SliderOwnProps>,
   libDefaults: SliderLibDefaults,
-  value: Ref<number | SliderRangeValue>,
+  model: Ref<number | SliderRangeValue>,
   options: UseSliderOptions = {},
 ) {
   const attrs = useAttrs();
@@ -220,7 +220,7 @@ export function useSlider(
     baseField;
 
   const resolvedValue = computed((): number | SliderRangeValue => {
-    const raw = value.value;
+    const raw = model.value;
     const currentBounds = bounds.value;
     const range = isRange.value;
 
@@ -326,7 +326,7 @@ export function useSlider(
   });
 
   const commitValue = (next: number | SliderRangeValue) => {
-    value.value = next;
+    model.value = next;
     options.onChange?.(next);
   };
 

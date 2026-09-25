@@ -45,6 +45,7 @@ test("it should commit a preset swatch immediately without footer", async () => 
   await swatch.trigger("click");
 
   expect(wrapper.emitted("change")?.[0]).toEqual(["#ea1212"]);
+  expect(wrapper.emitted("update:modelValue")?.[0]).toEqual(["#ea1212"]);
 });
 
 test("it should show footer actions when showFooter is set", () => {
@@ -65,6 +66,7 @@ test("it should commit draft value on Apply", async () => {
 
   await wrapper.find('[aria-label="#ea1212"]').trigger("click");
   expect(wrapper.emitted("change")).toBeFalsy();
+  expect(wrapper.emitted("update:modelValue")).toBeFalsy();
 
   const apply = wrapper
     .findAll("button")
@@ -72,4 +74,5 @@ test("it should commit draft value on Apply", async () => {
 
   await apply?.trigger("click");
   expect(wrapper.emitted("change")?.[0]).toEqual(["#ea1212"]);
+  expect(wrapper.emitted("update:modelValue")?.[0]).toEqual(["#ea1212"]);
 });

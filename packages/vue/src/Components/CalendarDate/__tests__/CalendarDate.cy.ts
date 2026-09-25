@@ -12,8 +12,8 @@ test("it should render the date grid", () => {
 test("it should highlight the selected day", () => {
   cy.mount(CalendarDate, {
     props: {
-      value: new Date(2021, 4, 21),
       viewDate: new Date(2021, 4, 1),
+      modelValue: new Date(2021, 4, 21),
     },
   });
 

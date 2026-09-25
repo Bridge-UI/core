@@ -73,6 +73,11 @@ export interface TimePickerEmits {
    * Emitted when Apply is pressed (`showFooter`) or when the value commits.
    */
   change: [value: null | TimeValue];
+
+  /**
+   * Emitted when `v-model` should update.
+   */
+  "update:modelValue": [value: null | TimeValue];
 }
 
 export interface TimePickerOwnProps {
@@ -202,13 +207,6 @@ export interface TimePickerOwnProps {
    * @default undefined
    */
   timeZone?: string;
-
-  /**
-   * Controlled value.
-   *
-   * @default undefined
-   */
-  value?: null | TimeValue;
 }
 
 export interface TimePickerSlots {
@@ -224,4 +222,11 @@ export interface TimePickerSlots {
 export type TimePickerProps = MergeHtmlProps<
   TimePickerOwnProps,
   HTMLAttributes
->;
+> & {
+  /**
+   * Bound with `v-model` on the component (`defineModel` internally).
+   *
+   * @default undefined
+   */
+  modelValue?: null | TimeValue;
+};
