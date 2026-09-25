@@ -158,6 +158,7 @@ declare module "@bridge-ui/core/Config" {
         | "autoPlay"
         | "indicators"
         | "orientation"
+        | "defaultIndex"
         | "slidesPerView"
       >
     >;
