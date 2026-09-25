@@ -16,6 +16,8 @@ import type {
   ButtonGroupProps,
 } from "@/Components/ButtonGroup";
 import type { CardClasses, CardProps } from "@/Components/Card";
+import type { CarouselClasses, CarouselProps } from "@/Components/Carousel";
+import type { CarouselSlideClasses } from "@/Components/CarouselSlide";
 import type { CheckboxClasses, CheckboxProps } from "@/Components/Checkbox";
 import type { ChipClasses, ChipProps } from "@/Components/Chip";
 import type { DividerClasses, DividerProps } from "@/Components/Divider";
@@ -142,6 +144,27 @@ declare module "@bridge-ui/core/Config" {
     defaultProps: Partial<
       Pick<CardProps, "shadow" | "padding" | "rounded" | "variant">
     >;
+  }
+
+  interface CarouselConfigOverrides {
+    classes: CarouselClasses;
+    defaultProps: Partial<
+      Pick<
+        CarouselProps,
+        | "gap"
+        | "loop"
+        | "size"
+        | "align"
+        | "autoPlay"
+        | "indicators"
+        | "orientation"
+        | "slidesPerView"
+      >
+    >;
+  }
+
+  interface CarouselSlideConfigOverrides {
+    classes: CarouselSlideClasses;
   }
 
   interface CheckboxConfigOverrides {
