@@ -7,9 +7,7 @@
 
 // ** External Imports
 import { Editor } from "@tiptap/core";
-import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
-import Underline from "@tiptap/extension-underline";
 import StarterKit from "@tiptap/starter-kit";
 import { get, isNil, isString } from "es-toolkit/compat";
 
@@ -186,9 +184,9 @@ export function createTiptapRichTextAdapter(): RichTextEditorAdapter {
           options.value ??
           (options.format === "json" ? { type: "doc", content: [] } : ""),
         extensions: [
-          StarterKit,
-          Underline,
-          Link.configure({ openOnClick: false }),
+          StarterKit.configure({
+            link: { openOnClick: false },
+          }),
           Placeholder.configure({
             placeholder: options.placeholder ?? "",
           }),

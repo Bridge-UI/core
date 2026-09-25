@@ -97,9 +97,7 @@
     "@tabler/icons-vue": "^3.0.0",
     "@tanstack/vue-table": "^9.2.0",
     "@tiptap/core": "^3.0.0",
-    "@tiptap/extension-link": "^3.0.0",
     "@tiptap/extension-placeholder": "^3.0.0",
-    "@tiptap/extension-underline": "^3.0.0",
     "@tiptap/pm": "^3.0.0",
     "@tiptap/starter-kit": "^3.0.0",
     "date-fns": "^4.0.0",
@@ -145,12 +143,6 @@
       "optional": true
     },
     "@tiptap/extension-placeholder": {
-      "optional": true
-    },
-    "@tiptap/extension-underline": {
-      "optional": true
-    },
-    "@tiptap/extension-link": {
       "optional": true
     },
     "date-fns": {
@@ -201,9 +193,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/vue-table": "^9.2.4",
     "@tiptap/core": "^3.31.3",
-    "@tiptap/extension-link": "^3.31.3",
     "@tiptap/extension-placeholder": "^3.31.3",
-    "@tiptap/extension-underline": "^3.31.3",
     "@tiptap/pm": "^3.31.3",
     "@tiptap/starter-kit": "^3.31.3",
     "@types/luxon": "^3.7.5",

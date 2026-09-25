@@ -27,9 +27,9 @@ const richText = createTiptapRichTextAdapter();
 </BridgeUIProvider>
 ```
 
-| Adapter                              | Peer(s)                                                                                                                                       | Notes                             |
-| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
-| `Adapters/Examples/rich-text-tiptap` | `@tiptap/core`, `@tiptap/pm`, `@tiptap/starter-kit`, `@tiptap/extension-placeholder`, `@tiptap/extension-underline`, `@tiptap/extension-link` | Shipped example; ProseMirror JSON |
+| Adapter                              | Peer(s)                                                                              | Notes                             |
+| ------------------------------------ | ------------------------------------------------------------------------------------ | --------------------------------- |
+| `Adapters/Examples/rich-text-tiptap` | `@tiptap/core`, `@tiptap/pm`, `@tiptap/starter-kit`, `@tiptap/extension-placeholder` | Shipped example; ProseMirror JSON |
 
 Custom engines can implement `RichTextEditorAdapter` and pass them via `global.richText`.
 
