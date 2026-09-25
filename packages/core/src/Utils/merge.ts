@@ -50,6 +50,7 @@ export function getColorToken<T>({
  */
 export const BRIDGE_UI_FORM_COMPONENT_NAMES = [
   "Radio",
+  "Rating",
   "Select",
   "Slider",
   "Switch",
@@ -96,6 +97,7 @@ export const BRIDGE_UI_CHROME_FALLBACK = {
   Select: "FormField",
   Slider: "BaseField",
   Radio: "FormControl",
+  Rating: "FormControl",
   Switch: "FormControl",
   OtpField: "BaseField",
   Textarea: "FormField",

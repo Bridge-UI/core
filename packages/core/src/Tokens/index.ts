@@ -318,6 +318,17 @@ export type {
   RadioSize,
 } from "@/Tokens/Radio";
 export {
+  colorProps as ratingColorProps,
+  roundedProps as ratingRoundedProps,
+  sizeProps as ratingSizeProps,
+} from "@/Tokens/Rating";
+export type {
+  RatingColor,
+  RatingColorItem,
+  RatingRounded,
+  RatingSize,
+} from "@/Tokens/Rating";
+export {
   roundedProps as richTextEditorRoundedProps,
   sizeProps as richTextEditorSizeProps,
 } from "@/Tokens/RichTextEditor";

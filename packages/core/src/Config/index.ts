@@ -109,6 +109,8 @@ export type {
   ProgressConfigOverrides,
   RadioConfigBase,
   RadioConfigOverrides,
+  RatingConfigBase,
+  RatingConfigOverrides,
   SelectConfigBase,
   SelectConfigOverrides,
   SidebarConfigBase,

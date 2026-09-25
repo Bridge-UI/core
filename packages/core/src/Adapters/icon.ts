@@ -22,6 +22,7 @@ export const SEMANTIC_ICON_NAMES = [
   "link",
   "list",
   "plus",
+  "star",
   "user",
   "alert",
   "check",
