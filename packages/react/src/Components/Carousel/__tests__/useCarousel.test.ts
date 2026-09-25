@@ -26,8 +26,8 @@ test("it should start at the first slide", () => {
 
   expect(result.current.activeIndex).toBe(0);
   expect(result.current.showControls).toBe(false);
-  expect(result.current.contextValue.id).toContain("bridge-carousel");
   expect(result.current.rootBind.role).toBe("region");
+  expect(result.current.contextValue.id).toContain("bridge-carousel");
 });
 
 test("it should use defaultIndex when uncontrolled", () => {
