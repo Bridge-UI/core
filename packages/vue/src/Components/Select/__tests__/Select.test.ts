@@ -209,7 +209,7 @@ test("it should not show the clear control when readonly", () => {
 });
 
 test("it should collect declarative SelectOption children", async () => {
-  const value = ref("pending");
+  const model = ref("pending");
 
   const Host = defineComponent({
     components: { SelectField, SelectOption },
@@ -218,9 +218,9 @@ test("it should collect declarative SelectOption children", async () => {
         h(
           SelectField,
           {
-            modelValue: value.value,
+            modelValue: model.value,
             "onUpdate:modelValue": (next: string) => {
-              value.value = next;
+              model.value = next;
             },
           },
           () => [

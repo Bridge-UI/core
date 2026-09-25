@@ -13,12 +13,12 @@ test("it should build tablist and panels from TabItem children", async () => {
     defineComponent({
       components: { Tabs, TabItem },
       setup() {
-        const value = ref("bun");
+        const model = ref("bun");
 
-        return { value };
+        return { model };
       },
       template: `
-        <Tabs v-model="value">
+        <Tabs v-model="model">
           <TabItem label="bun" value="bun">bun install</TabItem>
           <TabItem label="npm" value="npm">npm install</TabItem>
         </Tabs>
@@ -41,12 +41,12 @@ test("it should change panel when a TabItem tab is clicked", async () => {
     defineComponent({
       components: { Tabs, TabItem },
       setup() {
-        const value = ref("bun");
+        const model = ref("bun");
 
-        return { value };
+        return { model };
       },
       template: `
-        <Tabs v-model="value">
+        <Tabs v-model="model">
           <TabItem label="bun" value="bun">bun install</TabItem>
           <TabItem label="npm" value="npm">npm install</TabItem>
         </Tabs>
@@ -69,12 +69,12 @@ test("it should render TabItem startIcon and end slot on the tab trigger", async
     defineComponent({
       components: { Tabs, TabItem },
       setup() {
-        const value = ref("inbox");
+        const model = ref("inbox");
 
-        return { User, value };
+        return { User, model };
       },
       template: `
-        <Tabs v-model="value">
+        <Tabs v-model="model">
           <TabItem :start-icon="User" label="Inbox" value="inbox">
             <template #end>
               <span data-testid="item-end">3</span>

@@ -26,7 +26,7 @@ const libDefaults = {
 
 function mountUseSlider(
   props: Partial<SliderOwnProps> = {},
-  valueOverride?: number | [number, number],
+  modelOverride?: number | [number, number],
 ) {
   let result!: ReturnType<typeof useSlider>;
 
@@ -36,8 +36,8 @@ function mountUseSlider(
     step: props.step ?? libDefaults.step,
   });
 
-  const value = ref<number | [number, number]>(
-    valueOverride ??
+  const model = ref<number | [number, number]>(
+    modelOverride ??
       resolveSliderDefaultValue({
         min: bounds.min,
         max: bounds.max,
@@ -49,7 +49,7 @@ function mountUseSlider(
 
   const Consumer = defineComponent({
     setup() {
-      result = useSlider(() => props as SliderOwnProps, libDefaults, value);
+      result = useSlider(() => props as SliderOwnProps, libDefaults, model);
 
       return () => h("div");
     },
@@ -61,7 +61,7 @@ function mountUseSlider(
     },
   });
 
-  return { ...result, value };
+  return { ...result, model };
 }
 
 test("it should merge default bounds", () => {
@@ -103,14 +103,14 @@ test("it should build thumb bind with role slider", () => {
 });
 
 test("it should update uncontrolled value through keyboard handler", () => {
-  const { value, getThumbBind } = mountUseSlider({ defaultValue: 10 }, 10);
+  const { model, getThumbBind } = mountUseSlider({ defaultValue: 10 }, 10);
 
   getThumbBind(0).onKeydown?.({
     key: "ArrowRight",
     preventDefault: () => undefined,
   } as KeyboardEvent);
 
-  expect(value.value).toBe(11);
+  expect(model.value).toBe(11);
 });
 
 test("it should expose header chrome binds via baseField", () => {
