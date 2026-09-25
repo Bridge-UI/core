@@ -60,10 +60,10 @@ type FormControlMerged = MergeLibDefaults<
 export type FormControlOptions = {
   /**
    * Public registry key that owns FormControl chrome defaults/tokens.
-   * Defaults to `FormControl`; Checkbox / Radio / Switch pass their own key
+   * Defaults to `FormControl`; Checkbox / Radio / Rating / Switch pass their own key
    * so chrome cascades (`FormControl` → parent).
    */
-  componentName?: "Radio" | "Switch" | "Checkbox" | "FormControl";
+  componentName?: "Radio" | "Rating" | "Switch" | "Checkbox" | "FormControl";
 };
 
 export function useFormControl(
