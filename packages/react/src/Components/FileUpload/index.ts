@@ -5,12 +5,12 @@ export type {
   FileUploadClasses,
   FileUploadColorOverrides,
   FileUploadCustomProps,
-  FileUploadItemOwnProps,
-  FileUploadItemProps,
   FileUploadItemSlotProps,
   FileUploadItemSlots,
+  FileUploadItemState,
   FileUploadListSlotProps,
   FileUploadModel,
+  FileUploadOrientationOverrides,
   FileUploadOwnProps,
   FileUploadProps,
   FileUploadRemote,
@@ -20,5 +20,4 @@ export type {
   FileUploadValue,
   FileUploadVariantOverrides,
 } from "@/Components/FileUpload/fileUpload.types";
-export { default as FileUploadItem } from "@/Components/FileUpload/FileUploadItem";
 export { useFileUpload } from "@/Components/FileUpload/hooks/useFileUpload";

@@ -11,14 +11,19 @@ import {
   filterFileUploadSelection,
   formatFileMeta,
   formatFileSize,
+  formatFileUploadStatusLabel,
   getFileTypeLabel,
+  getFileUploadBrowserFile,
   getFileUploadItemKey,
+  getFileUploadItemState,
   getFileUploadPreviewUrl,
   isFileUploadRemote,
   isImageFile,
   isImageUploadValue,
   mergeFileUploadSelection,
   removeFileAtIndex,
+  resolveFileUploadItemMedia,
+  shouldShowFileUploadDescription,
   type FileUploadRemote,
 } from "@/Domain/fileUpload";
 
@@ -401,5 +406,119 @@ describe("removeFileAtIndex", () => {
 
     expect(removeFileAtIndex(files, -1)).toBe(files);
     expect(removeFileAtIndex(files, 2)).toBe(files);
+  });
+});
+
+describe("formatFileUploadStatusLabel", () => {
+  test("it should keep the type and size line when state is omitted", () => {
+    expect(
+      formatFileUploadStatusLabel(makeFile("notes.pdf", { size: 12 })),
+    ).toContain("PDF");
+  });
+
+  test("it should describe each upload state", () => {
+    expect(formatFileUploadStatusLabel({ name: "a.pdf", state: "idle" })).toBe(
+      "Ready to upload",
+    );
+    expect(
+      formatFileUploadStatusLabel({
+        progress: 64,
+        name: "a.pdf",
+        state: "uploading",
+      }),
+    ).toBe("Uploading · 64%");
+    expect(
+      formatFileUploadStatusLabel({ name: "a.pdf", state: "processing" }),
+    ).toBe("Processing document");
+    expect(formatFileUploadStatusLabel({ name: "a.pdf", state: "error" })).toBe(
+      "Upload failed. Try again.",
+    );
+    expect(
+      formatFileUploadStatusLabel({
+        name: "a.pdf",
+        state: "done",
+        size: 1.8 * 1024 * 1024,
+      }),
+    ).toBe("Uploaded · 1.8 MB");
+  });
+
+  test("it should prefer a custom description", () => {
+    expect(
+      formatFileUploadStatusLabel({
+        name: "a.pdf",
+        state: "done",
+        description: "Open preview dialog",
+      }),
+    ).toBe("Open preview dialog");
+  });
+});
+
+describe("shouldShowFileUploadDescription", () => {
+  test("it should hide the default meta line at xs", () => {
+    const file = makeFile("notes.pdf", { size: 12 });
+
+    expect(shouldShowFileUploadDescription(file, "md")).toBe(true);
+    expect(shouldShowFileUploadDescription(file, "xs")).toBe(false);
+    expect(
+      shouldShowFileUploadDescription(
+        { progress: 10, name: "a.pdf", state: "uploading" },
+        "xs",
+      ),
+    ).toBe(true);
+    expect(
+      shouldShowFileUploadDescription(
+        { name: "a.pdf", description: "Open preview dialog" },
+        "xs",
+      ),
+    ).toBe(true);
+  });
+});
+
+describe("resolveFileUploadItemMedia", () => {
+  test("it should pick an icon from the upload state", () => {
+    expect(
+      resolveFileUploadItemMedia({ name: "a.pdf", state: "idle" }).kind,
+    ).toBe("icon");
+    expect(
+      resolveFileUploadItemMedia({ name: "a.pdf", state: "uploading" }),
+    ).toEqual({ spin: true, kind: "icon", icon: "loader" });
+    expect(
+      resolveFileUploadItemMedia({ name: "a.pdf", state: "error" }),
+    ).toEqual({ spin: false, kind: "icon", icon: "error" });
+    expect(
+      resolveFileUploadItemMedia({ name: "a.pdf", state: "done" }),
+    ).toEqual({ spin: false, kind: "icon", icon: "check" });
+  });
+
+  test("it should keep an image preview when the upload is done", () => {
+    const value: FileUploadRemote = {
+      state: "done",
+      name: "photo.png",
+      type: "image/png",
+      url: "https://cdn.example/photo.png",
+    };
+
+    expect(resolveFileUploadItemMedia(value, value.url)).toEqual({
+      kind: "image",
+      src: value.url,
+    });
+  });
+});
+
+describe("getFileUploadBrowserFile", () => {
+  test("it should return a nested file and its preview object url", () => {
+    const file = makeFile("photo.png", { type: "image/png" });
+    const value: FileUploadRemote = {
+      file,
+      name: file.name,
+      type: file.type,
+      state: "uploading",
+    };
+
+    expect(getFileUploadBrowserFile(file)).toBe(file);
+    expect(getFileUploadBrowserFile(value)).toBe(file);
+    expect(getFileUploadItemState(value)).toBe("uploading");
+    expect(isImageUploadValue(value)).toBe(true);
+    expect(getFileUploadPreviewUrl(value, "blob:photo")).toBe("blob:photo");
   });
 });

@@ -5,6 +5,7 @@
 
 // ** External Imports
 import {
+  PhArrowClockwise,
   PhBell,
   PhCalendarDots,
   PhCaretDoubleLeft,
@@ -87,6 +88,7 @@ const icons = {
   chevronDown: PhCaretDown,
   chevronLeft: PhCaretLeft,
   calendar: PhCalendarDots,
+  refresh: PhArrowClockwise,
   search: PhMagnifyingGlass,
   download: PhDownloadSimple,
   chevronRight: PhCaretRight,

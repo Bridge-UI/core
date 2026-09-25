@@ -92,9 +92,12 @@ import type {
 import type {
   FileUploadColor,
   FileUploadColorItem,
+  FileUploadOrientation,
+  FileUploadOrientationItem,
   FileUploadRounded,
   FileUploadSize,
   FileUploadSizeItem,
+  FileUploadStateItem,
   FileUploadVariant,
   FileUploadVariantItem,
 } from "@/Tokens/FileUpload";
@@ -1107,14 +1110,17 @@ export interface FileUploadConfigBase {
   defaultProps: Partial<{
     color: keyof FileUploadColor;
     multiple: boolean;
+    orientation: keyof FileUploadOrientation;
     rounded: keyof FileUploadRounded;
     size: keyof FileUploadSize;
     variant: keyof FileUploadVariant;
   }>;
   tokens: Partial<{
     color: Record<string, FileUploadColorItem>;
+    orientation: Record<string, FileUploadOrientationItem>;
     rounded: Record<string, string>;
     size: Record<string, FileUploadSizeItem>;
+    state: Record<string, FileUploadStateItem>;
     variant: Record<string, FileUploadVariantItem>;
   }>;
 }

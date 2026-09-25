@@ -7,20 +7,86 @@ import { clamp, isArray, isNil } from "es-toolkit/compat";
 export type FileUploadRejectReason = "accept" | "maxSize" | "maxFiles";
 
 /**
- * Attachment already stored on the server. Not a browser `File`.
+ * Upload lifecycle shown on a file card.
+ * Omitted on a plain `File` — the card keeps the type · size line.
+ */
+export type FileUploadItemState =
+  "done" | "idle" | "error" | "uploading" | "processing";
+
+/**
+ * Icon chosen for a file card when it is not an image preview.
+ */
+export type FileUploadItemIcon =
+  "check" | "clock" | "error" | "loader" | "download";
+
+/**
+ * What the file card shows in the media slot.
+ */
+export type FileUploadItemMedia =
+  | {
+      /**
+       * Preview image.
+       */
+      kind: "image";
+
+      /**
+       * Preview URL.
+       */
+      src: string;
+    }
+  | {
+      /**
+       * Semantic icon name.
+       */
+      icon: FileUploadItemIcon;
+
+      /**
+       * Image preview is not used.
+       */
+      kind: "icon";
+
+      /**
+       * Spin the icon (upload in progress).
+       */
+      spin: boolean;
+    };
+
+/**
+ * Attachment metadata. Not a browser `File`.
  * Only `name` is required. `size` and `type` match `File` when known.
- * `url` is the remote location. Extra fields on the object are ignored.
+ * `url` is the remote location. `file` keeps a local `File` while an upload is in flight.
+ * `state`, `progress`, and `description` drive the card. Bridge does not upload.
  */
 export type FileUploadRemote = {
+  /**
+   * Replaces the meta line (`Ready to upload`, `PDF · 1.8 MB`, …).
+   */
+  description?: string;
+
+  /**
+   * Browser file still being uploaded. Preview uses this when `url` is absent.
+   */
+  file?: File;
+
   /**
    * File name shown on the card. Same as `File.name`.
    */
   name: string;
 
   /**
+   * Upload progress from 0 to 100. Shown while `state` is `uploading`.
+   */
+  progress?: number;
+
+  /**
    * Size in bytes. Same as `File.size`. Omitted from the card when missing.
    */
   size?: number;
+
+  /**
+   * Upload lifecycle. Omitted keeps the default type · size card.
+   */
+  state?: FileUploadItemState;
 
   /**
    * MIME type. Same as `File.type`. Used for the type label and image preview.
@@ -176,6 +242,135 @@ export function isFileUploadRemote(
   return !(value instanceof File);
 }
 
+/**
+ * Upload state stored on a remote item. A plain `File` has none.
+ */
+export function getFileUploadItemState(
+  value: FileUploadValue,
+): undefined | FileUploadItemState {
+  if (!isFileUploadRemote(value)) {
+    return undefined;
+  }
+
+  return value.state;
+}
+
+/**
+ * Browser `File` for a selection item.
+ * A plain `File` is returned as-is. A remote item returns `file` while an upload is in flight.
+ */
+export function getFileUploadBrowserFile(
+  value: FileUploadValue,
+): File | undefined {
+  if (value instanceof File) {
+    return value;
+  }
+
+  return value.file;
+}
+
+/**
+ * Meta line for a file card.
+ * `description` wins. Otherwise a known `state` replaces the type · size line.
+ */
+export function formatFileUploadStatusLabel(value: FileUploadValue): string {
+  if (isFileUploadRemote(value) && value.description) {
+    return value.description;
+  }
+
+  const state = getFileUploadItemState(value);
+
+  if (isNil(state)) {
+    return formatFileMeta(value);
+  }
+
+  if (state === "idle") {
+    return "Ready to upload";
+  }
+
+  if (state === "uploading") {
+    const progress = isFileUploadRemote(value) ? value.progress : undefined;
+
+    if (isNil(progress) || !Number.isFinite(progress)) {
+      return "Uploading";
+    }
+
+    return `Uploading · ${Math.round(clamp(progress, 0, 100))}%`;
+  }
+
+  if (state === "processing") {
+    return "Processing document";
+  }
+
+  if (state === "error") {
+    return "Upload failed. Try again.";
+  }
+
+  if (isNil(value.size)) {
+    return "Uploaded";
+  }
+
+  return `Uploaded · ${formatFileSize(value.size)}`;
+}
+
+/**
+ * Whether the meta line is visible.
+ * `xs` hides the default type · size line and still shows a status or custom description.
+ */
+export function shouldShowFileUploadDescription(
+  value: FileUploadValue,
+  size?: string,
+): boolean {
+  if (size !== "xs") {
+    return true;
+  }
+
+  if (getFileUploadItemState(value)) {
+    return true;
+  }
+
+  return isFileUploadRemote(value) && Boolean(value.description);
+}
+
+/**
+ * Media slot for a file card. Image preview wins when there is no in-progress state.
+ * `done` keeps the preview for images and uses a check icon otherwise.
+ */
+export function resolveFileUploadItemMedia(
+  value: FileUploadValue,
+  previewUrl?: string,
+): FileUploadItemMedia {
+  const state = getFileUploadItemState(value);
+  const image =
+    previewUrl && isImageUploadValue(value) ? previewUrl : undefined;
+
+  if ((isNil(state) || state === "done") && image) {
+    return { src: image, kind: "image" };
+  }
+
+  if (state === "idle") {
+    return { spin: false, kind: "icon", icon: "clock" };
+  }
+
+  if (state === "uploading") {
+    return { spin: true, kind: "icon", icon: "loader" };
+  }
+
+  if (state === "error") {
+    return { spin: false, kind: "icon", icon: "error" };
+  }
+
+  if (state === "done") {
+    return { spin: false, kind: "icon", icon: "check" };
+  }
+
+  if (image) {
+    return { src: image, kind: "image" };
+  }
+
+  return { spin: false, kind: "icon", icon: "download" };
+}
+
 function fileExtension(name: string): string {
   const path = name.split(/[?#]/)[0] ?? "";
   const base = path.split("/").pop() ?? path;
@@ -293,6 +488,12 @@ export function isImageFile(file: File): boolean {
  * Uses the MIME type, then the extension of `name`. Remote items also check `url`.
  */
 export function isImageUploadValue(value: FileUploadValue): boolean {
+  const browserFile = getFileUploadBrowserFile(value);
+
+  if (browserFile && isImageFile(browserFile)) {
+    return true;
+  }
+
   if ((value.type || "").toLowerCase().startsWith("image/")) {
     return true;
   }
@@ -320,7 +521,7 @@ export function getFileUploadPreviewUrl(
     return undefined;
   }
 
-  if (isFileUploadRemote(value)) {
+  if (isFileUploadRemote(value) && value.url) {
     return value.url;
   }
 

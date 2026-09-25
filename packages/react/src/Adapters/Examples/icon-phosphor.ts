@@ -5,6 +5,7 @@
 
 // ** External Imports
 import {
+  ArrowClockwiseIcon,
   BellIcon,
   CalendarDotsIcon,
   CaretDoubleLeftIcon,
@@ -87,6 +88,7 @@ const icons = {
   chevronLeft: CaretLeftIcon,
   chevronDown: CaretDownIcon,
   calendar: CalendarDotsIcon,
+  refresh: ArrowClockwiseIcon,
   search: MagnifyingGlassIcon,
   download: DownloadSimpleIcon,
   chevronRight: CaretRightIcon,

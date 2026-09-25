@@ -173,7 +173,7 @@ declare module "@bridge-ui/core/Config" {
     defaultProps: Partial<
       Pick<
         FileUploadProps,
-        "size" | "color" | "rounded" | "variant" | "multiple"
+        "size" | "color" | "rounded" | "variant" | "multiple" | "orientation"
       >
     >;
   }

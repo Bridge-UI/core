@@ -18,6 +18,7 @@ const libDefaults = {
   multiple: false,
   color: "primary",
   variant: "button",
+  orientation: "horizontal",
 } as const satisfies Partial<FileUploadOwnProps>;
 
 function mountUseFileUpload(
@@ -37,6 +38,7 @@ function mountUseFileUpload(
       });
       const emit = vi.fn() as unknown as {
         (event: "remove", value: FileUploadValue, index: number): void;
+        (event: "retry", value: FileUploadValue, index: number): void;
         (event: "update:modelValue", value: FileUploadModel): void;
       };
 

@@ -1,16 +1,14 @@
 # FileUpload
 
-File selection with an optional drag-and-drop surface (`variant="dropzone"`). Without `multiple`, `v-model` is one item or `null`. With `multiple`, it is a list. Each item is a browser `File`, or a remote attachment `{ name, size?, type?, url? }` already stored on the server. Bridge does not upload.
+File selection with an optional drag-and-drop surface (`variant="dropzone"`). Without `multiple`, `v-model` is one item or `null`. With `multiple`, it is a list. Each item is a browser `File`, or `{ name, size?, type?, url?, file?, state?, progress?, description? }`. Bridge does not upload. Write `state` on the object when your app is uploading.
 
 Selected files always render as the same attachment-style cards whether you pick one file or many — there is no FormField input shell for the single-file case. Optional `label` / `description` / `error` sit above or below as flat chrome.
 
 ## Import
 
 ```ts
-import {
-  FileUpload,
-  FileUploadItem,
-} from "@bridge-ui/vue/Components/FileUpload";
+import { FileUpload } from "@bridge-ui/vue/Components/FileUpload";
+import { FileUploadItem } from "@bridge-ui/vue/Components/FileUploadItem";
 ```
 
 ## Examples
@@ -131,6 +129,43 @@ The `start` and `end` slots on `FileUpload` do the same thing for the default li
 </FileUpload>
 ```
 
+### Size
+
+`xs` hides the default type · size line. `sm`, `md`, and `lg` keep it and scale the card and the dropzone. `md` is the default.
+
+```vue
+<FileUpload size="xs" label="Attachments" />
+```
+
+### Orientation
+
+`horizontal` places the media beside the name and stacks cards. `vertical` puts the media above the name and lays cards in a row. A card can override the field with its own `orientation` inside the `list` slot.
+
+```vue
+<FileUpload multiple v-model="files" orientation="vertical" />
+```
+
+### Upload state
+
+Leave `state` unset for the type · size card. Set it on the attachment object while your app uploads. `description` replaces the meta line. `progress` (0–100) is shown for `uploading`. Listen for `retry` to show a retry button when `state` is `error`.
+
+| `state`      | Meta line                 |
+| ------------ | ------------------------- |
+| `idle`       | Ready to upload           |
+| `uploading`  | Uploading · 64%           |
+| `processing` | Processing document       |
+| `error`      | Upload failed. Try again. |
+| `done`       | Uploaded · 1.8 MB         |
+
+```vue
+<FileUpload
+  v-on:retry="retryUpload"
+  :model-value="{ name: 'report.pdf', progress: 64, state: 'uploading' }"
+/>
+```
+
+A local `File` cannot carry `state`. Replace it with `{ file, name, size, type, state: "uploading", progress: 0 }` while the upload runs.
+
 ### customProps
 
 ```vue
@@ -148,11 +183,14 @@ The `start` and `end` slots on `FileUpload` do the same thing for the default li
 
 ### v-model
 
-| Prop / Event        | Type                                             | Default | Description                                                                                            |
-| ------------------- | ------------------------------------------------ | ------- | ------------------------------------------------------------------------------------------------------ |
-| `modelValue`        | `null \| FileUploadValue` or `FileUploadValue[]` | —       | One item when `multiple` is false, a list when it is true. A `File` or `{ name, size?, type?, url? }`. |
-| `update:modelValue` | `(value) => void`                                | —       | Emitted when `v-model` should update. Listen with `v-on:update:model-value`.                           |
-| `remove`            | `(value, index) => void`                         | —       | Emitted with the removed `File` or remote item and its index.                                          |
+| Prop / Event        | Type                                             | Default      | Description                                                                                                                                    |
+| ------------------- | ------------------------------------------------ | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `modelValue`        | `null \| FileUploadValue` or `FileUploadValue[]` | —            | One item when `multiple` is false, a list when it is true. A `File` or `{ name, size?, type?, url?, file?, state?, progress?, description? }`. |
+| `update:modelValue` | `(value) => void`                                | —            | Emitted when `v-model` should update. Listen with `v-on:update:model-value`.                                                                   |
+| `remove`            | `(value, index) => void`                         | —            | Emitted with the removed item and its index.                                                                                                   |
+| `retry`             | `(value, index) => void`                         | —            | Emitted from the retry button when `state` is `error`.                                                                                         |
+| `orientation`       | `"horizontal" \| "vertical"`                     | `horizontal` | Media beside the name, or stacked above it.                                                                                                    |
+| `size`              | `"xs" \| "sm" \| "md" \| "lg"`                   | `md`         | `xs` hides the default type · size line.                                                                                                       |
 
 ## Related components
 
