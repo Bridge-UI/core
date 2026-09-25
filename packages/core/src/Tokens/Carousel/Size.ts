@@ -5,72 +5,72 @@ export interface CarouselSizeItem {
   /**
    * Classes for previous/next buttons.
    */
-  control: string;
+  "control": string;
 
   /**
    * Classes for the previous/next overlay.
    */
-  controls: string;
+  "controls": string;
 
   /**
    * Classes added to the overlay when `orientation` is `vertical`.
    */
-  controlsVertical: string;
+  "controlsVertical": string;
 
   /**
    * Icon size token for previous/next `Icon` (`size` prop).
    */
-  icon: string;
+  "icon": string;
 
   /**
    * Classes for an indicator button.
    */
-  indicator: string;
+  "indicator": string;
 
   /**
    * Classes for the indicator group.
    */
-  indicators: string;
+  "indicators": string;
 
   /**
    * Classes added to the active indicator.
    */
-  indicatorSelected: string;
+  "indicatorSelected": string;
 
   /**
    * Classes for the live region.
    */
-  live: string;
+  "live": string;
 
   /**
    * Classes for the region root.
    */
-  root: string;
+  "root": string;
 
   /**
    * Classes for each slide.
    */
-  slide: string;
+  "slide": string;
 
   /**
    * Classes for the sliding track.
    */
-  track: string;
+  "track": string;
 
   /**
    * Classes added to the track when `orientation` is `vertical`.
    */
-  trackVertical: string;
+  "trackVertical": string;
 
   /**
    * Classes for the clipping viewport.
    */
-  viewport: string;
+  "viewport": string;
 
   /**
    * Classes added to the viewport when `orientation` is `vertical`.
    */
-  viewportVertical: string;
+  "viewportVertical": string;
 }
 
 /**
@@ -80,84 +80,84 @@ export interface CarouselSize {
   /**
    * Large size token.
    */
-  lg: CarouselSizeItem;
+  "lg": CarouselSizeItem;
 
   /**
    * Medium size token (default).
    */
-  md: CarouselSizeItem;
+  "md": CarouselSizeItem;
 
   /**
    * Small size token.
    */
-  sm: CarouselSizeItem;
+  "sm": CarouselSizeItem;
 }
-
-const controlBase =
-  "pointer-events-auto inline-flex shrink-0 items-center justify-center rounded-full border border-dark-200 bg-white text-dark-700 shadow-sm transition-colors cursor-pointer hover:bg-dark-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40 dark:border-dark-700 dark:bg-dark-900 dark:text-dark-100 dark:hover:bg-dark-800";
-
-const indicatorBase =
-  "inline-flex shrink-0 rounded-full bg-dark-300 p-0 transition-colors cursor-pointer hover:bg-dark-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:bg-dark-600 dark:hover:bg-dark-500";
-
-const indicatorSelected =
-  "bg-dark-800 hover:bg-dark-800 dark:bg-white dark:hover:bg-white";
 
 /**
  * Default carousel size classes.
  */
 export const sizeProps: CarouselSize = {
-  md: {
-    icon: "sm",
-    live: "sr-only",
-    indicatorSelected,
-    viewportVertical: "h-64",
-    trackVertical: "h-full flex-col",
-    control: `${controlBase} h-9 w-9`,
-    controlsVertical: "flex-col py-2",
-    indicator: `${indicatorBase} h-2 w-2`,
-    root: "relative flex w-full flex-col gap-3",
-    slide: "min-w-0 shrink-0 grow-0 basis-full",
-    viewport: "relative w-full overflow-hidden",
-    indicators: "flex items-center justify-center gap-2",
-    controls:
+  "md": {
+    "icon": "sm",
+    "live": "sr-only",
+    "viewportVertical": "h-64",
+    "trackVertical": "h-full flex-col",
+    "controlsVertical": "flex-col py-2",
+    "root": "relative flex w-full flex-col gap-3",
+    "slide": "min-w-0 shrink-0 grow-0 basis-full",
+    "viewport": "relative w-full overflow-hidden",
+    "indicators": "flex items-center justify-center gap-2",
+    "indicatorSelected":
+      "bg-dark-800 hover:bg-dark-800 dark:bg-white dark:hover:bg-white",
+    "controls":
       "pointer-events-none absolute inset-0 z-10 flex items-center justify-between px-2",
-    track:
+    "track":
       "flex w-full transition-transform duration-300 ease-out motion-reduce:transition-none",
+    "indicator":
+      "inline-flex shrink-0 rounded-full bg-dark-300 p-0 transition-colors cursor-pointer hover:bg-dark-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:bg-dark-600 dark:hover:bg-dark-500 h-2 w-2",
+    "control":
+      "pointer-events-auto inline-flex shrink-0 items-center justify-center rounded-full border border-dark-200 bg-white text-dark-700 shadow-sm transition-colors cursor-pointer hover:bg-dark-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40 dark:border-dark-700 dark:bg-dark-900 dark:text-dark-100 dark:hover:bg-dark-800 h-9 w-9",
   },
-  lg: {
-    icon: "md",
-    live: "sr-only",
-    indicatorSelected,
-    viewportVertical: "h-80",
-    trackVertical: "h-full flex-col",
-    controlsVertical: "flex-col py-3",
-    control: `${controlBase} h-10 w-10`,
-    indicator: `${indicatorBase} h-2.5 w-2.5`,
-    root: "relative flex w-full flex-col gap-4",
-    slide: "min-w-0 shrink-0 grow-0 basis-full",
-    viewport: "relative w-full overflow-hidden",
-    indicators: "flex items-center justify-center gap-2.5",
-    controls:
+  "lg": {
+    "icon": "md",
+    "live": "sr-only",
+    "viewportVertical": "h-80",
+    "trackVertical": "h-full flex-col",
+    "controlsVertical": "flex-col py-3",
+    "root": "relative flex w-full flex-col gap-4",
+    "slide": "min-w-0 shrink-0 grow-0 basis-full",
+    "viewport": "relative w-full overflow-hidden",
+    "indicators": "flex items-center justify-center gap-2.5",
+    "indicatorSelected":
+      "bg-dark-800 hover:bg-dark-800 dark:bg-white dark:hover:bg-white",
+    "controls":
       "pointer-events-none absolute inset-0 z-10 flex items-center justify-between px-3",
-    track:
+    "track":
       "flex w-full transition-transform duration-300 ease-out motion-reduce:transition-none",
+    "indicator":
+      "inline-flex shrink-0 rounded-full bg-dark-300 p-0 transition-colors cursor-pointer hover:bg-dark-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:bg-dark-600 dark:hover:bg-dark-500 h-2.5 w-2.5",
+    "control":
+      "pointer-events-auto inline-flex shrink-0 items-center justify-center rounded-full border border-dark-200 bg-white text-dark-700 shadow-sm transition-colors cursor-pointer hover:bg-dark-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40 dark:border-dark-700 dark:bg-dark-900 dark:text-dark-100 dark:hover:bg-dark-800 h-10 w-10",
   },
-  sm: {
-    icon: "xs",
-    live: "sr-only",
-    indicatorSelected,
-    viewportVertical: "h-48",
-    trackVertical: "h-full flex-col",
-    control: `${controlBase} h-8 w-8`,
-    controlsVertical: "flex-col py-1.5",
-    indicator: `${indicatorBase} h-1.5 w-1.5`,
-    root: "relative flex w-full flex-col gap-2",
-    slide: "min-w-0 shrink-0 grow-0 basis-full",
-    viewport: "relative w-full overflow-hidden",
-    indicators: "flex items-center justify-center gap-1.5",
-    track:
+  "sm": {
+    "icon": "xs",
+    "live": "sr-only",
+    "viewportVertical": "h-48",
+    "trackVertical": "h-full flex-col",
+    "controlsVertical": "flex-col py-1.5",
+    "root": "relative flex w-full flex-col gap-2",
+    "slide": "min-w-0 shrink-0 grow-0 basis-full",
+    "viewport": "relative w-full overflow-hidden",
+    "indicators": "flex items-center justify-center gap-1.5",
+    "indicatorSelected":
+      "bg-dark-800 hover:bg-dark-800 dark:bg-white dark:hover:bg-white",
+    "track":
       "flex w-full transition-transform duration-300 ease-out motion-reduce:transition-none",
-    controls:
+    "controls":
       "pointer-events-none absolute inset-0 z-10 flex items-center justify-between px-1.5",
+    "indicator":
+      "inline-flex shrink-0 rounded-full bg-dark-300 p-0 transition-colors cursor-pointer hover:bg-dark-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:bg-dark-600 dark:hover:bg-dark-500 h-1.5 w-1.5",
+    "control":
+      "pointer-events-auto inline-flex shrink-0 items-center justify-center rounded-full border border-dark-200 bg-white text-dark-700 shadow-sm transition-colors cursor-pointer hover:bg-dark-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40 dark:border-dark-700 dark:bg-dark-900 dark:text-dark-100 dark:hover:bg-dark-800 h-8 w-8",
   },
 };
