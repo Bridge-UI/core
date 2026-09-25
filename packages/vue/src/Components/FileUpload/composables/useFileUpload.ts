@@ -104,12 +104,13 @@ export function useFileUpload(
   },
 ) {
   const attrs = useAttrs();
-  const instance = getCurrentInstance();
   const slots = useSlots();
-  const inputRef = ref<null | HTMLInputElement>(null);
+  const instance = getCurrentInstance();
+
   const dragDepth = ref(0);
   const dragging = ref(false);
   const validationError = ref<string | undefined>();
+  const inputRef = ref<null | HTMLInputElement>(null);
   const previewUrls = ref<(string | undefined)[]>([]);
 
   const split = computed(() => {
