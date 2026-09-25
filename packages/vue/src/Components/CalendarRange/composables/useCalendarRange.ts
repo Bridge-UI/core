@@ -7,6 +7,8 @@ import {
   toValue,
   useAttrs,
   type MaybeRefOrGetter,
+  type Ref,
+  type SetupContext,
 } from "vue";
 
 // ** Core Imports
@@ -37,6 +39,7 @@ import { useDateAdapter } from "@/Adapters/Date";
 import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   CalendarRangeClasses,
+  CalendarRangeEmits,
   CalendarRangeOwnProps,
 } from "@/Components/CalendarRange/calendarRange.types";
 import {
@@ -49,7 +52,6 @@ const calendarRangeBridgeKeys = [
   "fill",
   "color",
   "error",
-  "value",
   "classes",
   "maxDate",
   "minDate",
@@ -107,11 +109,8 @@ function toRangeValue(value: DatePickerModel): null | DateRangeValue {
 export function useCalendarRange(
   props: MaybeRefOrGetter<CalendarRangeOwnProps>,
   libDefaults: CalendarRangeLibDefaults,
-  emit: {
-    (event: "change", value: null | DateRangeValue): void;
-    (event: "viewDateChange", date: Date): void;
-    (event: "previewDateChange", date: Date | null): void;
-  },
+  model: Ref<null | DateRangeValue>,
+  emit: SetupContext<CalendarRangeEmits>["emit"],
 ) {
   const attrs = useAttrs();
   const adapter = useDateAdapter();
@@ -145,6 +144,7 @@ export function useCalendarRange(
       "onChange",
       "onViewDateChange",
       "onPreviewDateChange",
+      "onUpdate:modelValue",
     ]);
   });
 
@@ -163,10 +163,6 @@ export function useCalendarRange(
     return toValue(props);
   });
 
-  const isValueControlled = computed(() => {
-    return !isNil(propsValue.value.value);
-  });
-
   const isViewDateControlled = computed(() => {
     const vnodeProps = getCurrentInstance()?.vnode.props ?? {};
 
@@ -180,10 +176,6 @@ export function useCalendarRange(
   const isPreviewControlled = computed(() => {
     return !isNil(propsValue.value.previewDate);
   });
-
-  const uncontrolledValue = ref<null | DateRangeValue>(
-    merged.value.defaultValue ?? null,
-  );
 
   const uncontrolledView = ref<CalendarView>(
     resolveCalendarPanelView({
@@ -200,11 +192,7 @@ export function useCalendarRange(
     adapter.value.startOfMonth(
       !isNil(propsValue.value.viewDate)
         ? (propsValue.value.viewDate as Date)
-        : resolveFocusDate(
-            propsValue.value.value ?? merged.value.defaultValue ?? null,
-            adapter.value,
-            timeZone.value,
-          ),
+        : resolveFocusDate(model.value, adapter.value, timeZone.value),
       timeZone.value,
     ),
   );
@@ -213,14 +201,6 @@ export function useCalendarRange(
 
   const yearPageSize = 15;
   const yearPageStart = ref<null | number>(null);
-
-  const value = computed((): null | DateRangeValue => {
-    if (isValueControlled.value) {
-      return propsValue.value.value ?? null;
-    }
-
-    return uncontrolledValue.value;
-  });
 
   const granularity = computed(() => {
     return merged.value.granularity ?? "day";
@@ -331,10 +311,7 @@ export function useCalendarRange(
   const handleChange = (next: DatePickerModel) => {
     const rangeValue = toRangeValue(next);
 
-    if (!isValueControlled.value) {
-      uncontrolledValue.value = rangeValue;
-    }
-
+    model.value = rangeValue;
     emit("change", rangeValue);
   };
 
@@ -404,7 +381,7 @@ export function useCalendarRange(
       handleChange(
         applyDateSelection({
           mode: "range",
-          value: value.value,
+          value: model.value,
           granularity: "year",
           adapter: adapter.value,
           timeZone: timeZone.value,
@@ -445,7 +422,7 @@ export function useCalendarRange(
       handleChange(
         applyDateSelection({
           mode: "range",
-          value: value.value,
+          value: model.value,
           granularity: "month",
           adapter: adapter.value,
           timeZone: timeZone.value,
@@ -780,7 +757,7 @@ export function useCalendarRange(
 
   return {
     view,
-    value,
+    model,
     shared,
     merged,
     showNav,

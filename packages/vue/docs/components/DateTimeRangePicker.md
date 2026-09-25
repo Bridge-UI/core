@@ -54,7 +54,6 @@ import { DateTimeRangePicker } from "@bridge-ui/vue/Components/DateTimeRangePick
 | `slots`           | `DateTimeRangePickerSlots`       | —              | Named slots (`day` on the calendars, `footer` for Cancel / Apply). |
 | `startOfWeek`     | `StartOfWeek`                    | `0`            | First day of the week.                                             |
 | `timeZone`        | `string`                         | —              | IANA time zone.                                                    |
-| `value`           | `DateRangeValue \| null`         | —              | Controlled value (`[start, end]` date-times).                      |
 
 ### v-model
 

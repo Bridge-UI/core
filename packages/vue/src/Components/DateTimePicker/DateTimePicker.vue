@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// ** External Imports
+import { ref } from "vue";
+
 // ** Local Imports
 import { ActionFooter } from "@/Components/ActionFooter";
 import Calendar from "@/Components/Calendar/Calendar.vue";
@@ -12,16 +15,23 @@ import {
   TIME_PANEL_COLUMN_WIDTH_CLASS,
   TimePanel,
 } from "@/Components/TimePanel";
+import { useOptionalModel } from "@/Utils";
 
 defineSlots<DateTimePickerSlots>();
 
 defineOptions({ inheritAttrs: false });
 
+const model = defineModel<Date | null>();
+
+const emit = defineEmits<DateTimePickerEmits>();
+
 const props = withDefaults(defineProps<DateTimePickerOwnProps>(), {
   showFooter: undefined,
 });
 
-const emit = defineEmits<DateTimePickerEmits>();
+const uncontrolledValue = ref<Date | null>(props.defaultValue ?? null);
+
+const value = useOptionalModel(model, uncontrolledValue);
 
 const {
   merged,
@@ -52,6 +62,7 @@ const {
     showSeconds: false,
     defaultView: "date",
   },
+  value,
   emit,
 );
 </script>
@@ -63,12 +74,12 @@ const {
         <Calendar
           :fill="merged.fill"
           :color="merged.color"
-          :value="displayValue"
           :error="merged.error"
           :rounded="merged.rounded"
           :max-date="merged.maxDate"
           :min-date="merged.minDate"
           :disabled="merged.disabled"
+          :model-value="displayValue"
           :read-only="merged.readOnly"
           :time-zone="merged.timeZone"
           :hide-years="merged.hideYears"
@@ -104,13 +115,13 @@ const {
             :ampm="merged.ampm"
             :fill="merged.fill"
             :color="merged.color"
-            :value="displayValue"
             :error="merged.error"
             :rounded="merged.rounded"
             :max-time="merged.maxTime"
             :min-time="merged.minTime"
             :disabled="merged.disabled"
             :interval="merged.interval"
+            :model-value="displayValue"
             :read-only="merged.readOnly"
             :time-zone="merged.timeZone"
             v-on:change="handlePanelChange"

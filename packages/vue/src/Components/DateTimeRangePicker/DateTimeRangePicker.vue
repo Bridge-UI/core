@@ -1,4 +1,10 @@
 <script setup lang="ts">
+// ** External Imports
+import { ref } from "vue";
+
+// ** Core Imports
+import type { DateRangeValue } from "@bridge-ui/core/Domain";
+
 // ** Local Imports
 import { ActionFooter } from "@/Components/ActionFooter";
 import CalendarRange from "@/Components/CalendarRange/CalendarRange.vue";
@@ -12,16 +18,25 @@ import {
   TIME_PANEL_COLUMN_WIDTH_CLASS,
   TimePanel,
 } from "@/Components/TimePanel";
+import { useOptionalModel } from "@/Utils";
 
 defineOptions({ inheritAttrs: false });
 
 defineSlots<DateTimeRangePickerSlots>();
 
+const model = defineModel<null | DateRangeValue>();
+
+const emit = defineEmits<DateTimeRangePickerEmits>();
+
 const props = withDefaults(defineProps<DateTimeRangePickerOwnProps>(), {
   showFooter: undefined,
 });
 
-const emit = defineEmits<DateTimeRangePickerEmits>();
+const uncontrolledValue = ref<null | DateRangeValue>(
+  props.defaultValue ?? null,
+);
+
+const value = useOptionalModel(model, uncontrolledValue);
 
 const {
   merged,
@@ -55,6 +70,7 @@ const {
     showSeconds: false,
     orientation: "horizontal",
   },
+  value,
   emit,
 );
 </script>
@@ -67,11 +83,11 @@ const {
           :fill="merged.fill"
           :color="merged.color"
           :error="merged.error"
-          :value="displayValue"
           :rounded="merged.rounded"
           :max-date="merged.maxDate"
           :min-date="merged.minDate"
           :disabled="merged.disabled"
+          :model-value="displayValue"
           :read-only="merged.readOnly"
           :time-zone="merged.timeZone"
           :hide-years="merged.hideYears"
@@ -110,7 +126,6 @@ const {
                   :fill="merged.fill"
                   :color="merged.color"
                   :error="merged.error"
-                  :value="startTimeValue"
                   :rounded="merged.rounded"
                   :max-time="merged.maxTime"
                   :min-time="merged.minTime"
@@ -118,6 +133,7 @@ const {
                   :interval="merged.interval"
                   :read-only="merged.readOnly"
                   :time-zone="merged.timeZone"
+                  :model-value="startTimeValue"
                   :show-seconds="merged.showSeconds"
                   v-on:change="handleStartPanelChange"
                   :disable-times="merged.disableTimes"
@@ -147,13 +163,13 @@ const {
                   :ampm="merged.ampm"
                   :fill="merged.fill"
                   :color="merged.color"
-                  :value="endTimeValue"
                   :error="merged.error"
                   :rounded="merged.rounded"
                   :max-time="merged.maxTime"
                   :min-time="merged.minTime"
                   :disabled="merged.disabled"
                   :interval="merged.interval"
+                  :model-value="endTimeValue"
                   :read-only="merged.readOnly"
                   :time-zone="merged.timeZone"
                   :show-seconds="merged.showSeconds"

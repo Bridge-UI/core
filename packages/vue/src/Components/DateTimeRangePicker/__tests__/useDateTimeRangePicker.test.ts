@@ -1,7 +1,10 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test, vi } from "vitest";
-import { defineComponent, h } from "vue";
+import { defineComponent, h, ref } from "vue";
+
+// ** Core Imports
+import type { DateRangeValue } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import {
@@ -23,11 +26,12 @@ function mountUseDateTimeRangePicker(
 ) {
   let result!: ReturnType<typeof useDateTimeRangePicker>;
 
+  const model = ref<null | DateRangeValue>(null);
   const emit = vi.fn();
 
   const Wrapper = defineComponent({
     setup() {
-      result = useDateTimeRangePicker(props, libDefaults, emit);
+      result = useDateTimeRangePicker(props, libDefaults, model, emit);
 
       return () => h("div");
     },

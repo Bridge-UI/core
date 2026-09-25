@@ -1,7 +1,7 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test, vi } from "vitest";
-import { defineComponent, h } from "vue";
+import { defineComponent, h, ref } from "vue";
 
 // ** Local Imports
 import {
@@ -22,11 +22,12 @@ const libDefaults = {
 function mountUseDateTimePicker(props: Partial<DateTimePickerOwnProps> = {}) {
   let result!: ReturnType<typeof useDateTimePicker>;
 
+  const model = ref<Date | null>(null);
   const emit = vi.fn();
 
   const Wrapper = defineComponent({
     setup() {
-      result = useDateTimePicker(props, libDefaults, emit);
+      result = useDateTimePicker(props, libDefaults, model, emit);
 
       return () => h("div");
     },

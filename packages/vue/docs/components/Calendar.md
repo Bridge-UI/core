@@ -75,7 +75,6 @@ import { Calendar } from "@bridge-ui/vue/Components/Calendar";
 | `slots`           | `CalendarDateSlots`          | —                     | Named slots forwarded to `CalendarDate` (`day`).                                   |
 | `startOfWeek`     | `StartOfWeek`                | `0`                   | First day of the week (`0` = Sunday).                                              |
 | `timeZone`        | `string`                     | —                     | IANA time zone.                                                                    |
-| `value`           | `DatePickerModel`            | —                     | Controlled selection model.                                                        |
 | `view`            | `CalendarView`               | —                     | Controlled panel view. Pair with `view-change`.                                    |
 | `viewDate`        | `Date`                       | —                     | Controlled displayed month. Pair with `view-date-change`.                          |
 

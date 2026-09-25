@@ -62,6 +62,11 @@ export interface CalendarYearEmits {
    * Emitted when the range preview hover date changes.
    */
   previewDateChange: [date: Date | null];
+
+  /**
+   * Emitted when `v-model` should update.
+   */
+  "update:modelValue": [value: number];
 }
 
 export interface CalendarYearOwnProps {
@@ -173,14 +178,14 @@ export interface CalendarYearOwnProps {
 
   /**
    * Date selection model used to highlight tiles when this panel is the commit
-   * view. `value` stays the focused year.
+   * view. `modelValue` stays the focused year.
    *
    * @default undefined
    */
   selection?: DatePickerModel;
 
   /**
-   * First year of the visible page. Defaults around `value` / current year.
+   * First year of the visible page. Defaults around `modelValue` / current year.
    *
    * @default undefined
    */
@@ -192,16 +197,17 @@ export interface CalendarYearOwnProps {
    * @default undefined
    */
   timeZone?: string;
-
-  /**
-   * Selected year.
-   *
-   * @default undefined
-   */
-  value?: number;
 }
 
 export type CalendarYearProps = MergeHtmlProps<
   CalendarYearOwnProps,
   HTMLAttributes
->;
+> & {
+  /**
+   * Selected year. Bound with `v-model` on the component (`defineModel`
+   * internally).
+   *
+   * @default undefined
+   */
+  modelValue?: number;
+};

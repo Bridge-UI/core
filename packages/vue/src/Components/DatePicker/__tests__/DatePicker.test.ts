@@ -24,6 +24,7 @@ test("it should commit immediately without footer", async () => {
   await day?.trigger("click");
 
   expect(wrapper.emitted("change")).toBeTruthy();
+  expect(wrapper.emitted("update:modelValue")).toBeTruthy();
 });
 
 test("it should show footer actions when showFooter is set", () => {
@@ -45,6 +46,7 @@ test("it should commit draft value on Apply", async () => {
 
   await day?.trigger("click");
   expect(wrapper.emitted("change")).toBeFalsy();
+  expect(wrapper.emitted("update:modelValue")).toBeFalsy();
 
   const apply = wrapper
     .findAll("button")
@@ -52,6 +54,7 @@ test("it should commit draft value on Apply", async () => {
 
   await apply?.trigger("click");
   expect(wrapper.emitted("change")).toBeTruthy();
+  expect(wrapper.emitted("update:modelValue")).toBeTruthy();
 });
 
 test("it should render a custom footer slot and commit on apply", async () => {
@@ -73,11 +76,13 @@ test("it should render a custom footer slot and commit on apply", async () => {
 
   await day?.trigger("click");
   expect(wrapper.emitted("change")).toBeFalsy();
+  expect(wrapper.emitted("update:modelValue")).toBeFalsy();
 
   const save = wrapper.findAll("button").find((node) => node.text() === "Save");
 
   await save?.trigger("click");
   expect(wrapper.emitted("change")).toBeTruthy();
+  expect(wrapper.emitted("update:modelValue")).toBeTruthy();
 });
 
 test("it should commit a month-start date when granularity is month", async () => {
@@ -92,6 +97,8 @@ test("it should commit a month-start date when granularity is month", async () =
   await march?.trigger("click");
 
   const selected = wrapper.emitted("change")?.[0]?.[0] as Date;
+
+  expect(wrapper.emitted("update:modelValue")?.[0]?.[0]).toEqual(selected);
 
   expect(selected.getFullYear()).toBe(2021);
   expect(selected.getMonth()).toBe(2);
@@ -108,6 +115,8 @@ test("it should commit January 1 when granularity is year", async () => {
   await year?.trigger("click");
 
   const selected = wrapper.emitted("change")?.[0]?.[0] as Date;
+
+  expect(wrapper.emitted("update:modelValue")?.[0]?.[0]).toEqual(selected);
 
   expect(selected.getDate()).toBe(1);
   expect(selected.getMonth()).toBe(0);

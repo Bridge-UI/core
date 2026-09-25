@@ -1,7 +1,10 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test, vi } from "vitest";
-import { defineComponent, h } from "vue";
+import { defineComponent, h, ref } from "vue";
+
+// ** Core Imports
+import type { DatePickerModel } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import {
@@ -18,10 +21,14 @@ const libDefaults = {
 
 function mountUseCalendarDate(
   props: Partial<CalendarDateOwnProps> = {},
-  options: { registryTokens?: { rounded?: Record<string, string> } } = {},
+  options: {
+    model?: DatePickerModel;
+    registryTokens?: { rounded?: Record<string, string> };
+  } = {},
 ) {
   let result!: ReturnType<typeof useCalendarDate>;
 
+  const model = ref<DatePickerModel>(options.model ?? null);
   const emit = vi.fn();
 
   const Wrapper = defineComponent({
@@ -29,6 +36,7 @@ function mountUseCalendarDate(
       result = useCalendarDate(
         { viewDate: new Date(2021, 4, 1), ...props },
         libDefaults,
+        model,
         emit,
       );
 
@@ -77,9 +85,7 @@ test("it should rotate weekdays for startOfWeek", () => {
 });
 
 test("it should mark selected day cells", () => {
-  const { days } = mountUseCalendarDate({
-    value: new Date(2021, 4, 21),
-  });
+  const { days } = mountUseCalendarDate({}, { model: new Date(2021, 4, 21) });
 
   const selected = days.value.filter((day) => day.selected);
 

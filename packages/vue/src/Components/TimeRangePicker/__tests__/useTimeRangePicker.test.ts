@@ -1,7 +1,10 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test, vi } from "vitest";
-import { defineComponent, h } from "vue";
+import { defineComponent, h, ref } from "vue";
+
+// ** Core Imports
+import type { TimeRangeValue } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import {
@@ -20,8 +23,10 @@ const libDefaults = {
 function mountUseTimeRangePicker(props: Partial<TimeRangePickerOwnProps> = {}) {
   let result!: ReturnType<typeof useTimeRangePicker>;
 
+  const model = ref<null | TimeRangeValue>(null);
   const emit = vi.fn() as unknown as {
     (event: "change", value: unknown): void;
+    (event: "update:modelValue", value: unknown): void;
     (event: "cancel"): void;
   };
 
@@ -31,6 +36,7 @@ function mountUseTimeRangePicker(props: Partial<TimeRangePickerOwnProps> = {}) {
       result = useTimeRangePicker(
         props,
         libDefaults as Parameters<typeof useTimeRangePicker>[1],
+        model,
         emit,
       );
 

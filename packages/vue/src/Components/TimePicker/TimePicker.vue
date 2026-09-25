@@ -1,4 +1,10 @@
 <script setup lang="ts">
+// ** External Imports
+import { ref } from "vue";
+
+// ** Core Imports
+import type { TimeValue } from "@bridge-ui/core/Domain";
+
 // ** Local Imports
 import { ActionFooter } from "@/Components/ActionFooter";
 import { TimePanel } from "@/Components/TimePanel";
@@ -8,16 +14,23 @@ import type {
   TimePickerOwnProps,
   TimePickerSlots,
 } from "@/Components/TimePicker/timePicker.types";
+import { useOptionalModel } from "@/Utils";
+
+defineSlots<TimePickerSlots>();
 
 defineOptions({ inheritAttrs: false });
 
-defineSlots<TimePickerSlots>();
+const emit = defineEmits<TimePickerEmits>();
+
+const model = defineModel<null | TimeValue>();
 
 const props = withDefaults(defineProps<TimePickerOwnProps>(), {
   showFooter: undefined,
 });
 
-const emit = defineEmits<TimePickerEmits>();
+const uncontrolledValue = ref<null | TimeValue>(props.defaultValue ?? null);
+
+const value = useOptionalModel(model, uncontrolledValue);
 
 const {
   merged,
@@ -40,6 +53,7 @@ const {
     color: "primary",
     showSeconds: false,
   },
+  value,
   emit,
 );
 </script>
@@ -51,13 +65,13 @@ const {
         :ampm="merged.ampm"
         :fill="merged.fill"
         :color="merged.color"
-        :value="displayValue"
         :error="merged.error"
         :rounded="merged.rounded"
         :max-time="merged.maxTime"
         :min-time="merged.minTime"
         :disabled="merged.disabled"
         :interval="merged.interval"
+        :model-value="displayValue"
         :read-only="merged.readOnly"
         :time-zone="merged.timeZone"
         v-on:change="handlePanelChange"

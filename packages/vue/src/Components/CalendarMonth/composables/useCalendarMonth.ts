@@ -1,6 +1,14 @@
 // ** External Imports
 import { get, isNil, isUndefined, omit } from "es-toolkit/compat";
-import { computed, ref, toValue, useAttrs, type MaybeRefOrGetter } from "vue";
+import {
+  computed,
+  ref,
+  toValue,
+  useAttrs,
+  type MaybeRefOrGetter,
+  type Ref,
+  type SetupContext,
+} from "vue";
 
 // ** Core Imports
 import {
@@ -31,6 +39,7 @@ import {
 import { useDateAdapter } from "@/Adapters/Date";
 import type {
   CalendarMonthClasses,
+  CalendarMonthEmits,
   CalendarMonthOwnProps,
 } from "@/Components/CalendarMonth/calendarMonth.types";
 import {
@@ -44,7 +53,6 @@ const calendarMonthBridgeKeys = [
   "color",
   "error",
   "range",
-  "value",
   "classes",
   "maxDate",
   "minDate",
@@ -84,10 +92,8 @@ export type CalendarMonthCell = {
 export function useCalendarMonth(
   props: MaybeRefOrGetter<CalendarMonthOwnProps>,
   libDefaults: CalendarMonthLibDefaults,
-  emit: {
-    (event: "change", month: number): void;
-    (event: "previewDateChange", date: Date | null): void;
-  },
+  model: Ref<number | undefined>,
+  emit: SetupContext<CalendarMonthEmits>["emit"],
 ) {
   const attrs = useAttrs();
   const adapter = useDateAdapter();
@@ -119,6 +125,7 @@ export function useCalendarMonth(
     return omit(split.value.inheritedAttrs, [
       "onChange",
       "onPreviewDateChange",
+      "onUpdate:modelValue",
     ]);
   });
 
@@ -225,7 +232,7 @@ export function useCalendarMonth(
             timeZone: timeZone.value,
             value: merged.value.selection ?? null,
           })
-        : !isNil(merged.value.value) && merged.value.value === month;
+        : !isNil(model.value) && model.value === month;
 
       const preview =
         isCommitPanel.value &&
@@ -326,6 +333,7 @@ export function useCalendarMonth(
       return;
     }
 
+    model.value = month;
     emit("change", month);
 
     if (mode.value === "range") {

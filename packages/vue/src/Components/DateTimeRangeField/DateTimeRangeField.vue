@@ -105,8 +105,8 @@ const {
   >
     <DateTimeRangePicker
       :fill="fill"
-      :value="modelValue"
       :class="pickerClass"
+      :model-value="modelValue"
       :ampm="dateTimeOnly.ampm"
       :show-footer="showFooter"
       :orientation="orientation"

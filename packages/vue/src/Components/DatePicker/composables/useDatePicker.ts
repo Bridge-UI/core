@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil, omit } from "es-toolkit/compat";
+import { get, omit } from "es-toolkit/compat";
 import {
   computed,
   inject,
@@ -8,6 +8,7 @@ import {
   useAttrs,
   watch,
   type MaybeRefOrGetter,
+  type Ref,
   type SetupContext,
 } from "vue";
 
@@ -39,7 +40,6 @@ const datePickerBridgeKeys = [
   "color",
   "error",
   "range",
-  "value",
   "classes",
   "maxDate",
   "minDate",
@@ -76,6 +76,7 @@ type DatePickerMerged = MergeLibDefaults<
 export function useDatePicker(
   props: MaybeRefOrGetter<DatePickerOwnProps>,
   libDefaults: DatePickerLibDefaults,
+  model: Ref<DatePickerModel>,
   emit: SetupContext<DatePickerEmits>["emit"],
 ) {
   const attrs = useAttrs();
@@ -111,6 +112,7 @@ export function useDatePicker(
       "onApply",
       "onCancel",
       "onChange",
+      "onUpdate:modelValue",
     ]);
   });
 
@@ -119,28 +121,10 @@ export function useDatePicker(
     props: () => split.value.componentProps,
   });
 
-  const propsValue = computed(() => {
-    return toValue(props);
-  });
-
-  const isControlled = computed(() => {
-    return !isNil(propsValue.value.value);
-  });
-
-  const uncontrolledValue = ref<DatePickerModel>(
-    merged.value.defaultValue ?? null,
-  );
-
-  const committedValue = computed((): DatePickerModel => {
-    return isControlled.value
-      ? (propsValue.value.value ?? null)
-      : uncontrolledValue.value;
-  });
-
-  const draftValue = ref<DatePickerModel>(committedValue.value);
+  const draftValue = ref<DatePickerModel>(model.value);
 
   watch(
-    () => [committedValue.value, merged.value.showFooter] as const,
+    () => [model.value, merged.value.showFooter] as const,
     ([committed, showFooter]) => {
       if (showFooter) {
         draftValue.value = committed;
@@ -149,14 +133,11 @@ export function useDatePicker(
   );
 
   const displayValue = computed(() => {
-    return merged.value.showFooter ? draftValue.value : committedValue.value;
+    return merged.value.showFooter ? draftValue.value : model.value;
   });
 
   const commitValue = (next: DatePickerModel) => {
-    if (!isControlled.value) {
-      uncontrolledValue.value = next;
-    }
-
+    model.value = next;
     emit("change", next);
   };
 
@@ -177,7 +158,7 @@ export function useDatePicker(
   };
 
   const handleCancel = () => {
-    draftValue.value = committedValue.value;
+    draftValue.value = model.value;
     emit("cancel");
     overlayFooter.cancel();
   };

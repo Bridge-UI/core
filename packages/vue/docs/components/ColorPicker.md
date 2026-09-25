@@ -15,23 +15,16 @@ import { ColorPicker } from "@bridge-ui/vue/Components/ColorPicker";
 ```vue
 <ColorPicker />
 
-<ColorPicker :value="color" v-on:change="color = $event" />
+<ColorPicker v-model="color" />
 
-<ColorPicker
-  alpha
-  show-footer
-  format="rgba"
-  :value="color"
-  v-on:change="color = $event"
-/>
+<ColorPicker alpha show-footer format="rgba" v-model="color" />
 ```
 
 ### Preset swatches
 
 ```vue
 <ColorPicker
-  :value="color"
-  v-on:change="color = $event"
+  v-model="color"
   :swatches="['#0f766e', '#2563eb', '#dc2626', '#000000']"
 />
 ```
@@ -39,11 +32,11 @@ import { ColorPicker } from "@bridge-ui/vue/Components/ColorPicker";
 ### Output format
 
 ```vue
-<ColorPicker format="hex" :value="color" v-on:change="color = $event" />
+<ColorPicker format="hex" v-model="color" />
 
-<ColorPicker format="rgb" :value="color" v-on:change="color = $event" />
+<ColorPicker format="rgb" v-model="color" />
 
-<ColorPicker format="rgba" :value="color" v-on:change="color = $event" />
+<ColorPicker format="rgba" v-model="color" />
 ```
 
 ## Props
@@ -61,7 +54,13 @@ import { ColorPicker } from "@bridge-ui/vue/Components/ColorPicker";
 | `rounded`      | `ColorPickerRounded`     | `"md"`  | Border radius of the picker shell and swatches.                     |
 | `showFooter`   | `boolean`                | `false` | Shows Cancel / Apply. Selection is draft until Apply.               |
 | `swatches`     | `string[]`               | —       | Preset colors shown below the sliders.                              |
-| `value`        | `string \| null`         | —       | Controlled value.                                                   |
+
+### v-model
+
+| Prop / Event        | Type                              | Default | Description                           |
+| ------------------- | --------------------------------- | ------- | ------------------------------------- |
+| `modelValue`        | `string \| null`                  | —       | Bound with `v-model`.                 |
+| `update:modelValue` | `(value: string \| null) => void` | —       | Emitted when `v-model` should update. |
 
 Picker tokens live on `components.ColorPicker` (`rounded`, `size`).
 

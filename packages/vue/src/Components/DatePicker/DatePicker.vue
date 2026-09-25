@@ -1,4 +1,10 @@
 <script setup lang="ts">
+// ** External Imports
+import { ref } from "vue";
+
+// ** Core Imports
+import type { DatePickerModel } from "@bridge-ui/core/Domain";
+
 // ** Local Imports
 import { ActionFooter } from "@/Components/ActionFooter";
 import Calendar from "@/Components/Calendar/Calendar.vue";
@@ -8,16 +14,23 @@ import type {
   DatePickerOwnProps,
   DatePickerSlots,
 } from "@/Components/DatePicker/datePicker.types";
+import { useOptionalModel } from "@/Utils";
 
 defineSlots<DatePickerSlots>();
 
 defineOptions({ inheritAttrs: false });
 
+const emit = defineEmits<DatePickerEmits>();
+
+const model = defineModel<DatePickerModel>();
+
 const props = withDefaults(defineProps<DatePickerOwnProps>(), {
   showFooter: undefined,
 });
 
-const emit = defineEmits<DatePickerEmits>();
+const uncontrolledValue = ref<DatePickerModel>(props.defaultValue ?? null);
+
+const value = useOptionalModel(model, uncontrolledValue);
 
 const {
   merged,
@@ -37,6 +50,7 @@ const {
     startOfWeek: 0,
     color: "primary",
   },
+  value,
   emit,
 );
 </script>
@@ -48,12 +62,12 @@ const {
       :color="merged.color"
       :error="merged.error"
       :range="merged.range"
-      :value="displayValue"
       :rounded="merged.rounded"
       :max-date="merged.maxDate"
       :min-date="merged.minDate"
       :disabled="merged.disabled"
       :multiple="merged.multiple"
+      :model-value="displayValue"
       :read-only="merged.readOnly"
       :time-zone="merged.timeZone"
       :hide-years="merged.hideYears"

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// ** External Imports
+import { ref } from "vue";
+
 // ** Core Imports
 import { cn } from "@bridge-ui/core/Utils";
 
@@ -10,16 +13,23 @@ import type {
   ColorPickerSlots,
 } from "@/Components/ColorPicker/colorPicker.types";
 import { useColorPicker } from "@/Components/ColorPicker/composables/useColorPicker";
+import { useOptionalModel } from "@/Utils";
 
 defineSlots<ColorPickerSlots>();
 
 defineOptions({ inheritAttrs: false });
 
+const model = defineModel<null | string>();
+
+const emit = defineEmits<ColorPickerEmits>();
+
 const props = withDefaults(defineProps<ColorPickerOwnProps>(), {
   showFooter: undefined,
 });
 
-const emit = defineEmits<ColorPickerEmits>();
+const uncontrolledValue = ref<null | string>(props.defaultValue ?? null);
+
+const value = useOptionalModel(model, uncontrolledValue);
 
 const {
   merged,
@@ -56,6 +66,7 @@ const {
     rounded: "md",
     format: "hex",
   },
+  value,
   emit,
 );
 </script>

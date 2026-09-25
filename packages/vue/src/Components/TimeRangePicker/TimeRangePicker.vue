@@ -1,4 +1,10 @@
 <script setup lang="ts">
+// ** External Imports
+import { ref } from "vue";
+
+// ** Core Imports
+import type { TimeRangeValue } from "@bridge-ui/core/Domain";
+
 // ** Local Imports
 import { ActionFooter } from "@/Components/ActionFooter";
 import { Divider } from "@/Components/Divider";
@@ -9,16 +15,25 @@ import type {
   TimeRangePickerOwnProps,
   TimeRangePickerSlots,
 } from "@/Components/TimeRangePicker/timeRangePicker.types";
+import { useOptionalModel } from "@/Utils";
+
+defineSlots<TimeRangePickerSlots>();
 
 defineOptions({ inheritAttrs: false });
 
-defineSlots<TimeRangePickerSlots>();
+const emit = defineEmits<TimeRangePickerEmits>();
+
+const model = defineModel<null | TimeRangeValue>();
 
 const props = withDefaults(defineProps<TimeRangePickerOwnProps>(), {
   showFooter: undefined,
 });
 
-const emit = defineEmits<TimeRangePickerEmits>();
+const uncontrolledValue = ref<null | TimeRangeValue>(
+  props.defaultValue ?? null,
+);
+
+const value = useOptionalModel(model, uncontrolledValue);
 
 const {
   merged,
@@ -51,6 +66,7 @@ const {
     color: "primary",
     showSeconds: false,
   },
+  value,
   emit,
 );
 </script>
@@ -71,7 +87,6 @@ const {
           :color="merged.color"
           :error="merged.error"
           :rounded="merged.rounded"
-          :value="startDisplayValue"
           :max-time="merged.maxTime"
           :min-time="merged.minTime"
           :disabled="merged.disabled"
@@ -79,6 +94,7 @@ const {
           :read-only="merged.readOnly"
           :time-zone="merged.timeZone"
           v-on:change="handleStartChange"
+          :model-value="startDisplayValue"
           :show-seconds="merged.showSeconds"
           :disable-times="merged.disableTimes"
         />
@@ -92,7 +108,6 @@ const {
           :fill="merged.fill"
           :color="merged.color"
           :error="merged.error"
-          :value="endDisplayValue"
           :rounded="merged.rounded"
           :max-time="merged.maxTime"
           :min-time="merged.minTime"
@@ -101,6 +116,7 @@ const {
           :read-only="merged.readOnly"
           :time-zone="merged.timeZone"
           v-on:change="handleEndChange"
+          :model-value="endDisplayValue"
           :show-seconds="merged.showSeconds"
           :disable-times="merged.disableTimes"
         />

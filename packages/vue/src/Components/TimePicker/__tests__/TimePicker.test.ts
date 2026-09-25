@@ -23,6 +23,7 @@ test("it should commit immediately without footer", async () => {
   await hour?.trigger("click");
 
   expect(wrapper.emitted("change")).toBeTruthy();
+  expect(wrapper.emitted("update:modelValue")).toBeTruthy();
 });
 
 test("it should show footer actions when showFooter is set", () => {
@@ -44,6 +45,7 @@ test("it should commit draft value on Apply", async () => {
 
   await hour?.trigger("click");
   expect(wrapper.emitted("change")).toBeFalsy();
+  expect(wrapper.emitted("update:modelValue")).toBeFalsy();
 
   const apply = wrapper
     .findAll("button")
@@ -51,4 +53,5 @@ test("it should commit draft value on Apply", async () => {
 
   await apply?.trigger("click");
   expect(wrapper.emitted("change")).toBeTruthy();
+  expect(wrapper.emitted("update:modelValue")).toBeTruthy();
 });

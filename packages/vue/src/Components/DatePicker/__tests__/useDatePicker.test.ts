@@ -1,7 +1,10 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test, vi } from "vitest";
-import { defineComponent, h } from "vue";
+import { defineComponent, h, ref } from "vue";
+
+// ** Core Imports
+import type { DatePickerModel } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import {
@@ -18,11 +21,12 @@ const libDefaults = {
 function mountUseDatePicker(props: Partial<DatePickerOwnProps> = {}) {
   let result!: ReturnType<typeof useDatePicker>;
 
+  const model = ref<DatePickerModel>(null);
   const emit = vi.fn();
 
   const Wrapper = defineComponent({
     setup() {
-      result = useDatePicker(props, libDefaults, emit);
+      result = useDatePicker(props, libDefaults, model, emit);
 
       return () => h("div");
     },

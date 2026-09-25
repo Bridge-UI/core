@@ -1,6 +1,13 @@
 // ** External Imports
 import { get, isNumber, omit } from "es-toolkit/compat";
-import { computed, toValue, useAttrs, type MaybeRefOrGetter } from "vue";
+import {
+  computed,
+  toValue,
+  useAttrs,
+  type MaybeRefOrGetter,
+  type Ref,
+  type SetupContext,
+} from "vue";
 
 // ** Core Imports
 import {
@@ -13,6 +20,7 @@ import {
   to12Hour,
   to24Hour,
   toMeridiem,
+  type TimeValue,
 } from "@bridge-ui/core/Domain";
 import {
   timeColorProps as colorProps,
@@ -31,6 +39,7 @@ import {
 import { useDateAdapter } from "@/Adapters/Date";
 import type {
   TimePanelClasses,
+  TimePanelEmits,
   TimePanelOwnProps,
 } from "@/Components/TimePanel/timePanel.types";
 import {
@@ -44,7 +53,6 @@ const timePanelBridgeKeys = [
   "fill",
   "color",
   "error",
-  "value",
   "classes",
   "maxTime",
   "minTime",
@@ -89,7 +97,8 @@ export type TimePanelItem = {
 export function useTimePanel(
   props: MaybeRefOrGetter<TimePanelOwnProps>,
   libDefaults: TimePanelLibDefaults,
-  emit: (event: "change", value: Date | null) => void,
+  model: Ref<null | TimeValue | undefined>,
+  emit: SetupContext<TimePanelEmits>["emit"],
 ) {
   const attrs = useAttrs();
   const adapter = useDateAdapter();
@@ -115,7 +124,10 @@ export function useTimePanel(
   });
 
   const rootInheritedAttrs = computed(() => {
-    return omit(split.value.inheritedAttrs, ["onChange"]);
+    return omit(split.value.inheritedAttrs, [
+      "onChange",
+      "onUpdate:modelValue",
+    ]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<TimePanelClasses>({
@@ -152,7 +164,7 @@ export function useTimePanel(
   });
 
   const displayDate = computed(() => {
-    const base = merged.value.value ?? adapter.value.now(timeZone.value);
+    const base = model.value ?? adapter.value.now(timeZone.value);
     const minutes = snapMinutes(
       adapter.value.getMinutes(base, timeZone.value),
       merged.value.interval,
@@ -212,6 +224,7 @@ export function useTimePanel(
       return;
     }
 
+    model.value = next;
     emit("change", next);
   };
 

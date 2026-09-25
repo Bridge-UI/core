@@ -3,7 +3,10 @@
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 // ** Core Imports
-import { observeTimePanelSelectedScroll } from "@bridge-ui/core/Domain";
+import {
+  observeTimePanelSelectedScroll,
+  type TimeValue,
+} from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import { useTimePanel } from "@/Components/TimePanel/composables/useTimePanel";
@@ -11,14 +14,21 @@ import type {
   TimePanelEmits,
   TimePanelOwnProps,
 } from "@/Components/TimePanel/timePanel.types";
+import { useOptionalModel } from "@/Utils";
 
 defineOptions({ inheritAttrs: false });
 
 const emit = defineEmits<TimePanelEmits>();
 
+const model = defineModel<null | TimeValue>();
+
 const rootRef = ref<null | HTMLElement>(null);
 
 const props = defineProps<TimePanelOwnProps>();
+
+const uncontrolledValue = ref<null | TimeValue>(null);
+
+const value = useOptionalModel(model, uncontrolledValue);
 
 const {
   rootBind,
@@ -42,6 +52,7 @@ const {
     color: "primary",
     showSeconds: false,
   },
+  value,
   emit,
 );
 

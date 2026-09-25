@@ -1,4 +1,10 @@
 <script setup lang="ts">
+// ** External Imports
+import { ref } from "vue";
+
+// ** Core Imports
+import type { DatePickerModel } from "@bridge-ui/core/Domain";
+
 // ** Local Imports
 import type {
   CalendarDateEmits,
@@ -6,14 +12,21 @@ import type {
   CalendarDateSlots,
 } from "@/Components/CalendarDate/calendarDate.types";
 import { useCalendarDate } from "@/Components/CalendarDate/composables/useCalendarDate";
+import { useOptionalModel } from "@/Utils";
 
 defineSlots<CalendarDateSlots>();
 
 defineOptions({ inheritAttrs: false });
 
+const model = defineModel<DatePickerModel>();
+
 const emit = defineEmits<CalendarDateEmits>();
 
 const props = defineProps<CalendarDateOwnProps>();
+
+const uncontrolledValue = ref<DatePickerModel>(props.defaultValue ?? null);
+
+const value = useOptionalModel(model, uncontrolledValue);
 
 const {
   days,
@@ -27,6 +40,7 @@ const {
 } = useCalendarDate(
   props,
   { rounded: "sm", startOfWeek: 0, color: "primary" },
+  value,
   emit,
 );
 

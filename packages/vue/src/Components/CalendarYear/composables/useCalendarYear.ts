@@ -1,6 +1,14 @@
 // ** External Imports
 import { get, isNil, isUndefined, omit } from "es-toolkit/compat";
-import { computed, ref, toValue, useAttrs, type MaybeRefOrGetter } from "vue";
+import {
+  computed,
+  ref,
+  toValue,
+  useAttrs,
+  type MaybeRefOrGetter,
+  type Ref,
+  type SetupContext,
+} from "vue";
 
 // ** Core Imports
 import {
@@ -31,6 +39,7 @@ import {
 import { useDateAdapter } from "@/Adapters/Date";
 import type {
   CalendarYearClasses,
+  CalendarYearEmits,
   CalendarYearOwnProps,
 } from "@/Components/CalendarYear/calendarYear.types";
 import {
@@ -45,7 +54,6 @@ const calendarYearBridgeKeys = [
   "color",
   "error",
   "range",
-  "value",
   "classes",
   "maxDate",
   "minDate",
@@ -86,10 +94,8 @@ export type CalendarYearCell = {
 export function useCalendarYear(
   props: MaybeRefOrGetter<CalendarYearOwnProps>,
   libDefaults: CalendarYearLibDefaults,
-  emit: {
-    (event: "change", year: number): void;
-    (event: "previewDateChange", date: Date | null): void;
-  },
+  model: Ref<number | undefined>,
+  emit: SetupContext<CalendarYearEmits>["emit"],
 ) {
   const attrs = useAttrs();
   const adapter = useDateAdapter();
@@ -121,6 +127,7 @@ export function useCalendarYear(
     return omit(split.value.inheritedAttrs, [
       "onChange",
       "onPreviewDateChange",
+      "onUpdate:modelValue",
     ]);
   });
 
@@ -145,7 +152,7 @@ export function useCalendarYear(
     }
 
     const focusYear =
-      merged.value.value ??
+      model.value ??
       adapter.value.getYear(adapter.value.now(timeZone.value), timeZone.value);
     const offset = Math.floor(pageSize.value / 2);
 
@@ -233,7 +240,7 @@ export function useCalendarYear(
             timeZone: timeZone.value,
             value: merged.value.selection ?? null,
           })
-        : !isNil(merged.value.value) && merged.value.value === year;
+        : !isNil(model.value) && model.value === year;
 
       const preview =
         isCommitPanel.value &&
@@ -331,6 +338,7 @@ export function useCalendarYear(
       return;
     }
 
+    model.value = year;
     emit("change", year);
 
     if (mode.value === "range") {

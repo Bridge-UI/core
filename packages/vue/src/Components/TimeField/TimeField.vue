@@ -102,9 +102,9 @@ const {
   >
     <TimePicker
       :fill="fill"
-      :value="modelValue"
       :class="pickerClass"
       :ampm="timeOnly.ampm"
+      :model-value="modelValue"
       :show-footer="showFooter"
       :read-only="props.readonly"
       :max-time="timeOnly.maxTime"

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 // ** External Imports
 import { isString } from "es-toolkit/compat";
-import { toValue } from "vue";
+import { ref, toValue } from "vue";
 
 // ** Core Imports
+import type { DatePickerModel } from "@bridge-ui/core/Domain";
 import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -17,6 +18,7 @@ import CalendarDate from "@/Components/CalendarDate/CalendarDate.vue";
 import CalendarMonth from "@/Components/CalendarMonth/CalendarMonth.vue";
 import CalendarYear from "@/Components/CalendarYear/CalendarYear.vue";
 import { Icon } from "@/Components/Icon";
+import { useOptionalModel } from "@/Utils";
 
 defineSlots<CalendarSlots>();
 
@@ -24,11 +26,16 @@ defineOptions({ inheritAttrs: false });
 
 const emit = defineEmits<CalendarEmits>();
 
+const model = defineModel<DatePickerModel>();
+
 const props = defineProps<CalendarOwnProps>();
+
+const uncontrolledValue = ref<DatePickerModel>(props.defaultValue ?? null);
+
+const value = useOptionalModel(model, uncontrolledValue);
 
 const {
   view,
-  value,
   merged,
   shared,
   showNav,
@@ -63,6 +70,7 @@ const {
     color: "primary",
     defaultView: "date",
   },
+  value,
   emit,
 );
 
@@ -122,7 +130,7 @@ function chevronClass(open: boolean) {
     <div v-bind="bodyBind">
       <CalendarDate
         v-bind="shared"
-        :value="value"
+        :model-value="value"
         :range="merged.range"
         :view-date="viewDate"
         v-if="view === 'date'"
@@ -146,8 +154,8 @@ function chevronClass(open: boolean) {
       <CalendarMonth
         v-bind="shared"
         :year="viewYear"
-        :value="viewMonth"
         :range="merged.range"
+        :model-value="viewMonth"
         :multiple="merged.multiple"
         v-else-if="view === 'month'"
         v-on:change="handleMonthSelect"
@@ -161,8 +169,8 @@ function chevronClass(open: boolean) {
 
       <CalendarYear
         v-bind="shared"
-        :value="viewYear"
         :range="merged.range"
+        :model-value="viewYear"
         :page-size="yearPageSize"
         :start-year="yearPageStart"
         v-else-if="view === 'year'"

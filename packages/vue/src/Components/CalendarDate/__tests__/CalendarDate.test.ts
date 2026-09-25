@@ -53,16 +53,17 @@ test("it should emit change when a day is selected", async () => {
   expect(emitted).toBeTruthy();
   const value = emitted?.[0]?.[0] as Date;
 
-  expect(value.getFullYear()).toBe(2021);
-  expect(value.getMonth()).toBe(4);
   expect(value.getDate()).toBe(21);
+  expect(value.getMonth()).toBe(4);
+  expect(value.getFullYear()).toBe(2021);
+  expect(wrapper.emitted("update:modelValue")?.[0]?.[0]).toEqual(value);
 });
 
 test("it should mark the selected day", () => {
   const wrapper = mount(CalendarDate, {
     props: {
-      value: new Date(2021, 4, 21),
       viewDate: new Date(2021, 4, 1),
+      modelValue: new Date(2021, 4, 21),
     },
   });
 
@@ -75,8 +76,8 @@ test("it should apply error tile colors when error is set", () => {
   const wrapper = mount(CalendarDate, {
     props: {
       error: true,
-      value: new Date(2021, 4, 21),
       viewDate: new Date(2021, 4, 1),
+      modelValue: new Date(2021, 4, 21),
     },
   });
 
