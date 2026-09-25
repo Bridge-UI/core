@@ -2,7 +2,6 @@
 import type { ComputedRef, HTMLAttributes, InjectionKey } from "vue";
 
 // ** Core Imports
-import type { CarouselAlign } from "@bridge-ui/core/Domain";
 import type { CarouselSizeItem } from "@bridge-ui/core/Tokens";
 
 /**
@@ -13,11 +12,6 @@ export type CarouselContextValue = {
    * Bound 0-based active index.
    */
   activeIndex: number;
-
-  /**
-   * Snap alignment used to decide which slides are in view.
-   */
-  align: CarouselAlign;
 
   /**
    * Resolves a registered slide's 0-based index.

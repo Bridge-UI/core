@@ -17,21 +17,23 @@ afterEach(async () => {
 
 const mounted: Array<ReturnType<typeof mount>> = [];
 
+function slideNodes(names: string[]) {
+  return names.map((name) => h(CarouselSlide, {}, () => name));
+}
+
 function slides() {
-  return [
-    h(CarouselSlide, {}, () => "One"),
-    h(CarouselSlide, {}, () => "Two"),
-    h(CarouselSlide, {}, () => "Three"),
-  ];
+  return slideNodes(["One", "Two", "Three"]);
 }
 
 async function mountCarousel(
   props: Record<string, unknown> = {},
-  options: { syncIndex?: boolean } = { syncIndex: true },
+  options: { names?: string[]; syncIndex?: boolean } = { syncIndex: true },
 ) {
   const wrapper = mount(Carousel, {
-    slots: { default: slides },
     attrs: { "aria-label": "Photos" },
+    slots: {
+      default: options.names ? () => slideNodes(options.names ?? []) : slides,
+    },
     props: {
       ...props,
       "onUpdate:index": (value: number) => {
@@ -54,17 +56,37 @@ function slideOf(wrapper: ReturnType<typeof mount>, name: string) {
     .find((node) => node.text() === name);
 }
 
+test("it should place previous and next beside the viewport", async () => {
+  const wrapper = await mountCarousel();
+  const controls = wrapper.get("[data-part='controls']");
+
+  expect(controls.classes()).toContain("items-center");
+  expect(controls.classes()).not.toContain("flex-col");
+  expect(controls.element.parentElement?.className).toContain("px-14");
+  expect(
+    wrapper.get("[data-part='viewport']").element.contains(controls.element),
+  ).toBe(false);
+});
+
+test("it should place previous and next above and below a vertical viewport", async () => {
+  const wrapper = await mountCarousel({ orientation: "vertical" });
+  const controls = wrapper.get("[data-part='controls']");
+
+  expect(controls.classes()).toContain("flex-col");
+  expect(controls.element.parentElement?.className).toContain("py-14");
+});
+
 test("it should show the first slide and disable previous", async () => {
   const wrapper = await mountCarousel();
 
-  expect(slideOf(wrapper, "One")?.attributes("aria-hidden")).toBeUndefined();
-  expect(slideOf(wrapper, "Two")?.attributes("aria-hidden")).toBe("true");
   expect(slideOf(wrapper, "Two")?.attributes("inert")).toBe("");
+  expect(wrapper.findAll("[data-part='indicator']")).toHaveLength(3);
+  expect(slideOf(wrapper, "Two")?.attributes("aria-hidden")).toBe("true");
   expect(wrapper.get("[data-part='prev']").attributes("disabled")).toBe("");
+  expect(slideOf(wrapper, "One")?.attributes("aria-hidden")).toBeUndefined();
   expect(
     wrapper.get("[role='region']").attributes("aria-roledescription"),
   ).toBe("carousel");
-  expect(wrapper.findAll("[data-part='indicator']")).toHaveLength(3);
 });
 
 test("it should move to the next slide", async () => {
@@ -92,8 +114,29 @@ test("it should stay on the last slide when loop is off", async () => {
   await next.trigger("click");
   await next.trigger("click");
 
-  expect(slideOf(wrapper, "Three")?.attributes("aria-hidden")).toBeUndefined();
   expect(next.attributes("disabled")).toBe("");
+  expect(slideOf(wrapper, "Three")?.attributes("aria-hidden")).toBeUndefined();
+});
+
+test("it should show one indicator per snap", async () => {
+  const wrapper = await mountCarousel(
+    { slidesPerView: 3 },
+    { names: ["One", "Two", "Three", "Four", "Five"] },
+  );
+
+  expect(wrapper.findAll("[data-part='indicator']")).toHaveLength(3);
+
+  await wrapper.get("[aria-label='Go to slide 3']").trigger("click");
+
+  expect(slideOf(wrapper, "One")?.attributes("aria-hidden")).toBe("true");
+  expect(slideOf(wrapper, "Five")?.attributes("aria-hidden")).toBeUndefined();
+  expect(slideOf(wrapper, "Three")?.attributes("aria-hidden")).toBeUndefined();
+});
+
+test("it should hide indicators when every slide fits", async () => {
+  const wrapper = await mountCarousel({ slidesPerView: 3 });
+
+  expect(wrapper.find("[data-part='indicators']").exists()).toBe(false);
 });
 
 test("it should select a slide from an indicator", async () => {

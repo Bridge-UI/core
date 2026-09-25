@@ -73,7 +73,6 @@ export function useCarouselSlide(props: CarouselSlideOwnProps) {
   const inView = computed(() => {
     return isCarouselSlideInView({
       slideIndex: index.value,
-      align: carousel.value.align,
       activeIndex: carousel.value.activeIndex,
       slidesPerView: carousel.value.slidesPerView,
     });

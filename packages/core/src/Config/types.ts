@@ -626,7 +626,6 @@ export interface CardConfigBase {
 export interface CarouselConfigBase {
   classes: object;
   defaultProps: Partial<{
-    align: "end" | "start" | "center";
     autoPlay: number | boolean;
     defaultIndex: number;
     gap: number;

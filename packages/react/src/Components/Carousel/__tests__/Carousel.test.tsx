@@ -50,6 +50,32 @@ function Photos({
   );
 }
 
+test("it should place previous and next beside the viewport", () => {
+  render(<Photos />);
+
+  const viewport = document.querySelector("[data-part='viewport']");
+  const controls = document.querySelector("[data-part='controls']");
+
+  expect(viewport?.contains(controls)).toBe(false);
+  expect(controls?.className).toContain("items-center");
+  expect(controls?.className).not.toContain("flex-col");
+  expect(controls?.parentElement?.className).toContain("px-14");
+});
+
+test("it should place previous and next above and below a vertical viewport", () => {
+  render(
+    <Carousel aria-label="Photos" orientation="vertical">
+      <CarouselSlide>One</CarouselSlide>
+      <CarouselSlide>Two</CarouselSlide>
+    </Carousel>,
+  );
+
+  const controls = document.querySelector("[data-part='controls']");
+
+  expect(controls?.className).toContain("flex-col");
+  expect(controls?.parentElement?.className).toContain("py-14");
+});
+
 test("it should show the first slide and disable previous", () => {
   render(<Photos />);
 
@@ -102,6 +128,40 @@ test("it should stay on the last slide when loop is off", () => {
     "disabled",
     true,
   );
+});
+
+test("it should show one indicator per snap", () => {
+  render(
+    <Carousel slidesPerView={3} aria-label="Photos">
+      <CarouselSlide>One</CarouselSlide>
+      <CarouselSlide>Two</CarouselSlide>
+      <CarouselSlide>Three</CarouselSlide>
+      <CarouselSlide>Four</CarouselSlide>
+      <CarouselSlide>Five</CarouselSlide>
+    </Carousel>,
+  );
+
+  expect(screen.getAllByRole("button", { name: /Go to slide/ })).toHaveLength(
+    3,
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: "Go to slide 3" }));
+
+  expect(slideOf("Five")?.getAttribute("aria-hidden")).toBeNull();
+  expect(slideOf("One")?.getAttribute("aria-hidden")).toBe("true");
+  expect(slideOf("Three")?.getAttribute("aria-hidden")).toBeNull();
+});
+
+test("it should hide indicators when every slide fits", () => {
+  render(
+    <Carousel slidesPerView={3} aria-label="Photos">
+      <CarouselSlide>One</CarouselSlide>
+      <CarouselSlide>Two</CarouselSlide>
+      <CarouselSlide>Three</CarouselSlide>
+    </Carousel>,
+  );
+
+  expect(screen.queryByRole("button", { name: /Go to slide/ })).toBeNull();
 });
 
 test("it should select a slide from an indicator", () => {

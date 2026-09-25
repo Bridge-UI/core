@@ -13,7 +13,6 @@ const libDefaults = {
   gap: 0,
   size: "md",
   loop: false,
-  align: "start",
   autoPlay: false,
   defaultIndex: 0,
   indicators: true,

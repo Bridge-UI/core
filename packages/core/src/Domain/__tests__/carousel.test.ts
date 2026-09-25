@@ -131,14 +131,10 @@ describe("canMoveCarousel", () => {
 });
 
 describe("getCarouselMaxIndex", () => {
-  test("it should keep the last page filled when align is start", () => {
-    expect(getCarouselMaxIndex(5, 2, "start")).toBe(3);
-    expect(getCarouselMaxIndex(5, 2.5, "start")).toBe(3);
+  test("it should keep the last page filled", () => {
+    expect(getCarouselMaxIndex(5, 2)).toBe(3);
     expect(getCarouselMaxIndex(3, 3)).toBe(0);
-  });
-
-  test("it should snap every slide when align is center", () => {
-    expect(getCarouselMaxIndex(5, 2, "center")).toBe(4);
+    expect(getCarouselMaxIndex(5, 2.5)).toBe(3);
   });
 });
 
@@ -158,9 +154,9 @@ describe("getCarouselTrackOffset", () => {
         orientation: "vertical",
       }),
     ).toBe("translate3d(0, -100%, 0)");
-    expect(
-      getCarouselTrackOffset(0, { align: "center", slidesPerView: 2 }),
-    ).toBe("translate3d(25%, 0, 0)");
+    expect(getCarouselTrackOffset(1, { gap: 16, slidesPerView: 3 })).toBe(
+      "translate3d(calc(-33.333% + -5.333px), 0, 0)",
+    );
   });
 });
 

@@ -8,7 +8,6 @@ const carouselLibDefaults = {
   gap: 0,
   size: "md",
   loop: false,
-  align: "start",
   autoPlay: false,
   defaultIndex: 0,
   indicators: true,
@@ -27,6 +26,7 @@ function Carousel(props: CarouselProps) {
     prevIcon,
     nextIcon,
     trackBind,
+    snapCount,
     activeIndex,
     controlsBind,
     nextIconBind,
@@ -35,6 +35,7 @@ function Carousel(props: CarouselProps) {
     viewportBind,
     contextValue,
     announcement,
+    frameClassName,
     indicatorsBind,
     showIndicators,
     getIndicatorBind,
@@ -43,8 +44,10 @@ function Carousel(props: CarouselProps) {
   return (
     <CarouselContext.Provider value={contextValue}>
       <section {...rootBind}>
-        <div {...viewportBind}>
-          <div {...trackBind}>{children}</div>
+        <div className={frameClassName}>
+          <div {...viewportBind}>
+            <div {...trackBind}>{children}</div>
+          </div>
           {showControls ? (
             <div {...controlsBind}>
               <button {...prevBind}>
@@ -58,7 +61,7 @@ function Carousel(props: CarouselProps) {
         </div>
         {showIndicators ? (
           <div {...indicatorsBind}>
-            {Array.from({ length: contextValue.slideCount }, (_, index) => (
+            {Array.from({ length: snapCount }, (_, index) => (
               <button key={index} {...getIndicatorBind(index)}>
                 {slots?.indicator?.({
                   index,

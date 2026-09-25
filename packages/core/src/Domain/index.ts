@@ -30,7 +30,6 @@ export {
 } from "@/Domain/carousel";
 export type {
   CanMoveCarouselOptions,
-  CarouselAlign,
   CarouselOrientation,
   CarouselSwipeOptions,
   CarouselTrackOffsetOptions,

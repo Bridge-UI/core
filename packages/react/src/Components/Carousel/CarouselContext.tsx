@@ -3,7 +3,6 @@ import type { HTMLAttributes } from "react";
 import { createContext, useContext } from "react";
 
 // ** Core Imports
-import type { CarouselAlign } from "@bridge-ui/core/Domain";
 import type { CarouselSizeItem } from "@bridge-ui/core/Tokens";
 
 /**
@@ -14,11 +13,6 @@ export type CarouselContextValue = {
    * Controlled / uncontrolled 0-based active index.
    */
   activeIndex: number;
-
-  /**
-   * Snap alignment used to decide which slides are in view.
-   */
-  align: CarouselAlign;
 
   /**
    * Stable id prefix for slide elements.

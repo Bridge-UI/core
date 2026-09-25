@@ -59,7 +59,6 @@ const carouselBridgeKeys = [
   "gap",
   "loop",
   "size",
-  "align",
   "index",
   "slots",
   "classes",
@@ -78,7 +77,6 @@ type CarouselLibDefaults = LibDefaultsShape<
   | "gap"
   | "loop"
   | "size"
-  | "align"
   | "autoPlay"
   | "indicators"
   | "orientation"
@@ -169,11 +167,7 @@ export function useCarousel(
       return rawIndex;
     }
 
-    const max = getCarouselMaxIndex(
-      slideCount,
-      merged.slidesPerView,
-      merged.align,
-    );
+    const max = getCarouselMaxIndex(slideCount, merged.slidesPerView);
 
     return clampCarouselIndex(rawIndex, max + 1);
   });
@@ -219,9 +213,7 @@ export function useCarousel(
     (index: number) => {
       const count = counterRef.current || slideCount;
       const max =
-        count <= 0
-          ? null
-          : getCarouselMaxIndex(count, merged.slidesPerView, merged.align);
+        count <= 0 ? null : getCarouselMaxIndex(count, merged.slidesPerView);
       const next = max == null ? index : clampCarouselIndex(index, max + 1);
 
       if (next === activeIndex) {
@@ -246,7 +238,6 @@ export function useCarousel(
         direction,
         loop: merged.loop,
         index: activeIndex,
-        align: merged.align,
         slidesPerView: merged.slidesPerView,
       };
 
@@ -256,14 +247,7 @@ export function useCarousel(
 
       selectIndex(getAdjacentCarouselIndex(move));
     },
-    [
-      slideCount,
-      activeIndex,
-      merged.loop,
-      selectIndex,
-      merged.align,
-      merged.slidesPerView,
-    ],
+    [slideCount, activeIndex, merged.loop, selectIndex, merged.slidesPerView],
   );
 
   useLayoutEffect(() => {
@@ -280,16 +264,12 @@ export function useCarousel(
     }
 
     setUncontrolled((current) => {
-      const max = getCarouselMaxIndex(
-        slideCount,
-        merged.slidesPerView,
-        merged.align,
-      );
+      const max = getCarouselMaxIndex(slideCount, merged.slidesPerView);
       const next = clampCarouselIndex(current, max + 1);
 
       return next === current ? current : next;
     });
-  }, [slideCount, isControlled, merged.align, merged.slidesPerView]);
+  }, [slideCount, isControlled, merged.slidesPerView]);
 
   useEffect(() => {
     if (typeof window.matchMedia !== "function") {
@@ -354,14 +334,20 @@ export function useCarousel(
     );
   }, [slideCount, activeIndex, resolveMessage]);
 
+  const snapCount = derived(() => {
+    if (slideCount <= 0) {
+      return 0;
+    }
+
+    return getCarouselMaxIndex(slideCount, merged.slidesPerView) + 1;
+  });
+
   const showControls = derived(() => {
-    return (
-      getCarouselMaxIndex(slideCount, merged.slidesPerView, merged.align) > 0
-    );
+    return snapCount > 1;
   });
 
   const showIndicators = derived(() => {
-    return merged.indicators !== false && slideCount > 1;
+    return merged.indicators !== false && snapCount > 1;
   });
 
   const prevDisabled = derived(() => {
@@ -370,7 +356,6 @@ export function useCarousel(
       count: slideCount,
       loop: merged.loop,
       index: activeIndex,
-      align: merged.align,
       slidesPerView: merged.slidesPerView,
     });
   });
@@ -381,7 +366,6 @@ export function useCarousel(
       count: slideCount,
       loop: merged.loop,
       index: activeIndex,
-      align: merged.align,
       slidesPerView: merged.slidesPerView,
     });
   });
@@ -442,9 +426,7 @@ export function useCarousel(
       event.preventDefault();
       const count = counterRef.current || slideCount;
 
-      selectIndex(
-        getCarouselMaxIndex(count, merged.slidesPerView, merged.align),
-      );
+      selectIndex(getCarouselMaxIndex(count, merged.slidesPerView));
     }
 
     inheritedAttrs.onKeyDown?.(event);
@@ -568,7 +550,7 @@ export function useCarousel(
         style: getCarouselTrackStyle(activeIndex, {
           rtl,
           gap: merged.gap,
-          align: merged.align,
+          count: slideCount,
           orientation: merged.orientation,
           slidesPerView: merged.slidesPerView,
         }),
@@ -589,6 +571,16 @@ export function useCarousel(
         }),
       },
     );
+  });
+
+  const frameClassName = derived(() => {
+    if (!showControls) {
+      return "relative";
+    }
+
+    return vertical
+      ? (get(sizeItem, "frameVertical") ?? "relative")
+      : (get(sizeItem, "frame") ?? "relative");
   });
 
   const prevBind = derived(() => {
@@ -731,7 +723,6 @@ export function useCarousel(
       slideCount,
       activeIndex,
       id: carouselId,
-      align: merged.align,
       slidePartProps: customProps?.slide,
       slidesPerView: merged.slidesPerView,
       slideClassName: get(mergedClasses, "slide") ?? "",
@@ -748,7 +739,6 @@ export function useCarousel(
     merged.gap,
     slideCount,
     activeIndex,
-    merged.align,
     mergedClasses,
     customProps?.slide,
     merged.orientation,
@@ -764,6 +754,7 @@ export function useCarousel(
     rootBind,
     iconSize,
     trackBind,
+    snapCount,
     activeIndex,
     controlsBind,
     nextIconBind,
@@ -772,6 +763,7 @@ export function useCarousel(
     viewportBind,
     contextValue,
     announcement,
+    frameClassName,
     indicatorsBind,
     showIndicators,
     getIndicatorBind,

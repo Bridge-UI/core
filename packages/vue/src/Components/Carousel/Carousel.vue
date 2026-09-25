@@ -32,6 +32,7 @@ const {
   showControls,
   viewportBind,
   announcement,
+  frameClassName,
   indicatorsBind,
   showIndicators,
   getIndicatorBind,
@@ -42,7 +43,6 @@ const {
     gap: 0,
     size: "md",
     loop: false,
-    align: "start",
     autoPlay: false,
     defaultIndex: 0,
     indicators: true,
@@ -55,9 +55,11 @@ const {
 
 <template>
   <section v-bind="rootBind">
-    <div v-bind="viewportBind">
-      <div v-bind="trackBind">
-        <slot />
+    <div :class="frameClassName">
+      <div v-bind="viewportBind">
+        <div v-bind="trackBind">
+          <slot />
+        </div>
       </div>
 
       <div v-if="showControls" v-bind="controlsBind">

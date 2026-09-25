@@ -2,10 +2,7 @@
 import type { ButtonHTMLAttributes, HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
-import type {
-  CarouselAlign,
-  CarouselOrientation,
-} from "@bridge-ui/core/Domain";
+import type { CarouselOrientation } from "@bridge-ui/core/Domain";
 import type { CarouselSize } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
@@ -21,7 +18,7 @@ export interface CarouselClasses {
   control?: string;
 
   /**
-   * Classes merged onto the previous/next overlay.
+   * Classes merged onto the previous and next control group.
    */
   controls?: string;
 
@@ -73,7 +70,7 @@ export interface CarouselClasses {
 
 export interface CarouselCustomProps {
   /**
-   * Props forwarded to the previous/next overlay.
+   * Props forwarded to the previous and next control group.
    *
    * @default undefined
    */
@@ -169,12 +166,12 @@ export interface CarouselEmits {
  */
 export interface CarouselIndicatorState {
   /**
-   * 0-based slide index.
+   * 0-based snap index.
    */
   index: number;
 
   /**
-   * Whether this indicator is the active slide.
+   * Whether this indicator is the active snap.
    */
   selected: boolean;
 }
@@ -183,13 +180,6 @@ export interface CarouselIndicatorState {
  * Slideshow region. Compose with `CarouselSlide`.
  */
 export interface CarouselOwnProps {
-  /**
-   * Where the active slide sits in the viewport.
-   *
-   * @default "start"
-   */
-  align?: CarouselAlign;
-
   /**
    * Auto-advance. `true` uses a 5s interval; a number is the interval in ms.
    *

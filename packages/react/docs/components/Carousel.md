@@ -1,8 +1,8 @@
 # Carousel
 
-Slideshow region. Previous and next buttons, optional dot indicators, keyboard, and swipe. Slide content stays in the app (`CarouselSlide`).
+Slideshow region. Previous and next sit beside the viewport (above and below when vertical), with optional dot indicators, keyboard, and swipe. Slide content stays in the app (`CarouselSlide`).
 
-One slide fills the viewport by default. `slidesPerView` shows more than one, including a fraction that peeks the next slide. `orientation` switches the scroll axis. `align` chooses how the active slide sits in the viewport. `gap` is the space between slides, in px.
+One slide fills the viewport by default. `slidesPerView` shows more than one, including a fraction that peeks the next slide. `orientation` switches the scroll axis. `gap` is the space between slides, in px.
 
 Auto-advance pauses while the pointer is over the carousel, while focus is inside it, and when the user prefers reduced motion.
 
@@ -85,7 +85,7 @@ const [index, setIndex] = useState(0);
 </Carousel>
 ```
 
-`align="center"` keeps the active slide in the middle. `align="end"` lines it up with the end of the viewport. The default is `"start"`.
+Each dot is a snap, not a slide. Five slides with `slidesPerView={3}` show three dots. When every slide fits, the dots stay hidden.
 
 ### Vertical
 
@@ -115,4 +115,4 @@ Set a height on the region when the slides should not use the default viewport h
 - `Home` / `End` jump to the first and last snap
 - A swipe along the scroll axis moves one snap. The cross-axis is left to the page
 - `loop` wraps the ends. Without it, the edge control is disabled
-- With `slidesPerView` above `1` and `align="start"`, next stops once the last slides fill the viewport
+- With `slidesPerView` above `1`, next stops once the last slides fill the viewport

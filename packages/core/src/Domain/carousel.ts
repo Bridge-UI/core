@@ -2,11 +2,6 @@
 import { clamp, floor } from "es-toolkit/compat";
 
 /**
- * How the active slide sits in the viewport.
- */
-export type CarouselAlign = "end" | "start" | "center";
-
-/**
  * Axis the track scrolls on.
  */
 export type CarouselOrientation = "vertical" | "horizontal";
@@ -16,9 +11,14 @@ export type CarouselOrientation = "vertical" | "horizontal";
  */
 export type CarouselTrackOffsetOptions = {
   /**
-   * Snap alignment. `start` lines the active slide up with the viewport start.
+   * Total slides. Stops the track once the last slides fill the viewport.
    */
-  align?: CarouselAlign;
+  count?: number;
+
+  /**
+   * Space between slides, in px.
+   */
+  gap?: number;
 
   /**
    * Scroll axis.
@@ -124,24 +124,17 @@ export function resolveCarouselSlidesPerView(
 }
 
 /**
- * Last 0-based snap index.
- * `start` stops once the remaining slides fill the viewport.
- * `center` and `end` can snap every slide.
+ * Last 0-based snap index. Stops once the remaining slides fill the viewport.
  */
 export function getCarouselMaxIndex(
   count: number,
   slidesPerView?: number,
-  align?: CarouselAlign,
 ): number {
   if (count <= 0) {
     return 0;
   }
 
   const visible = Math.min(resolveCarouselSlidesPerView(slidesPerView), count);
-
-  if (align === "center" || align === "end") {
-    return count - 1;
-  }
 
   return Math.max(0, Math.ceil(count - visible - 1e-9));
 }
@@ -150,11 +143,6 @@ export function getCarouselMaxIndex(
  * Inputs for the previous or next slide index.
  */
 export type GetAdjacentCarouselIndexOptions = {
-  /**
-   * Snap alignment. Changes where the track stops.
-   */
-  align?: CarouselAlign;
-
   /**
    * Number of slides.
    */
@@ -192,11 +180,7 @@ export function getAdjacentCarouselIndex(
     return 0;
   }
 
-  const max = getCarouselMaxIndex(
-    options.count,
-    options.slidesPerView,
-    options.align,
-  );
+  const max = getCarouselMaxIndex(options.count, options.slidesPerView);
   const current = clamp(
     clampCarouselIndex(options.index, options.count),
     0,
@@ -217,11 +201,6 @@ export function getAdjacentCarouselIndex(
  * Inputs for whether a previous or next control can change the slide.
  */
 export type CanMoveCarouselOptions = {
-  /**
-   * Snap alignment. Changes the last index that still moves.
-   */
-  align?: CarouselAlign;
-
   /**
    * Number of slides.
    */
@@ -252,11 +231,7 @@ export type CanMoveCarouselOptions = {
  * Whether a previous/next control can change the active slide.
  */
 export function canMoveCarousel(options: CanMoveCarouselOptions): boolean {
-  const max = getCarouselMaxIndex(
-    options.count,
-    options.slidesPerView,
-    options.align,
-  );
+  const max = getCarouselMaxIndex(options.count, options.slidesPerView);
 
   if (max <= 0) {
     return false;
@@ -289,11 +264,6 @@ export type IsCarouselSlideInViewOptions = {
   activeIndex: number;
 
   /**
-   * Snap alignment.
-   */
-  align?: CarouselAlign;
-
-  /**
    * 0-based index of the slide being tested.
    */
   slideIndex: number;
@@ -313,20 +283,13 @@ export function isCarouselSlideInView(
   const visible = resolveCarouselSlidesPerView(options.slidesPerView);
   const active = Number.isFinite(options.activeIndex) ? options.activeIndex : 0;
   const slide = Number.isFinite(options.slideIndex) ? options.slideIndex : 0;
-  let start = active;
-  let end = active + visible;
+  const end = active + visible;
 
-  if (options.align === "center") {
-    const pad = (visible - 1) / 2;
+  return slide < end && slide + 1 > active;
+}
 
-    start = active - pad;
-    end = active + 1 + pad;
-  } else if (options.align === "end") {
-    start = active + 1 - visible;
-    end = active + 1;
-  }
-
-  return slide < end && slide + 1 > start;
+function roundOffset(value: number): number {
+  return Math.round(value * 1000) / 1000;
 }
 
 /**
@@ -341,58 +304,58 @@ export function getCarouselTrackOffset(
   const slidePercent = 100 / visible;
   let shift = safe * slidePercent;
 
-  if (options.align === "center") {
-    shift -= (100 - slidePercent) / 2;
-  } else if (options.align === "end") {
-    shift -= 100 - slidePercent;
-  }
+  const maxShift =
+    typeof options.count === "number"
+      ? Math.max(0, (options.count - visible) * slidePercent)
+      : Number.POSITIVE_INFINITY;
+
+  shift = clamp(shift, 0, maxShift);
 
   if (options.rtl && options.orientation !== "vertical") {
     shift = -shift;
   }
 
+  const space = resolveCarouselGap(options.gap);
+  const percent = -shift;
+  const pixels = space > 0 ? (percent * space) / 100 : 0;
+  const axis =
+    space > 0
+      ? `calc(${roundOffset(percent)}% + ${roundOffset(pixels)}px)`
+      : `${percent}%`;
+
   if (options.orientation === "vertical") {
-    return `translate3d(0, ${-shift}%, 0)`;
+    return `translate3d(0, ${axis}, 0)`;
   }
 
-  return `translate3d(${-shift}%, 0, 0)`;
+  return `translate3d(${axis}, 0, 0)`;
 }
 
 /**
- * Inline size for one slide, including the gap padding trick.
+ * Inline size for one slide. Gap is subtracted so the visible count fits.
  */
 export function getCarouselSlideStyle(
   slidesPerView?: number,
   gap?: number,
-  orientation?: CarouselOrientation,
+  _orientation?: CarouselOrientation,
 ): Record<string, string> {
   const visible = resolveCarouselSlidesPerView(slidesPerView);
   const space = resolveCarouselGap(gap);
-  const style: Record<string, string> = {
-    flexBasis: `calc(100% / ${visible})`,
+  const between = space * Math.max(visible - 1, 0);
+
+  return {
+    flexBasis:
+      between > 0
+        ? `calc((100% - ${between}px) / ${visible})`
+        : `calc(100% / ${visible})`,
   };
-
-  if (space <= 0) {
-    return style;
-  }
-
-  const padding = `${space}px`;
-
-  if (orientation === "vertical") {
-    style.paddingBlockStart = padding;
-  } else {
-    style.paddingInlineStart = padding;
-  }
-
-  return style;
 }
 
 /**
- * Track `transform` plus the negative margin that cancels slide gap padding.
+ * Track `transform` and the gap between slides.
  */
 export function getCarouselTrackStyle(
   index: number,
-  options: CarouselTrackOffsetOptions & { gap?: number } = {},
+  options: CarouselTrackOffsetOptions = {},
 ): Record<string, string> {
   const style: Record<string, string> = {
     transform: getCarouselTrackOffset(index, options),
@@ -403,12 +366,10 @@ export function getCarouselTrackStyle(
     return style;
   }
 
-  const margin = `-${space}px`;
-
   if (options.orientation === "vertical") {
-    style.marginBlockStart = margin;
+    style.rowGap = `${space}px`;
   } else {
-    style.marginInlineStart = margin;
+    style.columnGap = `${space}px`;
   }
 
   return style;

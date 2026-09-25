@@ -154,7 +154,6 @@ declare module "@bridge-ui/core/Config" {
         | "gap"
         | "loop"
         | "size"
-        | "align"
         | "autoPlay"
         | "indicators"
         | "orientation"

@@ -56,7 +56,6 @@ const carouselBridgeKeys = [
   "gap",
   "loop",
   "size",
-  "align",
   "classes",
   "autoPlay",
   "indicators",
@@ -71,7 +70,6 @@ type CarouselLibDefaults = LibDefaultsShape<
   | "gap"
   | "loop"
   | "size"
-  | "align"
   | "autoPlay"
   | "indicators"
   | "orientation"
@@ -159,11 +157,7 @@ export function useCarousel(
       return raw;
     }
 
-    const max = getCarouselMaxIndex(
-      count,
-      merged.value.slidesPerView,
-      merged.value.align,
-    );
+    const max = getCarouselMaxIndex(count, merged.value.slidesPerView);
 
     return clampCarouselIndex(raw, max + 1);
   });
@@ -207,11 +201,7 @@ export function useCarousel(
     const max =
       count <= 0
         ? null
-        : getCarouselMaxIndex(
-            count,
-            merged.value.slidesPerView,
-            merged.value.align,
-          );
+        : getCarouselMaxIndex(count, merged.value.slidesPerView);
     const next = max == null ? index : clampCarouselIndex(index, max + 1);
 
     if (next === activeIndex.value) {
@@ -228,12 +218,10 @@ export function useCarousel(
   function go(direction: 1 | -1) {
     const count = slideIds.value.length;
     const loop = merged.value.loop === true;
-    const align = merged.value.align;
     const slidesPerView = merged.value.slidesPerView;
 
     const move = {
       loop,
-      align,
       count,
       direction,
       slidesPerView,
@@ -254,7 +242,6 @@ export function useCarousel(
   watch(
     () => {
       return {
-        align: merged.value.align,
         count: slideIds.value.length,
         slidesPerView: merged.value.slidesPerView,
       };
@@ -266,11 +253,7 @@ export function useCarousel(
 
       fallback.value = clampCarouselIndex(
         fallback.value,
-        getCarouselMaxIndex(
-          count,
-          merged.value.slidesPerView,
-          merged.value.align,
-        ) + 1,
+        getCarouselMaxIndex(count, merged.value.slidesPerView) + 1,
       );
     },
   );
@@ -357,18 +340,22 @@ export function useCarousel(
 
   onScopeDispose(clearTimer);
 
+  const snapCount = computed(() => {
+    const count = slideIds.value.length;
+
+    if (count <= 0) {
+      return 0;
+    }
+
+    return getCarouselMaxIndex(count, merged.value.slidesPerView) + 1;
+  });
+
   const showControls = computed(() => {
-    return (
-      getCarouselMaxIndex(
-        slideIds.value.length,
-        merged.value.slidesPerView,
-        merged.value.align,
-      ) > 0
-    );
+    return snapCount.value > 1;
   });
 
   const showIndicators = computed(() => {
-    return merged.value.indicators !== false && slideIds.value.length > 1;
+    return merged.value.indicators !== false && snapCount.value > 1;
   });
 
   const vertical = computed(() => {
@@ -407,7 +394,6 @@ export function useCarousel(
     return !canMoveCarousel({
       direction: -1,
       index: activeIndex.value,
-      align: merged.value.align,
       count: slideIds.value.length,
       loop: merged.value.loop === true,
       slidesPerView: merged.value.slidesPerView,
@@ -418,7 +404,6 @@ export function useCarousel(
     return !canMoveCarousel({
       direction: 1,
       index: activeIndex.value,
-      align: merged.value.align,
       count: slideIds.value.length,
       loop: merged.value.loop === true,
       slidesPerView: merged.value.slidesPerView,
@@ -426,7 +411,7 @@ export function useCarousel(
   });
 
   const indicatorIndexes = computed(() => {
-    return slideIds.value.map((_, index) => index);
+    return Array.from({ length: snapCount.value }, (_, index) => index);
   });
 
   const contextValue = computed<CarouselContextValue>(() => {
@@ -435,7 +420,6 @@ export function useCarousel(
       registerSlide,
       id: carouselId,
       sizeItem: sizeItem.value,
-      align: merged.value.align,
       activeIndex: activeIndex.value,
       slideCount: slideIds.value.length,
       slidesPerView: merged.value.slidesPerView,
@@ -513,7 +497,6 @@ export function useCarousel(
               getCarouselMaxIndex(
                 slideIds.value.length,
                 merged.value.slidesPerView,
-                merged.value.align,
               ),
             );
           }
@@ -595,7 +578,7 @@ export function useCarousel(
         style: getCarouselTrackStyle(activeIndex.value, {
           rtl: rtl.value,
           gap: merged.value.gap,
-          align: merged.value.align,
+          count: slideIds.value.length,
           orientation: merged.value.orientation,
           slidesPerView: merged.value.slidesPerView,
         }),
@@ -616,6 +599,16 @@ export function useCarousel(
         }),
       },
     );
+  });
+
+  const frameClassName = computed(() => {
+    if (!showControls.value) {
+      return "relative";
+    }
+
+    return vertical.value
+      ? (get(sizeItem.value, "frameVertical") ?? "relative")
+      : (get(sizeItem.value, "frame") ?? "relative");
   });
 
   const prevBind = computed(() => {
@@ -765,6 +758,7 @@ export function useCarousel(
     showControls,
     viewportBind,
     announcement,
+    frameClassName,
     indicatorsBind,
     showIndicators,
     getIndicatorBind,
