@@ -1,10 +1,114 @@
 // ** External Imports
-import { clamp, isNil } from "es-toolkit/compat";
+import { clamp, isArray, isNil } from "es-toolkit/compat";
 
 /**
  * Reason a file was rejected by FileUpload validation.
  */
 export type FileUploadRejectReason = "accept" | "maxSize" | "maxFiles";
+
+/**
+ * Upload lifecycle shown on a file card.
+ * Omitted on a plain `File` — the card keeps the type · size line.
+ */
+export type FileUploadItemState =
+  "done" | "idle" | "error" | "uploading" | "processing";
+
+/**
+ * Icon chosen for a file card when it is not an image preview.
+ */
+export type FileUploadItemIcon =
+  "check" | "clock" | "error" | "loader" | "download";
+
+/**
+ * What the file card shows in the media slot.
+ */
+export type FileUploadItemMedia =
+  | {
+      /**
+       * Preview image.
+       */
+      kind: "image";
+
+      /**
+       * Preview URL.
+       */
+      src: string;
+    }
+  | {
+      /**
+       * Semantic icon name.
+       */
+      icon: FileUploadItemIcon;
+
+      /**
+       * Image preview is not used.
+       */
+      kind: "icon";
+
+      /**
+       * Spin the icon (upload in progress).
+       */
+      spin: boolean;
+    };
+
+/**
+ * Attachment metadata. Not a browser `File`.
+ * Only `name` is required. `size` and `type` match `File` when known.
+ * `url` is the remote location. `file` keeps a local `File` while an upload is in flight.
+ * `state`, `progress`, and `description` drive the card. Bridge does not upload.
+ */
+export type FileUploadRemote = {
+  /**
+   * Replaces the meta line (`Ready to upload`, `PDF · 1.8 MB`, …).
+   */
+  description?: string;
+
+  /**
+   * Browser file still being uploaded. Preview uses this when `url` is absent.
+   */
+  file?: File;
+
+  /**
+   * File name shown on the card. Same as `File.name`.
+   */
+  name: string;
+
+  /**
+   * Upload progress from 0 to 100. Shown while `state` is `uploading`.
+   */
+  progress?: number;
+
+  /**
+   * Size in bytes. Same as `File.size`. Omitted from the card when missing.
+   */
+  size?: number;
+
+  /**
+   * Upload lifecycle. Omitted keeps the default type · size card.
+   */
+  state?: FileUploadItemState;
+
+  /**
+   * MIME type. Same as `File.type`. Used for the type label and image preview.
+   */
+  type?: string;
+
+  /**
+   * Remote location. Image preview when the item is an image.
+   */
+  url?: string;
+};
+
+/**
+ * A newly picked `File` or a remote attachment already on the server.
+ */
+export type FileUploadValue = File | FileUploadRemote;
+
+/**
+ * Bound FileUpload selection.
+ * One item or `null` when `multiple` is false, a list when `multiple` is true.
+ */
+export type FileUploadModel = null | FileUploadValue | FileUploadValue[];
 
 /**
  * A file rejected by {@link filterFileUploadSelection}.
@@ -62,6 +166,228 @@ export type FileUploadFilterResult = {
    */
   rejected: FileUploadRejectedFile[];
 };
+
+/**
+ * Next selection after merging validated incoming files into the current list.
+ */
+export type FileUploadMergeResult = {
+  /**
+   * Next selection. Replaces the current list when `multiple` is false.
+   */
+  accepted: FileUploadValue[];
+
+  /**
+   * Incoming files that failed validation.
+   */
+  rejected: FileUploadRejectedFile[];
+};
+
+const IMAGE_EXTENSIONS = new Set([
+  "bmp",
+  "gif",
+  "ico",
+  "jpg",
+  "png",
+  "svg",
+  "tif",
+  "apng",
+  "avif",
+  "heic",
+  "heif",
+  "jpeg",
+  "tiff",
+  "webp",
+]);
+
+/**
+ * Reads a FileUpload model as a list.
+ * A single item becomes a one-element list. An array is kept only when `multiple` is true.
+ */
+export function fileUploadItemsFromModel(
+  model: undefined | FileUploadModel,
+  multiple = false,
+): FileUploadValue[] {
+  if (multiple) {
+    return isArray(model) ? model : [];
+  }
+
+  if (isNil(model) || isArray(model)) {
+    return [];
+  }
+
+  return [model];
+}
+
+/**
+ * Writes a FileUpload list back to the public model.
+ * Single mode returns the first item, or `null` when the list is empty.
+ */
+export function fileUploadModelFromItems(
+  items: FileUploadValue[],
+  multiple = false,
+): FileUploadModel {
+  if (multiple) {
+    return items;
+  }
+
+  return items[0] ?? null;
+}
+
+/**
+ * Returns whether `value` is a remote attachment (not a browser `File`).
+ */
+export function isFileUploadRemote(
+  value: FileUploadValue,
+): value is FileUploadRemote {
+  return !(value instanceof File);
+}
+
+/**
+ * Upload state stored on a remote item. A plain `File` has none.
+ */
+export function getFileUploadItemState(
+  value: FileUploadValue,
+): undefined | FileUploadItemState {
+  if (!isFileUploadRemote(value)) {
+    return undefined;
+  }
+
+  return value.state;
+}
+
+/**
+ * Browser `File` for a selection item.
+ * A plain `File` is returned as-is. A remote item returns `file` while an upload is in flight.
+ */
+export function getFileUploadBrowserFile(
+  value: FileUploadValue,
+): File | undefined {
+  if (value instanceof File) {
+    return value;
+  }
+
+  return value.file;
+}
+
+/**
+ * Meta line for a file card.
+ * `description` wins. Otherwise a known `state` replaces the type · size line.
+ */
+export function formatFileUploadStatusLabel(value: FileUploadValue): string {
+  if (isFileUploadRemote(value) && value.description) {
+    return value.description;
+  }
+
+  const state = getFileUploadItemState(value);
+
+  if (isNil(state)) {
+    return formatFileMeta(value);
+  }
+
+  if (state === "idle") {
+    return "Ready to upload";
+  }
+
+  if (state === "uploading") {
+    const progress = isFileUploadRemote(value) ? value.progress : undefined;
+
+    if (isNil(progress) || !Number.isFinite(progress)) {
+      return "Uploading";
+    }
+
+    return `Uploading · ${Math.round(clamp(progress, 0, 100))}%`;
+  }
+
+  if (state === "processing") {
+    return "Processing document";
+  }
+
+  if (state === "error") {
+    return "Upload failed. Try again.";
+  }
+
+  if (isNil(value.size)) {
+    return "Uploaded";
+  }
+
+  return `Uploaded · ${formatFileSize(value.size)}`;
+}
+
+/**
+ * Whether the meta line is visible.
+ * `xs` hides the default type · size line and still shows a status or custom description.
+ */
+export function shouldShowFileUploadDescription(
+  value: FileUploadValue,
+  size?: string,
+): boolean {
+  if (size !== "xs") {
+    return true;
+  }
+
+  if (getFileUploadItemState(value)) {
+    return true;
+  }
+
+  return isFileUploadRemote(value) && Boolean(value.description);
+}
+
+/**
+ * Media slot for a file card. Image preview wins when there is no in-progress state.
+ * `done` keeps the preview for images and uses a check icon otherwise.
+ */
+export function resolveFileUploadItemMedia(
+  value: FileUploadValue,
+  previewUrl?: string,
+): FileUploadItemMedia {
+  const state = getFileUploadItemState(value);
+  const image =
+    previewUrl && isImageUploadValue(value) ? previewUrl : undefined;
+
+  if ((isNil(state) || state === "done") && image) {
+    return { src: image, kind: "image" };
+  }
+
+  if (state === "idle") {
+    return { spin: false, kind: "icon", icon: "clock" };
+  }
+
+  if (state === "uploading") {
+    return { spin: true, kind: "icon", icon: "loader" };
+  }
+
+  if (state === "error") {
+    return { spin: false, kind: "icon", icon: "error" };
+  }
+
+  if (state === "done") {
+    return { spin: false, kind: "icon", icon: "check" };
+  }
+
+  if (image) {
+    return { src: image, kind: "image" };
+  }
+
+  return { spin: false, kind: "icon", icon: "download" };
+}
+
+function fileExtension(name: string): string {
+  const path = name.split(/[?#]/)[0] ?? "";
+  const base = path.split("/").pop() ?? path;
+  const dot = base.lastIndexOf(".");
+
+  if (dot <= 0 || dot >= base.length - 1) {
+    return "";
+  }
+
+  return base.slice(dot + 1).toLowerCase();
+}
+
+function hasImageExtension(name: string): boolean {
+  const extension = fileExtension(name);
+
+  return extension !== "" && IMAGE_EXTENSIONS.has(extension);
+}
 
 /**
  * Converts a `FileList` (or nullish) into a plain `File[]`.
@@ -158,9 +484,68 @@ export function isImageFile(file: File): boolean {
 }
 
 /**
+ * Returns whether `value` can show an image preview.
+ * Uses the MIME type, then the extension of `name`. Remote items also check `url`.
+ */
+export function isImageUploadValue(value: FileUploadValue): boolean {
+  const browserFile = getFileUploadBrowserFile(value);
+
+  if (browserFile && isImageFile(browserFile)) {
+    return true;
+  }
+
+  if ((value.type || "").toLowerCase().startsWith("image/")) {
+    return true;
+  }
+
+  if (hasImageExtension(value.name)) {
+    return true;
+  }
+
+  if (isFileUploadRemote(value)) {
+    return hasImageExtension(value.url ?? "");
+  }
+
+  return false;
+}
+
+/**
+ * Preview URL for an upload item.
+ * Remote images use `url`. Browser images use `objectUrl`.
+ */
+export function getFileUploadPreviewUrl(
+  value: FileUploadValue,
+  objectUrl?: string,
+): string | undefined {
+  if (!isImageUploadValue(value)) {
+    return undefined;
+  }
+
+  if (isFileUploadRemote(value) && value.url) {
+    return value.url;
+  }
+
+  return objectUrl;
+}
+
+/**
+ * List key from the file name and index.
+ * A `File` and a remote item are told apart by object identity, not by an id.
+ */
+export function getFileUploadItemKey(
+  value: FileUploadValue,
+  index: number,
+): string {
+  return `${value.name}-${index}`;
+}
+
+/**
  * Short type label from the file name extension or MIME subtype (e.g. `PDF`).
  */
-export function getFileTypeLabel(file: File): string {
+export function getFileTypeLabel(file: {
+  name: string;
+  type?: string;
+}): string {
   const name = file.name.trim();
   const dot = name.lastIndexOf(".");
 
@@ -180,17 +565,25 @@ export function getFileTypeLabel(file: File): string {
 /**
  * Metadata line for a file card (e.g. `PNG · 820 KB`).
  */
-export function formatFileMeta(file: File): string {
-  return `${getFileTypeLabel(file)} · ${formatFileSize(file.size)}`;
+export function formatFileMeta(file: FileUploadValue): string {
+  const typeLabel = getFileTypeLabel(file);
+
+  if (isNil(file.size)) {
+    return typeLabel;
+  }
+
+  return `${typeLabel} · ${formatFileSize(file.size)}`;
 }
 
 /**
  * Filters `incoming` against accept / maxSize / maxFiles relative to `current`.
+ * `accept` and `maxSize` apply only to incoming `File`s. Remote items already
+ * in `current` are not revalidated, and they count toward `maxFiles`.
  * When `multiple` is false, only the first valid incoming file is kept and
  * it replaces the current selection.
  */
 export function filterFileUploadSelection(
-  current: File[],
+  current: FileUploadValue[],
   incoming: File[],
   options: FileUploadFilterOptions = {},
 ): FileUploadFilterResult {
@@ -248,13 +641,13 @@ export function filterFileUploadSelection(
 }
 
 /**
- * Builds the next controlled file list from `current` and validated `incoming`.
+ * Builds the next controlled list from `current` and validated `incoming`.
  */
 export function mergeFileUploadSelection(
-  current: File[],
+  current: FileUploadValue[],
   incoming: File[],
   options: FileUploadFilterOptions = {},
-): FileUploadFilterResult {
+): FileUploadMergeResult {
   const filtered = filterFileUploadSelection(current, incoming, options);
 
   if (!options.multiple) {
@@ -268,12 +661,12 @@ export function mergeFileUploadSelection(
 }
 
 /**
- * Removes the file at `index` from `files` (immutable).
+ * Removes the item at `index` from `items` (immutable).
  */
-export function removeFileAtIndex(files: File[], index: number): File[] {
-  if (index < 0 || index >= files.length) {
-    return files;
+export function removeFileAtIndex<T>(items: T[], index: number): T[] {
+  if (index < 0 || index >= items.length) {
+    return items;
   }
 
-  return files.filter((_, i) => i !== index);
+  return items.filter((_, i) => i !== index);
 }

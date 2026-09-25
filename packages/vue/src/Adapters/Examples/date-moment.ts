@@ -7,7 +7,7 @@
  */
 
 // ** External Imports
-import { clamp, isNil, isString, range } from "es-toolkit/compat";
+import { clamp, isFunction, isNil, isString, range } from "es-toolkit/compat";
 import moment, { type Moment } from "moment";
 
 // ** Core Imports
@@ -35,7 +35,7 @@ function withMomentZone(value: Moment, zone?: string): Moment {
 
 /** Parses `value` in `zone` when `moment.tz` is available. */
 function parseMomentInZone(value: string, zone?: string): Moment {
-  if (isNil(zone) || typeof momentTz.tz !== "function") {
+  if (isNil(zone) || !isFunction(momentTz.tz)) {
     return moment(value);
   }
 

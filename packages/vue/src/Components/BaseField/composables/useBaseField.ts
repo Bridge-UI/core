@@ -37,10 +37,10 @@ import {
 export type BaseFieldOptions = {
   /**
    * Public registry key that owns BaseField chrome defaults/tokens.
-   * Defaults to `BaseField`; Slider / OtpField pass their own key so chrome
-   * cascades (`BaseField` → parent).
+   * Defaults to `BaseField`; Slider / OtpField / FileUpload pass their own key
+   * so chrome cascades (`BaseField` → parent).
    */
-  componentName?: "Slider" | "OtpField" | "BaseField";
+  componentName?: "Slider" | "OtpField" | "BaseField" | "FileUpload";
 
   /**
    * Resolve `Label` `for` from `controlId`. Defaults to the control id itself.
@@ -88,9 +88,9 @@ export function useBaseField(
   },
   options: BaseFieldOptions = {},
 ) {
+  const autoId = useId();
   const attrs = useAttrs();
   const slots = useSlots();
-  const autoId = useId();
 
   const split = computed(() => {
     return splitComponentProps<

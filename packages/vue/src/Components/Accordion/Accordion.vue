@@ -12,9 +12,9 @@ import { useAccordion } from "@/Components/Accordion/composables/useAccordion";
 
 defineSlots<AccordionSlots>();
 
-const emit = defineEmits<AccordionEmits>();
-
 defineOptions({ inheritAttrs: false });
+
+const emit = defineEmits<AccordionEmits>();
 
 const props = withDefaults(defineProps<AccordionOwnProps>(), {
   disabled: false,

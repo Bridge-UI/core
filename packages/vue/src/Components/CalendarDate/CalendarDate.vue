@@ -7,9 +7,9 @@ import type {
 } from "@/Components/CalendarDate/calendarDate.types";
 import { useCalendarDate } from "@/Components/CalendarDate/composables/useCalendarDate";
 
-defineOptions({ inheritAttrs: false });
-
 defineSlots<CalendarDateSlots>();
+
+defineOptions({ inheritAttrs: false });
 
 const emit = defineEmits<CalendarDateEmits>();
 

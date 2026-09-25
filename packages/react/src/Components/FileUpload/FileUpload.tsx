@@ -1,26 +1,52 @@
+// ** External Imports
+import { isFunction, isNil } from "es-toolkit/compat";
+import { type ReactNode } from "react";
+
+// ** Core Imports
+import { getFileUploadItemKey } from "@bridge-ui/core/Domain";
+
 // ** Local Imports
+import BaseField from "@/Components/BaseField/BaseField";
 import { Button } from "@/Components/Button";
-import type { FileUploadProps } from "@/Components/FileUpload/fileUpload.types";
+import type {
+  FileUploadItemSlotProps,
+  FileUploadProps,
+} from "@/Components/FileUpload/fileUpload.types";
+import FileUploadContext from "@/Components/FileUpload/FileUploadContext";
 import { useFileUpload } from "@/Components/FileUpload/hooks/useFileUpload";
+import { FileUploadItem } from "@/Components/FileUploadItem";
 import { Icon } from "@/Components/Icon";
 import { hasNamedSlot, isPropPresent } from "@/Utils";
+
+function resolveItemSlot(
+  slot: ReactNode | undefined | ((props: FileUploadItemSlotProps) => ReactNode),
+  item: FileUploadItemSlotProps,
+): ReactNode {
+  if (isNil(slot)) {
+    return null;
+  }
+
+  if (isFunction(slot)) {
+    return slot(item);
+  }
+
+  return slot;
+}
 
 function FileUpload(props: FileUploadProps) {
   const {
     slots,
     merged,
-    rootBind,
     listBind,
     inputRef,
-    labelBind,
+    baseField,
     inputBind,
-    errorBind,
     mediaBind,
     titleBind,
     fileItems,
-    showError,
     isDropzone,
     showPicker,
+    stateItems,
     actionsBind,
     contentBind,
     triggerBind,
@@ -28,159 +54,129 @@ function FileUpload(props: FileUploadProps) {
     buttonLabel,
     dropzoneBind,
     openFileDialog,
-    descriptionBind,
+    orientationItems,
     itemDescriptionBind,
-    resolvedErrorMessage,
   } = useFileUpload(props, {
     size: "md",
     rounded: "md",
     multiple: false,
     color: "primary",
     variant: "button",
+    orientation: "horizontal",
   });
 
-  const showHelperDescription =
-    !showError &&
-    !isDropzone &&
-    (hasNamedSlot(slots, "description") || isPropPresent(merged.description));
+  const fileList = hasNamedSlot(slots, "list") ? (
+    isFunction(slots?.list) ? (
+      slots.list({ items: fileItems })
+    ) : null
+  ) : fileItems.length > 0 ? (
+    <ul {...listBind}>
+      {fileItems.map((item) => {
+        const itemKey = getFileUploadItemKey(item.value, item.index);
 
-  const fileList =
-    fileItems.length > 0 ? (
-      <ul {...listBind}>
-        {fileItems.map((item) => {
-          const itemBind = getItemBind(item.index);
-
-          if (typeof slots?.item === "function") {
-            return (
-              <li {...itemBind} key={itemBind.key as string}>
-                {slots.item(item)}
-              </li>
-            );
-          }
-
+        if (isFunction(slots?.item)) {
           return (
-            <li {...itemBind} key={itemBind.key as string}>
-              <div {...mediaBind}>
-                {item.isImage && item.previewUrl ? (
-                  <img alt="" src={item.previewUrl} />
-                ) : (
-                  <Icon icon="download" />
-                )}
-              </div>
-
-              <div {...contentBind}>
-                <p {...titleBind}>{item.file.name}</p>
-                <p {...itemDescriptionBind}>{item.metaLabel}</p>
-              </div>
-
-              <div {...actionsBind}>
-                <Button
-                  size="sm"
-                  icon="clear"
-                  type="button"
-                  variant="flat"
-                  density="mini"
-                  color={merged.color}
-                  onClick={item.remove}
-                  rounded={merged.rounded}
-                  disabled={merged.disabled}
-                  aria-label={`Remove ${item.file.name}`}
-                />
-              </div>
+            <li {...getItemBind(item.index)} key={itemKey}>
+              {slots.item(item)}
             </li>
           );
-        })}
-      </ul>
-    ) : null;
+        }
+
+        return (
+          <FileUploadItem
+            {...item}
+            key={itemKey}
+            slots={{
+              end: resolveItemSlot(slots?.end, item),
+              start: resolveItemSlot(slots?.start, item),
+            }}
+          />
+        );
+      })}
+    </ul>
+  ) : null;
 
   return (
-    <div {...rootBind}>
-      <input {...inputBind} ref={inputRef} />
+    <FileUploadContext.Provider
+      value={{
+        mediaBind,
+        titleBind,
+        stateItems,
+        actionsBind,
+        contentBind,
+        getItemBind,
+        orientationItems,
+        size: merged.size,
+        color: merged.color,
+        rounded: merged.rounded,
+        disabled: merged.disabled,
+        orientation: merged.orientation,
+        descriptionBind: itemDescriptionBind,
+      }}
+    >
+      <BaseField field={baseField}>
+        <div className="flex w-full flex-col">
+          <input {...inputBind} ref={inputRef} />
 
-      {isPropPresent(merged.label) || hasNamedSlot(slots, "label") ? (
-        <label {...labelBind}>
-          {hasNamedSlot(slots, "label") ? slots?.label : merged.label}
-          {merged.required ? (
-            <span aria-hidden className="text-error-600 dark:text-error-400">
-              *
-            </span>
+          {showPicker ? (
+            isDropzone ? (
+              <div {...dropzoneBind}>
+                {hasNamedSlot(slots, "dropzone") ? (
+                  slots?.dropzone
+                ) : (
+                  <>
+                    <Icon icon="inbox" className="mb-1 text-dark-400" />
+
+                    {isPropPresent(merged.title) ? (
+                      <p className="m-0 font-medium text-dark-900 dark:text-dark-100">
+                        {merged.title}
+                      </p>
+                    ) : null}
+
+                    {isPropPresent(merged.description) ? (
+                      <p className="m-0 text-sm text-dark-500 dark:text-dark-400">
+                        {merged.description}
+                      </p>
+                    ) : null}
+                  </>
+                )}
+              </div>
+            ) : (
+              <div {...triggerBind}>
+                {hasNamedSlot(slots, "trigger") ? (
+                  <span
+                    role="button"
+                    onClick={openFileDialog}
+                    tabIndex={merged.disabled ? -1 : 0}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        openFileDialog();
+                      }
+                    }}
+                  >
+                    {slots?.trigger}
+                  </span>
+                ) : (
+                  <Button
+                    type="button"
+                    size={merged.size}
+                    color={merged.color}
+                    onClick={openFileDialog}
+                    rounded={merged.rounded}
+                    disabled={merged.disabled}
+                  >
+                    {buttonLabel}
+                  </Button>
+                )}
+              </div>
+            )
           ) : null}
-        </label>
-      ) : null}
 
-      {showPicker ? (
-        isDropzone ? (
-          <div {...dropzoneBind}>
-            {hasNamedSlot(slots, "dropzone") ? (
-              slots?.dropzone
-            ) : (
-              <>
-                <Icon icon="inbox" className="mb-1 text-dark-400" />
-
-                {isPropPresent(merged.title) ? (
-                  <p className="m-0 font-medium text-dark-900 dark:text-dark-100">
-                    {merged.title}
-                  </p>
-                ) : null}
-
-                {isPropPresent(merged.description) ? (
-                  <p className="m-0 text-sm text-dark-500 dark:text-dark-400">
-                    {merged.description}
-                  </p>
-                ) : null}
-              </>
-            )}
-          </div>
-        ) : (
-          <div {...triggerBind}>
-            {hasNamedSlot(slots, "trigger") ? (
-              <span
-                role="button"
-                onClick={openFileDialog}
-                tabIndex={merged.disabled ? -1 : 0}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    openFileDialog();
-                  }
-                }}
-              >
-                {slots?.trigger}
-              </span>
-            ) : (
-              <Button
-                type="button"
-                size={merged.size}
-                color={merged.color}
-                onClick={openFileDialog}
-                rounded={merged.rounded}
-                disabled={merged.disabled}
-              >
-                {buttonLabel}
-              </Button>
-            )}
-          </div>
-        )
-      ) : null}
-
-      {fileList}
-
-      {showHelperDescription ? (
-        <p {...descriptionBind}>
-          {hasNamedSlot(slots, "description")
-            ? slots?.description
-            : merged.description}
-        </p>
-      ) : null}
-
-      {showError ? (
-        <p {...errorBind}>
-          {hasNamedSlot(slots, "errorMessage")
-            ? slots?.errorMessage
-            : resolvedErrorMessage}
-        </p>
-      ) : null}
-    </div>
+          {fileList}
+        </div>
+      </BaseField>
+    </FileUploadContext.Provider>
   );
 }
 

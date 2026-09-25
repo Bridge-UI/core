@@ -12,9 +12,9 @@ import type {
 
 defineSlots<DrawerSlots>();
 
-const emit = defineEmits<DrawerEmits>();
-
 defineOptions({ inheritAttrs: false });
+
+const emit = defineEmits<DrawerEmits>();
 
 const props = withDefaults(defineProps<DrawerOwnProps>(), {
   scroll: "paper",

@@ -13,9 +13,9 @@ import {
   TimePanel,
 } from "@/Components/TimePanel";
 
-defineOptions({ inheritAttrs: false });
-
 defineSlots<DateTimePickerSlots>();
+
+defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<DateTimePickerOwnProps>(), {
   showFooter: undefined,

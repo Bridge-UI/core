@@ -29,11 +29,18 @@ test("it should render a label when provided", () => {
 test("it should render a single file as an attachment card", () => {
   const file = new File(["hello"], "note.txt", { type: "text/plain" });
 
-  cy.mount(<FileUpload value={[file]} />);
+  cy.mount(<FileUpload value={file} />);
 
   cy.contains("note.txt").should("be.visible");
   cy.contains("TXT").should("be.visible");
   cy.contains("Choose file").should("not.exist");
+});
+
+test("it should render a remote attachment card", () => {
+  cy.mount(<FileUpload value={{ size: 45 * 1024, name: "Diploma.pdf" }} />);
+
+  cy.contains("PDF").should("be.visible");
+  cy.contains("Diploma.pdf").should("be.visible");
 });
 
 test("it should render a custom button label", () => {

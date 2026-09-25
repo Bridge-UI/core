@@ -1,4 +1,5 @@
 // ** External Imports
+import { isPlainObject } from "es-toolkit/compat";
 import { afterEach, describe, expect, test } from "vitest";
 
 // ** Local Imports
@@ -60,7 +61,7 @@ describe("createTiptapRichTextAdapter", () => {
     });
 
     const value = handle.getValue();
-    expect(typeof value).toBe("object");
+    expect(isPlainObject(value)).toBe(true);
     expect(JSON.stringify(value)).toContain("JSON");
 
     handle.destroy();

@@ -372,13 +372,25 @@ export type {
   FileUploadColorOverrides,
   FileUploadCustomProps,
   FileUploadItemSlotProps,
+  FileUploadItemSlots,
+  FileUploadItemState,
+  FileUploadListSlotProps,
+  FileUploadModel,
+  FileUploadOrientationOverrides,
   FileUploadOwnProps,
   FileUploadProps,
+  FileUploadRemote,
   FileUploadRoundedOverrides,
   FileUploadSizeOverrides,
   FileUploadSlots,
+  FileUploadValue,
   FileUploadVariantOverrides,
 } from "@/Components/FileUpload";
+export { FileUploadItem, useFileUploadItem } from "@/Components/FileUploadItem";
+export type {
+  FileUploadItemOwnProps,
+  FileUploadItemProps,
+} from "@/Components/FileUploadItem";
 export { FormControl, useFormControl } from "@/Components/FormControl";
 export type {
   FormControlClasses,

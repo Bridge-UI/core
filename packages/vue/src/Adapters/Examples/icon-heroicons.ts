@@ -7,6 +7,7 @@
 import {
   ArrowDownTrayIcon,
   ArrowPathIcon,
+  ArrowUturnLeftIcon,
   Bars3Icon,
   BellIcon,
   BoldIcon,
@@ -82,6 +83,7 @@ const icons = {
   chevronUp: ChevronUpIcon,
   columns: ViewColumnsIcon,
   calendar: CalendarDaysIcon,
+  refresh: ArrowUturnLeftIcon,
   download: ArrowDownTrayIcon,
   search: MagnifyingGlassIcon,
   info: InformationCircleIcon,

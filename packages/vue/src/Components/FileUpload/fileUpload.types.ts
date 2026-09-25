@@ -2,8 +2,10 @@
 import type { HTMLAttributes, InputHTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
+import type { FileUploadModel, FileUploadValue } from "@bridge-ui/core/Domain";
 import type {
-  ButtonColor,
+  FileUploadColor,
+  FileUploadOrientation,
   FileUploadRounded,
   FileUploadSize,
   FileUploadVariant,
@@ -14,6 +16,7 @@ export interface FileUploadSizeOverrides {}
 export interface FileUploadColorOverrides {}
 export interface FileUploadRoundedOverrides {}
 export interface FileUploadVariantOverrides {}
+export interface FileUploadOrientationOverrides {}
 
 export interface FileUploadClasses {
   /**
@@ -146,29 +149,30 @@ export interface FileUploadCustomProps {
 
 export interface FileUploadEmits {
   /**
-   * Emitted when a file is removed from the list.
+   * Emitted when an item is removed from the list.
    */
-  remove: [file: File, index: number];
+  remove: [value: FileUploadValue, index: number];
 
   /**
-   * Emitted when the selected files change (`v-model`).
+   * Emitted when retry is pressed on an item whose `state` is `error`.
    */
-  "update:modelValue": [files: File[]];
+  retry: [value: FileUploadValue, index: number];
+
+  /**
+   * Emitted when the selection changes (`v-model`).
+   * One item or `null` when `multiple` is false, a list when it is true.
+   */
+  "update:modelValue": [value: FileUploadModel];
 }
 
 export interface FileUploadItemSlotProps {
-  /**
-   * The file for this card.
-   */
-  file: File;
-
   /**
    * Index in the current selection.
    */
   index: number;
 
   /**
-   * Whether the file can show an image preview.
+   * Whether the item can show an image preview.
    */
   isImage: boolean;
 
@@ -178,19 +182,48 @@ export interface FileUploadItemSlotProps {
   metaLabel: string;
 
   /**
-   * Object URL for image previews (`undefined` when not an image).
+   * Image preview URL (`url` for a remote image, object URL for a `File`).
    */
   previewUrl?: string;
 
   /**
-   * Removes this file from the selection.
+   * Removes this item from the selection.
    */
   remove: () => void;
+
+  /**
+   * Retries this item. Set when the parent listens for `retry`.
+   */
+  retry?: () => void;
 
   /**
    * Formatted file size for display.
    */
   sizeLabel: string;
+
+  /**
+   * The selected `File` or remote attachment.
+   */
+  value: FileUploadValue;
+}
+
+export interface FileUploadItemSlots {
+  /**
+   * Replaces the remove button.
+   */
+  end?: Slot<FileUploadItemSlotProps>;
+
+  /**
+   * Leading content, before the file media. Use it for a drag handle.
+   */
+  start?: Slot<FileUploadItemSlotProps>;
+}
+
+export interface FileUploadListSlotProps {
+  /**
+   * Selected items in list order. When `multiple` is true, reorder by writing a new array to the model.
+   */
+  items: FileUploadItemSlotProps[];
 }
 
 /**
@@ -198,7 +231,7 @@ export interface FileUploadItemSlotProps {
  * attachment-style cards whether `multiple` is on or off — there is no FormField
  * chrome for a single file.
  */
-export interface FileUploadOwnProps {
+export interface FileUploadOwnProps<Multiple extends boolean = false> {
   /**
    * Native `accept` filter for the file input.
    *
@@ -221,11 +254,18 @@ export interface FileUploadOwnProps {
   classes?: FileUploadClasses;
 
   /**
-   * Color forwarded to the trigger and remove `Button`s.
+   * Color of the trigger, the remove button, and the dropzone highlight while dragging.
    *
    * @default "primary"
    */
-  color?: MergeProps<ButtonColor, FileUploadColorOverrides>;
+  color?: MergeProps<FileUploadColor, FileUploadColorOverrides>;
+
+  /**
+   * Secondary label text at the inline end of the header row.
+   *
+   * @default undefined
+   */
+  corner?: string;
 
   /**
    * Extra props for internal parts (`input`, `dropzone`, `list`, `item`, …).
@@ -235,11 +275,13 @@ export interface FileUploadOwnProps {
   customProps?: FileUploadCustomProps;
 
   /**
-   * Uncontrolled initial selection.
+   * Uncontrolled initial selection. One item or `null` unless `multiple` is true.
    *
    * @default undefined
    */
-  defaultValue?: File[];
+  defaultValue?: Multiple extends true
+    ? FileUploadValue[]
+    : null | FileUploadValue;
 
   /**
    * Helper text below the picker / list. Inside the dropzone, also used as the
@@ -292,12 +334,22 @@ export interface FileUploadOwnProps {
   maxSize?: number;
 
   /**
-   * Allow selecting more than one file. A single selection still uses the same
-   * attachment card as multiple — not a FormField input shell.
+   * When false, the model is one item or `null`. When true, it is a list.
+   * A single selection still uses the same attachment card — not a FormField input shell.
    *
    * @default false
    */
-  multiple?: boolean;
+  multiple?: Multiple;
+
+  /**
+   * Lay each card's media beside the name, or stacked above it.
+   *
+   * @default "horizontal"
+   */
+  orientation?: MergeProps<
+    FileUploadOrientation,
+    FileUploadOrientationOverrides
+  >;
 
   /**
    * Marks the field as required (asterisk on the label).
@@ -337,6 +389,11 @@ export interface FileUploadOwnProps {
 
 export interface FileUploadSlots {
   /**
+   * Secondary label at the inline end of the header row.
+   */
+  corner?: Slot<undefined>;
+
+  /**
    * Replaces helper text below the picker / list.
    */
   description?: Slot<undefined>;
@@ -345,6 +402,11 @@ export interface FileUploadSlots {
    * Replaces the default dropzone title / description copy.
    */
   dropzone?: Slot<undefined>;
+
+  /**
+   * Replaces the remove button on each default card.
+   */
+  end?: Slot<FileUploadItemSlotProps>;
 
   /**
    * Replaces validation / error text.
@@ -362,27 +424,86 @@ export interface FileUploadSlots {
   label?: Slot<undefined>;
 
   /**
+   * Replaces the default file list. The app owns markup and order.
+   * Render `FileUploadItem` to keep the default card.
+   */
+  list?: Slot<FileUploadListSlotProps>;
+
+  /**
+   * Leading content on each default card, before the file media.
+   * Use it for a drag handle.
+   */
+  start?: Slot<FileUploadItemSlotProps>;
+
+  /**
    * Replaces the default button-variant trigger.
    */
   trigger?: Slot<undefined>;
 }
 
-export type FileUploadProps = MergeHtmlProps<
-  FileUploadOwnProps,
-  Omit<
-    InputHTMLAttributes,
-    | "size"
-    | "type"
-    | "value"
-    | "accept"
-    | "disabled"
-    | "multiple"
-    | "onChange"
-    | "defaultValue"
-  >
+export type {
+  FileUploadItemState,
+  FileUploadModel,
+  FileUploadRemote,
+  FileUploadValue,
+} from "@bridge-ui/core/Domain";
+
+type FileUploadDomProps = Omit<
+  InputHTMLAttributes,
+  | "size"
+  | "type"
+  | "value"
+  | "accept"
+  | "disabled"
+  | "multiple"
+  | "onChange"
+  | "defaultValue"
+>;
+
+export type FileUploadSingleProps = MergeHtmlProps<
+  Omit<FileUploadOwnProps, "multiple" | "defaultValue"> & {
+    /**
+     * Uncontrolled initial item. `null` when empty.
+     *
+     * @default undefined
+     */
+    defaultValue?: null | FileUploadValue;
+
+    /**
+     * When false, the model is one item or `null`.
+     *
+     * @default false
+     */
+    multiple?: false;
+  },
+  FileUploadDomProps
 > & {
   /**
-   * Bound with `v-model` on the component (`defineModel` internally).
+   * Bound with `v-model`. One item, or `null` when empty.
    */
-  modelValue?: File[];
+  modelValue?: null | FileUploadValue;
 };
+
+export type FileUploadMultipleProps = MergeHtmlProps<
+  Omit<FileUploadOwnProps, "multiple" | "defaultValue"> & {
+    /**
+     * Uncontrolled initial list.
+     *
+     * @default undefined
+     */
+    defaultValue?: FileUploadValue[];
+
+    /**
+     * When true, the model is a list.
+     */
+    multiple: true;
+  },
+  FileUploadDomProps
+> & {
+  /**
+   * Bound with `v-model`.
+   */
+  modelValue?: FileUploadValue[];
+};
+
+export type FileUploadProps = FileUploadSingleProps | FileUploadMultipleProps;

@@ -10,9 +10,9 @@ import type {
 
 defineSlots<PaginationSlots>();
 
-const emit = defineEmits<PaginationEmits>();
-
 defineOptions({ inheritAttrs: false });
+
+const emit = defineEmits<PaginationEmits>();
 
 const props = withDefaults(defineProps<PaginationOwnProps>(), {
   disabled: false,
