@@ -30,6 +30,31 @@ test("it should render choose files when multiple is true", () => {
   expect(wrapper.text()).toContain("Choose files");
 });
 
+test("it should treat a bare multiple attribute as true", async () => {
+  const wrapper = mount({
+    components: { FileUpload },
+    template: "<FileUpload multiple />",
+  });
+  const input = wrapper.find('input[type="file"]');
+  const first = makeFile("a.txt");
+  const second = makeFile("b.txt");
+  const inputEl = input.element as HTMLInputElement;
+
+  expect(input.attributes("multiple")).toBe("");
+  expect(wrapper.text()).toContain("Choose files");
+
+  Object.defineProperty(inputEl, "files", {
+    configurable: true,
+    value: [first, second],
+  });
+
+  await input.trigger("change");
+
+  expect(
+    wrapper.findComponent(FileUpload).emitted("update:modelValue")?.[0],
+  ).toEqual([[first, second]]);
+});
+
 test("it should render a dropzone when variant is dropzone", () => {
   const wrapper = mount(FileUpload, {
     props: {
