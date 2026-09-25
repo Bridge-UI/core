@@ -147,26 +147,64 @@ export function getCarouselMaxIndex(
 }
 
 /**
+ * Inputs for the previous or next slide index.
+ */
+export type GetAdjacentCarouselIndexOptions = {
+  /**
+   * Snap alignment. Changes where the track stops.
+   */
+  align?: CarouselAlign;
+
+  /**
+   * Number of slides.
+   */
+  count: number;
+
+  /**
+   * Previous (`-1`) or next (`1`).
+   */
+  direction: 1 | -1;
+
+  /**
+   * Active 0-based slide index.
+   */
+  index: number;
+
+  /**
+   * Wrap at the ends.
+   */
+  loop: boolean;
+
+  /**
+   * How many slides fit in the viewport.
+   */
+  slidesPerView?: number;
+};
+
+/**
  * Previous (`-1`) or next (`1`) index. With `loop`, wraps at the ends.
  * Without `loop`, stays on the current edge.
  */
 export function getAdjacentCarouselIndex(
-  index: number,
-  count: number,
-  direction: 1 | -1,
-  loop: boolean,
-  slidesPerView?: number,
-  align?: CarouselAlign,
+  options: GetAdjacentCarouselIndexOptions,
 ): number {
-  if (count <= 0) {
+  if (options.count <= 0) {
     return 0;
   }
 
-  const max = getCarouselMaxIndex(count, slidesPerView, align);
-  const current = clamp(clampCarouselIndex(index, count), 0, max);
-  const next = current + direction;
+  const max = getCarouselMaxIndex(
+    options.count,
+    options.slidesPerView,
+    options.align,
+  );
+  const current = clamp(
+    clampCarouselIndex(options.index, options.count),
+    0,
+    max,
+  );
+  const next = current + options.direction;
 
-  if (loop && max > 0) {
+  if (options.loop && max > 0) {
     const span = max + 1;
 
     return (next + span) % span;
@@ -176,29 +214,65 @@ export function getAdjacentCarouselIndex(
 }
 
 /**
+ * Inputs for whether a previous or next control can change the slide.
+ */
+export type CanMoveCarouselOptions = {
+  /**
+   * Snap alignment. Changes the last index that still moves.
+   */
+  align?: CarouselAlign;
+
+  /**
+   * Number of slides.
+   */
+  count: number;
+
+  /**
+   * Previous (`-1`) or next (`1`).
+   */
+  direction: 1 | -1;
+
+  /**
+   * Active 0-based slide index.
+   */
+  index: number;
+
+  /**
+   * Wrap at the ends.
+   */
+  loop: boolean;
+
+  /**
+   * How many slides fit in the viewport.
+   */
+  slidesPerView?: number;
+};
+
+/**
  * Whether a previous/next control can change the active slide.
  */
-export function canMoveCarousel(
-  index: number,
-  count: number,
-  direction: 1 | -1,
-  loop: boolean,
-  slidesPerView?: number,
-  align?: CarouselAlign,
-): boolean {
-  const max = getCarouselMaxIndex(count, slidesPerView, align);
+export function canMoveCarousel(options: CanMoveCarouselOptions): boolean {
+  const max = getCarouselMaxIndex(
+    options.count,
+    options.slidesPerView,
+    options.align,
+  );
 
   if (max <= 0) {
     return false;
   }
 
-  if (loop) {
+  if (options.loop) {
     return true;
   }
 
-  const current = clamp(clampCarouselIndex(index, count), 0, max);
+  const current = clamp(
+    clampCarouselIndex(options.index, options.count),
+    0,
+    max,
+  );
 
-  if (direction === -1) {
+  if (options.direction === -1) {
     return current > 0;
   }
 
@@ -206,26 +280,48 @@ export function canMoveCarousel(
 }
 
 /**
+ * Inputs for whether a slide overlaps the active viewport.
+ */
+export type IsCarouselSlideInViewOptions = {
+  /**
+   * Active 0-based snap index.
+   */
+  activeIndex: number;
+
+  /**
+   * Snap alignment.
+   */
+  align?: CarouselAlign;
+
+  /**
+   * 0-based index of the slide being tested.
+   */
+  slideIndex: number;
+
+  /**
+   * How many slides fit in the viewport.
+   */
+  slidesPerView?: number;
+};
+
+/**
  * Whether `slideIndex` overlaps the viewport for the active snap.
  */
 export function isCarouselSlideInView(
-  slideIndex: number,
-  activeIndex: number,
-  slidesPerView?: number,
-  align?: CarouselAlign,
+  options: IsCarouselSlideInViewOptions,
 ): boolean {
-  const visible = resolveCarouselSlidesPerView(slidesPerView);
-  const active = Number.isFinite(activeIndex) ? activeIndex : 0;
-  const slide = Number.isFinite(slideIndex) ? slideIndex : 0;
+  const visible = resolveCarouselSlidesPerView(options.slidesPerView);
+  const active = Number.isFinite(options.activeIndex) ? options.activeIndex : 0;
+  const slide = Number.isFinite(options.slideIndex) ? options.slideIndex : 0;
   let start = active;
   let end = active + visible;
 
-  if (align === "center") {
+  if (options.align === "center") {
     const pad = (visible - 1) / 2;
 
     start = active - pad;
     end = active + 1 + pad;
-  } else if (align === "end") {
+  } else if (options.align === "end") {
     start = active + 1 - visible;
     end = active + 1;
   }

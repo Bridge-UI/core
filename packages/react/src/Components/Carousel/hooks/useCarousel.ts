@@ -241,29 +241,20 @@ export function useCarousel(
     (direction: 1 | -1) => {
       const count = counterRef.current || slideCount;
 
-      if (
-        !canMoveCarousel(
-          activeIndex,
-          count,
-          direction,
-          merged.loop,
-          merged.slidesPerView,
-          merged.align,
-        )
-      ) {
+      const move = {
+        count,
+        direction,
+        loop: merged.loop,
+        index: activeIndex,
+        align: merged.align,
+        slidesPerView: merged.slidesPerView,
+      };
+
+      if (!canMoveCarousel(move)) {
         return;
       }
 
-      selectIndex(
-        getAdjacentCarouselIndex(
-          activeIndex,
-          count,
-          direction,
-          merged.loop,
-          merged.slidesPerView,
-          merged.align,
-        ),
-      );
+      selectIndex(getAdjacentCarouselIndex(move));
     },
     [
       slideCount,
@@ -374,25 +365,25 @@ export function useCarousel(
   });
 
   const prevDisabled = derived(() => {
-    return !canMoveCarousel(
-      activeIndex,
-      slideCount,
-      -1,
-      merged.loop,
-      merged.slidesPerView,
-      merged.align,
-    );
+    return !canMoveCarousel({
+      direction: -1,
+      count: slideCount,
+      loop: merged.loop,
+      index: activeIndex,
+      align: merged.align,
+      slidesPerView: merged.slidesPerView,
+    });
   });
 
   const nextDisabled = derived(() => {
-    return !canMoveCarousel(
-      activeIndex,
-      slideCount,
-      1,
-      merged.loop,
-      merged.slidesPerView,
-      merged.align,
-    );
+    return !canMoveCarousel({
+      direction: 1,
+      count: slideCount,
+      loop: merged.loop,
+      index: activeIndex,
+      align: merged.align,
+      slidesPerView: merged.slidesPerView,
+    });
   });
 
   const vertical = derived(() => {
@@ -404,11 +395,27 @@ export function useCarousel(
   });
 
   const prevKey = derived(() => {
-    return vertical ? "ArrowUp" : rtl ? "ArrowRight" : "ArrowLeft";
+    if (vertical) {
+      return "ArrowUp";
+    }
+
+    if (rtl) {
+      return "ArrowRight";
+    }
+
+    return "ArrowLeft";
   });
 
   const nextKey = derived(() => {
-    return vertical ? "ArrowDown" : rtl ? "ArrowLeft" : "ArrowRight";
+    if (vertical) {
+      return "ArrowDown";
+    }
+
+    if (rtl) {
+      return "ArrowLeft";
+    }
+
+    return "ArrowRight";
   });
 
   const rootInheritedAttrs = derived(() => {

@@ -231,29 +231,20 @@ export function useCarousel(
     const align = merged.value.align;
     const slidesPerView = merged.value.slidesPerView;
 
-    if (
-      !canMoveCarousel(
-        activeIndex.value,
-        count,
-        direction,
-        loop,
-        slidesPerView,
-        align,
-      )
-    ) {
+    const move = {
+      loop,
+      align,
+      count,
+      direction,
+      slidesPerView,
+      index: activeIndex.value,
+    };
+
+    if (!canMoveCarousel(move)) {
       return;
     }
 
-    commit(
-      getAdjacentCarouselIndex(
-        activeIndex.value,
-        count,
-        direction,
-        loop,
-        slidesPerView,
-        align,
-      ),
-    );
+    commit(getAdjacentCarouselIndex(move));
   }
 
   function selectIndex(index: number) {
@@ -389,37 +380,49 @@ export function useCarousel(
   });
 
   const prevKey = computed(() => {
-    return vertical.value ? "ArrowUp" : rtl.value ? "ArrowRight" : "ArrowLeft";
+    if (vertical.value) {
+      return "ArrowUp";
+    }
+
+    if (rtl.value) {
+      return "ArrowRight";
+    }
+
+    return "ArrowLeft";
   });
 
   const nextKey = computed(() => {
-    return vertical.value
-      ? "ArrowDown"
-      : rtl.value
-        ? "ArrowLeft"
-        : "ArrowRight";
+    if (vertical.value) {
+      return "ArrowDown";
+    }
+
+    if (rtl.value) {
+      return "ArrowLeft";
+    }
+
+    return "ArrowRight";
   });
 
   const prevDisabled = computed(() => {
-    return !canMoveCarousel(
-      activeIndex.value,
-      slideIds.value.length,
-      -1,
-      merged.value.loop === true,
-      merged.value.slidesPerView,
-      merged.value.align,
-    );
+    return !canMoveCarousel({
+      direction: -1,
+      index: activeIndex.value,
+      align: merged.value.align,
+      count: slideIds.value.length,
+      loop: merged.value.loop === true,
+      slidesPerView: merged.value.slidesPerView,
+    });
   });
 
   const nextDisabled = computed(() => {
-    return !canMoveCarousel(
-      activeIndex.value,
-      slideIds.value.length,
-      1,
-      merged.value.loop === true,
-      merged.value.slidesPerView,
-      merged.value.align,
-    );
+    return !canMoveCarousel({
+      direction: 1,
+      index: activeIndex.value,
+      align: merged.value.align,
+      count: slideIds.value.length,
+      loop: merged.value.loop === true,
+      slidesPerView: merged.value.slidesPerView,
+    });
   });
 
   const indicatorIndexes = computed(() => {
@@ -449,12 +452,12 @@ export function useCarousel(
   provide(CAROUSEL_INJECTION_KEY, contextValue);
 
   const rootBind = computed(() => {
-    const inherited = omit(split.value.inheritedAttrs, [...rootEventKeys]);
-    const userKeydown = asListener(split.value.inheritedAttrs.onKeydown);
-    const userFocus = asListener(split.value.inheritedAttrs.onFocus);
     const userBlur = asListener(split.value.inheritedAttrs.onBlur);
+    const userFocus = asListener(split.value.inheritedAttrs.onFocus);
+    const userKeydown = asListener(split.value.inheritedAttrs.onKeydown);
     const userEnter = asListener(split.value.inheritedAttrs.onMouseenter);
     const userLeave = asListener(split.value.inheritedAttrs.onMouseleave);
+    const inherited = omit(split.value.inheritedAttrs, [...rootEventKeys]);
 
     return mergePartBind(merged.value.customProps?.root, inherited, {
       role: "region",
@@ -523,8 +526,8 @@ export function useCarousel(
 
   const viewportBind = computed(() => {
     const viewport = merged.value.customProps?.viewport;
-    const userDown = asListener(viewport?.onPointerdown);
     const userUp = asListener(viewport?.onPointerup);
+    const userDown = asListener(viewport?.onPointerdown);
     const userCancel = asListener(viewport?.onPointercancel);
 
     return mergePartBind(

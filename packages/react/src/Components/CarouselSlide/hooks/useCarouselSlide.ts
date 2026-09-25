@@ -42,12 +42,12 @@ export function useCarouselSlide(props: CarouselSlideProps) {
   });
 
   const inView = derived(() => {
-    return isCarouselSlideInView(
-      index,
-      carousel.activeIndex,
-      carousel.slidesPerView,
-      carousel.align,
-    );
+    return isCarouselSlideInView({
+      slideIndex: index,
+      align: carousel.align,
+      activeIndex: carousel.activeIndex,
+      slidesPerView: carousel.slidesPerView,
+    });
   });
 
   const slideId = derived(() => {

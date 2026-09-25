@@ -28,34 +28,105 @@ describe("clampCarouselIndex", () => {
 
 describe("getAdjacentCarouselIndex", () => {
   test("it should stay on the edge when loop is off", () => {
-    expect(getAdjacentCarouselIndex(0, 3, -1, false)).toBe(0);
-    expect(getAdjacentCarouselIndex(2, 3, 1, false)).toBe(2);
-    expect(getAdjacentCarouselIndex(1, 3, 1, false)).toBe(2);
+    expect(
+      getAdjacentCarouselIndex({
+        count: 3,
+        index: 0,
+        loop: false,
+        direction: -1,
+      }),
+    ).toBe(0);
+    expect(
+      getAdjacentCarouselIndex({
+        count: 3,
+        index: 2,
+        loop: false,
+        direction: 1,
+      }),
+    ).toBe(2);
+    expect(
+      getAdjacentCarouselIndex({
+        count: 3,
+        index: 1,
+        loop: false,
+        direction: 1,
+      }),
+    ).toBe(2);
   });
 
   test("it should wrap when loop is on", () => {
-    expect(getAdjacentCarouselIndex(0, 3, -1, true)).toBe(2);
-    expect(getAdjacentCarouselIndex(2, 3, 1, true)).toBe(0);
+    expect(
+      getAdjacentCarouselIndex({
+        count: 3,
+        index: 0,
+        loop: true,
+        direction: -1,
+      }),
+    ).toBe(2);
+    expect(
+      getAdjacentCarouselIndex({
+        count: 3,
+        index: 2,
+        loop: true,
+        direction: 1,
+      }),
+    ).toBe(0);
   });
 });
 
 describe("canMoveCarousel", () => {
   test("it should block movement when there is nothing to move to", () => {
-    expect(canMoveCarousel(0, 0, 1, true)).toBe(false);
-    expect(canMoveCarousel(0, 1, 1, true)).toBe(false);
-    expect(canMoveCarousel(0, 3, -1, false)).toBe(false);
-    expect(canMoveCarousel(2, 3, 1, false)).toBe(false);
-    expect(canMoveCarousel(0, 3, 1, false, 3)).toBe(false);
+    expect(
+      canMoveCarousel({ count: 0, index: 0, loop: true, direction: 1 }),
+    ).toBe(false);
+    expect(
+      canMoveCarousel({ count: 1, index: 0, loop: true, direction: 1 }),
+    ).toBe(false);
+    expect(
+      canMoveCarousel({ count: 3, index: 0, loop: false, direction: -1 }),
+    ).toBe(false);
+    expect(
+      canMoveCarousel({ count: 3, index: 2, loop: false, direction: 1 }),
+    ).toBe(false);
+    expect(
+      canMoveCarousel({
+        count: 3,
+        index: 0,
+        loop: false,
+        direction: 1,
+        slidesPerView: 3,
+      }),
+    ).toBe(false);
   });
 
   test("it should allow wrapping when loop is on", () => {
-    expect(canMoveCarousel(0, 3, -1, true)).toBe(true);
-    expect(canMoveCarousel(1, 3, 1, false)).toBe(true);
+    expect(
+      canMoveCarousel({ count: 3, index: 0, loop: true, direction: -1 }),
+    ).toBe(true);
+    expect(
+      canMoveCarousel({ count: 3, index: 1, loop: false, direction: 1 }),
+    ).toBe(true);
   });
 
   test("it should stop when the last slides already fill the viewport", () => {
-    expect(canMoveCarousel(1, 5, 1, false, 2)).toBe(true);
-    expect(canMoveCarousel(3, 5, 1, false, 2)).toBe(false);
+    expect(
+      canMoveCarousel({
+        count: 5,
+        index: 1,
+        loop: false,
+        direction: 1,
+        slidesPerView: 2,
+      }),
+    ).toBe(true);
+    expect(
+      canMoveCarousel({
+        count: 5,
+        index: 3,
+        loop: false,
+        direction: 1,
+        slidesPerView: 2,
+      }),
+    ).toBe(false);
   });
 });
 
@@ -95,10 +166,34 @@ describe("getCarouselTrackOffset", () => {
 
 describe("isCarouselSlideInView", () => {
   test("it should include neighbors when more than one slide is visible", () => {
-    expect(isCarouselSlideInView(0, 0, 1)).toBe(true);
-    expect(isCarouselSlideInView(1, 0, 1)).toBe(false);
-    expect(isCarouselSlideInView(1, 0, 2)).toBe(true);
-    expect(isCarouselSlideInView(2, 0, 2)).toBe(false);
+    expect(
+      isCarouselSlideInView({
+        slideIndex: 0,
+        activeIndex: 0,
+        slidesPerView: 1,
+      }),
+    ).toBe(true);
+    expect(
+      isCarouselSlideInView({
+        slideIndex: 1,
+        activeIndex: 0,
+        slidesPerView: 1,
+      }),
+    ).toBe(false);
+    expect(
+      isCarouselSlideInView({
+        slideIndex: 1,
+        activeIndex: 0,
+        slidesPerView: 2,
+      }),
+    ).toBe(true);
+    expect(
+      isCarouselSlideInView({
+        slideIndex: 2,
+        activeIndex: 0,
+        slidesPerView: 2,
+      }),
+    ).toBe(false);
   });
 });
 

@@ -29,10 +29,13 @@ export {
   shouldPauseCarouselAutoPlay,
 } from "@/Domain/carousel";
 export type {
+  CanMoveCarouselOptions,
   CarouselAlign,
   CarouselOrientation,
   CarouselSwipeOptions,
   CarouselTrackOffsetOptions,
+  GetAdjacentCarouselIndexOptions,
+  IsCarouselSlideInViewOptions,
   ShouldPauseCarouselAutoPlayOptions,
 } from "@/Domain/carousel";
 export {

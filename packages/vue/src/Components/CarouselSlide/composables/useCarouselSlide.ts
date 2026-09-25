@@ -44,8 +44,8 @@ function cssStyle(value: unknown): Record<string, string> {
 
 export function useCarouselSlide(props: CarouselSlideOwnProps) {
   const attrs = useAttrs();
-  const resolveMessage = useResolveMessage();
   const slideUid = useId();
+  const resolveMessage = useResolveMessage();
   const injected = inject(CAROUSEL_INJECTION_KEY, null);
 
   if (!injected) {
@@ -71,12 +71,12 @@ export function useCarouselSlide(props: CarouselSlideOwnProps) {
   });
 
   const inView = computed(() => {
-    return isCarouselSlideInView(
-      index.value,
-      carousel.value.activeIndex,
-      carousel.value.slidesPerView,
-      carousel.value.align,
-    );
+    return isCarouselSlideInView({
+      slideIndex: index.value,
+      align: carousel.value.align,
+      activeIndex: carousel.value.activeIndex,
+      slidesPerView: carousel.value.slidesPerView,
+    });
   });
 
   const slideId = computed(() => {
