@@ -16,7 +16,9 @@ test("it should throw when used outside SidebarProvider", () => {
   });
 
   expect(() => {
-    mount(Orphan);
+    mount(Orphan, {
+      global: { config: { warnHandler: () => undefined } },
+    });
   }).toThrow("useSidebar must be used within a SidebarProvider");
 });
 

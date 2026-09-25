@@ -11,7 +11,7 @@ import {
  * Reads the nearest `SidebarProvider` context. Throws when used outside it.
  */
 export function useSidebar() {
-  const context = inject(SIDEBAR_INJECTION_KEY);
+  const context = inject(SIDEBAR_INJECTION_KEY, null);
 
   if (!context) {
     throw new Error("useSidebar must be used within a SidebarProvider");
