@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { get, isFunction, omit } from "es-toolkit/compat";
 import {
   computed,
   onMounted,
@@ -108,9 +108,7 @@ function isEditableTarget(target: null | EventTarget): boolean {
 }
 
 function asListener(value: unknown): undefined | ((event: Event) => void) {
-  return typeof value === "function"
-    ? (value as (event: Event) => void)
-    : undefined;
+  return isFunction(value) ? (value as (event: Event) => void) : undefined;
 }
 
 export function useCarousel(
@@ -280,7 +278,7 @@ export function useCarousel(
   });
 
   onMounted(() => {
-    if (typeof window.matchMedia !== "function") {
+    if (!isFunction(window.matchMedia)) {
       return;
     }
 
