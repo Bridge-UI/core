@@ -73,7 +73,7 @@ import { CarouselSlide } from "@bridge-ui/vue/Components/CarouselSlide";
 ### Several slides
 
 ```vue
-<Carousel :gap="16" aria-label="Products" :slides-per-view="3">
+<Carousel :gap="16" :slides-per-view="3" aria-label="Products">
   <CarouselSlide>One</CarouselSlide>
   <CarouselSlide>Two</CarouselSlide>
   <CarouselSlide>Three</CarouselSlide>

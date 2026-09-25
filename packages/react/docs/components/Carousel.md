@@ -54,7 +54,7 @@ const [index, setIndex] = useState(0);
 ### Without indicators
 
 ```tsx
-<Carousel aria-label="Photos" indicators={false}>
+<Carousel indicators={false} aria-label="Photos">
   <CarouselSlide>One</CarouselSlide>
   <CarouselSlide>Two</CarouselSlide>
 </Carousel>
