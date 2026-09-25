@@ -234,7 +234,7 @@ export function useCarousel(
 
       merged.onIndexChange?.(next);
     },
-    [activeIndex, isControlled, merged, slideCount],
+    [merged, slideCount, activeIndex, isControlled],
   );
 
   const go = useCallback(
@@ -265,7 +265,14 @@ export function useCarousel(
         ),
       );
     },
-    [activeIndex, merged.loop, selectIndex, slideCount],
+    [
+      slideCount,
+      activeIndex,
+      merged.loop,
+      selectIndex,
+      merged.align,
+      merged.slidesPerView,
+    ],
   );
 
   useLayoutEffect(() => {
@@ -291,7 +298,7 @@ export function useCarousel(
 
       return next === current ? current : next;
     });
-  }, [isControlled, merged.align, merged.slidesPerView, slideCount]);
+  }, [slideCount, isControlled, merged.align, merged.slidesPerView]);
 
   useEffect(() => {
     if (typeof window.matchMedia !== "function") {
@@ -329,7 +336,7 @@ export function useCarousel(
     return () => {
       window.clearInterval(timer);
     };
-  }, [focused, go, hovered, merged.autoPlay, reducedMotion]);
+  }, [go, focused, hovered, reducedMotion, merged.autoPlay]);
 
   useEffect(() => {
     if (slideCount <= 0) {
@@ -354,7 +361,7 @@ export function useCarousel(
         index: activeIndex + 1,
       }),
     );
-  }, [activeIndex, resolveMessage, slideCount]);
+  }, [slideCount, activeIndex, resolveMessage]);
 
   const showControls =
     getCarouselMaxIndex(slideCount, merged.slidesPerView, merged.align) > 0;
@@ -677,12 +684,12 @@ export function useCarousel(
       );
     },
     [
+      sizeItem,
       activeIndex,
-      customProps?.indicator,
+      selectIndex,
       mergedClasses,
       resolveMessage,
-      selectIndex,
-      sizeItem,
+      customProps?.indicator,
     ],
   );
 
@@ -704,17 +711,17 @@ export function useCarousel(
       ),
     };
   }, [
-    activeIndex,
+    sizeItem,
+    takeIndex,
     carouselId,
-    customProps?.slide,
-    merged.align,
     merged.gap,
+    slideCount,
+    activeIndex,
+    merged.align,
+    mergedClasses,
+    customProps?.slide,
     merged.orientation,
     merged.slidesPerView,
-    mergedClasses,
-    sizeItem,
-    slideCount,
-    takeIndex,
   ]);
 
   return {
