@@ -11,6 +11,31 @@ export type { AccordionValue } from "@/Domain/accordion";
 export { collapseBreadcrumbItems } from "@/Domain/breadcrumb";
 export type { CollapsedBreadcrumbEntry } from "@/Domain/breadcrumb";
 export {
+  CAROUSEL_SWIPE_THRESHOLD_PX,
+  DEFAULT_CAROUSEL_AUTOPLAY_INTERVAL,
+  canMoveCarousel,
+  clampCarouselIndex,
+  getAdjacentCarouselIndex,
+  getCarouselMaxIndex,
+  getCarouselSlideId,
+  getCarouselSlideStyle,
+  getCarouselTrackOffset,
+  getCarouselTrackStyle,
+  isCarouselSlideInView,
+  resolveCarouselAutoPlayInterval,
+  resolveCarouselGap,
+  resolveCarouselSlidesPerView,
+  resolveCarouselSwipeDirection,
+  shouldPauseCarouselAutoPlay,
+} from "@/Domain/carousel";
+export type {
+  CarouselAlign,
+  CarouselOrientation,
+  CarouselSwipeOptions,
+  CarouselTrackOffsetOptions,
+  ShouldPauseCarouselAutoPlayOptions,
+} from "@/Domain/carousel";
+export {
   COLOR_FORMATS,
   DEFAULT_COLOR_FORMAT,
   DEFAULT_HSVA,

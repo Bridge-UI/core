@@ -116,6 +116,8 @@ export type {
   CardVariant,
   CardVariantItem,
 } from "@/Tokens/Card";
+export { sizeProps as carouselSizeProps } from "@/Tokens/Carousel";
+export type { CarouselSize, CarouselSizeItem } from "@/Tokens/Carousel";
 export {
   colorProps as checkboxColorProps,
   roundedProps as checkboxRoundedProps,

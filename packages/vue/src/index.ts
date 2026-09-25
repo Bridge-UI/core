@@ -218,6 +218,26 @@ export type {
   CardSlots,
   CardVariantOverrides,
 } from "@/Components/Card";
+export { Carousel, useCarousel } from "@/Components/Carousel";
+export type {
+  CarouselClasses,
+  CarouselContextValue,
+  CarouselCustomProps,
+  CarouselEmits,
+  CarouselIndicatorState,
+  CarouselOwnProps,
+  CarouselProps,
+  CarouselSizeOverrides,
+  CarouselSlots,
+} from "@/Components/Carousel";
+export { CarouselSlide, useCarouselSlide } from "@/Components/CarouselSlide";
+export type {
+  CarouselSlideClasses,
+  CarouselSlideCustomProps,
+  CarouselSlideOwnProps,
+  CarouselSlideProps,
+  CarouselSlideSlots,
+} from "@/Components/CarouselSlide";
 export { Checkbox, useCheckbox } from "@/Components/Checkbox";
 export type {
   CheckboxClasses,
