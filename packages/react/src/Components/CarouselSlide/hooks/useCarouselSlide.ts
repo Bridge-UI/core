@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, omit } from "es-toolkit/compat";
-import { useLayoutEffect } from "react";
+import { useId, useLayoutEffect } from "react";
 
 // ** Core Imports
 import {
@@ -30,11 +30,18 @@ const carouselSlideBridgeKeys = [
 ] as const satisfies readonly (keyof CarouselSlideOwnProps)[];
 
 export function useCarouselSlide(props: CarouselSlideProps) {
+  const slideUid = useId();
   const carousel = useCarouselContext();
   const resolveMessage = useResolveMessage();
 
+  carousel.registerSlide(slideUid);
+
+  useLayoutEffect(() => {
+    return carousel.registerSlide(slideUid);
+  }, [carousel.registerSlide, slideUid]);
+
   const index = derived(() => {
-    return carousel.takeIndex();
+    return carousel.getIndex(slideUid);
   });
 
   const selected = derived(() => {

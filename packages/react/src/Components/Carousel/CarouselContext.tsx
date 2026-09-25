@@ -15,9 +15,19 @@ export type CarouselContextValue = {
   activeIndex: number;
 
   /**
+   * Resolves a registered slide's 0-based index.
+   */
+  getIndex: (id: string) => number;
+
+  /**
    * Stable id prefix for slide elements.
    */
   id: string;
+
+  /**
+   * Registers a slide id and returns unregister.
+   */
+  registerSlide: (id: string) => () => void;
 
   /**
    * Size class map.
@@ -48,11 +58,6 @@ export type CarouselContextValue = {
    * Inline size for each slide (basis and gap padding).
    */
   slideStyle: Record<string, string>;
-
-  /**
-   * Allocates the next 0-based index during render.
-   */
-  takeIndex: () => number;
 };
 
 export const CarouselContext = createContext<null | CarouselContextValue>(null);

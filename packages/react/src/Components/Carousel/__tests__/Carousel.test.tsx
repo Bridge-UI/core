@@ -108,6 +108,48 @@ test("it should move to the next slide", () => {
   expect(slideOf("One")?.getAttribute("aria-hidden")).toBe("true");
 });
 
+test("it should move on the first click after focus", () => {
+  const onIndexChange = vi.fn();
+
+  render(<Photos onIndexChange={onIndexChange} />);
+
+  const next = screen.getByRole("button", { name: "Next slide" });
+
+  fireEvent.focus(next);
+
+  expect(screen.getByRole("button", { name: "Next slide" })).toBe(next);
+
+  fireEvent.click(next);
+
+  expect(onIndexChange).toHaveBeenCalledWith(1);
+  expect(slideOf("Two")?.getAttribute("aria-hidden")).toBeNull();
+});
+
+test("it should hide controls when every slide is removed", () => {
+  function Harness() {
+    const [items, setItems] = useState(["One", "Two"]);
+
+    return (
+      <>
+        <button type="button" onClick={() => setItems([])}>
+          Clear
+        </button>
+        <Carousel aria-label="Photos">
+          {items.map((item) => (
+            <CarouselSlide key={item}>{item}</CarouselSlide>
+          ))}
+        </Carousel>
+      </>
+    );
+  }
+
+  render(<Harness />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Clear" }));
+
+  expect(screen.queryByRole("button", { name: "Next slide" })).toBeNull();
+});
+
 test("it should wrap when loop is on", () => {
   render(<Photos loop />);
 

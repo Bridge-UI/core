@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { get, isFunction, omit } from "es-toolkit/compat";
 import type {
   FocusEvent,
   KeyboardEvent,
@@ -120,8 +120,9 @@ export function useCarousel(
   libDefaults: CarouselLibDefaults,
 ) {
   const reactId = useId();
-  const counterRef = useRef(0);
   const resolveMessage = useResolveMessage();
+
+  const slideIdsRef = useRef<string[]>([]);
   const seenIndexRef = useRef<null | number>(null);
   const carouselId = `bridge-carousel${reactId.replace(/:/g, "")}`;
   const swipeStart = useRef<null | {
@@ -129,8 +130,6 @@ export function useCarousel(
     x: number;
     y: number;
   }>(null);
-
-  counterRef.current = 0;
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     CarouselProps,
@@ -151,14 +150,14 @@ export function useCarousel(
 
   const isControlled = props.index !== undefined;
 
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [slideCount, setSlideCount] = useState(0);
+  const [announcement, setAnnouncement] = useState("");
+  const [reducedMotion, setReducedMotion] = useState(false);
   const [uncontrolled, setUncontrolled] = useState(
     () => props.defaultIndex ?? libDefaults.defaultIndex ?? 0,
   );
-  const [slideCount, setSlideCount] = useState(0);
-  const [hovered, setHovered] = useState(false);
-  const [focused, setFocused] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
-  const [announcement, setAnnouncement] = useState("");
 
   const rawIndex = isControlled ? (props.index ?? 0) : uncontrolled;
 
@@ -201,17 +200,23 @@ export function useCarousel(
     return (get(sizeItem, "icon") ?? "sm") as keyof IconSize;
   });
 
-  const takeIndex = useCallback(() => {
-    const index = counterRef.current;
+  const registerSlide = useCallback((id: string) => {
+    if (!slideIdsRef.current.includes(id)) {
+      slideIdsRef.current = [...slideIdsRef.current, id];
+    }
 
-    counterRef.current += 1;
+    return () => {
+      slideIdsRef.current = slideIdsRef.current.filter((item) => item !== id);
+    };
+  }, []);
 
-    return index;
+  const getIndex = useCallback((id: string) => {
+    return slideIdsRef.current.indexOf(id);
   }, []);
 
   const selectIndex = useCallback(
     (index: number) => {
-      const count = counterRef.current || slideCount;
+      const count = slideIdsRef.current.length;
       const max =
         count <= 0 ? null : getCarouselMaxIndex(count, merged.slidesPerView);
       const next = max == null ? index : clampCarouselIndex(index, max + 1);
@@ -226,12 +231,12 @@ export function useCarousel(
 
       merged.onIndexChange?.(next);
     },
-    [merged, slideCount, activeIndex, isControlled],
+    [merged, activeIndex, isControlled],
   );
 
   const go = useCallback(
     (direction: 1 | -1) => {
-      const count = counterRef.current || slideCount;
+      const count = slideIdsRef.current.length;
 
       const move = {
         count,
@@ -247,11 +252,11 @@ export function useCarousel(
 
       selectIndex(getAdjacentCarouselIndex(move));
     },
-    [slideCount, activeIndex, merged.loop, selectIndex, merged.slidesPerView],
+    [activeIndex, merged.loop, selectIndex, merged.slidesPerView],
   );
 
   useLayoutEffect(() => {
-    const next = counterRef.current;
+    const next = slideIdsRef.current.length;
 
     setSlideCount((current) => {
       return current === next ? current : next;
@@ -272,7 +277,7 @@ export function useCarousel(
   }, [slideCount, isControlled, merged.slidesPerView]);
 
   useEffect(() => {
-    if (typeof window.matchMedia !== "function") {
+    if (!isFunction(window.matchMedia)) {
       return;
     }
 
@@ -424,7 +429,7 @@ export function useCarousel(
       selectIndex(0);
     } else if (event.key === "End") {
       event.preventDefault();
-      const count = counterRef.current || slideCount;
+      const count = slideIdsRef.current.length;
 
       selectIndex(getCarouselMaxIndex(count, merged.slidesPerView));
     }
@@ -718,10 +723,11 @@ export function useCarousel(
 
   const contextValue = useMemo<CarouselContextValue>(() => {
     return {
+      getIndex,
       sizeItem,
-      takeIndex,
       slideCount,
       activeIndex,
+      registerSlide,
       id: carouselId,
       slidePartProps: customProps?.slide,
       slidesPerView: merged.slidesPerView,
@@ -733,13 +739,14 @@ export function useCarousel(
       ),
     };
   }, [
+    getIndex,
     sizeItem,
-    takeIndex,
     carouselId,
     merged.gap,
     slideCount,
     activeIndex,
     mergedClasses,
+    registerSlide,
     customProps?.slide,
     merged.orientation,
     merged.slidesPerView,
