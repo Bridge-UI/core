@@ -245,6 +245,8 @@ describe("isImageUploadValue", () => {
     expect(isImageUploadValue(typed)).toBe(true);
     expect(isImageUploadValue(remote)).toBe(true);
     expect(isImageUploadValue({ size: 10, name: "Diploma.pdf" })).toBe(false);
+    expect(isImageUploadValue(makeFile("photo.png", { type: "" }))).toBe(true);
+    expect(isImageUploadValue(makeFile("notes.txt", { type: "" }))).toBe(false);
   });
 });
 
@@ -264,6 +266,12 @@ describe("getFileUploadPreviewUrl", () => {
     expect(
       getFileUploadPreviewUrl({ size: 10, name: "Diploma.pdf" }),
     ).toBeUndefined();
+    expect(
+      getFileUploadPreviewUrl(
+        makeFile("photo.png", { type: "" }),
+        "blob:preview",
+      ),
+    ).toBe("blob:preview");
   });
 });
 

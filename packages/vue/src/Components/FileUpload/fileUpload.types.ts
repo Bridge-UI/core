@@ -249,6 +249,13 @@ export interface FileUploadOwnProps<Multiple extends boolean = false> {
   color?: MergeProps<FileUploadColor, FileUploadColorOverrides>;
 
   /**
+   * Secondary label text at the inline end of the header row.
+   *
+   * @default undefined
+   */
+  corner?: string;
+
+  /**
    * Extra props for internal parts (`input`, `dropzone`, `list`, `item`, …).
    *
    * @default undefined

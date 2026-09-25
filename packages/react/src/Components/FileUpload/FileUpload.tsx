@@ -2,6 +2,9 @@
 import { isFunction, isNil } from "es-toolkit/compat";
 import { type ReactNode } from "react";
 
+// ** Core Imports
+import { getFileUploadItemKey } from "@bridge-ui/core/Domain";
+
 // ** Local Imports
 import BaseField from "@/Components/BaseField/BaseField";
 import { Button } from "@/Components/Button";
@@ -66,11 +69,11 @@ function FileUpload(props: FileUploadProps) {
   ) : fileItems.length > 0 ? (
     <ul {...listBind}>
       {fileItems.map((item) => {
-        const itemBind = getItemBind(item.index);
+        const itemKey = getFileUploadItemKey(item.value, item.index);
 
         if (isFunction(slots?.item)) {
           return (
-            <li {...itemBind} key={itemBind.key as string}>
+            <li {...getItemBind(item.index)} key={itemKey}>
               {slots.item(item)}
             </li>
           );
@@ -79,7 +82,7 @@ function FileUpload(props: FileUploadProps) {
         return (
           <FileUploadItem
             {...item}
-            key={itemBind.key as string}
+            key={itemKey}
             slots={{
               end: resolveItemSlot(slots?.end, item),
               start: resolveItemSlot(slots?.start, item),

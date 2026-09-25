@@ -290,15 +290,19 @@ export function isImageFile(file: File): boolean {
 
 /**
  * Returns whether `value` can show an image preview.
- * Uses the MIME type (`File.type` or remote `type`), then the extension of `name` or `url`.
+ * Uses the MIME type, then the extension of `name`. Remote items also check `url`.
  */
 export function isImageUploadValue(value: FileUploadValue): boolean {
   if ((value.type || "").toLowerCase().startsWith("image/")) {
     return true;
   }
 
+  if (hasImageExtension(value.name)) {
+    return true;
+  }
+
   if (isFileUploadRemote(value)) {
-    return hasImageExtension(value.name) || hasImageExtension(value.url ?? "");
+    return hasImageExtension(value.url ?? "");
   }
 
   return false;

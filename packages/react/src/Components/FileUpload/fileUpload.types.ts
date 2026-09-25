@@ -252,6 +252,13 @@ export interface FileUploadOwnProps {
   color?: MergeProps<FileUploadColor, FileUploadColorOverrides>;
 
   /**
+   * Secondary label text at the inline end of the header row.
+   *
+   * @default undefined
+   */
+  corner?: string;
+
+  /**
    * Extra props for internal parts (`input`, `dropzone`, `list`, `item`, …).
    *
    * @default undefined
@@ -367,6 +374,11 @@ export interface FileUploadOwnProps {
 }
 
 export interface FileUploadSlots {
+  /**
+   * Secondary label at the inline end of the header row.
+   */
+  corner?: ReactNode;
+
   /**
    * Replaces helper text below the picker / list.
    */

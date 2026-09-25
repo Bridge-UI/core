@@ -43,6 +43,24 @@ test("it should render a dropzone when variant is dropzone", () => {
   expect(wrapper.find('[role="button"]').exists()).toBe(true);
 });
 
+test("it should render a corner label beside the field label", () => {
+  const wrapper = mount(FileUpload, {
+    props: { corner: "Optional", label: "Attachments" },
+  });
+
+  expect(wrapper.text()).toContain("Optional");
+  expect(wrapper.text()).toContain("Attachments");
+});
+
+test("it should render the corner slot", () => {
+  const wrapper = mount(FileUpload, {
+    props: { label: "Attachments" },
+    slots: { corner: () => "Later" },
+  });
+
+  expect(wrapper.text()).toContain("Later");
+});
+
 test("it should render an optional label", () => {
   const wrapper = mount(FileUpload, {
     props: { label: "Attachments" },
@@ -205,6 +223,24 @@ test("it should render a start slot and replace the remove button with end", () 
   expect(wrapper.text()).toContain("Drag");
   expect(wrapper.text()).toContain("Clear");
   expect(wrapper.find('[aria-label="Remove note.txt"]').exists()).toBe(false);
+});
+
+test("it should forward attributes on FileUploadItem", () => {
+  const file = makeFile("note.txt", { size: 12 });
+  const wrapper = mount(FileUpload, {
+    props: { modelValue: file },
+    slots: {
+      list: (slotProps: { items: { index: number }[] }) =>
+        h(
+          "div",
+          slotProps.items.map((item) =>
+            h(FileUploadItem, { ...item, "data-testid": "upload-item" }),
+          ),
+        ),
+    },
+  });
+
+  expect(wrapper.find('[data-testid="upload-item"]').exists()).toBe(true);
 });
 
 test("it should reuse FileUploadItem inside the list slot", () => {

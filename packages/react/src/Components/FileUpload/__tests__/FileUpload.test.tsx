@@ -46,6 +46,21 @@ test("it should render a dropzone when variant is dropzone", () => {
   expect(screen.getByRole("button")).toBeTruthy();
 });
 
+test("it should render a corner label beside the field label", () => {
+  render(<FileUpload corner="Optional" label="Attachments" />);
+
+  expect(screen.getByText("Optional")).toBeTruthy();
+  expect(screen.getByText("Attachments")).toBeTruthy();
+});
+
+test("it should render the corner slot", () => {
+  render(
+    <FileUpload label="Attachments" slots={{ corner: <span>Later</span> }} />,
+  );
+
+  expect(screen.getByText("Later")).toBeTruthy();
+});
+
 test("it should render an optional label", () => {
   render(<FileUpload label="Attachments" />);
 

@@ -19,10 +19,8 @@ import {
   fileUploadModelFromItems,
   formatFileMeta,
   formatFileSize,
-  getFileUploadItemKey,
   getFileUploadPreviewUrl,
   isFileUploadRemote,
-  isImageFile,
   isImageUploadValue,
   mergeFileUploadSelection,
   removeFileAtIndex,
@@ -65,6 +63,7 @@ const fileUploadBridgeKeys = [
   "title",
   "value",
   "accept",
+  "corner",
   "classes",
   "maxSize",
   "rounded",
@@ -218,12 +217,14 @@ export function useFileUpload(
       error: showError,
       size: componentProps.size,
       label: componentProps.label,
+      corner: componentProps.corner,
       disabled: componentProps.disabled,
       required: componentProps.required,
       errorMessage: resolvedErrorMessage,
       description: isDropzone ? undefined : componentProps.description,
       slots: {
         label: slots?.label,
+        corner: slots?.corner,
         errorMessage: slots?.errorMessage,
         description: isDropzone ? undefined : slots?.description,
       },
@@ -253,25 +254,27 @@ export function useFileUpload(
     },
   );
 
-  const previewUrls = useMemo(() => {
-    return files.map((value) => {
-      if (isFileUploadRemote(value) || !isImageFile(value)) {
+  const [previewUrls, setPreviewUrls] = useState<(string | undefined)[]>([]);
+
+  useEffect(() => {
+    const urls = files.map((value) => {
+      if (isFileUploadRemote(value) || !isImageUploadValue(value)) {
         return undefined;
       }
 
       return URL.createObjectURL(value);
     });
-  }, [files]);
 
-  useEffect(() => {
+    setPreviewUrls(urls);
+
     return () => {
-      for (const url of previewUrls) {
+      for (const url of urls) {
         if (url) {
           URL.revokeObjectURL(url);
         }
       }
     };
-  }, [previewUrls]);
+  }, [files]);
 
   const publishModel = useCallback(
     (next: FileUploadValue[]) => {
@@ -516,12 +519,10 @@ export function useFileUpload(
   });
 
   const getItemBind = useCallback(
-    (index: number) => {
-      const value = files[index];
-
+    (_index: number) => {
       return mergePartBind(
         customProps?.item,
-        { key: value ? getFileUploadItemKey(value, index) : String(index) },
+        {},
         cn({
           [get(sizeItem, "item") ?? ""]: true,
           [roundedClass ?? ""]: true,
@@ -529,7 +530,7 @@ export function useFileUpload(
         }),
       );
     },
-    [customProps?.item, files, mergedClasses, roundedClass, sizeItem],
+    [sizeItem, roundedClass, mergedClasses, customProps?.item],
   );
 
   const mediaBind = derived(() => {

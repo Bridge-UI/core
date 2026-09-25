@@ -20,7 +20,6 @@ import {
   formatFileSize,
   getFileUploadPreviewUrl,
   isFileUploadRemote,
-  isImageFile,
   isImageUploadValue,
   mergeFileUploadSelection,
   removeFileAtIndex,
@@ -61,6 +60,7 @@ const fileUploadBridgeKeys = [
   "label",
   "title",
   "accept",
+  "corner",
   "classes",
   "maxSize",
   "rounded",
@@ -173,6 +173,7 @@ export function useFileUpload(
         size: split.value.componentProps.size,
         label: split.value.componentProps.label,
         errorMessage: resolvedErrorMessage.value,
+        corner: split.value.componentProps.corner,
         disabled: split.value.componentProps.disabled,
         required: split.value.componentProps.required,
         description: isDropzone.value
@@ -256,7 +257,7 @@ export function useFileUpload(
       }
 
       previewUrls.value = next.map((value) => {
-        if (isFileUploadRemote(value) || !isImageFile(value)) {
+        if (isFileUploadRemote(value) || !isImageUploadValue(value)) {
           return undefined;
         }
 

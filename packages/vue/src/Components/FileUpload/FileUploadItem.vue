@@ -1,6 +1,10 @@
 <script setup lang="ts">
 // ** External Imports
-import { computed, inject, useSlots } from "vue";
+import type { ClassValue } from "clsx";
+import { computed, inject, useAttrs, useSlots } from "vue";
+
+// ** Core Imports
+import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { Button } from "@/Components/Button";
@@ -18,6 +22,8 @@ defineOptions({ inheritAttrs: false });
 
 const props = defineProps<FileUploadItemSlotProps>();
 
+const attrs = useAttrs();
+
 const slots = useSlots();
 
 const context = inject(FILE_UPLOAD_KEY);
@@ -27,7 +33,13 @@ if (!context) {
 }
 
 const itemBind = computed(() => {
-  return context.value.getItemBind(props.index);
+  const bind = context.value.getItemBind(props.index);
+
+  return {
+    ...bind,
+    ...attrs,
+    class: cn(bind.class, attrs.class as ClassValue),
+  };
 });
 </script>
 
