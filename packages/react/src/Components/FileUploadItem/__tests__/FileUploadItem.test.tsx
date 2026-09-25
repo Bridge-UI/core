@@ -31,6 +31,30 @@ test("it should render an upload error with retry", () => {
   expect(screen.getByRole("listitem").getAttribute("data-state")).toBe("error");
 });
 
+test("it should replace the state line from the item description", () => {
+  render(
+    <FileUpload
+      value={{ state: "error", name: "report.pdf" }}
+      slots={{
+        list: ({ items }) => (
+          <div>
+            {items.map((item) => (
+              <FileUploadItem
+                {...item}
+                key={item.index}
+                description="Open preview dialog"
+              />
+            ))}
+          </div>
+        ),
+      }}
+    />,
+  );
+
+  expect(screen.getByText("Open preview dialog")).toBeTruthy();
+  expect(screen.queryByText("Upload failed. Try again.")).toBeNull();
+});
+
 test("it should render FileUploadItem from the list slot", () => {
   const file = new File(["hello"], "note.txt", { type: "text/plain" });
 

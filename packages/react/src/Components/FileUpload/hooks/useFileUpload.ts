@@ -101,8 +101,8 @@ export function useFileUpload(
   props: FileUploadProps,
   libDefaults: FileUploadLibDefaults,
 ) {
-  const inputRef = useRef<null | HTMLInputElement>(null);
   const dragDepthRef = useRef(0);
+  const inputRef = useRef<null | HTMLInputElement>(null);
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     FileUploadProps,
@@ -121,14 +121,19 @@ export function useFileUpload(
     componentName: "FileUpload",
   });
 
+  const [dragging, setDragging] = useState(false);
+  const [validationError, setValidationError] = useState<string | undefined>();
   const [uncontrolledModel, setUncontrolledModel] = useState<FileUploadModel>(
     () => props.defaultValue ?? null,
   );
-  const [dragging, setDragging] = useState(false);
-  const [validationError, setValidationError] = useState<string | undefined>();
 
-  const isControlled = props.value !== undefined;
-  const boundModel = isControlled ? (props.value ?? null) : uncontrolledModel;
+  const isControlled = derived(() => {
+    return props.value !== undefined;
+  });
+
+  const boundModel = derived(() => {
+    return isControlled ? (props.value ?? null) : uncontrolledModel;
+  });
   const files = useMemo(() => {
     return fileUploadItemsFromModel(boundModel, Boolean(merged.multiple));
   }, [boundModel, merged.multiple]);

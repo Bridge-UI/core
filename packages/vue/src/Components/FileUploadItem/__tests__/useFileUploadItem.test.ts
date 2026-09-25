@@ -77,9 +77,9 @@ test("it should describe a file without an upload state", () => {
     remove: () => undefined,
   });
 
-  expect(result.statusLabel.value).toContain("TXT");
-  expect(result.showDescription.value).toBe(true);
   expect(result.showRetry.value).toBe(false);
+  expect(result.showDescription.value).toBe(true);
+  expect(result.statusLabel.value).toContain("TXT");
   expect(result.media.value).toEqual({
     spin: false,
     kind: "icon",
@@ -100,14 +100,55 @@ test("it should mark an uploading card", () => {
     { size: "xs" },
   );
 
-  expect(result.statusLabel.value).toBe("Uploading · 64%");
   expect(result.showDescription.value).toBe(true);
+  expect(result.statusLabel.value).toBe("Uploading · 64%");
+  expect(String(result.titleBind.value.class)).toContain("animate-pulse");
   expect(result.media.value).toEqual({
     spin: true,
     kind: "icon",
     icon: "loader",
   });
-  expect(String(result.titleBind.value.class)).toContain("animate-pulse");
+});
+
+test("it should hide the state line when description is cleared", () => {
+  const empty = mountUseFileUploadItem({
+    index: 0,
+    sizeLabel: "",
+    isImage: false,
+    description: "",
+    metaLabel: "PDF",
+    remove: () => undefined,
+    value: { name: "a.pdf", state: "uploading" },
+  });
+
+  expect(empty.result.showDescription.value).toBe(false);
+
+  const cleared = mountUseFileUploadItem({
+    index: 0,
+    sizeLabel: "",
+    isImage: false,
+    metaLabel: "PDF",
+    description: null,
+    remove: () => undefined,
+    value: { name: "a.pdf", state: "error" },
+  });
+
+  expect(cleared.result.showDescription.value).toBe(false);
+});
+
+test("it should replace the state line with description", () => {
+  const { result } = mountUseFileUploadItem({
+    index: 0,
+    sizeLabel: "",
+    isImage: false,
+    metaLabel: "PDF",
+    remove: () => undefined,
+    description: "Open preview dialog",
+    value: { name: "a.pdf", state: "error" },
+  });
+
+  expect(result.showDescription.value).toBe(true);
+  expect(result.statusLabel.value).toBe("Open preview dialog");
 });
 
 test("it should apply a vertical orientation override", () => {
@@ -121,6 +162,6 @@ test("it should apply a vertical orientation override", () => {
     orientation: "vertical",
   });
 
-  expect(result.rootBind.value["data-orientation"]).toBe("vertical");
   expect(String(result.rootBind.value.class)).toContain("flex-col");
+  expect(result.rootBind.value["data-orientation"]).toBe("vertical");
 });

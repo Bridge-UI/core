@@ -167,7 +167,7 @@ When `slots.list` is set, FileUpload does not render the default list. `items` f
 
 ### Upload state
 
-Leave `state` unset for the type · size card. Set it on the attachment object while your app uploads. `description` replaces the meta line. `progress` (0–100) is shown for `uploading`. `onRetry` adds a retry button when `state` is `error`.
+Leave `state` unset for the type · size card. Set it on the attachment object while your app uploads. `description` on the attachment, or on `FileUploadItem`, replaces that line — including state copy such as "Uploading" or "Upload failed. Try again." `null` or `""` hides the line at every size, including `xs` while `state` is set. `progress` (0–100) is shown for `uploading`. `onRetry` adds a retry button when `state` is `error`.
 
 | `state`      | Meta line                 |
 | ------------ | ------------------------- |

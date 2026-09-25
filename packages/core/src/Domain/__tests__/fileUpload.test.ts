@@ -472,6 +472,24 @@ describe("shouldShowFileUploadDescription", () => {
       ),
     ).toBe(true);
   });
+
+  test("it should hide the line when description is cleared", () => {
+    const uploading = {
+      progress: 64,
+      name: "a.pdf",
+      state: "uploading" as const,
+    };
+
+    expect(
+      shouldShowFileUploadDescription(
+        { ...uploading, description: null },
+        "xs",
+      ),
+    ).toBe(false);
+    expect(
+      shouldShowFileUploadDescription({ ...uploading, description: "" }, "md"),
+    ).toBe(false);
+  });
 });
 
 describe("resolveFileUploadItemMedia", () => {

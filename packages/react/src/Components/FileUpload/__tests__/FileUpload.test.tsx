@@ -327,6 +327,26 @@ test("it should lay vertical cards in a row", () => {
   expect(container.querySelector("li")?.className).toContain("flex-col");
 });
 
+test("it should hide the state line when description is cleared", () => {
+  const { rerender } = render(
+    <FileUpload
+      size="xs"
+      value={{ description: "", name: "report.pdf", state: "uploading" }}
+    />,
+  );
+
+  expect(screen.queryByText(/Uploading/)).toBeNull();
+
+  rerender(
+    <FileUpload
+      size="md"
+      value={{ state: "error", description: null, name: "report.pdf" }}
+    />,
+  );
+
+  expect(screen.queryByText("Upload failed. Try again.")).toBeNull();
+});
+
 test("it should replace the meta line with a custom description", () => {
   render(
     <FileUpload

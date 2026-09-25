@@ -331,6 +331,34 @@ test("it should lay vertical cards in a row", () => {
   expect(wrapper.find("li").classes()).toContain("flex-col");
 });
 
+test("it should hide the state line when description is cleared", () => {
+  const empty = mount(FileUpload, {
+    props: {
+      size: "xs",
+      modelValue: {
+        description: "",
+        name: "report.pdf",
+        state: "uploading" as const,
+      },
+    },
+  });
+
+  expect(empty.text()).not.toContain("Uploading");
+
+  const cleared = mount(FileUpload, {
+    props: {
+      size: "md",
+      modelValue: {
+        description: null,
+        name: "report.pdf",
+        state: "error" as const,
+      },
+    },
+  });
+
+  expect(cleared.text()).not.toContain("Upload failed. Try again.");
+});
+
 test("it should replace the meta line with a custom description", () => {
   const wrapper = mount(FileUpload, {
     props: {

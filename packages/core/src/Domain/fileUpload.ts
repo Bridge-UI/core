@@ -60,8 +60,9 @@ export type FileUploadItemMedia =
 export type FileUploadRemote = {
   /**
    * Replaces the meta line (`Ready to upload`, `PDF · 1.8 MB`, …).
+   * `null` or `""` hides that line at every size, including while `state` is set.
    */
-  description?: string;
+  description?: null | string;
 
   /**
    * Browser file still being uploaded. Preview uses this when `url` is absent.
@@ -316,11 +317,16 @@ export function formatFileUploadStatusLabel(value: FileUploadValue): string {
 /**
  * Whether the meta line is visible.
  * `xs` hides the default type · size line and still shows a status or custom description.
+ * `description: null` or `""` hides the line at every size, including while `state` is set.
  */
 export function shouldShowFileUploadDescription(
   value: FileUploadValue,
   size?: string,
 ): boolean {
+  if (isFileUploadDescriptionCleared(value)) {
+    return false;
+  }
+
   if (size !== "xs") {
     return true;
   }
@@ -330,6 +336,16 @@ export function shouldShowFileUploadDescription(
   }
 
   return isFileUploadRemote(value) && Boolean(value.description);
+}
+
+/**
+ * `null` or `""` on a remote attachment hides the meta line.
+ */
+function isFileUploadDescriptionCleared(value: FileUploadValue): boolean {
+  return (
+    isFileUploadRemote(value) &&
+    (value.description === null || value.description === "")
+  );
 }
 
 /**

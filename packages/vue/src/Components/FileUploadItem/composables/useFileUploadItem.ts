@@ -25,6 +25,7 @@ const fileUploadItemBridgeKeys = [
   "metaLabel",
   "sizeLabel",
   "previewUrl",
+  "description",
   "orientation",
 ] as const satisfies readonly (keyof FileUploadItemOwnProps)[];
 
@@ -75,10 +76,26 @@ export function useFileUploadItem(props: FileUploadItemOwnProps) {
   });
 
   const statusLabel = computed(() => {
+    const description = split.value.componentProps.description;
+
+    if (description) {
+      return description;
+    }
+
     return formatFileUploadStatusLabel(split.value.componentProps.value);
   });
 
   const showDescription = computed(() => {
+    const description = split.value.componentProps.description;
+
+    if (description === null || description === "") {
+      return false;
+    }
+
+    if (description) {
+      return true;
+    }
+
     return shouldShowFileUploadDescription(
       split.value.componentProps.value,
       context.value.size,

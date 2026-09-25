@@ -14,6 +14,14 @@ import type {
 
 export interface FileUploadItemOwnProps extends FileUploadItemSlotProps {
   /**
+   * Replaces the meta line, including upload-state copy.
+   * `null` or `""` hides the line.
+   *
+   * @default the attachment `description`, or the type · size / state label
+   */
+  description?: null | string;
+
+  /**
    * Card layout. Overrides the `FileUpload` orientation for this card.
    *
    * @default inherited from FileUpload

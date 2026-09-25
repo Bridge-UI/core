@@ -14,6 +14,7 @@ import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 // ** Local Imports
 import { useFileUploadItemContext } from "@/Components/FileUpload/FileUploadContext";
 import type { FileUploadItemProps } from "@/Components/FileUploadItem/fileUploadItem.types";
+import { derived } from "@/Utils";
 
 const fileUploadItemBridgeKeys = [
   "index",
@@ -25,6 +26,7 @@ const fileUploadItemBridgeKeys = [
   "metaLabel",
   "sizeLabel",
   "previewUrl",
+  "description",
   "orientation",
 ] as const satisfies readonly (keyof FileUploadItemProps)[];
 
@@ -42,75 +44,127 @@ export function useFileUploadItem(props: FileUploadItemProps) {
     bridgeKeys: fileUploadItemBridgeKeys,
   });
 
-  const orientation = componentProps.orientation ?? context.orientation;
-  const orientationItem = get(context.orientationItems, orientation);
-  const state = getFileUploadItemState(componentProps.value);
-  const stateItem = state ? get(context.stateItems, state) : undefined;
-  const media = resolveFileUploadItemMedia(
-    componentProps.value,
-    componentProps.previewUrl,
-  );
-  const statusLabel = formatFileUploadStatusLabel(componentProps.value);
-  const showDescription = shouldShowFileUploadDescription(
-    componentProps.value,
-    context.size,
-  );
-  const showRetry = state === "error" && !isNil(componentProps.retry);
-  const orientationOverride = orientation !== context.orientation;
-  const itemBind = context.getItemBind(componentProps.index);
+  const orientation = derived(() => {
+    return componentProps.orientation ?? context.orientation;
+  });
 
-  const rootBind = {
-    ...itemBind,
-    ...inheritedAttrs,
-    "data-orientation": orientation,
-    ...(state ? { "data-state": state } : {}),
-    className: cn(
-      itemBind.className,
-      orientationOverride ? get(orientationItem, "item") : undefined,
-      inheritedAttrs.className,
-    ),
-  } as HTMLAttributes<HTMLLIElement>;
+  const orientationItem = derived(() => {
+    return get(context.orientationItems, orientation);
+  });
 
-  const mediaBind: HTMLAttributes<HTMLDivElement> = {
-    ...context.mediaBind,
-    className: cn(
-      context.mediaBind.className,
-      orientationOverride ? get(orientationItem, "media") : undefined,
-      stateItem ? get(stateItem, "media") : undefined,
-    ),
-  };
+  const state = derived(() => {
+    return getFileUploadItemState(componentProps.value);
+  });
 
-  const contentBind: HTMLAttributes<HTMLDivElement> = {
-    ...context.contentBind,
-    className: cn(
-      context.contentBind.className,
-      orientationOverride ? get(orientationItem, "content") : undefined,
-    ),
-  };
+  const stateItem = derived(() => {
+    return state ? get(context.stateItems, state) : undefined;
+  });
 
-  const titleBind: HTMLAttributes<HTMLParagraphElement> = {
-    ...context.titleBind,
-    className: cn(
-      context.titleBind.className,
-      stateItem ? get(stateItem, "title") : undefined,
-    ),
-  };
+  const media = derived(() => {
+    return resolveFileUploadItemMedia(
+      componentProps.value,
+      componentProps.previewUrl,
+    );
+  });
 
-  const descriptionBind: HTMLAttributes<HTMLParagraphElement> = {
-    ...context.descriptionBind,
-    className: cn(
-      context.descriptionBind.className,
-      stateItem ? get(stateItem, "description") : undefined,
-    ),
-  };
+  const description = derived(() => {
+    return componentProps.description;
+  });
 
-  const actionsBind: HTMLAttributes<HTMLDivElement> = {
-    ...context.actionsBind,
-    className: cn(
-      context.actionsBind.className,
-      orientationOverride ? get(orientationItem, "actions") : undefined,
-    ),
-  };
+  const statusLabel = derived(() => {
+    if (description) {
+      return description;
+    }
+
+    return formatFileUploadStatusLabel(componentProps.value);
+  });
+
+  const showDescription = derived(() => {
+    if (description === null || description === "") {
+      return false;
+    }
+
+    if (description) {
+      return true;
+    }
+
+    return shouldShowFileUploadDescription(componentProps.value, context.size);
+  });
+
+  const showRetry = derived(() => {
+    return state === "error" && !isNil(componentProps.retry);
+  });
+
+  const orientationOverride = derived(() => {
+    return orientation !== context.orientation;
+  });
+
+  const rootBind = derived(() => {
+    const itemBind = context.getItemBind(componentProps.index);
+
+    return {
+      ...itemBind,
+      ...inheritedAttrs,
+      "data-orientation": orientation,
+      ...(state ? { "data-state": state } : {}),
+      className: cn(
+        itemBind.className,
+        orientationOverride ? get(orientationItem, "item") : undefined,
+        inheritedAttrs.className,
+      ),
+    } as HTMLAttributes<HTMLLIElement>;
+  });
+
+  const mediaBind = derived(() => {
+    return {
+      ...context.mediaBind,
+      className: cn(
+        context.mediaBind.className,
+        orientationOverride ? get(orientationItem, "media") : undefined,
+        stateItem ? get(stateItem, "media") : undefined,
+      ),
+    } as HTMLAttributes<HTMLDivElement>;
+  });
+
+  const contentBind = derived(() => {
+    return {
+      ...context.contentBind,
+      className: cn(
+        context.contentBind.className,
+        orientationOverride ? get(orientationItem, "content") : undefined,
+      ),
+    } as HTMLAttributes<HTMLDivElement>;
+  });
+
+  const titleBind = derived(() => {
+    return {
+      ...context.titleBind,
+      className: cn(
+        context.titleBind.className,
+        stateItem ? get(stateItem, "title") : undefined,
+      ),
+    } as HTMLAttributes<HTMLParagraphElement>;
+  });
+
+  const descriptionBind = derived(() => {
+    return {
+      ...context.descriptionBind,
+      className: cn(
+        context.descriptionBind.className,
+        stateItem ? get(stateItem, "description") : undefined,
+      ),
+    } as HTMLAttributes<HTMLParagraphElement>;
+  });
+
+  const actionsBind = derived(() => {
+    return {
+      ...context.actionsBind,
+      className: cn(
+        context.actionsBind.className,
+        orientationOverride ? get(orientationItem, "actions") : undefined,
+      ),
+    } as HTMLAttributes<HTMLDivElement>;
+  });
 
   return {
     media,

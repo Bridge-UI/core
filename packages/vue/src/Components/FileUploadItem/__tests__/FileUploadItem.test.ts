@@ -28,6 +28,26 @@ test("it should render an upload error with retry", async () => {
   expect(wrapper.find("li").attributes("data-state")).toBe("error");
 });
 
+test("it should replace the state line from the item description", () => {
+  const wrapper = mount(FileUpload, {
+    props: {
+      modelValue: { name: "report.pdf", state: "error" as const },
+    },
+    slots: {
+      list: (slotProps: { items: Record<string, unknown>[] }) =>
+        slotProps.items.map((item) =>
+          h(FileUploadItem, {
+            ...item,
+            description: "Open preview dialog",
+          }),
+        ),
+    },
+  });
+
+  expect(wrapper.text()).toContain("Open preview dialog");
+  expect(wrapper.text()).not.toContain("Upload failed. Try again.");
+});
+
 test("it should render FileUploadItem from the list slot", () => {
   const file = new File(["hello"], "note.txt", { type: "text/plain" });
   const wrapper = mount(FileUpload, {
