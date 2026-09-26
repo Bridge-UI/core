@@ -1,18 +1,10 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
-import { computed, defineComponent, h, ref } from "vue";
+import { defineComponent, h, ref } from "vue";
 
 // ** Local Imports
 import { useRating, type RatingOwnProps } from "@/Components/Rating";
-
-const libDefaults = {
-  max: 5,
-  size: "md",
-  icon: "star",
-  rounded: "sm",
-  color: "primary",
-} as const satisfies Partial<RatingOwnProps>;
 
 function mountUseRating(
   props: RatingOwnProps = {},
@@ -20,23 +12,12 @@ function mountUseRating(
 ) {
   let result!: ReturnType<typeof useRating>;
 
-  const modelRef = ref<null | number | undefined>(modelValue);
-  const uncontrolled = ref<null | number>(props.defaultValue ?? null);
-
-  const model = computed({
-    get: () => {
-      return modelRef.value === undefined ? uncontrolled.value : modelRef.value;
-    },
-    set: (next: null | number) => {
-      uncontrolled.value = next;
-      modelRef.value = next;
-    },
-  });
+  const model = ref<null | number | undefined>(modelValue);
 
   const Wrapper = defineComponent({
     inheritAttrs: false,
     setup() {
-      result = useRating(() => props, libDefaults, model);
+      result = useRating(props, model);
 
       return () => h("div");
     },
@@ -51,8 +32,8 @@ test("it should start empty with five items", () => {
   const result = mountUseRating();
 
   expect(result.value.value).toBeNull();
-  expect(result.items.value).toHaveLength(5);
   expect(result.icon.value).toBe("star");
+  expect(result.items.value).toHaveLength(5);
 });
 
 test("it should select and clear from item clicks", async () => {
@@ -80,4 +61,13 @@ test("it should clamp the value to max", () => {
 
   expect(result.value.value).toBe(3);
   expect(result.items.value).toHaveLength(3);
+});
+
+test("it should expose a halfway fill for a fractional value", () => {
+  const result = mountUseRating({ max: 5 }, 1.5);
+
+  expect(result.value.value).toBe(1.5);
+  expect(result.items.value[2]?.fill).toBe(0);
+  expect(result.items.value[0]?.fill).toBe(1);
+  expect(result.items.value[1]?.fill).toBe(0.5);
 });

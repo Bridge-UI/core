@@ -1,5 +1,6 @@
 // ** Exports
 export { useRating } from "@/Components/Rating/hooks/useRating";
+export type { RatingItemState } from "@/Components/Rating/hooks/useRating";
 export { default as Rating } from "@/Components/Rating/Rating";
 export type {
   RatingCallbacks,
@@ -12,4 +13,3 @@ export type {
   RatingSizeOverrides,
   RatingSlots,
 } from "@/Components/Rating/rating.types";
-export type { RatingItemState } from "@/Components/Rating/hooks/useRating";

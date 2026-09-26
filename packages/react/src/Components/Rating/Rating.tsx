@@ -1,23 +1,16 @@
 // ** Local Imports
-import { FormControl } from "@/Components/FormControl";
+import BaseField from "@/Components/BaseField/BaseField";
 import { Icon } from "@/Components/Icon";
 import { useRating } from "@/Components/Rating/hooks/useRating";
 import type { RatingProps } from "@/Components/Rating/rating.types";
 
-const ratingLibDefaults = {
-  max: 5,
-  size: "md",
-  icon: "star",
-  rounded: "sm",
-  color: "primary",
-} as const;
-
 function Rating(props: RatingProps) {
-  const { icon, items, inputBind, groupBind, setItemRef, formControl } =
-    useRating(props, ratingLibDefaults);
+  const api = useRating(props);
+
+  const { icon, items, inputBind, groupBind, baseField, setItemRef } = api;
 
   return (
-    <FormControl field={formControl}>
+    <BaseField field={baseField}>
       <div {...groupBind}>
         {items.map((item) => (
           <button
@@ -27,13 +20,26 @@ function Rating(props: RatingProps) {
               setItemRef(item.value, node);
             }}
           >
-            <Icon icon={icon} {...item.iconBind} />
+            {item.fill > 0 && item.fill < 1 ? (
+              <span className="relative inline-flex">
+                <Icon icon={icon} {...item.emptyIconBind} />
+
+                <span
+                  style={{ width: `${item.fill * 100}%` }}
+                  className="absolute inset-y-0 inset-s-0 overflow-hidden"
+                >
+                  <Icon icon={icon} {...item.filledIconBind} />
+                </span>
+              </span>
+            ) : (
+              <Icon icon={icon} {...item.iconBind} />
+            )}
           </button>
         ))}
 
         <input {...inputBind} />
       </div>
-    </FormControl>
+    </BaseField>
   );
 }
 

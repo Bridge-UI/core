@@ -1,15 +1,16 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { get, isString, omit, pick } from "es-toolkit/compat";
 import type { KeyboardEvent } from "react";
 import { useMemo, useRef, useState } from "react";
 
 // ** Core Imports
 import {
   clampRatingValue,
+  getRatingCurrentItem,
+  getRatingItemFill,
   getRatingItems,
   getRatingTabIndex,
   getRatingValueFromKey,
-  isRatingItemFilled,
   normalizeRatingMax,
   resolveRatingSelection,
   type RatingValue,
@@ -30,7 +31,10 @@ import {
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n/useI18nAdapter";
-import { useFormControl } from "@/Components/FormControl/hooks/useFormControl";
+import {
+  baseFieldBridgeKeys,
+  useBaseField,
+} from "@/Components/BaseField/hooks/useBaseField";
 import type {
   RatingClasses,
   RatingOwnProps,
@@ -44,32 +48,17 @@ import {
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
 
-const ratingBridgeKeys = [
+export const ratingBridgeKeys = [
   "max",
   "icon",
   "name",
-  "size",
   "color",
   "value",
-  "classes",
   "rounded",
   "onChange",
-  "customProps",
   "defaultValue",
+  ...baseFieldBridgeKeys,
 ] as const satisfies readonly (keyof RatingProps)[];
-
-const ratingInheritedOmitKeys = [
-  "max",
-  "icon",
-  "name",
-  "color",
-  "value",
-  "classes",
-  "rounded",
-  "onChange",
-  "customProps",
-  "defaultValue",
-] as const;
 
 type RatingLibDefaults = LibDefaultsShape<
   RatingOwnProps,
@@ -82,38 +71,45 @@ type RatingMerged = MergeLibDefaults<RatingOwnProps, RatingLibDefaults>;
  * One rating item with the binds for its button and icon.
  */
 export type RatingItemState = {
+  emptyIconBind: ReturnType<typeof mergePartBind>;
+  fill: number;
+  filledIconBind: ReturnType<typeof mergePartBind>;
   iconBind: ReturnType<typeof mergePartBind>;
   itemBind: ReturnType<typeof mergePartBind>;
   value: number;
 };
 
-export function useRating(props: RatingProps, libDefaults: RatingLibDefaults) {
+function resolveBaseFieldCustomProps(
+  customProps: RatingOwnProps["customProps"],
+) {
+  if (!customProps) {
+    return undefined;
+  }
+
+  const { icon: _icon, item: _item, input: _input, ...chrome } = customProps;
+
+  return chrome;
+}
+
+/**
+ * Composes rating state, field chrome via {@link useBaseField}, and item handlers.
+ */
+export function useRating(
+  props: RatingProps,
+  libDefaults: RatingLibDefaults = {
+    max: 5,
+    size: "md",
+    icon: "star",
+    rounded: "sm",
+    color: "primary",
+  },
+) {
   const bridge = useBridgeUI();
-
   const resolve = useResolveMessage();
+  const [hover, setHover] = useState<null | number>(null);
+  const itemRefs = useRef<Array<null | HTMLButtonElement>>([]);
 
-  const formControl = useFormControl(
-    omit(props, [
-      "max",
-      "icon",
-      "name",
-      "color",
-      "value",
-      "rounded",
-      "onChange",
-      "defaultValue",
-    ]),
-    {
-      error: false,
-      hideErrorMessage: false,
-      size: libDefaults.size ?? "md",
-    },
-    {
-      componentName: "Rating",
-    },
-  );
-
-  const { componentProps } = splitComponentProps<
+  const { componentProps, inheritedAttrs } = splitComponentProps<
     RatingProps,
     typeof ratingBridgeKeys
   >({
@@ -139,9 +135,42 @@ export function useRating(props: RatingProps, libDefaults: RatingLibDefaults) {
     props: componentProps,
   });
 
-  const itemRefs = useRef<Array<null | HTMLButtonElement>>([]);
+  const baseFieldCustomProps = useMemo(() => {
+    return resolveBaseFieldCustomProps(merged.customProps);
+  }, [merged.customProps]);
 
-  const [hover, setHover] = useState<null | number>(null);
+  const baseField = useBaseField(
+    {
+      ...pick(componentProps, baseFieldBridgeKeys),
+      slots: props.slots,
+      customProps: baseFieldCustomProps,
+      id: inheritedAttrs.id as string | undefined,
+      className: inheritedAttrs.className as string | undefined,
+      ...omit(inheritedAttrs, ["className", "id", "slots"]),
+    },
+    {
+      size: "md",
+      error: false,
+      hideErrorMessage: false,
+    },
+    {
+      componentName: "Rating",
+      labelHtmlFor: (controlId) => {
+        return `${controlId}-0`;
+      },
+    },
+  );
+
+  const { controlId, isDisabled, isReadonly, invalidated, ariaDescribedBy } =
+    baseField;
+
+  const max = derived(() => {
+    return normalizeRatingMax(merged.max);
+  });
+
+  const isControlled = derived(() => {
+    return props.value !== undefined;
+  });
 
   const [uncontrolledValue, setUncontrolledValue] = useState<RatingValue>(
     () => {
@@ -151,12 +180,6 @@ export function useRating(props: RatingProps, libDefaults: RatingLibDefaults) {
       );
     },
   );
-
-  const isControlled = props.value !== undefined;
-
-  const max = derived(() => {
-    return normalizeRatingMax(merged.max);
-  });
 
   const value = derived(() => {
     const raw = isControlled ? props.value : uncontrolledValue;
@@ -169,51 +192,11 @@ export function useRating(props: RatingProps, libDefaults: RatingLibDefaults) {
   });
 
   const displayValue = derived(() => {
-    if (formControl.isDisabled || formControl.isReadonly || hover == null) {
+    if (isDisabled || isReadonly || hover == null) {
       return value;
     }
 
     return hover;
-  });
-
-  const colorClasses = useMemo(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      colorProps,
-      bridgeRating?.tokens?.color,
-    );
-
-    return getColorToken({
-      tokens: classes,
-      color: merged.color,
-      invalid: formControl.invalidated,
-    });
-  }, [formControl.invalidated, merged.color, bridgeRating?.tokens?.color]);
-
-  const sizeClasses = useMemo(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      sizeProps,
-      bridgeRating?.tokens?.size,
-    );
-
-    return get(classes, merged.size ?? "md");
-  }, [merged.size, bridgeRating?.tokens?.size]);
-
-  const roundedClasses = useMemo(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      roundedProps,
-      bridgeRating?.tokens?.rounded,
-    );
-
-    return get(classes, merged.rounded ?? "sm");
-  }, [merged.rounded, bridgeRating?.tokens?.rounded]);
-
-  const groupLabel = derived(() => {
-    const labels = [formControl.merged.startLabel, formControl.merged.endLabel]
-      .filter((part): part is string => {
-        return typeof part === "string" && part.length > 0;
-      });
-
-    return labels.length > 0 ? labels.join(" ") : undefined;
   });
 
   function commit(next: RatingValue) {
@@ -227,7 +210,7 @@ export function useRating(props: RatingProps, libDefaults: RatingLibDefaults) {
   }
 
   function select(item: number) {
-    if (formControl.isDisabled || formControl.isReadonly) {
+    if (isDisabled || isReadonly) {
       return;
     }
 
@@ -241,7 +224,7 @@ export function useRating(props: RatingProps, libDefaults: RatingLibDefaults) {
   }
 
   function preview(item: number) {
-    if (formControl.isDisabled || formControl.isReadonly) {
+    if (isDisabled || isReadonly) {
       return;
     }
 
@@ -255,7 +238,7 @@ export function useRating(props: RatingProps, libDefaults: RatingLibDefaults) {
   }
 
   function onItemKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
-    if (formControl.isDisabled) {
+    if (isDisabled) {
       return;
     }
 
@@ -272,7 +255,9 @@ export function useRating(props: RatingProps, libDefaults: RatingLibDefaults) {
 
     event.preventDefault();
 
-    if (formControl.isReadonly) {
+    if (isReadonly) {
+      focusItem(next);
+
       return;
     }
 
@@ -287,36 +272,58 @@ export function useRating(props: RatingProps, libDefaults: RatingLibDefaults) {
     focusItem(next);
   }
 
-  const setItemRef = (item: number, node: null | HTMLButtonElement) => {
-    itemRefs.current[item - 1] = node;
-  };
+  const sizeClasses = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      sizeProps,
+      bridgeRating?.tokens?.size,
+    );
 
-  const groupInherited = derived(() => {
-    return omit(formControl.inputInheritedAttrs, [
-      ...ratingInheritedOmitKeys,
-      "id",
-    ]);
-  });
+    return get(classes, merged.size ?? "md");
+  }, [merged.size, bridgeRating?.tokens?.size]);
+
+  const colorClasses = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      bridgeRating?.tokens?.color,
+    );
+
+    return getColorToken({
+      tokens: classes,
+      color: merged.color,
+      invalid: invalidated,
+    });
+  }, [invalidated, merged.color, bridgeRating?.tokens?.color]);
+
+  const roundedClasses = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgeRating?.tokens?.rounded,
+    );
+
+    return get(classes, merged.rounded ?? "sm");
+  }, [merged.rounded, bridgeRating?.tokens?.rounded]);
 
   const groupBind = derived(() => {
+    const label = baseField.merged.label;
+    const groupLabel = isString(label) && label.length > 0 ? label : undefined;
+
     return mergePartBind(
-      customProps?.group,
+      {},
       {
-        ...groupInherited,
         role: "radiogroup",
         "aria-label": groupLabel,
-        "aria-describedby": formControl.ariaDescribedBy,
-        "aria-disabled": formControl.isDisabled || undefined,
-        "aria-readonly": formControl.isReadonly || undefined,
-        "aria-invalid": formControl.invalidated || undefined,
+        "aria-describedby": ariaDescribedBy,
+        "aria-disabled": isDisabled || undefined,
+        "aria-readonly": isReadonly || undefined,
+        "aria-invalid": invalidated || undefined,
+        "aria-required": baseField.merged.required || undefined,
         onMouseLeave: () => {
           setHover(null);
         },
-        "aria-required": formControl.merged.required || undefined,
       },
       cn({
         "inline-flex items-center": true,
-        [mergedClasses.group ?? ""]: true,
+        [baseField.sizeClasses?.group ?? ""]: true,
       }),
     );
   });
@@ -330,7 +337,7 @@ export function useRating(props: RatingProps, libDefaults: RatingLibDefaults) {
         name: merged.name,
         value: value ?? "",
         "aria-hidden": true,
-        disabled: formControl.isDisabled || undefined,
+        disabled: isDisabled || undefined,
       },
       cn({
         [mergedClasses.input ?? ""]: true,
@@ -340,8 +347,7 @@ export function useRating(props: RatingProps, libDefaults: RatingLibDefaults) {
 
   const items = derived(() => {
     return getRatingItems(max).map((item) => {
-      const filled = isRatingItemFilled(item, displayValue);
-      const tabbable = getRatingTabIndex(item, value) === 0;
+      const fill = getRatingItemFill(item, displayValue);
 
       const itemBind = mergePartBind(
         customProps?.item,
@@ -349,10 +355,10 @@ export function useRating(props: RatingProps, libDefaults: RatingLibDefaults) {
           role: "radio",
           type: "button" as const,
           onKeyDown: onItemKeyDown,
-          "aria-checked": value === item,
+          id: `${controlId}-${item - 1}`,
+          disabled: isDisabled || undefined,
           tabIndex: getRatingTabIndex(item, value),
-          disabled: formControl.isDisabled || undefined,
-          id: tabbable ? formControl.controlId : undefined,
+          "aria-checked": getRatingCurrentItem(value) === item,
           onClick: () => {
             select(item);
           },
@@ -365,43 +371,70 @@ export function useRating(props: RatingProps, libDefaults: RatingLibDefaults) {
         },
         cn({
           "inline-flex items-center justify-center p-0.5 outline-none transition focus-visible:ring-2 focus-visible:ring-offset-1": true,
-          "cursor-pointer": !formControl.isDisabled && !formControl.isReadonly,
+          "cursor-pointer": !isDisabled && !isReadonly,
           [roundedClasses ?? ""]: true,
           [colorClasses?.focus ?? ""]: true,
           [mergedClasses.item ?? ""]: true,
         }),
       );
 
-      const iconBind = mergePartBind(
-        customProps?.icon,
-        {
-          "aria-hidden": true,
-        },
-        cn({
+      const iconHidden = {
+        "aria-hidden": true,
+      } as const;
+
+      const iconClasses = (active: boolean) => {
+        return cn({
           "fill-current transition-colors": true,
           [sizeClasses ?? ""]: true,
-          [filled
-            ? (colorClasses?.filled ?? "")
-            : (colorClasses?.empty ?? "")]: true,
+          [active ? (colorClasses?.filled ?? "") : (colorClasses?.empty ?? "")]:
+            true,
           [mergedClasses.icon ?? ""]: true,
-        }),
+        });
+      };
+
+      const iconBind = mergePartBind(
+        customProps?.icon,
+        iconHidden,
+        iconClasses(fill === 1),
+      );
+
+      const emptyIconBind = mergePartBind(
+        customProps?.icon,
+        iconHidden,
+        iconClasses(false),
+      );
+
+      const filledIconBind = mergePartBind(
+        customProps?.icon,
+        iconHidden,
+        cn(iconClasses(true), "max-w-none"),
       );
 
       return {
+        fill,
         iconBind,
         itemBind,
         value: item,
+        emptyIconBind,
+        filledIconBind,
       } satisfies RatingItemState;
     });
   });
 
+  const setItemRef = (item: number, node: null | HTMLButtonElement) => {
+    itemRefs.current[item - 1] = node;
+  };
+
   return {
     items,
     value,
+    merged,
     inputBind,
     groupBind,
+    baseField,
     setItemRef,
-    formControl,
     icon: merged.icon,
   };
 }
+
+export type UseRatingReturn = ReturnType<typeof useRating>;

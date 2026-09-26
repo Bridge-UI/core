@@ -25,10 +25,10 @@ Controlled fields: **`v-model` / `modelValue`**. Never React `value`/`onChange`.
 | Text input                | `.ai/docs/components/TextField.md`                                    |
 | Password                  | `.ai/docs/components/PasswordField.md`                                |
 | Number / OTP / textarea   | `.ai/docs/components/NumberField.md`, `OtpField.md`, `Textarea.md`    |
-| Slider                    | `.ai/docs/components/Slider.md`                                       |
+| Slider / rating           | `.ai/docs/components/Slider.md`, `Rating.md`                          |
 | Select                    | `.ai/docs/components/Select.md`                                       |
 | Autocomplete              | `.ai/docs/components/Autocomplete.md`                                 |
-| Checkbox / radio / rating / switch | `.ai/docs/components/Checkbox.md`, `Radio.md`, `Rating.md`, `Switch.md` |
+| Checkbox / radio / switch | `.ai/docs/components/Checkbox.md`, `Radio.md`, `Switch.md`            |
 | Date                      | `.ai/docs/components/DateField.md`, `DatePicker.md`                   |
 | Date range                | `.ai/docs/components/DateRangeField.md`, `DateRangePicker.md`         |
 | Time                      | `.ai/docs/components/TimeField.md`, `TimePicker.md`                   |

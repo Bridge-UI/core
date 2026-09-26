@@ -1,8 +1,8 @@
 # BaseField
 
-> Building block for composite field chrome. Prefer `OtpField` / `Slider` in apps; BaseField remains exported for advanced composition. Theme shared chrome via `components.BaseField`.
+> Building block for composite field chrome. Prefer `OtpField` / `Rating` / `Slider` in apps; BaseField remains exported for advanced composition. Theme shared chrome via `components.BaseField`.
 
-Shared field chrome (label, corner, start/end slots, description, error) for composite inputs such as `OtpField` and `Slider`.
+Shared field chrome (label, corner, start/end slots, description, error) for composite inputs such as `OtpField`, `Rating`, and `Slider`.
 
 Control tokens stay on the parent (`tokens.size`, …).
 
@@ -71,4 +71,4 @@ Props are consumed by `useBaseField`. `<BaseField />` accepts `field` (the hook 
 
 ## Related components
 
-FormControl, Label, OtpField
+FormControl, Label, OtpField, Rating, Slider

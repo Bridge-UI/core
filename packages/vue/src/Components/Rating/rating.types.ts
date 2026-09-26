@@ -16,23 +16,18 @@ import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";
 import type {
-  FormControlClasses,
-  FormControlCustomProps,
-  FormControlOwnProps,
-  FormControlSlots,
-} from "@/Components/FormControl/formControl.types";
+  BaseFieldClasses,
+  BaseFieldCustomProps,
+  BaseFieldOwnProps,
+  BaseFieldSlots,
+} from "@/Components/BaseField/baseField.types";
 import type { IconProps } from "@/Components/Icon";
 
 export interface RatingSizeOverrides {}
 export interface RatingColorOverrides {}
 export interface RatingRoundedOverrides {}
 
-export interface RatingClasses extends FormControlClasses {
-  /**
-   * Classes merged onto the rating group.
-   */
-  group?: string;
-
+export interface RatingClasses extends BaseFieldClasses {
   /**
    * Classes merged onto each icon.
    */
@@ -49,12 +44,7 @@ export interface RatingClasses extends FormControlClasses {
   item?: string;
 }
 
-export interface RatingCustomProps extends FormControlCustomProps {
-  /**
-   * Props forwarded to the rating group.
-   */
-  group?: HTMLAttributes;
-
+export interface RatingCustomProps extends BaseFieldCustomProps {
   /**
    * Props forwarded to each `Icon`. The icon source stays on `icon`.
    */
@@ -79,11 +69,11 @@ export interface RatingEmits {
 }
 
 export interface RatingOwnProps extends Omit<
-  FormControlOwnProps,
-  "field" | "slots" | "classes" | "customProps"
+  BaseFieldOwnProps,
+  "field" | "slots" | "classes" | "children" | "customProps"
 > {
   /**
-   * Classes for the form control chrome and the rating parts.
+   * Classes for the field chrome and the rating parts.
    *
    * @default undefined
    */
@@ -104,7 +94,7 @@ export interface RatingOwnProps extends Omit<
   customProps?: RatingCustomProps;
 
   /**
-   * Initial value for uncontrolled usage.
+   * Initial value for uncontrolled usage. Fractions are kept.
    *
    * @default undefined
    */
@@ -118,7 +108,7 @@ export interface RatingOwnProps extends Omit<
   icon?: IconSource;
 
   /**
-   * Number of items. Values are integers from 1 through `max`.
+   * Number of items. The value runs from above 0 through `max`.
    *
    * @default 5
    */
@@ -139,7 +129,7 @@ export interface RatingOwnProps extends Omit<
   rounded?: MergeProps<RatingRounded, RatingRoundedOverrides>;
 
   /**
-   * Size of the icons and of form control labels (`2xs` … `2xl`).
+   * Size of the icons and of the field label (`2xs` … `2xl`).
    *
    * @default "md"
    */
@@ -153,7 +143,7 @@ export interface RatingOwnProps extends Omit<
   slots?: RatingSlots;
 }
 
-export interface RatingSlots extends FormControlSlots {}
+export interface RatingSlots extends BaseFieldSlots {}
 
 export type RatingProps = MergeHtmlProps<
   RatingOwnProps,

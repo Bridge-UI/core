@@ -1,9 +1,9 @@
 # BaseField
 
-> Building block for composite field chrome. Prefer `OtpField` / `Slider` in apps; BaseField remains exported for advanced composition. Theme shared chrome via `components.BaseField`.
+> Building block for composite field chrome. Prefer `OtpField` / `Rating` / `Slider` in apps; BaseField remains exported for advanced composition. Theme shared chrome via `components.BaseField`.
 
 Shared vertical field chrome (label, corner, start/end slots, description,
-error message) for OtpField, Slider, and similar controls.
+error message) for OtpField, Rating, Slider, and similar controls.
 
 Control tokens stay on the parent (`tokens.size`, …).
 
@@ -124,4 +124,4 @@ const field = useBaseField(() => ({
 
 ## Related components
 
-OtpField, Slider, Label
+OtpField, Rating, Slider, Label

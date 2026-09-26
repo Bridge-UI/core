@@ -1,6 +1,6 @@
 # Rating
 
-Star rating field. Extends FormControl props. The value is an integer from 1 through `max`, or `null` when empty. Choosing the current value clears it.
+Star rating field. Extends BaseField props. The value is a number from above 0 through `max`, or `null` when empty. A fraction fills the next item by that amount: `1.5` fills the first item and half of the second. Choosing the current whole value clears it.
 
 ## Import
 
@@ -13,12 +13,12 @@ import { Rating } from "@bridge-ui/react/Components/Rating";
 ### Usage
 
 ```tsx
-<Rating endLabel="Quality" />
+<Rating label="Quality" />
 
 <Rating
   name="score"
   value={score}
-  endLabel="Quality"
+  label="Quality"
   onChange={setScore}
 />
 ```
@@ -26,17 +26,23 @@ import { Rating } from "@bridge-ui/react/Components/Rating";
 ### Read-only and scale
 
 ```tsx
-<Rating max={5} readonly value={4} endLabel="Quality" />
+<Rating max={5} readonly value={4} label="Quality" />
+```
+
+### Fractional value
+
+```tsx
+<Rating readonly value={1.5} label="Quality" />
 ```
 
 ### Required and error
 
 ```tsx
-<Rating required endLabel="Quality" />
+<Rating required label="Quality" />
 
 <Rating
   error
-  endLabel="Quality"
+  label="Quality"
   errorMessage="Choose a score."
 />
 ```
@@ -45,7 +51,7 @@ import { Rating } from "@bridge-ui/react/Components/Rating";
 
 ```tsx
 <Rating
-  endLabel="Quality"
+  label="Quality"
   customProps={{
     input: { id: "score" },
     item: { "data-testid": "rating-item" },
@@ -57,32 +63,32 @@ import { Rating } from "@bridge-ui/react/Components/Rating";
 
 ### Rating-specific
 
-| Prop          | Type                | Default   | Description                                                          |
-| ------------- | ------------------- | --------- | -------------------------------------------------------------------- |
-| `classes`     | `RatingClasses`     | —         | Classes for the form control chrome and the rating parts.           |
-| `color`       | `RatingColor`       | "primary" | The color applied to selected icons.                                 |
-| `customProps` | `RatingCustomProps` | —         | Extra props for internal parts.                                      |
-| `icon`        | `IconSource`        | "star"    | Icon used for every item.                                            |
-| `max`         | `number`            | `5`       | Number of items. Values are integers from 1 through `max`.           |
-| `name`        | `string`            | —         | The `name` of the hidden input submitted with the form.             |
-| `rounded`     | `RatingRounded`     | "sm"      | Roundedness of each item hit area.                                   |
-| `size`        | `RatingSize`        | "md"      | Size of the icons and of form control labels (`2xs` … `2xl`).        |
-| `slots`       | `RatingSlots`       | —         | Chrome slots.                                                         |
+| Prop          | Type                | Default   | Description                                                 |
+| ------------- | ------------------- | --------- | ----------------------------------------------------------- |
+| `classes`     | `RatingClasses`     | —         | Classes for the field chrome and the rating parts.          |
+| `color`       | `RatingColor`       | "primary" | The color applied to selected icons.                        |
+| `customProps` | `RatingCustomProps` | —         | Extra props for internal parts.                             |
+| `icon`        | `IconSource`        | "star"    | Icon used for every item.                                   |
+| `max`         | `number`            | `5`       | Number of items. The value runs from above 0 through `max`. |
+| `name`        | `string`            | —         | The `name` of the hidden input submitted with the form.     |
+| `rounded`     | `RatingRounded`     | "sm"      | Roundedness of each item hit area.                          |
+| `size`        | `RatingSize`        | "md"      | Size of the icons and of the field label (`2xs` … `2xl`).   |
+| `slots`       | `RatingSlots`       | —         | Chrome slots.                                               |
 
 ### Binding
 
-| Prop           | Type                       | Default | Description                                                                 |
-| -------------- | -------------------------- | ------- | --------------------------------------------------------------------------- |
-| `defaultValue` | `number \| null`           | —       | Initial value for uncontrolled usage.                                       |
-| `onChange`     | `(value: number \| null) => void` | — | Called with the next value. `null` means the selection was cleared.         |
-| `value`        | `number \| null`           | —       | Selected value. `null` clears the rating. Pair with `onChange`.             |
+| Prop           | Type                              | Default | Description                                                                                                                          |
+| -------------- | --------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `defaultValue` | `number \| null`                  | —       | Initial value for uncontrolled usage.                                                                                                |
+| `onChange`     | `(value: number \| null) => void` | —       | Called with the next value. `null` means the selection was cleared.                                                                  |
+| `value`        | `number \| null`                  | —       | Selected value. `null` clears the rating. A fraction fills the next item partway (`1.5` fills item 2 halfway). Pair with `onChange`. |
 
 Hover previews the value under the pointer. Arrow keys change it (horizontal arrows follow direction). Home selects 1. End selects `max`. Moving below 1 clears the rating.
 
-### Inherited from FormControl
+### Inherited from BaseField
 
-See [FormControl](./FormControl.md). `readonly` and `disabled` block changes.
+See [BaseField](./BaseField.md). `readonly` and `disabled` block changes.
 
 ## Related components
 
-FormControl, Radio
+BaseField, Slider

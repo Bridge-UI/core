@@ -1,25 +1,14 @@
 <script setup lang="ts">
-// ** External Imports
-import { ref } from "vue";
-
-// ** Core Imports
-import {
-  clampRatingValue,
-  normalizeRatingMax,
-} from "@bridge-ui/core/Domain";
-
 // ** Local Imports
-import {
-  FORM_CONTROL_CHROME_SLOT_NAMES,
-  FormControl,
-} from "@/Components/FormControl";
+import { BASE_FIELD_CHROME_SLOT_NAMES } from "@/Components/BaseField";
+import BaseField from "@/Components/BaseField/BaseField.vue";
 import { Icon } from "@/Components/Icon";
 import { useRating } from "@/Components/Rating/composables/useRating";
 import type {
   RatingOwnProps,
   RatingSlots,
 } from "@/Components/Rating/rating.types";
-import { presentSlotNames, useOptionalModel } from "@/Utils";
+import { presentSlotNames } from "@/Utils";
 
 defineSlots<RatingSlots>();
 
@@ -27,36 +16,18 @@ defineOptions({ inheritAttrs: false });
 
 const props = defineProps<RatingOwnProps>();
 
-const model = defineModel<null | number | undefined>({
-  default: undefined,
-});
+const model = defineModel<null | number | undefined>();
 
-const ratingLibDefaults = {
-  max: 5,
-  size: "md",
-  icon: "star",
-  rounded: "sm",
-  color: "primary",
-} as const;
+const api = useRating(props, model);
 
-const uncontrolledValue = ref<null | number>(
-  clampRatingValue(
-    props.defaultValue ?? null,
-    normalizeRatingMax(props.max ?? ratingLibDefaults.max),
-  ),
-);
-
-const value = useOptionalModel(model, uncontrolledValue);
-
-const { icon, items, inputBind, groupBind, setItemRef, formControl } =
-  useRating(() => props, ratingLibDefaults, value);
+const { icon, items, inputBind, groupBind, baseField, setItemRef } = api;
 </script>
 
 <template>
-  <FormControl :field="formControl">
+  <BaseField :field="baseField">
     <template
       #[name]="slotData"
-      v-for="name in presentSlotNames(FORM_CONTROL_CHROME_SLOT_NAMES, $slots)"
+      v-for="name in presentSlotNames(BASE_FIELD_CHROME_SLOT_NAMES, $slots)"
     >
       <slot :name="name" v-bind="slotData || {}" />
     </template>
@@ -68,10 +39,24 @@ const { icon, items, inputBind, groupBind, setItemRef, formControl } =
         v-bind="item.itemBind"
         :ref="(node) => setItemRef(item.value, node)"
       >
-        <Icon v-bind="item.iconBind" :icon="icon" />
+        <span
+          class="relative inline-flex"
+          v-if="item.fill > 0 && item.fill < 1"
+        >
+          <Icon v-bind="item.emptyIconBind" :icon="icon" />
+
+          <span
+            :style="{ width: `${item.fill * 100}%` }"
+            class="absolute inset-y-0 inset-s-0 overflow-hidden"
+          >
+            <Icon v-bind="item.filledIconBind" :icon="icon" />
+          </span>
+        </span>
+
+        <Icon v-else v-bind="item.iconBind" :icon="icon" />
       </button>
 
       <input v-bind="inputBind" />
     </div>
-  </FormControl>
+  </BaseField>
 </template>

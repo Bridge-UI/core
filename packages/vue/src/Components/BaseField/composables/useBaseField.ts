@@ -37,10 +37,10 @@ import {
 export type BaseFieldOptions = {
   /**
    * Public registry key that owns BaseField chrome defaults/tokens.
-   * Defaults to `BaseField`; Slider / OtpField / FileUpload pass their own key
+   * Defaults to `BaseField`; Rating / Slider / OtpField / FileUpload pass their own key
    * so chrome cascades (`BaseField` → parent).
    */
-  componentName?: "Slider" | "OtpField" | "BaseField" | "FileUpload";
+  componentName?: "Rating" | "Slider" | "OtpField" | "BaseField" | "FileUpload";
 
   /**
    * Resolve `Label` `for` from `controlId`. Defaults to the control id itself.

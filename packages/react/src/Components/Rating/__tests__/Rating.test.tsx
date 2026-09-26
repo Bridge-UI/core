@@ -10,14 +10,14 @@ afterEach(() => {
 });
 
 test("it should render five stars by default", () => {
-  render(<Rating endLabel="Quality" />);
+  render(<Rating label="Quality" />);
 
   expect(screen.getAllByRole("radio")).toHaveLength(5);
   expect(screen.getByRole("radiogroup", { name: "Quality" })).toBeTruthy();
 });
 
 test("it should select a value and clear it when the same item is clicked", () => {
-  render(<Rating endLabel="Quality" />);
+  render(<Rating label="Quality" />);
 
   const item = screen.getByRole("radio", { name: "3 stars" });
 
@@ -36,7 +36,7 @@ test("it should call onChange in controlled mode", () => {
   render(
     <Rating
       value={1}
-      endLabel="Quality"
+      label="Quality"
       onChange={(next) => {
         values.push(next);
       }}
@@ -50,7 +50,7 @@ test("it should call onChange in controlled mode", () => {
 });
 
 test("it should preview a value on hover without committing it", () => {
-  const { container } = render(<Rating endLabel="Quality" />);
+  const { container } = render(<Rating label="Quality" />);
 
   fireEvent.mouseEnter(screen.getByRole("radio", { name: "3 stars" }));
 
@@ -68,7 +68,7 @@ test("it should preview a value on hover without committing it", () => {
 });
 
 test("it should change the value from the keyboard", () => {
-  render(<Rating endLabel="Quality" />);
+  render(<Rating label="Quality" />);
 
   const first = screen.getByRole("radio", { name: "1 star" });
 
@@ -103,7 +103,7 @@ test("it should change the value from the keyboard", () => {
 });
 
 test("it should render only max items", () => {
-  render(<Rating max={3} endLabel="Quality" />);
+  render(<Rating max={3} label="Quality" />);
 
   expect(screen.getAllByRole("radio")).toHaveLength(3);
 });
@@ -115,7 +115,7 @@ test("it should ignore changes when readonly", () => {
     <Rating
       readonly
       value={2}
-      endLabel="Quality"
+      label="Quality"
       onChange={(next) => {
         values.push(next);
       }}
@@ -130,8 +130,22 @@ test("it should ignore changes when readonly", () => {
   ).toBe("true");
 });
 
+test("it should move focus without changing the value when readonly", () => {
+  render(<Rating readonly value={2} label="Quality" />);
+
+  const current = screen.getByRole("radio", { name: "2 stars" });
+
+  current.focus();
+  fireEvent.keyDown(current, { key: "ArrowRight" });
+
+  expect(current.getAttribute("aria-checked")).toBe("true");
+  expect(document.activeElement).toBe(
+    screen.getByRole("radio", { name: "3 stars" }),
+  );
+});
+
 test("it should disable each item when disabled", () => {
-  render(<Rating disabled endLabel="Quality" />);
+  render(<Rating disabled label="Quality" />);
 
   for (const item of screen.getAllByRole("radio")) {
     expect((item as HTMLButtonElement).disabled).toBe(true);
@@ -139,7 +153,7 @@ test("it should disable each item when disabled", () => {
 });
 
 test("it should set aria-invalid when error is set", () => {
-  render(<Rating error endLabel="Quality" errorMessage="Choose a score." />);
+  render(<Rating error label="Quality" errorMessage="Choose a score." />);
 
   expect(screen.getByRole("radiogroup").getAttribute("aria-invalid")).toBe(
     "true",
@@ -154,13 +168,36 @@ test("it should submit the value through a named hidden input", () => {
     'input[type="hidden"]',
   ) as HTMLInputElement;
 
-  expect(input.name).toBe("score");
   expect(input.value).toBe("4");
+  expect(input.name).toBe("score");
 });
 
-test("it should link the label to the tabbable item", () => {
-  const { container } = render(<Rating endLabel="Quality" controlId="quality" />);
+test("it should link the label to the first item", () => {
+  const { container } = render(<Rating label="Quality" controlId="quality" />);
 
-  expect(container.querySelector("label")?.getAttribute("for")).toBe("quality");
-  expect(screen.getByRole("radio", { name: "1 star" }).id).toBe("quality");
+  expect(container.querySelector("label")?.getAttribute("for")).toBe(
+    "quality-0",
+  );
+  expect(screen.getByRole("radio", { name: "1 star" }).id).toBe("quality-0");
+});
+
+test("it should fill the next item halfway for a fractional value", () => {
+  render(<Rating value={1.5} label="Quality" />);
+
+  const items = screen.getAllByRole("radio");
+
+  expect(items[0]?.querySelectorAll("svg")).toHaveLength(1);
+  expect(items[1]?.querySelector(".overflow-hidden")?.style.width).toBe("50%");
+  expect(items[1]?.querySelectorAll("svg")).toHaveLength(2);
+  expect(
+    items[0]?.querySelector("svg")?.classList.contains("text-primary-500"),
+  ).toBe(true);
+  expect(
+    items[2]?.querySelector("svg")?.classList.contains("text-primary-500"),
+  ).toBe(false);
+  expect(
+    items[1]
+      ?.querySelector(".overflow-hidden svg")
+      ?.classList.contains("text-primary-500"),
+  ).toBe(true);
 });

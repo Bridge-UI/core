@@ -7,7 +7,7 @@ import { Rating } from "@/Components/Rating";
 
 test("it should render five stars by default", () => {
   const wrapper = mount(Rating, {
-    props: { endLabel: "Quality" },
+    props: { label: "Quality" },
   });
 
   expect(wrapper.findAll('[role="radio"]')).toHaveLength(5);
@@ -16,7 +16,7 @@ test("it should render five stars by default", () => {
 
 test("it should select a value and clear it when the same item is clicked", async () => {
   const wrapper = mount(Rating, {
-    props: { endLabel: "Quality" },
+    props: { label: "Quality" },
   });
 
   const item = wrapper.findAll('[role="radio"]')[2];
@@ -32,7 +32,7 @@ test("it should select a value and clear it when the same item is clicked", asyn
 
 test("it should emit the next value in controlled mode", async () => {
   const wrapper = mount(Rating, {
-    props: { modelValue: 1, endLabel: "Quality" },
+    props: { modelValue: 1, label: "Quality" },
   });
 
   await wrapper.findAll('[role="radio"]')[3]?.trigger("click");
@@ -42,7 +42,7 @@ test("it should emit the next value in controlled mode", async () => {
 
 test("it should emit null when the current value is chosen again", async () => {
   const wrapper = mount(Rating, {
-    props: { modelValue: 2, endLabel: "Quality" },
+    props: { modelValue: 2, label: "Quality" },
   });
 
   await wrapper.findAll('[role="radio"]')[1]?.trigger("click");
@@ -52,7 +52,7 @@ test("it should emit null when the current value is chosen again", async () => {
 
 test("it should preview a value on hover without committing it", async () => {
   const wrapper = mount(Rating, {
-    props: { endLabel: "Quality" },
+    props: { label: "Quality" },
   });
 
   await wrapper.findAll('[role="radio"]')[2]?.trigger("mouseenter");
@@ -72,7 +72,7 @@ test("it should preview a value on hover without committing it", async () => {
 
 test("it should change the value from the keyboard", async () => {
   const wrapper = mount(Rating, {
-    props: { endLabel: "Quality" },
+    props: { label: "Quality" },
   });
 
   await wrapper.findAll('[role="radio"]')[0]?.trigger("keydown", {
@@ -118,7 +118,7 @@ test("it should change the value from the keyboard", async () => {
 
 test("it should render only max items", () => {
   const wrapper = mount(Rating, {
-    props: { max: 3, endLabel: "Quality" },
+    props: { max: 3, label: "Quality" },
   });
 
   expect(wrapper.findAll('[role="radio"]')).toHaveLength(3);
@@ -126,7 +126,7 @@ test("it should render only max items", () => {
 
 test("it should ignore changes when readonly", async () => {
   const wrapper = mount(Rating, {
-    props: { modelValue: 2, readonly: true, endLabel: "Quality" },
+    props: { modelValue: 2, readonly: true, label: "Quality" },
   });
 
   await wrapper.findAll('[role="radio"]')[3]?.trigger("click");
@@ -137,9 +137,43 @@ test("it should ignore changes when readonly", async () => {
   );
 });
 
+test("it should move focus without changing the value when readonly", async () => {
+  const wrapper = mount(Rating, {
+    attachTo: document.body,
+    props: { modelValue: 2, readonly: true, label: "Quality" },
+  });
+
+  const current = wrapper.findAll('[role="radio"]')[1];
+  const next = wrapper.findAll('[role="radio"]')[2];
+
+  (current?.element as HTMLButtonElement).focus();
+
+  await current?.trigger("keydown", { key: "ArrowRight" });
+
+  expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+  expect(current?.attributes("aria-checked")).toBe("true");
+  expect(document.activeElement).toBe(next?.element);
+
+  wrapper.unmount();
+});
+
+test("it should forward fallthrough attrs and link the label to id", () => {
+  const wrapper = mount(Rating, {
+    props: { label: "Quality" },
+    attrs: { id: "score", class: "mt-2", "data-testid": "rating" },
+  });
+
+  const root = wrapper.get("[data-testid='rating']");
+
+  expect(root.classes()).toContain("mt-2");
+  expect(root.classes()).toContain("group");
+  expect(wrapper.get("label").attributes("for")).toBe("score-0");
+  expect(wrapper.get('[role="radio"]').attributes("id")).toBe("score-0");
+});
+
 test("it should disable each item when disabled", () => {
   const wrapper = mount(Rating, {
-    props: { disabled: true, endLabel: "Quality" },
+    props: { disabled: true, label: "Quality" },
   });
 
   for (const item of wrapper.findAll('[role="radio"]')) {
@@ -151,7 +185,7 @@ test("it should set aria-invalid when error is set", () => {
   const wrapper = mount(Rating, {
     props: {
       error: true,
-      endLabel: "Quality",
+      label: "Quality",
       errorMessage: "Choose a score.",
     },
   });
@@ -167,9 +201,27 @@ test("it should submit the value through a named hidden input", () => {
     props: { name: "score", defaultValue: 4 },
   });
 
-  const input = wrapper.get('input[type="hidden"]')
-    .element as HTMLInputElement;
+  const input = wrapper.get('input[type="hidden"]').element as HTMLInputElement;
 
-  expect(input.name).toBe("score");
   expect(input.value).toBe("4");
+  expect(input.name).toBe("score");
+});
+
+test("it should fill the next item halfway for a fractional value", () => {
+  const wrapper = mount(Rating, {
+    props: { modelValue: 1.5, label: "Quality" },
+  });
+
+  const items = wrapper.findAll('[role="radio"]');
+
+  expect(items[0]?.findAll("svg")).toHaveLength(1);
+  expect(items[1]?.findAll("svg")).toHaveLength(2);
+  expect(items[1]?.find(".overflow-hidden").attributes("style")).toContain(
+    "width: 50%",
+  );
+  expect(items[0]?.find("svg").classes()).toContain("text-primary-500");
+  expect(items[2]?.find("svg").classes()).not.toContain("text-primary-500");
+  expect(items[1]?.find(".overflow-hidden svg").classes()).toContain(
+    "text-primary-500",
+  );
 });

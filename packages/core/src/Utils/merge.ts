@@ -96,8 +96,8 @@ export const BRIDGE_UI_FORM_SHAPE_ROUNDED_NAMES = [
 export const BRIDGE_UI_CHROME_FALLBACK = {
   Select: "FormField",
   Slider: "BaseField",
+  Rating: "BaseField",
   Radio: "FormControl",
-  Rating: "FormControl",
   Switch: "FormControl",
   OtpField: "BaseField",
   Textarea: "FormField",

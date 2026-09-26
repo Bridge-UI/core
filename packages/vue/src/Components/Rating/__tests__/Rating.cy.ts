@@ -3,7 +3,7 @@ import { Rating } from "@/Components/Rating";
 
 test("it should render with an end label", () => {
   cy.mount(Rating, {
-    props: { endLabel: "Quality" },
+    props: { label: "Quality" },
   });
 
   cy.contains("Quality").should("be.visible");
@@ -12,7 +12,7 @@ test("it should render with an end label", () => {
 
 test("it should select a star and clear it on a second click", () => {
   cy.mount(Rating, {
-    props: { endLabel: "Quality" },
+    props: { label: "Quality" },
   });
 
   cy.get('[role="radio"]')
@@ -27,7 +27,7 @@ test("it should render the error message when error is set", () => {
   cy.mount(Rating, {
     props: {
       error: true,
-      endLabel: "Quality",
+      label: "Quality",
       errorMessage: "Choose a score.",
     },
   });
@@ -38,7 +38,7 @@ test("it should render the error message when error is set", () => {
 
 test("it should disable each item when disabled", () => {
   cy.mount(Rating, {
-    props: { disabled: true, endLabel: "Quality" },
+    props: { disabled: true, label: "Quality" },
   });
 
   cy.get('[role="radio"]').should("be.disabled");
@@ -46,7 +46,7 @@ test("it should disable each item when disabled", () => {
 
 test("it should forward name to the hidden input", () => {
   cy.mount(Rating, {
-    props: { name: "score", defaultValue: 3, endLabel: "Quality" },
+    props: { name: "score", defaultValue: 3, label: "Quality" },
   });
 
   cy.get('input[type="hidden"]').should("have.attr", "name", "score");
