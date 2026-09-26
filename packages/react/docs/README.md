@@ -53,6 +53,7 @@ Component reference for **React**. This folder ships with the npm package.
 - [PasswordField](./components/PasswordField.md)
 - [Progress](./components/Progress.md)
 - [Radio](./components/Radio.md)
+- [Rating](./components/Rating.md)
 - [RichTextEditor](./components/RichTextEditor.md)
 - [Select](./components/Select.md)
 - [Sidebar](./components/Sidebar.md)

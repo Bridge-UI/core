@@ -3,7 +3,7 @@ name: bridge-ui-forms
 description: >-
   Build forms with Bridge UI Vue — TextField, Textarea, PasswordField,
   NumberField, OtpField, Select, Autocomplete, Slider, Checkbox, Radio,
-  Switch, DateField, DatePicker, DateRangeField, DateRangePicker, TimeField,
+  Rating, Switch, DateField, DatePicker, DateRangeField, DateRangePicker, TimeField,
   TimePicker, TimeRangeField, TimeRangePicker, DateTimeField, DateTimePicker,
   DateTimeRangeField, DateTimeRangePicker, ColorField, ColorPicker, FormField,
   FormControl, BaseField.
@@ -25,7 +25,7 @@ Controlled fields: **`v-model` / `modelValue`**. Never React `value`/`onChange`.
 | Text input                | `.ai/docs/components/TextField.md`                                    |
 | Password                  | `.ai/docs/components/PasswordField.md`                                |
 | Number / OTP / textarea   | `.ai/docs/components/NumberField.md`, `OtpField.md`, `Textarea.md`    |
-| Slider                    | `.ai/docs/components/Slider.md`                                       |
+| Slider / rating           | `.ai/docs/components/Slider.md`, `Rating.md`                          |
 | Select                    | `.ai/docs/components/Select.md`                                       |
 | Autocomplete              | `.ai/docs/components/Autocomplete.md`                                 |
 | Checkbox / radio / switch | `.ai/docs/components/Checkbox.md`, `Radio.md`, `Switch.md`            |
@@ -45,4 +45,4 @@ Controlled fields: **`v-model` / `modelValue`**. Never React `value`/`onChange`.
 1. Map validation to `error`, `error-message`, `description`, `disabled`, `readOnly`.
 2. Native input attrs often go through `:custom-props` → `input` — see TextField docs.
 3. Use only documented option shapes for Select/Autocomplete.
-4. Prefer public fields/controls in apps. `FormField`, `FormControl`, and `BaseField` are exported building blocks for advanced composition. Theme shared chrome via `components.FormField` / `FormControl` / `BaseField` (a public entry such as `components.TextField` still overrides `defaultProps`). Chrome tokens live on those shared keys. Dropdown tokens live on `components.Listbox` (`defaultProps.matchWidth` matches the field). Time overlay chrome: `components.TimePanel` (`TimePicker` / `TimeRangePicker` override). Shared form density: `global.formDefaults: { size, rounded }` (Radio/Switch/BaseField/FormControl ignore `rounded`).
+4. Prefer public fields/controls in apps. `FormField`, `FormControl`, and `BaseField` are exported building blocks for advanced composition. Theme shared chrome via `components.FormField` / `FormControl` / `BaseField` (a public entry such as `components.TextField` still overrides `defaultProps`). Chrome tokens live on those shared keys. Dropdown tokens live on `components.Listbox` (`defaultProps.matchWidth` matches the field). Time overlay chrome: `components.TimePanel` (`TimePicker` / `TimeRangePicker` override). Shared form density: `global.formDefaults: { size, rounded }` (Radio/Switch/BaseField/FormControl/Rating ignore `rounded`).

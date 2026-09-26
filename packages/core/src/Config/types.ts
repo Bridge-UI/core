@@ -1,7 +1,7 @@
 // ** Local Imports
 import type { DateAdapter } from "@/Adapters/date";
 import type { I18nAdapter } from "@/Adapters/i18n";
-import type { IconAdapter } from "@/Adapters/icon";
+import type { IconAdapter, SemanticIconName } from "@/Adapters/icon";
 import type { RichTextEditorAdapter, RichTextTool } from "@/Adapters/richText";
 import type {
   AccordionColor,
@@ -171,6 +171,7 @@ import type {
   RadioRounded,
   RadioSize,
 } from "@/Tokens/Radio";
+import type { RatingColor, RatingColorItem, RatingSize } from "@/Tokens/Rating";
 import type { RichTextEditorSizeItem } from "@/Tokens/RichTextEditor";
 import type {
   SidebarCollapsible,
@@ -268,10 +269,12 @@ export type Direction = "ltr" | "rtl";
  * which form controls share after token alignment.
  * Applied when merging props for form registry components only.
  * Radio and Switch ignore `rounded` (shape-driven `full` stays from lib / registry).
+ * BaseField, FormControl, and Rating have no `rounded` prop.
  */
 export interface BridgeUIFormDefaults {
   /**
-   * Default `rounded` token key for form controls (not applied to Radio / Switch).
+   * Default `rounded` token key for form controls.
+   * Not applied to Radio, Switch, BaseField, FormControl, or Rating.
    *
    * @default undefined
    */
@@ -436,6 +439,7 @@ export interface PaginationConfigOverrides {}
 export interface PasswordFieldConfigOverrides {}
 export interface ProgressConfigOverrides {}
 export interface RadioConfigOverrides {}
+export interface RatingConfigOverrides {}
 export interface RichTextEditorConfigOverrides {}
 export interface SelectConfigOverrides {}
 export interface SidebarConfigOverrides {}
@@ -1264,6 +1268,22 @@ export interface RadioConfigBase {
   }>;
 }
 
+export interface RatingConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof RatingColor;
+    hideErrorMessage: boolean;
+    icon: SemanticIconName;
+    max: number;
+    size: keyof RatingSize;
+    step: number;
+  }>;
+  tokens: Partial<{
+    color: Record<string, RatingColorItem>;
+    size: Record<string, string>;
+  }>;
+}
+
 export interface SnackbarConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -1699,6 +1719,7 @@ export type BridgeUIComponentsConfig = Partial<{
   >;
   Progress: Partial<Overwrite<ProgressConfigBase, ProgressConfigOverrides>>;
   Radio: Partial<Overwrite<RadioConfigBase, RadioConfigOverrides>>;
+  Rating: Partial<Overwrite<RatingConfigBase, RatingConfigOverrides>>;
   RichTextEditor: Partial<
     Overwrite<RichTextEditorConfigBase, RichTextEditorConfigOverrides>
   >;

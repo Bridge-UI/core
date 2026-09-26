@@ -277,6 +277,21 @@ export {
 } from "@/Domain/progress";
 export type { SpinnerCircleGeometry } from "@/Domain/progress";
 export {
+  DEFAULT_RATING_MAX,
+  clampRatingValue,
+  getRatingCurrentItem,
+  getRatingItemFill,
+  getRatingItems,
+  getRatingTabIndex,
+  getRatingValueFromKey,
+  getRatingValueFromPointer,
+  isRatingItemFilled,
+  normalizeRatingMax,
+  normalizeRatingStep,
+  resolveRatingSelection,
+} from "@/Domain/rating";
+export type { RatingDirection, RatingValue } from "@/Domain/rating";
+export {
   DEFAULT_SELECT_ASYNC_DEBOUNCE,
   DEFAULT_SELECT_ASYNC_LIMIT,
   commitFreeSoloValue,

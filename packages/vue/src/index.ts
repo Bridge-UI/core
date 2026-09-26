@@ -608,6 +608,18 @@ export type {
   RadioSizeOverrides,
   RadioSlots,
 } from "@/Components/Radio";
+export { Rating, useRating } from "@/Components/Rating";
+export type {
+  RatingClasses,
+  RatingColorOverrides,
+  RatingCustomProps,
+  RatingEmits,
+  RatingItemState,
+  RatingOwnProps,
+  RatingProps,
+  RatingSizeOverrides,
+  RatingSlots,
+} from "@/Components/Rating";
 export { RichTextEditor, useRichTextEditor } from "@/Components/RichTextEditor";
 export type {
   RichTextEditorClasses,

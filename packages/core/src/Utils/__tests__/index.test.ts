@@ -226,6 +226,18 @@ test("it should apply formDefaults to FileUpload", () => {
   expect(result).toEqual({ size: "lg", rounded: "xl" });
 });
 
+test("it should apply formDefaults size but not rounded to Rating", () => {
+  const result = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components: null,
+    componentName: "Rating",
+    libDefaults: { size: "md" as never },
+    formDefaults: { size: "lg", rounded: "md" },
+  });
+
+  expect(result).toEqual({ size: "lg" });
+});
+
 test("it should apply formDefaults size but not rounded for Radio and Switch", () => {
   const radio = mergePropsWithBridgeUIDefaults({
     props: {},
