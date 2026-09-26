@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, isString, omit, pick } from "es-toolkit/compat";
-import type { KeyboardEvent } from "react";
+import type { KeyboardEvent, MouseEvent } from "react";
 import { useMemo, useRef, useState } from "react";
 
 // ** Core Imports
@@ -11,7 +11,9 @@ import {
   getRatingItems,
   getRatingTabIndex,
   getRatingValueFromKey,
+  getRatingValueFromPointer,
   normalizeRatingMax,
+  normalizeRatingStep,
   resolveRatingSelection,
   type RatingValue,
 } from "@bridge-ui/core/Domain";
@@ -52,6 +54,7 @@ export const ratingBridgeKeys = [
   "max",
   "icon",
   "name",
+  "step",
   "color",
   "value",
   "rounded",
@@ -62,7 +65,7 @@ export const ratingBridgeKeys = [
 
 type RatingLibDefaults = LibDefaultsShape<
   RatingOwnProps,
-  "max" | "icon" | "size" | "color" | "rounded"
+  "max" | "icon" | "size" | "step" | "color" | "rounded"
 >;
 
 type RatingMerged = MergeLibDefaults<RatingOwnProps, RatingLibDefaults>;
@@ -98,6 +101,7 @@ export function useRating(
   props: RatingProps,
   libDefaults: RatingLibDefaults = {
     max: 5,
+    step: 1,
     size: "md",
     icon: "star",
     rounded: "sm",
@@ -168,6 +172,10 @@ export function useRating(
     return normalizeRatingMax(merged.max);
   });
 
+  const step = derived(() => {
+    return normalizeRatingStep(merged.step);
+  });
+
   const isControlled = derived(() => {
     return props.value !== undefined;
   });
@@ -209,6 +217,28 @@ export function useRating(
     props.onChange?.(clamped);
   }
 
+  function valueAtPointer(item: number, event?: MouseEvent<HTMLButtonElement>) {
+    const node = event?.currentTarget;
+
+    if (!node) {
+      return item;
+    }
+
+    const rect = node.getBoundingClientRect();
+
+    if (!(rect.width > 0)) {
+      return item;
+    }
+
+    const ratio = (event.clientX - rect.left) / rect.width;
+
+    return getRatingValueFromPointer({
+      item,
+      step,
+      ratio: isRtl ? 1 - ratio : ratio,
+    });
+  }
+
   function select(item: number) {
     if (isDisabled || isReadonly) {
       return;
@@ -232,7 +262,7 @@ export function useRating(
   }
 
   function focusItem(next: RatingValue) {
-    const target = next ?? 1;
+    const target = getRatingCurrentItem(next) ?? 1;
 
     itemRefs.current[target - 1]?.focus();
   }
@@ -244,6 +274,7 @@ export function useRating(
 
     const next = getRatingValueFromKey({
       max,
+      step,
       value,
       key: event.key,
       direction: isRtl ? "rtl" : "ltr",
@@ -322,8 +353,7 @@ export function useRating(
         },
       },
       cn({
-        "inline-flex items-center": true,
-        [baseField.sizeClasses?.group ?? ""]: true,
+        "inline-flex items-center gap-0.5": true,
       }),
     );
   });
@@ -359,15 +389,18 @@ export function useRating(
           disabled: isDisabled || undefined,
           tabIndex: getRatingTabIndex(item, value),
           "aria-checked": getRatingCurrentItem(value) === item,
-          onClick: () => {
-            select(item);
-          },
-          onMouseEnter: () => {
-            preview(item);
-          },
           "aria-label": resolve("{{count}} star | {{count}} stars", item, {
             count: item,
           }),
+          onClick: (event: MouseEvent<HTMLButtonElement>) => {
+            select(valueAtPointer(item, event));
+          },
+          onMouseMove: (event: MouseEvent<HTMLButtonElement>) => {
+            preview(valueAtPointer(item, event));
+          },
+          onMouseEnter: (event: MouseEvent<HTMLButtonElement>) => {
+            preview(valueAtPointer(item, event));
+          },
         },
         cn({
           "inline-flex items-center justify-center p-0.5 outline-none transition focus-visible:ring-2 focus-visible:ring-offset-1": true,

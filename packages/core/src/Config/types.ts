@@ -1280,6 +1280,7 @@ export interface RatingConfigBase {
     max: number;
     rounded: keyof RatingRounded;
     size: keyof RatingSize;
+    step: number;
   }>;
   tokens: Partial<{
     color: Record<string, RatingColorItem>;

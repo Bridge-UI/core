@@ -284,8 +284,10 @@ export {
   getRatingItems,
   getRatingTabIndex,
   getRatingValueFromKey,
+  getRatingValueFromPointer,
   isRatingItemFilled,
   normalizeRatingMax,
+  normalizeRatingStep,
   resolveRatingSelection,
 } from "@/Domain/rating";
 export type { RatingDirection, RatingValue } from "@/Domain/rating";

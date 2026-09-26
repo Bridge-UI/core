@@ -143,6 +143,14 @@ export interface RatingOwnProps extends Omit<
   slots?: RatingSlots;
 
   /**
+   * Increment for pointer and keyboard selection.
+   * `1` selects a whole item. `0.5` selects each half.
+   *
+   * @default 1
+   */
+  step?: number;
+
+  /**
    * Selected value. `null` clears the rating. A fraction fills the next item
    * by that amount (`1.5` fills item 2 halfway). Pair with `onChange`.
    *

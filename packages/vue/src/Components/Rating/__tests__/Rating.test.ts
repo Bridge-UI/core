@@ -1,6 +1,6 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 
 // ** Local Imports
 import { Rating } from "@/Components/Rating";
@@ -48,6 +48,33 @@ test("it should emit null when the current value is chosen again", async () => {
   await wrapper.findAll('[role="radio"]')[1]?.trigger("click");
 
   expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([null]);
+});
+
+test("it should select a half step from the pointer", async () => {
+  const wrapper = mount(Rating, {
+    props: { step: 0.5, label: "Quality" },
+  });
+
+  const star = wrapper.findAll('[role="radio"]')[1]!;
+
+  vi.spyOn(star.element, "getBoundingClientRect").mockReturnValue({
+    x: 0,
+    y: 0,
+    top: 0,
+    left: 0,
+    right: 100,
+    width: 100,
+    bottom: 20,
+    height: 20,
+    toJSON() {
+      return {};
+    },
+  });
+
+  await star.trigger("click", { clientX: 20 });
+  await star.trigger("click", { clientX: 80 });
+
+  expect(wrapper.emitted("update:modelValue")).toEqual([[1.5], [2]]);
 });
 
 test("it should preview a value on hover without committing it", async () => {

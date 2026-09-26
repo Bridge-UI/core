@@ -1,6 +1,6 @@
 // ** External Imports
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, expect, test } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
 import { Rating } from "@/Components/Rating";
@@ -47,6 +47,41 @@ test("it should call onChange in controlled mode", () => {
   fireEvent.click(screen.getByRole("radio", { name: "1 star" }));
 
   expect(values).toEqual([4, null]);
+});
+
+test("it should select a half step from the pointer", () => {
+  const values: Array<null | number> = [];
+
+  render(
+    <Rating
+      step={0.5}
+      label="Quality"
+      onChange={(next) => {
+        values.push(next);
+      }}
+    />,
+  );
+
+  const star = screen.getByRole("radio", { name: "2 stars" });
+
+  vi.spyOn(star, "getBoundingClientRect").mockReturnValue({
+    x: 0,
+    y: 0,
+    top: 0,
+    left: 0,
+    right: 100,
+    width: 100,
+    bottom: 20,
+    height: 20,
+    toJSON() {
+      return {};
+    },
+  });
+
+  fireEvent.click(star, { clientX: 20 });
+  fireEvent.click(star, { clientX: 80 });
+
+  expect(values).toEqual([1.5, 2]);
 });
 
 test("it should preview a value on hover without committing it", () => {

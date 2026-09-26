@@ -1,5 +1,5 @@
 // ** External Imports
-import { clamp, isNil, range } from "es-toolkit/compat";
+import { ceil, clamp, isNil, range, round } from "es-toolkit/compat";
 
 /** Default number of rating items. */
 export const DEFAULT_RATING_MAX = 5;
@@ -13,6 +13,17 @@ export type RatingValue = null | number;
  * Layout direction used to map horizontal arrow keys.
  */
 export type RatingDirection = "ltr" | "rtl";
+
+/**
+ * Normalizes `step` to a positive finite number. Invalid values become 1.
+ */
+export function normalizeRatingStep(step?: number): number {
+  if (isNil(step) || !Number.isFinite(step) || step <= 0) {
+    return 1;
+  }
+
+  return step;
+}
 
 /**
  * Normalizes `max` to an integer of at least 1.
@@ -81,17 +92,48 @@ export function getRatingCurrentItem(value: RatingValue): null | number {
 }
 
 /**
- * Selects `item`, or clears the rating when `item` is already selected.
+ * Value under a pointer on `item`.
+ * `ratio` is 0 at the inline start of the item and 1 at the inline end.
+ * `step` of 1 selects the whole item. `0.5` selects the first half, then the rest.
+ */
+export function getRatingValueFromPointer({
+  item,
+  step,
+  ratio,
+}: {
+  item: number;
+  ratio: number;
+  step?: number;
+}): number {
+  const safeStep = normalizeRatingStep(step);
+
+  if (safeStep >= 1) {
+    return item;
+  }
+
+  const span = clamp(Number.isFinite(ratio) ? ratio : 1, 0, 1);
+  const position = span === 0 ? safeStep : span;
+  const steps = Math.max(
+    1,
+    ceil(round(position / safeStep, decimalPlaces(safeStep))),
+  );
+  const fill = clamp(round(steps * safeStep, decimalPlaces(safeStep)), 0, 1);
+
+  return roundRating(item - 1 + fill, safeStep);
+}
+
+/**
+ * Selects `next`, or clears the rating when `next` is already selected.
  */
 export function resolveRatingSelection(
   current: RatingValue,
-  item: number,
+  next: number,
 ): RatingValue {
-  if (current === item) {
+  if (!isNil(current) && current === next) {
     return null;
   }
 
-  return item;
+  return next;
 }
 
 /**
@@ -107,18 +149,21 @@ export function getRatingTabIndex(item: number, value: RatingValue): 0 | -1 {
 /**
  * Next rating for a keyboard key.
  * Returns `undefined` when the key is not handled.
- * Horizontal arrows follow `direction`. A step to 0 or below clears the value.
- * Home selects 1. End selects `max`.
+ * Horizontal arrows follow `direction` and move by `step`.
+ * A move at or below the first step clears the value.
+ * Home selects the first step. End selects `max`.
  */
 export function getRatingValueFromKey({
   key,
   max,
+  step,
   value,
   direction = "ltr",
 }: {
   direction?: RatingDirection;
   key: string;
   max: number;
+  step?: number;
   value: RatingValue;
 }): undefined | RatingValue {
   const increaseKeys =
@@ -129,8 +174,10 @@ export function getRatingValueFromKey({
       ? ["ArrowRight", "ArrowDown"]
       : ["ArrowLeft", "ArrowDown"];
 
+  const safeStep = normalizeRatingStep(step);
+
   if (key === "Home") {
-    return 1;
+    return Math.min(max, safeStep);
   }
 
   if (key === "End") {
@@ -139,19 +186,40 @@ export function getRatingValueFromKey({
 
   if (increaseKeys.includes(key)) {
     if (isNil(value)) {
-      return 1;
+      return Math.min(max, safeStep);
     }
 
-    return Math.min(max, value + 1);
+    return Math.min(max, roundRating(value + safeStep, value, safeStep));
   }
 
   if (decreaseKeys.includes(key)) {
-    if (isNil(value) || value <= 1) {
+    if (isNil(value)) {
       return null;
     }
 
-    return value - 1;
+    const next = roundRating(value - safeStep, value, safeStep);
+
+    return next <= 0 ? null : next;
   }
 
   return undefined;
+}
+
+/**
+ * Decimal places of `value`, from its base-10 text.
+ */
+function decimalPlaces(value: number): number {
+  const decimal = `${value}`.split(".")[1];
+
+  return decimal ? decimal.length : 0;
+}
+
+/**
+ * Rounds `value` to the decimal places of `sources`.
+ * `1.5 + 1` stays `2.5`.
+ */
+function roundRating(value: number, ...sources: number[]): number {
+  const precision = Math.max(0, ...sources.map(decimalPlaces));
+
+  return round(value, precision);
 }

@@ -141,6 +141,14 @@ export interface RatingOwnProps extends Omit<
    * @default undefined
    */
   slots?: RatingSlots;
+
+  /**
+   * Increment for pointer and keyboard selection.
+   * `1` selects a whole item. `0.5` selects each half.
+   *
+   * @default 1
+   */
+  step?: number;
 }
 
 export interface RatingSlots extends BaseFieldSlots {}

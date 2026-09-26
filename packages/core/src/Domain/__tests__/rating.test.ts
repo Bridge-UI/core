@@ -9,8 +9,10 @@ import {
   getRatingItems,
   getRatingTabIndex,
   getRatingValueFromKey,
+  getRatingValueFromPointer,
   isRatingItemFilled,
   normalizeRatingMax,
+  normalizeRatingStep,
   resolveRatingSelection,
 } from "@/Domain/rating";
 
@@ -63,6 +65,39 @@ describe("isRatingItemFilled", () => {
   });
 });
 
+describe("normalizeRatingStep", () => {
+  test("it should default invalid steps to 1", () => {
+    expect(normalizeRatingStep()).toBe(1);
+    expect(normalizeRatingStep(0)).toBe(1);
+    expect(normalizeRatingStep(-1)).toBe(1);
+  });
+
+  test("it should keep a positive step", () => {
+    expect(normalizeRatingStep(0.5)).toBe(0.5);
+  });
+});
+
+describe("getRatingValueFromPointer", () => {
+  test("it should select the whole item when step is 1", () => {
+    expect(getRatingValueFromPointer({ item: 2, step: 1, ratio: 0.2 })).toBe(2);
+  });
+
+  test("it should split an item into halves", () => {
+    expect(getRatingValueFromPointer({ item: 2, step: 0.5, ratio: 0.2 })).toBe(
+      1.5,
+    );
+    expect(getRatingValueFromPointer({ item: 2, step: 0.5, ratio: 0.8 })).toBe(
+      2,
+    );
+  });
+
+  test("it should snap a decimal step without float residue", () => {
+    expect(getRatingValueFromPointer({ item: 1, step: 0.1, ratio: 0.3 })).toBe(
+      0.3,
+    );
+  });
+});
+
 describe("resolveRatingSelection", () => {
   test("it should select an item and clear it when chosen again", () => {
     expect(resolveRatingSelection(null, 2)).toBe(2);
@@ -111,6 +146,48 @@ describe("getRatingValueFromKey", () => {
     expect(getRatingValueFromKey({ max: 5, value: 5, key: "ArrowRight" })).toBe(
       5,
     );
+  });
+
+  test("it should step by the given increment", () => {
+    expect(
+      getRatingValueFromKey({
+        max: 5,
+        step: 0.5,
+        value: null,
+        key: "ArrowRight",
+      }),
+    ).toBe(0.5);
+
+    expect(
+      getRatingValueFromKey({
+        max: 5,
+        step: 0.5,
+        value: 1.5,
+        key: "ArrowRight",
+      }),
+    ).toBe(2);
+
+    expect(
+      getRatingValueFromKey({ max: 5, step: 0.5, value: 0.5, key: "Home" }),
+    ).toBe(0.5);
+
+    expect(
+      getRatingValueFromKey({
+        max: 5,
+        step: 0.5,
+        value: 0.5,
+        key: "ArrowLeft",
+      }),
+    ).toBeNull();
+
+    expect(
+      getRatingValueFromKey({
+        max: 5,
+        step: 0.2,
+        value: 0.1,
+        key: "ArrowRight",
+      }),
+    ).toBe(0.3);
   });
 
   test("it should step a fractional value by one", () => {
