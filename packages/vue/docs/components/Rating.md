@@ -64,7 +64,6 @@ import { Rating } from "@bridge-ui/vue/Components/Rating";
 | `icon`        | `IconSource`        | "star"    | Icon used for every item.                                              |
 | `max`         | `number`            | `5`       | Number of items. The value runs from above 0 through `max`.            |
 | `name`        | `string`            | —         | The `name` of the hidden input submitted with the form.                |
-| `rounded`     | `RatingRounded`     | "sm"      | Roundedness of each item hit area.                                     |
 | `size`        | `RatingSize`        | "md"      | Size of the icons and of the field label (`2xs` … `2xl`).              |
 | `slots`       | `RatingSlots`       | —         | Chrome slots.                                                          |
 | `step`        | `number`            | `1`       | Increment for pointer and keyboard selection. `0.5` selects each half. |

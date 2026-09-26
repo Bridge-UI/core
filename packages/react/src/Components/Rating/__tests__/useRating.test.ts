@@ -9,7 +9,6 @@ const libDefaults = {
   max: 5,
   size: "md",
   icon: "star",
-  rounded: "sm",
   color: "primary",
 } as const satisfies Partial<RatingOwnProps>;
 

@@ -569,7 +569,6 @@ export type {
   RatingItemState,
   RatingOwnProps,
   RatingProps,
-  RatingRoundedOverrides,
   RatingSizeOverrides,
   RatingSlots,
 } from "@/Components/Rating";

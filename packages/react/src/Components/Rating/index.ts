@@ -9,7 +9,6 @@ export type {
   RatingCustomProps,
   RatingOwnProps,
   RatingProps,
-  RatingRoundedOverrides,
   RatingSizeOverrides,
   RatingSlots,
 } from "@/Components/Rating/rating.types";

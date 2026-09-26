@@ -171,12 +171,7 @@ import type {
   RadioRounded,
   RadioSize,
 } from "@/Tokens/Radio";
-import type {
-  RatingColor,
-  RatingColorItem,
-  RatingRounded,
-  RatingSize,
-} from "@/Tokens/Rating";
+import type { RatingColor, RatingColorItem, RatingSize } from "@/Tokens/Rating";
 import type { RichTextEditorSizeItem } from "@/Tokens/RichTextEditor";
 import type {
   SidebarCollapsible,
@@ -274,10 +269,12 @@ export type Direction = "ltr" | "rtl";
  * which form controls share after token alignment.
  * Applied when merging props for form registry components only.
  * Radio and Switch ignore `rounded` (shape-driven `full` stays from lib / registry).
+ * BaseField, FormControl, and Rating have no `rounded` prop.
  */
 export interface BridgeUIFormDefaults {
   /**
-   * Default `rounded` token key for form controls (not applied to Radio / Switch).
+   * Default `rounded` token key for form controls.
+   * Not applied to Radio, Switch, BaseField, FormControl, or Rating.
    *
    * @default undefined
    */
@@ -1278,13 +1275,11 @@ export interface RatingConfigBase {
     hideErrorMessage: boolean;
     icon: SemanticIconName;
     max: number;
-    rounded: keyof RatingRounded;
     size: keyof RatingSize;
     step: number;
   }>;
   tokens: Partial<{
     color: Record<string, RatingColorItem>;
-    rounded: Record<string, string>;
     size: Record<string, string>;
   }>;
 }

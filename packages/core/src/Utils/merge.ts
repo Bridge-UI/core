@@ -77,11 +77,12 @@ export const BRIDGE_UI_FORM_COMPONENT_NAMES = [
 
 /**
  * Form controls that receive `formDefaults.size` but not `rounded`.
- * Radio / Switch keep a shape-driven pill; BaseField / FormControl have no
- * `rounded` prop.
+ * Radio / Switch keep a shape-driven pill. BaseField, FormControl, and Rating
+ * have no `rounded` prop.
  */
 export const BRIDGE_UI_FORM_SHAPE_ROUNDED_NAMES = [
   "Radio",
+  "Rating",
   "Switch",
   "BaseField",
   "FormControl",
@@ -180,7 +181,7 @@ const BRIDGE_UI_NON_MERGEABLE_PROP_KEYS = [
 
 /**
  * Picks density defaults from `formDefaults` when `componentName` is a form control.
- * Radio / Switch / BaseField / FormControl omit `rounded`.
+ * Radio / Switch / BaseField / FormControl / Rating omit `rounded`.
  */
 export function resolveBridgeUIFormDefaults<
   K extends keyof BridgeUIComponentsConfig,

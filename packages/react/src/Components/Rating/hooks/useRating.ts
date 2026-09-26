@@ -19,7 +19,6 @@ import {
 } from "@bridge-ui/core/Domain";
 import {
   ratingColorProps as colorProps,
-  ratingRoundedProps as roundedProps,
   ratingSizeProps as sizeProps,
 } from "@bridge-ui/core/Tokens";
 import {
@@ -57,7 +56,6 @@ export const ratingBridgeKeys = [
   "step",
   "color",
   "value",
-  "rounded",
   "onChange",
   "defaultValue",
   ...baseFieldBridgeKeys,
@@ -65,7 +63,7 @@ export const ratingBridgeKeys = [
 
 type RatingLibDefaults = LibDefaultsShape<
   RatingOwnProps,
-  "max" | "icon" | "size" | "step" | "color" | "rounded"
+  "max" | "icon" | "size" | "step" | "color"
 >;
 
 type RatingMerged = MergeLibDefaults<RatingOwnProps, RatingLibDefaults>;
@@ -104,7 +102,6 @@ export function useRating(
     step: 1,
     size: "md",
     icon: "star",
-    rounded: "sm",
     color: "primary",
   },
 ) {
@@ -325,15 +322,6 @@ export function useRating(
     });
   }, [invalidated, merged.color, bridgeRating?.tokens?.color]);
 
-  const roundedClasses = useMemo(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      roundedProps,
-      bridgeRating?.tokens?.rounded,
-    );
-
-    return get(classes, merged.rounded ?? "sm");
-  }, [merged.rounded, bridgeRating?.tokens?.rounded]);
-
   const groupBind = derived(() => {
     const label = baseField.merged.label;
     const groupLabel = isString(label) && label.length > 0 ? label : undefined;
@@ -405,7 +393,6 @@ export function useRating(
         cn({
           "inline-flex items-center justify-center p-0.5 outline-none transition focus-visible:ring-2 focus-visible:ring-offset-1": true,
           "cursor-pointer": !isDisabled && !isReadonly,
-          [roundedClasses ?? ""]: true,
           [colorClasses?.focus ?? ""]: true,
           [mergedClasses.item ?? ""]: true,
         }),

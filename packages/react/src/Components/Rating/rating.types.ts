@@ -6,11 +6,7 @@ import type {
 } from "react";
 
 // ** Core Imports
-import type {
-  RatingColor,
-  RatingRounded,
-  RatingSize,
-} from "@bridge-ui/core/Tokens";
+import type { RatingColor, RatingSize } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -25,7 +21,6 @@ import type { IconProps } from "@/Components/Icon";
 
 export interface RatingSizeOverrides {}
 export interface RatingColorOverrides {}
-export interface RatingRoundedOverrides {}
 
 export interface RatingCallbacks {
   /**
@@ -120,13 +115,6 @@ export interface RatingOwnProps extends Omit<
    * @default undefined
    */
   name?: string;
-
-  /**
-   * Roundedness of each item hit area.
-   *
-   * @default "sm"
-   */
-  rounded?: MergeProps<RatingRounded, RatingRoundedOverrides>;
 
   /**
    * Size of the icons and of the field label (`2xs` … `2xl`).
