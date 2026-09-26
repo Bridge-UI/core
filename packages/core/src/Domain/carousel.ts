@@ -1,5 +1,5 @@
 // ** External Imports
-import { clamp, floor } from "es-toolkit/compat";
+import { clamp, floor, isNumber } from "es-toolkit/compat";
 
 /**
  * Axis the track scrolls on.
@@ -99,7 +99,7 @@ export function clampCarouselIndex(index: number, count: number): number {
  * Gap in px. Invalid and negative values become `0`.
  */
 export function resolveCarouselGap(gap: number | undefined): number {
-  if (typeof gap !== "number" || !Number.isFinite(gap) || gap <= 0) {
+  if (!isNumber(gap) || !Number.isFinite(gap) || gap <= 0) {
     return 0;
   }
 
@@ -113,7 +113,7 @@ export function resolveCarouselSlidesPerView(
   slidesPerView: number | undefined,
 ): number {
   if (
-    typeof slidesPerView !== "number" ||
+    !isNumber(slidesPerView) ||
     !Number.isFinite(slidesPerView) ||
     slidesPerView < 1
   ) {
@@ -304,10 +304,9 @@ export function getCarouselTrackOffset(
   const slidePercent = 100 / visible;
   let shift = safe * slidePercent;
 
-  const maxShift =
-    typeof options.count === "number"
-      ? Math.max(0, (options.count - visible) * slidePercent)
-      : Number.POSITIVE_INFINITY;
+  const maxShift = isNumber(options.count)
+    ? Math.max(0, (options.count - visible) * slidePercent)
+    : Number.POSITIVE_INFINITY;
 
   shift = clamp(shift, 0, maxShift);
 
@@ -392,11 +391,7 @@ export function resolveCarouselAutoPlayInterval(
     return DEFAULT_CAROUSEL_AUTOPLAY_INTERVAL;
   }
 
-  if (
-    typeof autoPlay === "number" &&
-    Number.isFinite(autoPlay) &&
-    autoPlay > 0
-  ) {
+  if (isNumber(autoPlay) && Number.isFinite(autoPlay) && autoPlay > 0) {
     return autoPlay;
   }
 
@@ -412,8 +407,9 @@ export function resolveCarouselSwipeDirection(
   deltaY: number,
   threshold: number | CarouselSwipeOptions = CAROUSEL_SWIPE_THRESHOLD_PX,
 ): 1 | -1 | null {
-  const options: CarouselSwipeOptions =
-    typeof threshold === "number" ? { threshold } : threshold;
+  const options: CarouselSwipeOptions = isNumber(threshold)
+    ? { threshold }
+    : threshold;
   const limit = options.threshold ?? CAROUSEL_SWIPE_THRESHOLD_PX;
 
   if (!Number.isFinite(deltaX) || !Number.isFinite(deltaY)) {
