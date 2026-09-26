@@ -279,6 +279,8 @@ export type { SpinnerCircleGeometry } from "@/Domain/progress";
 export {
   DEFAULT_RATING_MAX,
   clampRatingValue,
+  getRatingCurrentItem,
+  getRatingItemFill,
   getRatingItems,
   getRatingTabIndex,
   getRatingValueFromKey,

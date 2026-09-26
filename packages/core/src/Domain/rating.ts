@@ -1,3 +1,6 @@
+// ** External Imports
+import { clamp, isNil, range } from "es-toolkit/compat";
+
 /** Default number of rating items. */
 export const DEFAULT_RATING_MAX = 5;
 
@@ -15,7 +18,7 @@ export type RatingDirection = "ltr" | "rtl";
  * Normalizes `max` to an integer of at least 1.
  */
 export function normalizeRatingMax(max?: number): number {
-  if (max == null || !Number.isFinite(max)) {
+  if (isNil(max) || !Number.isFinite(max)) {
     return DEFAULT_RATING_MAX;
   }
 
@@ -23,44 +26,58 @@ export function normalizeRatingMax(max?: number): number {
 }
 
 /**
- * Clamps a rating to `null` or an integer from 1 through `max`.
- * Non-integers are rounded. Values below 1 become `null`.
+ * Clamps a rating to `null` or a number from above 0 through `max`.
+ * Fractional values are kept. Non-positive values become `null`.
  */
 export function clampRatingValue(
   value: null | number | undefined,
   max: number,
 ): RatingValue {
-  if (value == null || !Number.isFinite(value)) {
+  if (isNil(value) || !Number.isFinite(value) || value <= 0) {
     return null;
   }
 
-  const rounded = Math.round(value);
-
-  if (rounded < 1) {
-    return null;
-  }
-
-  if (rounded > max) {
-    return max;
-  }
-
-  return rounded;
+  return Math.min(max, value);
 }
 
 /**
  * Item values from 1 through `max`.
  */
 export function getRatingItems(max: number): number[] {
-  return Array.from({ length: max }, (_, index) => {
-    return index + 1;
-  });
+  return range(1, max + 1);
 }
 
 /**
- * Whether `item` is filled for the displayed value (committed or preview).
+ * Fill ratio of `item` for `value`, from 0 (empty) to 1 (full).
+ * `1.5` fills item 1 completely and item 2 halfway.
+ */
+export function getRatingItemFill(item: number, value: RatingValue): number {
+  if (isNil(value)) {
+    return 0;
+  }
+
+  return clamp(value - (item - 1), 0, 1);
+}
+
+/**
+ * Whether `item` is completely filled for the displayed value.
+ * A partial icon is {@link getRatingItemFill} between 0 and 1.
  */
 export function isRatingItemFilled(item: number, value: RatingValue): boolean {
-  return value != null && item <= value;
+  return getRatingItemFill(item, value) === 1;
+}
+
+/**
+ * Item that represents `value` for tab order and `aria-checked`.
+ * `null` when the rating is empty. A fraction selects the partial item
+ * (`1.5` selects item 2).
+ */
+export function getRatingCurrentItem(value: RatingValue): null | number {
+  if (isNil(value)) {
+    return null;
+  }
+
+  return Math.ceil(value);
 }
 
 /**
@@ -82,7 +99,7 @@ export function resolveRatingSelection(
  * an empty rating keeps the first item tabbable.
  */
 export function getRatingTabIndex(item: number, value: RatingValue): 0 | -1 {
-  const current = value ?? 1;
+  const current = getRatingCurrentItem(value) ?? 1;
 
   return item === current ? 0 : -1;
 }
@@ -90,7 +107,7 @@ export function getRatingTabIndex(item: number, value: RatingValue): 0 | -1 {
 /**
  * Next rating for a keyboard key.
  * Returns `undefined` when the key is not handled.
- * Horizontal arrows follow `direction`. Moving below 1 clears the value.
+ * Horizontal arrows follow `direction`. A step to 0 or below clears the value.
  * Home selects 1. End selects `max`.
  */
 export function getRatingValueFromKey({
@@ -121,7 +138,7 @@ export function getRatingValueFromKey({
   }
 
   if (increaseKeys.includes(key)) {
-    if (value == null) {
+    if (isNil(value)) {
       return 1;
     }
 
@@ -129,7 +146,7 @@ export function getRatingValueFromKey({
   }
 
   if (decreaseKeys.includes(key)) {
-    if (value == null || value <= 1) {
+    if (isNil(value) || value <= 1) {
       return null;
     }
 

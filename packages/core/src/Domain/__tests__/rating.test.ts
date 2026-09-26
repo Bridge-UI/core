@@ -4,6 +4,8 @@ import { describe, expect, test } from "vitest";
 // ** Local Imports
 import {
   clampRatingValue,
+  getRatingCurrentItem,
+  getRatingItemFill,
   getRatingItems,
   getRatingTabIndex,
   getRatingValueFromKey,
@@ -25,22 +27,31 @@ describe("normalizeRatingMax", () => {
 });
 
 describe("clampRatingValue", () => {
-  test("it should treat empty and sub-one values as no selection", () => {
+  test("it should treat empty and non-positive values as no selection", () => {
+    expect(clampRatingValue(0, 5)).toBeNull();
     expect(clampRatingValue(null, 5)).toBeNull();
     expect(clampRatingValue(undefined, 5)).toBeNull();
-    expect(clampRatingValue(0, 5)).toBeNull();
   });
 
-  test("it should round to an integer inside the scale", () => {
-    expect(clampRatingValue(3.4, 5)).toBe(3);
-    expect(clampRatingValue(3.6, 5)).toBe(4);
+  test("it should keep a fractional value inside the scale", () => {
     expect(clampRatingValue(9, 5)).toBe(5);
+    expect(clampRatingValue(0.5, 5)).toBe(0.5);
+    expect(clampRatingValue(1.5, 5)).toBe(1.5);
   });
 });
 
 describe("getRatingItems", () => {
   test("it should return 1 through max", () => {
     expect(getRatingItems(3)).toEqual([1, 2, 3]);
+  });
+});
+
+describe("getRatingItemFill", () => {
+  test("it should fill a fractional item partway", () => {
+    expect(getRatingItemFill(1, 1.5)).toBe(1);
+    expect(getRatingItemFill(3, 1.5)).toBe(0);
+    expect(getRatingItemFill(1, null)).toBe(0);
+    expect(getRatingItemFill(2, 1.5)).toBe(0.5);
   });
 });
 
@@ -60,10 +71,23 @@ describe("resolveRatingSelection", () => {
   });
 });
 
+describe("getRatingCurrentItem", () => {
+  test("it should point at the partial item for a fraction", () => {
+    expect(getRatingCurrentItem(2)).toBe(2);
+    expect(getRatingCurrentItem(1.5)).toBe(2);
+    expect(getRatingCurrentItem(null)).toBeNull();
+  });
+});
+
 describe("getRatingTabIndex", () => {
   test("it should keep the committed value in the tab order", () => {
     expect(getRatingTabIndex(3, 3)).toBe(0);
     expect(getRatingTabIndex(1, 3)).toBe(-1);
+  });
+
+  test("it should tab the partial item when the value is fractional", () => {
+    expect(getRatingTabIndex(2, 1.5)).toBe(0);
+    expect(getRatingTabIndex(1, 1.5)).toBe(-1);
   });
 
   test("it should tab the first item when the rating is empty", () => {
@@ -78,9 +102,7 @@ describe("getRatingValueFromKey", () => {
       getRatingValueFromKey({ max: 5, value: null, key: "ArrowRight" }),
     ).toBe(1);
 
-    expect(getRatingValueFromKey({ max: 5, value: 2, key: "ArrowUp" })).toBe(
-      3,
-    );
+    expect(getRatingValueFromKey({ max: 5, value: 2, key: "ArrowUp" })).toBe(3);
 
     expect(
       getRatingValueFromKey({ max: 5, value: 1, key: "ArrowLeft" }),
@@ -89,6 +111,20 @@ describe("getRatingValueFromKey", () => {
     expect(getRatingValueFromKey({ max: 5, value: 5, key: "ArrowRight" })).toBe(
       5,
     );
+  });
+
+  test("it should step a fractional value by one", () => {
+    expect(
+      getRatingValueFromKey({ max: 5, value: 1.5, key: "ArrowRight" }),
+    ).toBe(2.5);
+
+    expect(
+      getRatingValueFromKey({ max: 5, value: 1.5, key: "ArrowLeft" }),
+    ).toBe(0.5);
+
+    expect(
+      getRatingValueFromKey({ max: 5, value: 0.5, key: "ArrowLeft" }),
+    ).toBeNull();
   });
 
   test("it should swap horizontal arrows in rtl", () => {
