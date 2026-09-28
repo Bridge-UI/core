@@ -80,6 +80,17 @@ export default defineConfig(
     rules: {
       "vue/multi-word-component-names": "off",
       "@typescript-eslint/no-empty-object-type": "off",
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["./*", "../*"],
+              message: "Use the `@/` alias instead of relative imports.",
+            },
+          ],
+        },
+      ],
       "perfectionist/sort-interfaces": [
         "error",
         {
