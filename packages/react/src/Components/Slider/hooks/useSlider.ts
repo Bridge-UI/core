@@ -168,6 +168,7 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
     "Slider"
   >({
     libDefaults,
+    chrome: "BaseField",
     componentName: "Slider",
     props: {
       ...pick(componentProps, sliderOnlyBridgeKeys),

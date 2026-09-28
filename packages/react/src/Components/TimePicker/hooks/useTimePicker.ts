@@ -76,6 +76,7 @@ export function useTimePicker(
     "TimePicker"
   >({
     libDefaults,
+    chrome: "TimePanel",
     props: componentProps,
     componentName: "TimePicker",
   });

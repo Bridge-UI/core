@@ -428,8 +428,8 @@ export interface IconConfigOverrides {}
 export interface LabelConfigOverrides {}
 export interface LinkConfigOverrides {}
 export interface ListConfigOverrides {}
-export interface ListItemConfigOverrides {}
 export interface ListboxConfigOverrides {}
+export interface ListItemConfigOverrides {}
 export interface ListSectionConfigOverrides {}
 export interface MenuConfigOverrides {}
 export interface ModalConfigOverrides {}
@@ -452,9 +452,9 @@ export interface StepperConfigOverrides {}
 export interface SwitchConfigOverrides {}
 export interface TabConfigOverrides {}
 export interface TabItemConfigOverrides {}
+export interface TableConfigOverrides {}
 export interface TabListConfigOverrides {}
 export interface TabPanelConfigOverrides {}
-export interface TableConfigOverrides {}
 export interface TabsConfigOverrides {}
 export interface TextareaConfigOverrides {}
 export interface TextFieldConfigOverrides {}
@@ -514,6 +514,20 @@ export interface AlertConfigBase {
     rounded: Record<string, string>;
     shadow: Record<string, string>;
     variant: Record<string, Record<string, AlertColorItem>>;
+  }>;
+}
+
+export interface AutocompleteConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof FormFieldColor;
+    hideErrorMessage: boolean;
+    rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
+    showErrorIcon: boolean;
+    showFooter: boolean;
+    size: keyof FormFieldSize;
+    variant: keyof FormFieldVariant;
   }>;
 }
 
@@ -611,6 +625,26 @@ export interface ButtonGroupConfigBase {
   }>;
 }
 
+export interface CalendarConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof CalendarColor;
+    fill: boolean;
+    granularity: "day" | "year" | "month";
+    hideMonths: boolean;
+    hideOutsideDays: boolean;
+    hideWeekdays: boolean;
+    hideYears: boolean;
+    rounded: keyof CalendarRounded;
+    startOfWeek: number;
+  }>;
+  tokens: Partial<{
+    color: Record<string, CalendarColorItem>;
+    day: Partial<CalendarDay>;
+    rounded: Record<string, string>;
+  }>;
+}
+
 export interface CardConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -705,26 +739,6 @@ export interface ColorPickerConfigBase {
   tokens: Partial<{
     rounded: Record<string, string>;
     size: Record<string, ColorPickerSizeItem>;
-  }>;
-}
-
-export interface CalendarConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof CalendarColor;
-    fill: boolean;
-    granularity: "day" | "year" | "month";
-    hideMonths: boolean;
-    hideOutsideDays: boolean;
-    hideWeekdays: boolean;
-    hideYears: boolean;
-    rounded: keyof CalendarRounded;
-    startOfWeek: number;
-  }>;
-  tokens: Partial<{
-    color: Record<string, CalendarColorItem>;
-    day: Partial<CalendarDay>;
-    rounded: Record<string, string>;
   }>;
 }
 
@@ -876,6 +890,603 @@ export interface DateTimePickerConfigBase {
   }>;
 }
 
+export interface DateTimeRangeFieldConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    ampm: boolean;
+    color: keyof FormFieldColor;
+    editable: boolean;
+    fill: boolean;
+    hideErrorMessage: boolean;
+    hideMonths: boolean;
+    hideOutsideDays: boolean;
+    hideWeekdays: boolean;
+    hideYears: boolean;
+    interval: number;
+    orientation: "vertical" | "horizontal";
+    rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
+    showErrorIcon: boolean;
+    showFooter: boolean;
+    showSeconds: boolean;
+    size: keyof FormFieldSize;
+    startOfWeek: number;
+    timeZone: string;
+    variant: keyof FormFieldVariant;
+  }>;
+}
+
+export interface DateTimeRangePickerConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    ampm: boolean;
+    color: keyof CalendarColor;
+    error: boolean;
+    fill: boolean;
+    hideMonths: boolean;
+    hideOutsideDays: boolean;
+    hideWeekdays: boolean;
+    hideYears: boolean;
+    interval: number;
+    orientation: "vertical" | "horizontal";
+    rounded: keyof CalendarRounded;
+    showFooter: boolean;
+    showSeconds: boolean;
+    startOfWeek: number;
+    timeZone: string;
+  }>;
+}
+
+export interface DividerConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof DividerColor;
+    orientation: keyof DividerOrientation;
+  }>;
+  tokens: Partial<{
+    color: Record<string, string>;
+    orientation: Record<string, string>;
+  }>;
+}
+
+export interface DrawerConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    blur: keyof DrawerBlur;
+    placement: keyof DrawerPlacement;
+    size: keyof DrawerSize;
+    teleportTo: false | string;
+    transition: keyof DrawerTransition;
+  }>;
+  tokens: Partial<{
+    blur: Record<string, string>;
+    placement: Record<string, string>;
+    size: Record<string, DrawerSizeItem>;
+    transition: Partial<Record<string, Partial<DrawerTransitionLayer>>>;
+  }>;
+}
+
+export interface EmptyStateConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    align: keyof EmptyStateAlign;
+    mediaDecorative: boolean;
+    size: keyof EmptyStateSize;
+    titleAs: "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "div";
+  }>;
+  tokens: Partial<{
+    align: Record<string, string>;
+    size: Record<string, EmptyStateSizeItem>;
+  }>;
+}
+
+export interface FileUploadConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof FileUploadColor;
+    multiple: boolean;
+    orientation: keyof FileUploadOrientation;
+    rounded: keyof FileUploadRounded;
+    size: keyof FileUploadSize;
+    variant: keyof FileUploadVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, FileUploadColorItem>;
+    orientation: Record<string, FileUploadOrientationItem>;
+    rounded: Record<string, string>;
+    size: Record<string, FileUploadSizeItem>;
+    state: Record<string, FileUploadStateItem>;
+    variant: Record<string, FileUploadVariantItem>;
+  }>;
+}
+
+export interface FormControlConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    hideErrorMessage: boolean;
+    size: keyof LabelSize;
+  }>;
+}
+
+export interface FormFieldConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof FormFieldColor;
+    hideErrorMessage: boolean;
+    rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
+    showErrorIcon: boolean;
+    size: keyof FormFieldSize;
+    variant: keyof FormFieldVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, FormFieldColorItem>;
+    rounded: Record<string, string>;
+    size: Record<string, FormFieldSizeItem>;
+    variant: Record<string, FormFieldVariantItem>;
+  }>;
+}
+
+export interface IconConfigBase {
+  defaultProps: Partial<{
+    size: keyof IconSize;
+  }>;
+  tokens: Partial<{
+    size: Record<string, string>;
+  }>;
+}
+
+export interface LabelConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    size: keyof LabelSize;
+  }>;
+  tokens: Partial<{
+    size: Record<string, string>;
+  }>;
+}
+
+export interface LinkConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof LinkColor;
+    size: keyof LinkSize;
+    underline: keyof LinkUnderline;
+  }>;
+  tokens: Partial<{
+    color: Record<string, LinkColorItem>;
+    size: Record<string, string>;
+    underline: Record<string, string>;
+  }>;
+}
+
+export interface ListConfigBase {
+  classes: object;
+}
+
+export interface ListboxConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof ListboxColor;
+    matchWidth: boolean;
+    rounded: keyof ListboxRounded;
+    showFooter: boolean;
+    size: keyof ListboxSize;
+  }>;
+  tokens: Partial<{
+    color: Record<string, ListboxColorItem>;
+    rounded: Record<string, string>;
+    size: Record<string, ListboxSizeItem>;
+  }>;
+}
+
+export interface ListItemConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    role: "button" | "option" | "menuitem";
+    selectedIcon: unknown;
+  }>;
+}
+
+export interface ListSectionConfigBase {
+  classes: object;
+}
+
+export interface MenuConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    rounded: keyof MenuRounded;
+    shadow: keyof MenuShadow;
+  }>;
+  tokens: Partial<{
+    rounded: Record<string, string>;
+    shadow: Record<string, string>;
+  }>;
+}
+
+export interface ModalConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    align: keyof ModalAlign;
+    blur: keyof ModalBlur;
+    size: keyof ModalSize;
+    teleportTo: false | string;
+    transition: keyof ModalTransition;
+  }>;
+  tokens: Partial<{
+    align: Record<string, string>;
+    blur: Record<string, string>;
+    size: Record<string, string>;
+    transition: Partial<Record<string, Partial<ModalTransitionLayer>>>;
+  }>;
+}
+
+export interface NumberFieldConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof FormFieldColor;
+    controlVariant: keyof NumberFieldControlVariant;
+    hideErrorMessage: boolean;
+    rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
+    showErrorIcon: boolean;
+    size: keyof FormFieldSize;
+    variant: keyof FormFieldVariant;
+  }>;
+  tokens: Partial<{
+    controlVariant: Record<string, NumberFieldControlVariantItem>;
+  }>;
+}
+
+export interface OtpFieldConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof OtpFieldColor;
+    hideErrorMessage: boolean;
+    length: number;
+    rounded: keyof OtpFieldRounded;
+    showDescriptionOnError: boolean;
+    size: keyof OtpFieldSize;
+    type: "numeric" | "alphanumeric";
+    variant: keyof OtpFieldVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, OtpFieldColorItem>;
+    rounded: Record<string, OtpFieldRoundedItem>;
+    size: Record<string, OtpFieldSizeItem>;
+    variant: Record<string, OtpFieldVariantItem>;
+  }>;
+}
+
+export interface PaginationConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    boundaryCount: number;
+    color: keyof PaginationColor;
+    disabled: boolean;
+    hideNextButton: boolean;
+    hidePrevButton: boolean;
+    mode: "simple" | "numbered";
+    rounded: keyof PaginationRounded;
+    siblingCount: number;
+    size: keyof PaginationSize;
+    variant: keyof PaginationVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, PaginationColorItem>;
+    rounded: Record<string, PaginationRoundedItem>;
+    size: Record<string, PaginationSizeItem>;
+    variant: Record<string, PaginationVariantItem>;
+  }>;
+}
+
+export interface PasswordFieldConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof FormFieldColor;
+    hideErrorMessage: boolean;
+    rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
+    showErrorIcon: boolean;
+    size: keyof FormFieldSize;
+    variant: keyof FormFieldVariant;
+  }>;
+}
+
+export interface ProgressConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof ProgressColor;
+    rounded: keyof ProgressRounded;
+    size: keyof ProgressSize;
+    variant: keyof ProgressVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, ProgressColorItem>;
+    rounded: Record<string, string>;
+    size: Record<string, string>;
+    variant: Record<string, string>;
+  }>;
+}
+
+export interface RadioConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof RadioColor;
+    hideErrorMessage: boolean;
+    rounded: keyof RadioRounded;
+    size: keyof RadioSize;
+  }>;
+  tokens: Partial<{
+    color: Record<string, RadioColorItem>;
+    rounded: Record<string, string>;
+    size: Record<string, string>;
+  }>;
+}
+
+export interface RatingConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof RatingColor;
+    hideErrorMessage: boolean;
+    icon: SemanticIconName;
+    max: number;
+    size: keyof RatingSize;
+    step: number;
+  }>;
+  tokens: Partial<{
+    color: Record<string, RatingColorItem>;
+    size: Record<string, string>;
+  }>;
+}
+
+export interface RichTextEditorConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof FormFieldColor;
+    format: "html" | "json";
+    hideErrorMessage: boolean;
+    rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
+    showErrorIcon: boolean;
+    size: keyof FormFieldSize;
+    tools: RichTextTool[];
+    variant: keyof FormFieldVariant;
+  }>;
+  tokens: Partial<{
+    rounded: Record<string, string>;
+    size: Record<string, RichTextEditorSizeItem>;
+  }>;
+}
+
+export interface SelectConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof FormFieldColor;
+    hideErrorMessage: boolean;
+    rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
+    showErrorIcon: boolean;
+    showFooter: boolean;
+    size: keyof FormFieldSize;
+    variant: keyof FormFieldVariant;
+  }>;
+}
+
+export interface SidebarConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    collapsible: keyof SidebarCollapsible;
+    defaultOpen: boolean;
+    side: keyof SidebarSide;
+    variant: keyof SidebarVariant;
+  }>;
+  tokens: Partial<{
+    collapsible: Record<string, SidebarCollapsibleItem>;
+    side: Record<string, string>;
+    variant: Record<string, SidebarVariantItem>;
+    width: Partial<SidebarWidth>;
+  }>;
+}
+
+export interface SkeletonConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    rounded: keyof SkeletonRounded;
+  }>;
+  tokens: Partial<{
+    rounded: Record<string, string>;
+  }>;
+}
+
+export interface SliderConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof SliderColor;
+    hideErrorMessage: boolean;
+    max: number;
+    min: number;
+    rounded: keyof SliderRounded;
+    showDescriptionOnError: boolean;
+    showStops: boolean;
+    showTooltip: boolean;
+    size: keyof SliderSize;
+    step: number;
+  }>;
+  tokens: Partial<{
+    color: Record<string, SliderColorItem>;
+    rounded: Record<string, string>;
+    size: Record<string, SliderSizeItem>;
+  }>;
+}
+
+export interface SnackbarConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    closeButton: boolean;
+    color: keyof SnackbarColor;
+    duration: false | number;
+    padding: keyof SnackbarPadding;
+    position: keyof SnackbarPosition;
+    progressbar: boolean;
+    rounded: keyof SnackbarRounded;
+    teleportTo: false | string;
+    transition: keyof SnackbarTransition;
+  }>;
+  tokens: Partial<{
+    color: Record<string, SnackbarColorItem>;
+    padding: Record<string, SnackbarPaddingItem>;
+    position: Record<string, string>;
+    rounded: Record<string, SnackbarRoundedItem>;
+    transition: Record<string, string>;
+  }>;
+}
+
+export interface SpinnerConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof SpinnerColor;
+    disableShrink: boolean;
+    enableTrack: boolean;
+    size: keyof SpinnerSize;
+    thickness: number;
+    variant: keyof SpinnerVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, SpinnerColorItem>;
+    size: Record<string, string>;
+    variant: Record<string, string>;
+  }>;
+}
+
+export interface StepConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    disabled: boolean;
+    error: boolean;
+  }>;
+}
+
+export interface StepperConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof StepperColor;
+    linear: boolean;
+    orientation: keyof StepperOrientation;
+    size: keyof StepperSize;
+  }>;
+  tokens: Partial<{
+    color: Record<string, StepperColorItem>;
+    orientation: Record<string, StepperOrientationItem>;
+    size: Record<string, StepperSizeItem>;
+  }>;
+}
+
+export interface SwitchConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof SwitchColor;
+    hideErrorMessage: boolean;
+    rounded: keyof SwitchRounded;
+    size: keyof SwitchSize;
+  }>;
+  tokens: Partial<{
+    color: Record<string, SwitchColorItem>;
+    rounded: Record<string, string>;
+    size: Record<string, string>;
+  }>;
+}
+
+export interface TabConfigBase {
+  classes: object;
+}
+
+export interface TabItemConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    keepMounted: boolean;
+  }>;
+}
+
+export interface TableConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    full: boolean;
+    hoverable: boolean;
+    rounded: keyof TableRounded;
+    size: keyof TableSize;
+    stickyHeader: boolean;
+    striped: boolean;
+    variant: keyof TableVariant;
+  }>;
+  tokens: Partial<{
+    align: Record<string, TableAlignItem>;
+    rounded: Record<string, TableRoundedItem>;
+    size: Record<string, TableSizeItem>;
+    variant: Record<string, TableVariantItem>;
+  }>;
+}
+
+export interface TabListConfigBase {
+  classes: object;
+}
+
+export interface TabPanelConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    keepMounted: boolean;
+  }>;
+}
+
+export interface TabsConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    activation: "manual" | "automatic";
+    color: keyof TabsColor;
+    keepMounted: boolean;
+    orientation: keyof TabsOrientation;
+    size: keyof TabsSize;
+    variant: keyof TabsVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, TabsColorItem>;
+    orientation: Record<string, TabsOrientationItem>;
+    size: Record<string, TabsSizeItem>;
+    variant: Record<string, TabsVariantItem>;
+  }>;
+}
+
+export interface TextareaConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    autosize: boolean;
+    color: keyof FormFieldColor;
+    hideErrorMessage: boolean;
+    resize: keyof TextareaResize;
+    rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
+    showErrorIcon: boolean;
+    size: keyof FormFieldSize;
+    variant: keyof FormFieldVariant;
+  }>;
+  tokens: Partial<{
+    resize: Record<string, string>;
+  }>;
+}
+
+export interface TextFieldConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof FormFieldColor;
+    hideErrorMessage: boolean;
+    rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
+    showErrorIcon: boolean;
+    size: keyof FormFieldSize;
+    variant: keyof FormFieldVariant;
+  }>;
+}
+
 export interface TimeFieldConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -962,617 +1573,6 @@ export interface TimeRangePickerConfigBase {
   }>;
 }
 
-export interface DateTimeRangeFieldConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    ampm: boolean;
-    color: keyof FormFieldColor;
-    editable: boolean;
-    fill: boolean;
-    hideErrorMessage: boolean;
-    hideMonths: boolean;
-    hideOutsideDays: boolean;
-    hideWeekdays: boolean;
-    hideYears: boolean;
-    interval: number;
-    orientation: "vertical" | "horizontal";
-    rounded: keyof FormFieldRounded;
-    showDescriptionOnError: boolean;
-    showErrorIcon: boolean;
-    showFooter: boolean;
-    showSeconds: boolean;
-    size: keyof FormFieldSize;
-    startOfWeek: number;
-    timeZone: string;
-    variant: keyof FormFieldVariant;
-  }>;
-}
-
-export interface DateTimeRangePickerConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    ampm: boolean;
-    color: keyof CalendarColor;
-    error: boolean;
-    fill: boolean;
-    hideMonths: boolean;
-    hideOutsideDays: boolean;
-    hideWeekdays: boolean;
-    hideYears: boolean;
-    interval: number;
-    orientation: "vertical" | "horizontal";
-    rounded: keyof CalendarRounded;
-    showFooter: boolean;
-    showSeconds: boolean;
-    startOfWeek: number;
-    timeZone: string;
-  }>;
-}
-
-export interface IconConfigBase {
-  defaultProps: Partial<{
-    size: keyof IconSize;
-  }>;
-  tokens: Partial<{
-    size: Record<string, string>;
-  }>;
-}
-
-export interface LabelConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    size: keyof LabelSize;
-  }>;
-  tokens: Partial<{
-    size: Record<string, string>;
-  }>;
-}
-
-export interface LinkConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof LinkColor;
-    size: keyof LinkSize;
-    underline: keyof LinkUnderline;
-  }>;
-  tokens: Partial<{
-    color: Record<string, LinkColorItem>;
-    size: Record<string, string>;
-    underline: Record<string, string>;
-  }>;
-}
-
-export interface ListConfigBase {
-  classes: object;
-}
-
-export interface ListItemConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    role: "button" | "option" | "menuitem";
-    selectedIcon: unknown;
-  }>;
-}
-
-export interface ListSectionConfigBase {
-  classes: object;
-}
-
-export interface ListboxConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof ListboxColor;
-    matchWidth: boolean;
-    rounded: keyof ListboxRounded;
-    showFooter: boolean;
-    size: keyof ListboxSize;
-  }>;
-  tokens: Partial<{
-    color: Record<string, ListboxColorItem>;
-    rounded: Record<string, string>;
-    size: Record<string, ListboxSizeItem>;
-  }>;
-}
-
-export interface MenuConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    rounded: keyof MenuRounded;
-    shadow: keyof MenuShadow;
-  }>;
-  tokens: Partial<{
-    rounded: Record<string, string>;
-    shadow: Record<string, string>;
-  }>;
-}
-
-export interface ModalConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    align: keyof ModalAlign;
-    blur: keyof ModalBlur;
-    size: keyof ModalSize;
-    teleportTo: false | string;
-    transition: keyof ModalTransition;
-  }>;
-  tokens: Partial<{
-    align: Record<string, string>;
-    blur: Record<string, string>;
-    size: Record<string, string>;
-    transition: Partial<Record<string, Partial<ModalTransitionLayer>>>;
-  }>;
-}
-
-export interface DrawerConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    blur: keyof DrawerBlur;
-    placement: keyof DrawerPlacement;
-    size: keyof DrawerSize;
-    teleportTo: false | string;
-    transition: keyof DrawerTransition;
-  }>;
-  tokens: Partial<{
-    blur: Record<string, string>;
-    placement: Record<string, string>;
-    size: Record<string, DrawerSizeItem>;
-    transition: Partial<Record<string, Partial<DrawerTransitionLayer>>>;
-  }>;
-}
-
-export interface EmptyStateConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    align: keyof EmptyStateAlign;
-    mediaDecorative: boolean;
-    size: keyof EmptyStateSize;
-    titleAs: "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "div";
-  }>;
-  tokens: Partial<{
-    align: Record<string, string>;
-    size: Record<string, EmptyStateSizeItem>;
-  }>;
-}
-
-export interface FileUploadConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof FileUploadColor;
-    multiple: boolean;
-    orientation: keyof FileUploadOrientation;
-    rounded: keyof FileUploadRounded;
-    size: keyof FileUploadSize;
-    variant: keyof FileUploadVariant;
-  }>;
-  tokens: Partial<{
-    color: Record<string, FileUploadColorItem>;
-    orientation: Record<string, FileUploadOrientationItem>;
-    rounded: Record<string, string>;
-    size: Record<string, FileUploadSizeItem>;
-    state: Record<string, FileUploadStateItem>;
-    variant: Record<string, FileUploadVariantItem>;
-  }>;
-}
-
-export interface FormControlConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    hideErrorMessage: boolean;
-    size: keyof LabelSize;
-  }>;
-}
-
-export interface FormFieldConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof FormFieldColor;
-    hideErrorMessage: boolean;
-    rounded: keyof FormFieldRounded;
-    showDescriptionOnError: boolean;
-    showErrorIcon: boolean;
-    size: keyof FormFieldSize;
-    variant: keyof FormFieldVariant;
-  }>;
-  tokens: Partial<{
-    color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, string>;
-    size: Record<string, FormFieldSizeItem>;
-    variant: Record<string, FormFieldVariantItem>;
-  }>;
-}
-
-export interface NumberFieldConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof FormFieldColor;
-    controlVariant: keyof NumberFieldControlVariant;
-    hideErrorMessage: boolean;
-    rounded: keyof FormFieldRounded;
-    showDescriptionOnError: boolean;
-    showErrorIcon: boolean;
-    size: keyof FormFieldSize;
-    variant: keyof FormFieldVariant;
-  }>;
-  tokens: Partial<{
-    controlVariant: Record<string, NumberFieldControlVariantItem>;
-  }>;
-}
-
-export interface OtpFieldConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof OtpFieldColor;
-    hideErrorMessage: boolean;
-    length: number;
-    rounded: keyof OtpFieldRounded;
-    showDescriptionOnError: boolean;
-    size: keyof OtpFieldSize;
-    type: "numeric" | "alphanumeric";
-    variant: keyof OtpFieldVariant;
-  }>;
-  tokens: Partial<{
-    color: Record<string, OtpFieldColorItem>;
-    rounded: Record<string, OtpFieldRoundedItem>;
-    size: Record<string, OtpFieldSizeItem>;
-    variant: Record<string, OtpFieldVariantItem>;
-  }>;
-}
-
-export interface PaginationConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    boundaryCount: number;
-    color: keyof PaginationColor;
-    disabled: boolean;
-    hideNextButton: boolean;
-    hidePrevButton: boolean;
-    mode: "simple" | "numbered";
-    rounded: keyof PaginationRounded;
-    siblingCount: number;
-    size: keyof PaginationSize;
-    variant: keyof PaginationVariant;
-  }>;
-  tokens: Partial<{
-    color: Record<string, PaginationColorItem>;
-    rounded: Record<string, PaginationRoundedItem>;
-    size: Record<string, PaginationSizeItem>;
-    variant: Record<string, PaginationVariantItem>;
-  }>;
-}
-
-export interface PasswordFieldConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof FormFieldColor;
-    hideErrorMessage: boolean;
-    rounded: keyof FormFieldRounded;
-    showDescriptionOnError: boolean;
-    showErrorIcon: boolean;
-    size: keyof FormFieldSize;
-    variant: keyof FormFieldVariant;
-  }>;
-}
-
-export interface RadioConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof RadioColor;
-    hideErrorMessage: boolean;
-    rounded: keyof RadioRounded;
-    size: keyof RadioSize;
-  }>;
-  tokens: Partial<{
-    color: Record<string, RadioColorItem>;
-    rounded: Record<string, string>;
-    size: Record<string, string>;
-  }>;
-}
-
-export interface RatingConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof RatingColor;
-    hideErrorMessage: boolean;
-    icon: SemanticIconName;
-    max: number;
-    size: keyof RatingSize;
-    step: number;
-  }>;
-  tokens: Partial<{
-    color: Record<string, RatingColorItem>;
-    size: Record<string, string>;
-  }>;
-}
-
-export interface SnackbarConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    closeButton: boolean;
-    color: keyof SnackbarColor;
-    duration: false | number;
-    padding: keyof SnackbarPadding;
-    position: keyof SnackbarPosition;
-    progressbar: boolean;
-    rounded: keyof SnackbarRounded;
-    teleportTo: false | string;
-    transition: keyof SnackbarTransition;
-  }>;
-  tokens: Partial<{
-    color: Record<string, SnackbarColorItem>;
-    padding: Record<string, SnackbarPaddingItem>;
-    position: Record<string, string>;
-    rounded: Record<string, SnackbarRoundedItem>;
-    transition: Record<string, string>;
-  }>;
-}
-
-export interface AutocompleteConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof FormFieldColor;
-    hideErrorMessage: boolean;
-    rounded: keyof FormFieldRounded;
-    showDescriptionOnError: boolean;
-    showErrorIcon: boolean;
-    showFooter: boolean;
-    size: keyof FormFieldSize;
-    variant: keyof FormFieldVariant;
-  }>;
-}
-
-export interface SelectConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof FormFieldColor;
-    hideErrorMessage: boolean;
-    rounded: keyof FormFieldRounded;
-    showDescriptionOnError: boolean;
-    showErrorIcon: boolean;
-    showFooter: boolean;
-    size: keyof FormFieldSize;
-    variant: keyof FormFieldVariant;
-  }>;
-}
-
-export interface DividerConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof DividerColor;
-    orientation: keyof DividerOrientation;
-  }>;
-  tokens: Partial<{
-    color: Record<string, string>;
-    orientation: Record<string, string>;
-  }>;
-}
-
-export interface ProgressConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof ProgressColor;
-    rounded: keyof ProgressRounded;
-    size: keyof ProgressSize;
-    variant: keyof ProgressVariant;
-  }>;
-  tokens: Partial<{
-    color: Record<string, ProgressColorItem>;
-    rounded: Record<string, string>;
-    size: Record<string, string>;
-    variant: Record<string, string>;
-  }>;
-}
-
-export interface RichTextEditorConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof FormFieldColor;
-    format: "html" | "json";
-    hideErrorMessage: boolean;
-    rounded: keyof FormFieldRounded;
-    showDescriptionOnError: boolean;
-    showErrorIcon: boolean;
-    size: keyof FormFieldSize;
-    tools: RichTextTool[];
-    variant: keyof FormFieldVariant;
-  }>;
-  tokens: Partial<{
-    rounded: Record<string, string>;
-    size: Record<string, RichTextEditorSizeItem>;
-  }>;
-}
-
-export interface SidebarConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    collapsible: keyof SidebarCollapsible;
-    defaultOpen: boolean;
-    side: keyof SidebarSide;
-    variant: keyof SidebarVariant;
-  }>;
-  tokens: Partial<{
-    collapsible: Record<string, SidebarCollapsibleItem>;
-    side: Record<string, string>;
-    variant: Record<string, SidebarVariantItem>;
-    width: Partial<SidebarWidth>;
-  }>;
-}
-
-export interface SkeletonConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    rounded: keyof SkeletonRounded;
-  }>;
-  tokens: Partial<{
-    rounded: Record<string, string>;
-  }>;
-}
-
-export interface SliderConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof SliderColor;
-    hideErrorMessage: boolean;
-    max: number;
-    min: number;
-    rounded: keyof SliderRounded;
-    showDescriptionOnError: boolean;
-    showStops: boolean;
-    showTooltip: boolean;
-    size: keyof SliderSize;
-    step: number;
-  }>;
-  tokens: Partial<{
-    color: Record<string, SliderColorItem>;
-    rounded: Record<string, string>;
-    size: Record<string, SliderSizeItem>;
-  }>;
-}
-
-export interface SpinnerConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof SpinnerColor;
-    disableShrink: boolean;
-    enableTrack: boolean;
-    size: keyof SpinnerSize;
-    thickness: number;
-    variant: keyof SpinnerVariant;
-  }>;
-  tokens: Partial<{
-    color: Record<string, SpinnerColorItem>;
-    size: Record<string, string>;
-    variant: Record<string, string>;
-  }>;
-}
-
-export interface StepConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    disabled: boolean;
-    error: boolean;
-  }>;
-}
-
-export interface StepperConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof StepperColor;
-    linear: boolean;
-    orientation: keyof StepperOrientation;
-    size: keyof StepperSize;
-  }>;
-  tokens: Partial<{
-    color: Record<string, StepperColorItem>;
-    orientation: Record<string, StepperOrientationItem>;
-    size: Record<string, StepperSizeItem>;
-  }>;
-}
-
-export interface SwitchConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof SwitchColor;
-    hideErrorMessage: boolean;
-    rounded: keyof SwitchRounded;
-    size: keyof SwitchSize;
-  }>;
-  tokens: Partial<{
-    color: Record<string, SwitchColorItem>;
-    rounded: Record<string, string>;
-    size: Record<string, string>;
-  }>;
-}
-
-export interface TextareaConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    autosize: boolean;
-    color: keyof FormFieldColor;
-    hideErrorMessage: boolean;
-    resize: keyof TextareaResize;
-    rounded: keyof FormFieldRounded;
-    showDescriptionOnError: boolean;
-    showErrorIcon: boolean;
-    size: keyof FormFieldSize;
-    variant: keyof FormFieldVariant;
-  }>;
-  tokens: Partial<{
-    resize: Record<string, string>;
-  }>;
-}
-
-export interface TextFieldConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof FormFieldColor;
-    hideErrorMessage: boolean;
-    rounded: keyof FormFieldRounded;
-    showDescriptionOnError: boolean;
-    showErrorIcon: boolean;
-    size: keyof FormFieldSize;
-    variant: keyof FormFieldVariant;
-  }>;
-}
-
-export interface TableConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    full: boolean;
-    hoverable: boolean;
-    rounded: keyof TableRounded;
-    size: keyof TableSize;
-    stickyHeader: boolean;
-    striped: boolean;
-    variant: keyof TableVariant;
-  }>;
-  tokens: Partial<{
-    align: Record<string, TableAlignItem>;
-    rounded: Record<string, TableRoundedItem>;
-    size: Record<string, TableSizeItem>;
-    variant: Record<string, TableVariantItem>;
-  }>;
-}
-
-export interface TabsConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    activation: "manual" | "automatic";
-    color: keyof TabsColor;
-    keepMounted: boolean;
-    orientation: keyof TabsOrientation;
-    size: keyof TabsSize;
-    variant: keyof TabsVariant;
-  }>;
-  tokens: Partial<{
-    color: Record<string, TabsColorItem>;
-    orientation: Record<string, TabsOrientationItem>;
-    size: Record<string, TabsSizeItem>;
-    variant: Record<string, TabsVariantItem>;
-  }>;
-}
-
-export interface TabListConfigBase {
-  classes: object;
-}
-
-export interface TabConfigBase {
-  classes: object;
-}
-
-export interface TabPanelConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    keepMounted: boolean;
-  }>;
-}
-
-export interface TabItemConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    keepMounted: boolean;
-  }>;
-}
-
 export interface ToggleGroupConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -1622,7 +1622,12 @@ export interface TooltipConfigBase {
   }>;
 }
 
-export type BridgeUIComponentsConfig = Partial<{
+/**
+ * Registry entries keyed by component name. Augment via
+ * `declare module "@bridge-ui/core/Config"` to register components shipped
+ * outside Bridge (typed `components.X` and `useBridgeUIComponent` names).
+ */
+export interface BridgeUIComponentsRegistry {
   Accordion: Partial<Overwrite<AccordionConfigBase, AccordionConfigOverrides>>;
   AccordionItem: Partial<
     Overwrite<AccordionItemConfigBase, AccordionItemConfigOverrides>
@@ -1758,7 +1763,12 @@ export type BridgeUIComponentsConfig = Partial<{
     Overwrite<ToggleItemConfigBase, ToggleItemConfigOverrides>
   >;
   Tooltip: Partial<Overwrite<TooltipConfigBase, TooltipConfigOverrides>>;
-}>;
+}
+
+/**
+ * Per-component registry config (`classes`, `defaultProps`, `tokens`).
+ */
+export type BridgeUIComponentsConfig = Partial<BridgeUIComponentsRegistry>;
 
 export interface BridgeUIOptions {
   components?: BridgeUIComponentsConfig;

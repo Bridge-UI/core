@@ -85,6 +85,7 @@ export function useCheckbox(
   >({
     libDefaults,
     props: componentProps,
+    chrome: "FormControl",
     componentName: "Checkbox",
   });
 

@@ -143,6 +143,7 @@ export function useSelect(
     SelectRegistryProps,
     "Select"
   >({
+    chrome: "FormField",
     componentName: "Select",
     props: { classes: selectMerged.classes },
   });
@@ -278,6 +279,7 @@ export function useSelect(
   });
 
   const showFooter = useFieldShowFooter({
+    chrome: "FormField",
     componentName: "Select",
     overlay: resolvedOverlay,
     showFooter: selectMerged.showFooter,

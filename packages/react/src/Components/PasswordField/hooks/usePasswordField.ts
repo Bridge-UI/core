@@ -27,6 +27,7 @@ export function usePasswordField(props: PasswordFieldProps) {
     "PasswordField"
   >({
     props: { classes },
+    chrome: "FormField",
     componentName: "PasswordField",
   });
 

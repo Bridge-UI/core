@@ -163,6 +163,7 @@ export function useRichTextEditor(
     RichTextEditorMerged,
     "RichTextEditor"
   >({
+    chrome: "FormField",
     componentName: "RichTextEditor",
     props: () => registryProps.value,
     libDefaults: {

@@ -123,6 +123,7 @@ export function useTimeField(
   });
 
   const fill = usePickerFill({
+    chrome: "FormField",
     overlay: resolvedOverlay,
     componentName: "TimeField",
     fill: () => timeOnly.value.fill,
@@ -244,6 +245,7 @@ export function useTimeField(
   }
 
   const showFooter = useFieldShowFooter({
+    chrome: "FormField",
     overlay: resolvedOverlay,
     componentName: "TimeField",
     showFooter: () => timeOnly.value.showFooter,

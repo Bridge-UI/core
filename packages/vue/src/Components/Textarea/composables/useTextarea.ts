@@ -56,6 +56,7 @@ export function useTextarea(
 
   const { entry: bridgeTextarea, merged: textareaMerged } =
     useBridgeUIComponent<TextareaMerged, "Textarea">({
+      chrome: "FormField",
       componentName: "Textarea",
       props: () => registryProps.value,
       libDefaults: {

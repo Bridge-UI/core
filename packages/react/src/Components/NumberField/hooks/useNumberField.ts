@@ -104,6 +104,7 @@ export function useNumberField(props: NumberFieldProps) {
     NumberFieldMerged,
     "NumberField"
   >({
+    chrome: "FormField",
     props: registryProps,
     componentName: "NumberField",
     libDefaults: {

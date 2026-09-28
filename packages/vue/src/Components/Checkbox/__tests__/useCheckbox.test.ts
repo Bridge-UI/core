@@ -5,6 +5,7 @@ import { defineComponent, h, ref } from "vue";
 
 // ** Local Imports
 import { useCheckbox, type CheckboxOwnProps } from "@/Components/Checkbox";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 const libDefaults = {
   size: "md",
@@ -37,6 +38,29 @@ test("it should merge default size, rounded, and color", () => {
   expect(merged.value.size).toBe("md");
   expect(merged.value.rounded).toBe("sm");
   expect(merged.value.color).toBe("primary");
+});
+
+test("it should inherit size from FormControl registry defaultProps", () => {
+  let result!: ReturnType<typeof useCheckbox>;
+
+  const Consumer = defineComponent({
+    inheritAttrs: false,
+    setup() {
+      result = useCheckbox(() => ({}), libDefaults, ref(false));
+
+      return () => h("div");
+    },
+  });
+
+  mount(BridgeUIProvider, {
+    slots: { default: () => h(Consumer) },
+    props: {
+      components: { FormControl: { defaultProps: { size: "lg" } } },
+    },
+  });
+
+  expect(result.merged.value.size).toBe("lg");
+  expect(result.controlBind.value.class).toContain("w-6");
 });
 
 test("it should reflect checked state from model ref", () => {

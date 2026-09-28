@@ -143,6 +143,7 @@ export function useAutocomplete(
     AutocompleteRegistryProps,
     "Autocomplete"
   >({
+    chrome: "FormField",
     componentName: "Autocomplete",
     props: { classes: autocompleteMerged.classes },
   });
@@ -278,6 +279,7 @@ export function useAutocomplete(
   });
 
   const showFooter = useFieldShowFooter({
+    chrome: "FormField",
     overlay: resolvedOverlay,
     componentName: "Autocomplete",
     showFooter: autocompleteMerged.showFooter,

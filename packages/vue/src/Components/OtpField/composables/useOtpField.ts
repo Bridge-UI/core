@@ -122,6 +122,7 @@ export function useOtpField(
     "OtpField"
   >({
     libDefaults,
+    chrome: "BaseField",
     componentName: "OtpField",
     props: () => {
       return split.value.componentProps;

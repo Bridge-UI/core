@@ -143,6 +143,8 @@ export function useFormField(
 
   const registryName = options.componentName ?? "FormField";
 
+  const chrome = registryName === "FormField" ? undefined : "FormField";
+
   const {
     merged,
     entry: bridgeFormField,
@@ -151,6 +153,7 @@ export function useFormField(
     FormFieldMerged,
     NonNullable<FormFieldOptions["componentName"]>
   >({
+    chrome,
     libDefaults,
     componentName: registryName,
     props: () => {

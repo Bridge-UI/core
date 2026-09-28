@@ -21,7 +21,6 @@ import type { FormFieldSize, IconSize } from "@bridge-ui/core/Tokens";
 import {
   createMergeNestedComponentProps,
   createMergePartBind,
-  getBridgeUIChromeComponentName,
   getBridgeUIRegistryDefaultProp,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
@@ -78,15 +77,19 @@ export const mergeNestedComponentProps =
 
 /**
  * Registry entry + props merged with Bridge defaults for a named component.
+ * `chrome` inherits another entry's `classes` / `defaultProps` (e.g.
+ * `"FormField"`) and, for form chrome, `global.formDefaults`.
  */
 export function useBridgeUIComponent<
   P extends object,
   K extends keyof BridgeUIComponentsConfig = keyof BridgeUIComponentsConfig,
 >({
   props,
+  chrome,
   libDefaults,
   componentName,
 }: {
+  chrome?: MaybeRefOrGetter<undefined | keyof BridgeUIComponentsConfig>;
   componentName?: K;
   libDefaults?: Partial<P>;
   props: MaybeRefOrGetter<Partial<P>>;
@@ -107,7 +110,7 @@ export function useBridgeUIComponent<
   });
 
   const chromeEntry = computed((): undefined | BridgeUIRegistryChromeEntry => {
-    const chromeName = getBridgeUIChromeComponentName(componentName);
+    const chromeName = toValue(chrome);
 
     if (!chromeName) {
       return undefined;
@@ -122,6 +125,7 @@ export function useBridgeUIComponent<
       libDefaults,
       componentName,
       props: toValue(props) as P,
+      chromeName: toValue(chrome),
       components: components.value,
       formDefaults: bridge?.global.value.formDefaults,
     }) as P;
@@ -138,13 +142,16 @@ export function useBridgeUIComponent<
 
 /**
  * Resolves Cancel / Apply visibility: instance prop, then registry
- * `defaultProps.showFooter`, then the overlay default from core.
+ * `defaultProps.showFooter` (component, then `chrome`), then the overlay
+ * default from core.
  */
 export function useFieldShowFooter({
+  chrome,
   overlay,
   showFooter,
   componentName,
 }: {
+  chrome?: MaybeRefOrGetter<undefined | keyof BridgeUIComponentsConfig>;
   componentName: undefined | keyof BridgeUIComponentsConfig;
   overlay: MaybeRefOrGetter<ResolvedFieldOverlay>;
   showFooter: MaybeRefOrGetter<boolean | undefined>;
@@ -155,6 +162,7 @@ export function useFieldShowFooter({
     const registryShowFooter = getBridgeUIRegistryDefaultProp<boolean>({
       componentName,
       prop: "showFooter",
+      chromeName: toValue(chrome),
       components: unref(bridge?.components),
     });
 
@@ -166,14 +174,16 @@ export function useFieldShowFooter({
 }
 
 /**
- * Resolves picker fill: instance prop, then registry `defaultProps.fill`,
- * then the overlay default from core.
+ * Resolves picker fill: instance prop, then registry `defaultProps.fill`
+ * (component, then `chrome`), then the overlay default from core.
  */
 export function usePickerFill({
   fill,
+  chrome,
   overlay,
   componentName,
 }: {
+  chrome?: MaybeRefOrGetter<undefined | keyof BridgeUIComponentsConfig>;
   componentName: undefined | keyof BridgeUIComponentsConfig;
   fill: MaybeRefOrGetter<boolean | undefined>;
   overlay?: MaybeRefOrGetter<undefined | ResolvedFieldOverlay>;
@@ -184,6 +194,7 @@ export function usePickerFill({
     const registryFill = getBridgeUIRegistryDefaultProp<boolean>({
       prop: "fill",
       componentName,
+      chromeName: toValue(chrome),
       components: unref(bridge?.components),
     });
 
@@ -212,16 +223,20 @@ export function useBridgeUIMergedRegistryClasses<C extends object>({
   });
 }
 
+/**
+ * Maps a form field `size` to the `Icon` size used by field adornments.
+ */
 export function resolveFieldAdornmentIconSize(
   fieldSize?: keyof FormFieldSize,
 ): keyof IconSize {
+  // prettier-ignore
   return get(
     {
-      xs: "xs",
-      sm: "sm",
-      md: "md",
-      lg: "md",
-      xl: "lg",
+      "xs": "xs",
+      "sm": "sm",
+      "md": "md",
+      "lg": "md",
+      "xl": "lg",
       "2xs": "xs",
       "2xl": "lg",
     },

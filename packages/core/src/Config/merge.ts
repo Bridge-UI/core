@@ -1,11 +1,22 @@
 // ** External Imports
-import { findLast, isNil, isUndefined, omit } from "es-toolkit/compat";
+import {
+  compact,
+  findLast,
+  flatMap,
+  isArray,
+  isFunction,
+  isObject,
+  isPlainObject,
+  isUndefined,
+  keys,
+  map,
+  omit,
+  some,
+  uniq,
+  values,
+} from "es-toolkit/compat";
 
 // ** Local Imports
-import type { DateAdapter } from "@/Adapters/date";
-import type { I18nAdapter } from "@/Adapters/i18n";
-import type { IconAdapter } from "@/Adapters/icon";
-import type { RichTextEditorAdapter } from "@/Adapters/richText";
 import type {
   BridgeUIComponentsConfig,
   BridgeUIGlobal,
@@ -14,28 +25,33 @@ import type {
 import { BRIDGE_UI_DEFAULT_GLOBAL } from "@/Config/types";
 import { mergeBridgeUILayeredClasses } from "@/Utils";
 
-/** Adapter keys that must replace-on-write instead of deep-merging. */
-const GLOBAL_ADAPTER_KEYS = ["i18n", "dates", "icons", "richText"] as const;
-
 /**
- * Drops adapter fields so deep-merge does not combine adapter objects.
+ * True for values that must replace-on-write instead of deep-merging:
+ * functions, non-plain objects (class instances), and plain objects with a
+ * function member (adapters such as `dates`, `icons`, `i18n`, `richText`).
+ * Only top-level members are checked; deeper functions still deep-merge.
  */
-function omitGlobalAdapters(
-  value: undefined | Partial<BridgeUIGlobal>,
-):
-  | undefined
-  | Omit<Partial<BridgeUIGlobal>, "i18n" | "dates" | "icons" | "richText"> {
-  if (isNil(value)) {
-    return value;
+function isReplaceOnWriteValue(value: unknown): boolean {
+  if (isFunction(value)) {
+    return true;
   }
 
-  return omit(value, GLOBAL_ADAPTER_KEYS);
+  if (!isObject(value) || isArray(value)) {
+    return false;
+  }
+
+  if (!isPlainObject(value)) {
+    return true;
+  }
+
+  return some(values(value), isFunction);
 }
 
 /**
  * Merges the base and partials into a single object.
- * `dates`, `icons`, `i18n`, and `richText` are replace-on-write
- * (last defined adapter wins).
+ * Plain data (`breakpoints`, `formDefaults`, …) is deep-merged. Adapters and
+ * other values with behavior are replace-on-write (last defined value wins),
+ * including keys added by packages via `BridgeUIGlobal` augmentation.
  */
 export function mergeBridgeUIGlobal({
   base,
@@ -44,70 +60,32 @@ export function mergeBridgeUIGlobal({
   base: BridgeUIGlobal;
   partials: Array<undefined | Partial<BridgeUIGlobal>>;
 }): BridgeUIGlobal {
-  const layers = [base, ...partials];
+  const layers = compact<Partial<BridgeUIGlobal>>([base, ...partials]);
 
-  const dates = findLast(
-    layers,
-    (layer): layer is Partial<BridgeUIGlobal> & { dates: DateAdapter } => {
-      return !isNil(layer) && !isUndefined(layer.dates);
-    },
-  )?.dates;
-
-  const icons = findLast(
-    layers,
-    (layer): layer is Partial<BridgeUIGlobal> & { icons: IconAdapter } => {
-      return !isNil(layer) && !isUndefined(layer.icons);
-    },
-  )?.icons;
-
-  const i18n = findLast(
-    layers,
-    (layer): layer is Partial<BridgeUIGlobal> & { i18n: I18nAdapter } => {
-      return !isNil(layer) && !isUndefined(layer.i18n);
-    },
-  )?.i18n;
-
-  const richText = findLast(
-    layers,
-    (
-      layer,
-    ): layer is Partial<BridgeUIGlobal> & {
-      richText: RichTextEditorAdapter;
-    } => {
-      return !isNil(layer) && !isUndefined(layer.richText);
-    },
-  )?.richText;
+  const replaceKeys = uniq(
+    flatMap(layers, (layer) => {
+      return keys(layer).filter((key) => {
+        return isReplaceOnWriteValue(layer[key as keyof BridgeUIGlobal]);
+      });
+    }),
+  );
 
   const merged = mergeBridgeUILayeredClasses(
-    omitGlobalAdapters(base) as BridgeUIGlobal,
-    ...partials.map(omitGlobalAdapters),
-  ) as BridgeUIGlobal;
+    ...map(layers, (layer) => omit(layer, replaceKeys)),
+  ) as Record<string, unknown>;
 
-  if (isUndefined(dates)) {
-    delete merged.dates;
-  } else {
-    merged.dates = dates;
+  for (const key of replaceKeys) {
+    const value = findLast(
+      map(layers, (layer) => layer[key as keyof BridgeUIGlobal]),
+      (entry) => !isUndefined(entry),
+    );
+
+    if (!isUndefined(value)) {
+      merged[key] = value;
+    }
   }
 
-  if (isUndefined(icons)) {
-    delete merged.icons;
-  } else {
-    merged.icons = icons;
-  }
-
-  if (isUndefined(i18n)) {
-    delete merged.i18n;
-  } else {
-    merged.i18n = i18n;
-  }
-
-  if (isUndefined(richText)) {
-    delete merged.richText;
-  } else {
-    merged.richText = richText;
-  }
-
-  return merged;
+  return merged as unknown as BridgeUIGlobal;
 }
 
 /**

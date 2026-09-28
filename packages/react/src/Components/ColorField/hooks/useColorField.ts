@@ -129,6 +129,7 @@ export function useColorField(props: ColorFieldProps) {
   });
 
   const showFooter = useFieldShowFooter({
+    chrome: "FormField",
     overlay: resolvedOverlay,
     componentName: "ColorField",
     showFooter: colorOnly.showFooter,
@@ -147,6 +148,7 @@ export function useColorField(props: ColorFieldProps) {
   });
 
   const fill = usePickerFill({
+    chrome: "FormField",
     fill: colorOnly.fill,
     overlay: resolvedOverlay,
     componentName: "ColorField",

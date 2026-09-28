@@ -49,6 +49,7 @@ export function usePasswordField(
     Pick<PasswordFieldOwnProps, "classes">,
     "PasswordField"
   >({
+    chrome: "FormField",
     componentName: "PasswordField",
     props: () => ({ classes: props.classes }),
   });

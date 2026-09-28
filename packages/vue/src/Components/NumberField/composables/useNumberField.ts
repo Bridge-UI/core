@@ -70,6 +70,7 @@ export function useNumberField(
     NumberFieldMerged,
     "NumberField"
   >({
+    chrome: "FormField",
     componentName: "NumberField",
     props: () => registryProps.value,
     libDefaults: {

@@ -27,6 +27,7 @@ export type {
   BreadcrumbItemConfigBase,
   BreadcrumbItemConfigOverrides,
   BridgeUIComponentsConfig,
+  BridgeUIComponentsRegistry,
   BridgeUIFormDefaults,
   BridgeUIGlobal,
   BridgeUIOptions,

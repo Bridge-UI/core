@@ -134,6 +134,7 @@ export function useColorField(
   });
 
   const fill = usePickerFill({
+    chrome: "FormField",
     overlay: resolvedOverlay,
     componentName: "ColorField",
     fill: () => colorOnly.value.fill,
@@ -283,6 +284,7 @@ export function useColorField(
   }
 
   const showFooter = useFieldShowFooter({
+    chrome: "FormField",
     overlay: resolvedOverlay,
     componentName: "ColorField",
     showFooter: () => colorOnly.value.showFooter,

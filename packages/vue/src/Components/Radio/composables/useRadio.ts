@@ -80,6 +80,7 @@ export function useRadio(
     "Radio"
   >({
     libDefaults,
+    chrome: "FormControl",
     componentName: "Radio",
     props: () => split.value.componentProps,
   });

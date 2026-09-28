@@ -76,6 +76,7 @@ export function useSwitch(props: SwitchProps, libDefaults: SwitchLibDefaults) {
   >({
     libDefaults,
     props: componentProps,
+    chrome: "FormControl",
     componentName: "Switch",
   });
 

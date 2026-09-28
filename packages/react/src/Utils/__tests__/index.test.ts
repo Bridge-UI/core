@@ -3,6 +3,9 @@ import { renderHook } from "@testing-library/react";
 import { createElement } from "react";
 import { expect, test } from "vitest";
 
+// ** Core Imports
+import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config";
+
 // ** Local Imports
 import { BridgeUIProvider } from "@/Provider";
 import {
@@ -50,6 +53,43 @@ test("it should remake merged when a prop value changes", () => {
 
   expect(result.current.merged).not.toBe(first);
   expect(result.current.merged).toMatchObject({ size: "lg" });
+});
+
+test("it should read a custom registry entry with explicit chrome", () => {
+  const { result } = renderHook(
+    () => {
+      return useBridgeUIComponent<{ size?: string; variant?: string }>({
+        props: {},
+        chrome: "FormField",
+        componentName: "Editor" as keyof BridgeUIComponentsConfig,
+      });
+    },
+    {
+      wrapper: ({ children }) => {
+        return createElement(BridgeUIProvider, {
+          children,
+          components: {
+            Editor: {
+              defaultProps: { size: "sm" },
+              classes: { root: "editor-root" },
+            },
+            FormField: {
+              classes: { label: "chrome-label" },
+              defaultProps: { variant: "filled" },
+            },
+          } as BridgeUIComponentsConfig,
+        });
+      },
+    },
+  );
+
+  expect(result.current.merged).toEqual({ size: "sm", variant: "filled" });
+  expect(result.current.entry).toMatchObject({
+    classes: { root: "editor-root" },
+  });
+  expect(result.current.chromeEntry).toMatchObject({
+    classes: { label: "chrome-label" },
+  });
 });
 
 test("it should run the getter and return its value from derived", () => {

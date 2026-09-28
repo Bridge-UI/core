@@ -77,6 +77,7 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
   >({
     libDefaults,
     props: componentProps,
+    chrome: "FormControl",
     componentName: "Radio",
   });
 

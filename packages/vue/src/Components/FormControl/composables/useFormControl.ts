@@ -91,6 +91,10 @@ export function useFormControl(
     });
   });
 
+  const registryName = options.componentName ?? "FormControl";
+
+  const chrome = registryName === "FormControl" ? undefined : "FormControl";
+
   const {
     merged,
     entry: bridgeFormControl,
@@ -99,8 +103,9 @@ export function useFormControl(
     FormControlMerged,
     NonNullable<FormControlOptions["componentName"]>
   >({
+    chrome,
     libDefaults,
-    componentName: options.componentName ?? "FormControl",
+    componentName: registryName,
     props: () => {
       return split.value.componentProps;
     },

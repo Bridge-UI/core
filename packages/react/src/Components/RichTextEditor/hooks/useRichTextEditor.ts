@@ -154,6 +154,7 @@ export function useRichTextEditor(props: RichTextEditorProps) {
     RichTextEditorMerged,
     "RichTextEditor"
   >({
+    chrome: "FormField",
     props: registryProps,
     componentName: "RichTextEditor",
     libDefaults: {
