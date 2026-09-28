@@ -325,10 +325,10 @@ export interface BridgeUIGlobal {
 
   /**
    * Default `color` for every colorable component (Button, Badge, Tabs,
-   * Checkbox, form fields, pickers, Tooltip, …), replacing the library default
+   * Checkbox, form fields, pickers, …), replacing the library default
    * (`primary`, `dark`, or `secondary`). Use `"black"` for a monochrome UI;
    * to rebrand `primary`, change the palette in CSS instead.
-   * Divider keeps its neutral default.
+   * Divider and Tooltip keep their neutral defaults.
    * Merge order: instance props → component `defaultProps` → `formDefaults` →
    * `defaultColor` → lib defaults.
    *

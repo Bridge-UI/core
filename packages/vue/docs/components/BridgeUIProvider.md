@@ -167,7 +167,7 @@ app.use(
 
 ### Default color
 
-Set `global.defaultColor` to replace the library default `color` (`primary`, `dark`, or `secondary`) on every colorable component: Button, ButtonGroup, Badge, Alert, Avatar, Link, Tabs, ToggleGroup, Tooltip, Snackbar, Progress, Spinner, Stepper, Pagination, Accordion, Calendar, ActionFooter, form fields, and pickers. Divider keeps its neutral default.
+Set `global.defaultColor` to replace the library default `color` (`primary`, `dark`, or `secondary`) on every colorable component: Button, ButtonGroup, Badge, Alert, Avatar, Link, Tabs, ToggleGroup, Snackbar, Progress, Spinner, Stepper, Pagination, Accordion, Calendar, ActionFooter, form fields, and pickers. Divider and Tooltip keep their neutral defaults.
 
 Use `"black"` for a monochrome UI. To rebrand `primary`, change the palette in CSS instead.
 

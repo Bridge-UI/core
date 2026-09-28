@@ -307,10 +307,10 @@ test("it should apply dark content color by default", async () => {
   ).toBe(true);
 });
 
-test("it should apply global defaultColor from BridgeUIProvider", async () => {
+test("it should apply registry color from BridgeUIProvider", async () => {
   const wrapper = mount(BridgeUIProvider, {
     attachTo: document.body,
-    props: { global: { defaultColor: "black" } },
+    props: { components: { Tooltip: { defaultProps: { color: "black" } } } },
     slots: {
       default: () => {
         return h(

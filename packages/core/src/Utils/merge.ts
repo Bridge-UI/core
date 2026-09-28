@@ -94,7 +94,7 @@ export const BRIDGE_UI_FORM_SHAPE_ROUNDED_NAMES = [
 
 /**
  * Registry keys that receive `global.defaultColor` on `color`.
- * Divider is omitted: its default is a neutral separator, not an accent.
+ * Divider and Tooltip are omitted: their defaults are neutral surfaces, not accents.
  */
 export const BRIDGE_UI_COLOR_COMPONENT_NAMES = [
   "Link",
@@ -111,7 +111,6 @@ export const BRIDGE_UI_COLOR_COMPONENT_NAMES = [
   "Listbox",
   "Spinner",
   "Stepper",
-  "Tooltip",
   "Calendar",
   "Checkbox",
   "OtpField",

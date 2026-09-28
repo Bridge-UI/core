@@ -282,15 +282,15 @@ test("it should apply defaultColor over libDefaults for colorable components", (
 
   expect(button).toEqual({ color: "black" });
 
-  const tooltip = mergePropsWithBridgeUIDefaults({
+  const tabs = mergePropsWithBridgeUIDefaults({
     props: {},
     components: null,
     defaultColor: "black",
-    componentName: "Tooltip",
+    componentName: "Tabs",
     libDefaults: { color: "dark" as never },
   });
 
-  expect(tooltip).toEqual({ color: "black" });
+  expect(tabs).toEqual({ color: "black" });
 });
 
 test("it should let registry defaultProps and props override defaultColor", () => {
@@ -336,7 +336,7 @@ test("it should let FormField chrome defaultProps override defaultColor", () => 
   expect(result).toEqual({ color: "secondary" });
 });
 
-test("it should ignore defaultColor for Divider and non-colorable components", () => {
+test("it should ignore defaultColor for neutral and non-colorable components", () => {
   const divider = mergePropsWithBridgeUIDefaults({
     props: {},
     components: null,
@@ -346,6 +346,16 @@ test("it should ignore defaultColor for Divider and non-colorable components", (
   });
 
   expect(divider).toEqual({ color: "dark" });
+
+  const tooltip = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components: null,
+    defaultColor: "black",
+    componentName: "Tooltip",
+    libDefaults: { color: "dark" as never },
+  });
+
+  expect(tooltip).toEqual({ color: "dark" });
 
   const card = mergePropsWithBridgeUIDefaults({
     props: {},
