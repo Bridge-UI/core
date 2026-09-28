@@ -222,7 +222,9 @@ export function useRichTextEditor(props: RichTextEditorProps) {
     },
   );
 
-  const color = derived(() => formField.merged.color ?? "primary");
+  const color = derived(() => {
+    return formField.merged.color ?? "primary";
+  });
 
   const toolbarColor = derived(() => {
     if (formField.invalidated) {

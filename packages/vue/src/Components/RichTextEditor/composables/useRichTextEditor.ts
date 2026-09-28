@@ -238,7 +238,9 @@ export function useRichTextEditor(
     },
   );
 
-  const color = computed(() => formField.merged.value.color ?? "primary");
+  const color = computed(() => {
+    return formField.merged.value.color ?? "primary";
+  });
 
   const toolbarColor = computed(() => {
     if (formField.invalidated.value) {
