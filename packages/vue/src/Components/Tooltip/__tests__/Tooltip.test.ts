@@ -9,6 +9,7 @@ import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 // ** Local Imports
 import { Button } from "@/Components/Button";
 import { Tooltip } from "@/Components/Tooltip";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {
@@ -303,6 +304,33 @@ test("it should apply dark content color by default", async () => {
     document.body
       .querySelector('[role="tooltip"]')
       ?.classList.contains("bg-dark-900"),
+  ).toBe(true);
+});
+
+test("it should apply registry color from BridgeUIProvider", async () => {
+  const wrapper = mount(BridgeUIProvider, {
+    attachTo: document.body,
+    props: { components: { Tooltip: { defaultProps: { color: "black" } } } },
+    slots: {
+      default: () => {
+        return h(
+          Tooltip,
+          { openDelay: 0, content: "Black" },
+          { trigger: () => h(Button, null, () => "Save") },
+        );
+      },
+    },
+  });
+
+  mountedWrappers.push(wrapper);
+
+  await wrapper.find(".inline-flex.w-fit").trigger("pointerenter");
+  await flushPromises();
+
+  expect(
+    document.body
+      .querySelector('[role="tooltip"]')
+      ?.classList.contains("bg-black"),
   ).toBe(true);
 });
 

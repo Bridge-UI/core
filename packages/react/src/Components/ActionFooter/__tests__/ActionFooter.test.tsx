@@ -41,10 +41,21 @@ test("it should call onApply and onCancel when the buttons are clicked", () => {
   expect(onCancel).toHaveBeenCalledOnce();
 });
 
-test("it should let customProps.applyButton color win over applyColor", () => {
+test("it should share color across both buttons with different variants", () => {
+  render(<ActionFooter color="info" />);
+
+  expect(screen.getByRole("button", { name: "Apply" }).className).toContain(
+    "bg-info-500",
+  );
+  expect(screen.getByRole("button", { name: "Cancel" }).className).toContain(
+    "text-info-600",
+  );
+});
+
+test("it should let customProps.applyButton color win over color", () => {
   render(
     <ActionFooter
-      applyColor="info"
+      color="info"
       customProps={{ applyButton: { color: "error" } }}
     />,
   );
@@ -58,7 +69,7 @@ test("it should apply ActionFooter defaultProps from BridgeUIProvider", () => {
   render(
     <BridgeUIProvider
       components={{
-        ActionFooter: { defaultProps: { applyColor: "info" } },
+        ActionFooter: { defaultProps: { color: "info" } },
       }}
     >
       <ActionFooter />

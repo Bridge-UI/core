@@ -138,6 +138,28 @@ test("it should apply a link from the url field", () => {
   ).toBe("true");
 });
 
+test("it should forward its color to the link editor", () => {
+  render(<RichTextEditor color="success" aria-label="Description" />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Link" }));
+
+  const urlField = screen
+    .getByRole("textbox", { name: "URL" })
+    .closest('[class*="ring-success-600"]');
+
+  const surface = document.querySelector("[contenteditable]");
+
+  expect(surface).toBeTruthy();
+  expect(urlField).toBeTruthy();
+  expect(urlField?.contains(surface)).toBe(false);
+  expect(screen.getByRole("button", { name: "Apply" }).className).toContain(
+    "bg-success-500",
+  );
+  expect(screen.getByRole("button", { name: "Cancel" }).className).toContain(
+    "text-success-600",
+  );
+});
+
 test("it should leave the link unset when the url field is cancelled", () => {
   render(<RichTextEditor aria-label="Description" />);
 

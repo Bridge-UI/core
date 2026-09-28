@@ -41,6 +41,7 @@ const uncontrolledValue = ref<undefined | RichTextValue>(props.defaultValue);
 const value = useOptionalModel(model, uncontrolledValue);
 
 const {
+  color,
   slots,
   tools,
   linkHref,
@@ -97,6 +98,7 @@ const {
             size="sm"
             type="url"
             class="w-full"
+            :color="color"
             v-model="linkHref"
             autocomplete="off"
             hide-error-message
@@ -109,6 +111,7 @@ const {
           class="flex items-center justify-end gap-2 border-t border-dark-100 bg-dark-50 px-3 py-2 dark:border-dark-800 dark:bg-dark-950/40"
         >
           <ActionFooter
+            :color="color"
             v-on:apply="confirmLink"
             v-on:cancel="closeLinkEditor"
             :custom-props="{

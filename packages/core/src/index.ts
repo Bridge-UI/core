@@ -43,6 +43,7 @@ export type {
   BreadcrumbItemConfigOverrides,
   BridgeUIComponentsConfig,
   BridgeUIComponentsRegistry,
+  BridgeUIDefaultColor,
   BridgeUIFormDefaults,
   BridgeUIGlobal,
   BridgeUIOptions,
@@ -944,6 +945,7 @@ export type {
   TooltipSizeItem,
 } from "@/Tokens/Tooltip";
 export {
+  BRIDGE_UI_COLOR_COMPONENT_NAMES,
   BRIDGE_UI_FORM_COMPONENT_NAMES,
   BRIDGE_UI_FORM_SHAPE_ROUNDED_NAMES,
   adjustAutosizeTextareaHeight,
@@ -954,6 +956,7 @@ export {
   getColorToken,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
+  resolveBridgeUIDefaultColor,
   resolveBridgeUIFormDefaults,
   splitComponentProps,
 } from "@/Utils";

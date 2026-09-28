@@ -2,7 +2,9 @@
 
 Cancel / Apply pair used as the default footer in pickers and listboxes. The host keeps the footer bar; `ActionFooter` only renders the buttons.
 
-Theme both buttons once through `components.ActionFooter.defaultProps`. Instance `customProps.applyButton` / `cancelButton` still win.
+Both buttons share one `color`; `applyVariant` / `cancelVariant` set their hierarchy. Inside pickers, listboxes and the `RichTextEditor` link editor the footer follows the host `color` (`<DatePicker color="success" show-footer />` gets a green footer). There, `components.ActionFooter.defaultProps.color` does not apply — set `color` on the host (or `global.defaultColor`) instead.
+
+Theme the variants once through `components.ActionFooter.defaultProps`. Instance `customProps.applyButton` / `cancelButton` still win, including a per-button `color`.
 
 ## Import
 
@@ -18,6 +20,8 @@ import { ActionFooter } from "@bridge-ui/vue/Components/ActionFooter";
 <ActionFooter v-on:apply="save" v-on:cancel="discard" />
 
 <ActionFooter apply-label="Save" cancel-label="Discard" />
+
+<ActionFooter color="info" cancel-variant="outline" />
 ```
 
 ### Registry defaults
@@ -27,9 +31,8 @@ import { ActionFooter } from "@bridge-ui/vue/Components/ActionFooter";
   :components="{
     ActionFooter: {
       defaultProps: {
-        applyColor: 'info',
-        cancelVariant: 'flat',
-        cancelColor: 'secondary',
+        applyVariant: 'solid',
+        cancelVariant: 'outline',
       },
     },
   }"
@@ -62,16 +65,15 @@ import { ActionFooter } from "@bridge-ui/vue/Components/ActionFooter";
 
 ## Props
 
-| Prop             | Type                      | Default       | Description                                              |
-| ---------------- | ------------------------- | ------------- | -------------------------------------------------------- |
-| `apply-color`    | `ButtonColor`             | `"primary"`   | Color of the Apply button.                               |
-| `apply-label`    | `string`                  | `"Apply"`     | Label of the Apply button. Falls back to i18n `Apply`.   |
-| `apply-variant`  | `ButtonVariant`           | —             | Variant of the Apply button. Falls back to `Button`.     |
-| `cancel-color`   | `ButtonColor`             | `"secondary"` | Color of the Cancel button.                              |
-| `cancel-label`   | `string`                  | `"Cancel"`    | Label of the Cancel button. Falls back to i18n `Cancel`. |
-| `cancel-variant` | `ButtonVariant`           | `"flat"`      | Variant of the Cancel button.                            |
-| `classes`        | `ActionFooterClasses`     | —             | Classes for `root`, `applyButton`, `cancelButton`.       |
-| `custom-props`   | `ActionFooterCustomProps` | —             | Extra props for internal parts.                          |
+| Prop             | Type                      | Default     | Description                                              |
+| ---------------- | ------------------------- | ----------- | -------------------------------------------------------- |
+| `apply-label`    | `string`                  | `"Apply"`   | Label of the Apply button. Falls back to i18n `Apply`.   |
+| `apply-variant`  | `ButtonVariant`           | —           | Variant of the Apply button. Falls back to `Button`.     |
+| `cancel-label`   | `string`                  | `"Cancel"`  | Label of the Cancel button. Falls back to i18n `Cancel`. |
+| `cancel-variant` | `ButtonVariant`           | `"flat"`    | Variant of the Cancel button.                            |
+| `classes`        | `ActionFooterClasses`     | —           | Classes for `root`, `applyButton`, `cancelButton`.       |
+| `color`          | `ButtonColor`             | `"primary"` | Color shared by both buttons.                            |
+| `custom-props`   | `ActionFooterCustomProps` | —           | Extra props for internal parts.                          |
 
 ## Events
 

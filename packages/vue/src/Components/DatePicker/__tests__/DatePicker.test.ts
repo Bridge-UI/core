@@ -34,6 +34,23 @@ test("it should show footer actions when showFooter is set", () => {
   expect(wrapper.text()).toContain("Apply");
 });
 
+test("it should forward its color to the footer actions", () => {
+  const wrapper = mount(DatePicker, {
+    props: { showFooter: true, color: "success" },
+  });
+
+  const apply = wrapper.findAll("button").find((node) => {
+    return node.text() === "Apply";
+  });
+
+  const cancel = wrapper.findAll("button").find((node) => {
+    return node.text() === "Cancel";
+  });
+
+  expect(apply?.classes()).toContain("bg-success-500");
+  expect(cancel?.classes()).toContain("text-success-600");
+});
+
 test("it should commit draft value on Apply", async () => {
   const wrapper = mount(DatePicker, {
     props: {

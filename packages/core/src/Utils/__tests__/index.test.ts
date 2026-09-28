@@ -271,6 +271,116 @@ test("it should apply formDefaults size 2xs to OtpField", () => {
   expect(result).toEqual({ size: "2xs", rounded: "lg" });
 });
 
+test("it should apply defaultColor over libDefaults for colorable components", () => {
+  const button = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components: null,
+    defaultColor: "black",
+    componentName: "Button",
+    libDefaults: { color: "primary" as never },
+  });
+
+  expect(button).toEqual({ color: "black" });
+
+  const tabs = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components: null,
+    defaultColor: "black",
+    componentName: "Tabs",
+    libDefaults: { color: "dark" as never },
+  });
+
+  expect(tabs).toEqual({ color: "black" });
+});
+
+test("it should let registry defaultProps and props override defaultColor", () => {
+  const components: BridgeUIComponentsConfig = {
+    Alert: { defaultProps: { color: "info" } },
+  };
+
+  const fromRegistry = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components,
+    defaultColor: "black",
+    componentName: "Alert",
+    libDefaults: { color: "primary" as never },
+  });
+
+  expect(fromRegistry).toEqual({ color: "info" });
+
+  const fromProps = mergePropsWithBridgeUIDefaults({
+    components,
+    defaultColor: "black",
+    componentName: "Alert",
+    props: { color: "error" as never },
+    libDefaults: { color: "primary" as never },
+  });
+
+  expect(fromProps).toEqual({ color: "error" });
+});
+
+test("it should let FormField chrome defaultProps override defaultColor", () => {
+  const components: BridgeUIComponentsConfig = {
+    FormField: { defaultProps: { color: "secondary" } },
+  };
+
+  const result = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components,
+    defaultColor: "black",
+    chromeName: "FormField",
+    componentName: "Select",
+    libDefaults: { color: "primary" as never },
+  });
+
+  expect(result).toEqual({ color: "secondary" });
+});
+
+test("it should ignore defaultColor for neutral and non-colorable components", () => {
+  const divider = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components: null,
+    defaultColor: "black",
+    componentName: "Divider",
+    libDefaults: { color: "dark" as never },
+  });
+
+  expect(divider).toEqual({ color: "dark" });
+
+  const tooltip = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components: null,
+    defaultColor: "black",
+    componentName: "Tooltip",
+    libDefaults: { color: "dark" as never },
+  });
+
+  expect(tooltip).toEqual({ color: "dark" });
+
+  const card = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components: null,
+    defaultColor: "black",
+    componentName: "Card",
+    libDefaults: { rounded: "md" as never },
+  });
+
+  expect(card).toEqual({ rounded: "md" });
+});
+
+test("it should apply defaultColor to a custom component through a colorable chrome", () => {
+  const result = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components: null,
+    defaultColor: "black",
+    componentName: "Card",
+    chromeName: "FormField",
+    libDefaults: { color: "primary" as never },
+  });
+
+  expect(result).toEqual({ color: "black" });
+});
+
 test("it should apply FormField chrome defaultProps to TextField", () => {
   const components: BridgeUIComponentsConfig = {
     FormField: { defaultProps: { variant: "filled", color: "secondary" } },

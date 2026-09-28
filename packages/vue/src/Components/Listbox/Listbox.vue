@@ -51,7 +51,6 @@ const props = withDefaults(defineProps<ListboxOwnProps>(), {
   loading: false,
   multiple: false,
   overlay: "auto",
-  color: "primary",
   showCheckmark: true,
   highlightedIndex: -1,
   showFooter: undefined,
@@ -350,6 +349,7 @@ function handleCancel() {
       <div v-if="showFooter" v-bind="footerBind">
         <slot name="footer" :apply="handleApply" :cancel="handleCancel">
           <ActionFooter
+            :color="merged.color"
             v-on:apply="handleApply"
             v-on:cancel="handleCancel"
             :custom-props="{

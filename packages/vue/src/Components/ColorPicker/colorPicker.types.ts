@@ -6,11 +6,14 @@ import type {
   ColorFormat,
   FieldOverlayFooterSlotProps,
 } from "@bridge-ui/core/Domain";
-import type { ColorPickerRounded } from "@bridge-ui/core/Tokens";
+import type { ButtonColor, ColorPickerRounded } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import type { ButtonProps } from "@/Components/Button/button.types";
+import type {
+  ButtonColorOverrides,
+  ButtonProps,
+} from "@/Components/Button/button.types";
 
 export interface ColorPickerRoundedOverrides {}
 
@@ -153,6 +156,13 @@ export interface ColorPickerOwnProps {
    * @default undefined
    */
   classes?: ColorPickerClasses;
+
+  /**
+   * Color of the Cancel / Apply footer actions.
+   *
+   * @default "primary"
+   */
+  color?: MergeProps<ButtonColor, ButtonColorOverrides>;
 
   /**
    * Extra props for internal parts.

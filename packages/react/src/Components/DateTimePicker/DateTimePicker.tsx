@@ -107,6 +107,7 @@ function DateTimePicker(props: DateTimePickerProps) {
             props.slots.footer({ apply: handleApply, cancel: handleCancel })
           ) : (
             <ActionFooter
+              color={merged.color}
               onApply={handleApply}
               onCancel={handleCancel}
               customProps={{

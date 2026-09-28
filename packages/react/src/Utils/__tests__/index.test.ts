@@ -92,6 +92,28 @@ test("it should read a custom registry entry with explicit chrome", () => {
   });
 });
 
+test("it should apply global defaultColor from BridgeUIProvider", () => {
+  const { result } = renderHook(
+    () => {
+      return useBridgeUIComponent<{ color?: string }>({
+        props: {},
+        componentName: "Button",
+        libDefaults: { color: "primary" },
+      });
+    },
+    {
+      wrapper: ({ children }) => {
+        return createElement(BridgeUIProvider, {
+          children,
+          global: { defaultColor: "black" },
+        });
+      },
+    },
+  );
+
+  expect(result.current.merged).toEqual({ color: "black" });
+});
+
 test("it should run the getter and return its value from derived", () => {
   let runs = 0;
 

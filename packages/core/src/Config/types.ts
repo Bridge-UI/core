@@ -288,6 +288,20 @@ export interface BridgeUIFormDefaults {
   size?: keyof FormFieldSize;
 }
 
+/**
+ * Color token key accepted by `global.defaultColor` — present in every palette
+ * that receives it (`primary`, `secondary`, `dark`, `black`, …).
+ */
+export type BridgeUIDefaultColor =
+  | "dark"
+  | "info"
+  | "black"
+  | "error"
+  | "primary"
+  | "success"
+  | "warning"
+  | "secondary";
+
 export interface BridgeUIGlobal {
   /**
    * Global breakpoint CSS length overrides for `useBreakpoint`.
@@ -308,6 +322,19 @@ export interface BridgeUIGlobal {
    * @default undefined
    */
   dates?: DateAdapter;
+
+  /**
+   * Default `color` for every colorable component (Button, Badge, Tabs,
+   * Checkbox, form fields, pickers, …), replacing the library default
+   * (`primary`, `dark`, or `secondary`). Use `"black"` for a monochrome UI;
+   * to rebrand `primary`, change the palette in CSS instead.
+   * Divider and Tooltip keep their neutral defaults.
+   * Merge order: instance props → component `defaultProps` → chrome
+   * `defaultProps` → `formDefaults` → `defaultColor` → lib defaults.
+   *
+   * @default undefined
+   */
+  defaultColor?: BridgeUIDefaultColor;
 
   /**
    * Global text direction.
@@ -493,10 +520,9 @@ export interface AccordionItemConfigBase {
 export interface ActionFooterConfigBase {
   classes: object;
   defaultProps: Partial<{
-    applyColor: keyof ButtonColor;
     applyVariant: keyof ButtonVariant;
-    cancelColor: keyof ButtonColor;
     cancelVariant: keyof ButtonVariant;
+    color: keyof ButtonColor;
   }>;
 }
 
@@ -731,6 +757,7 @@ export interface ColorPickerConfigBase {
   classes: object;
   defaultProps: Partial<{
     alpha: boolean;
+    color: keyof ButtonColor;
     fill: boolean;
     format: "hex" | "hsl" | "rgb" | "hexa" | "hsla" | "rgba";
     rounded: keyof ColorPickerRounded;

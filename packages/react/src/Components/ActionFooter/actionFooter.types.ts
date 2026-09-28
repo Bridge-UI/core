@@ -83,13 +83,6 @@ export interface ActionFooterCustomProps {
  */
 export interface ActionFooterOwnProps {
   /**
-   * Color of the Apply button.
-   *
-   * @default "primary"
-   */
-  applyColor?: MergeProps<ButtonColor, ButtonColorOverrides>;
-
-  /**
    * Label of the Apply button. Falls back to the i18n string `Apply`.
    *
    * @default undefined
@@ -102,13 +95,6 @@ export interface ActionFooterOwnProps {
    * @default undefined
    */
   applyVariant?: MergeProps<ButtonVariant, ButtonVariantOverrides>;
-
-  /**
-   * Color of the Cancel button.
-   *
-   * @default "secondary"
-   */
-  cancelColor?: MergeProps<ButtonColor, ButtonColorOverrides>;
 
   /**
    * Label of the Cancel button. Falls back to the i18n string `Cancel`.
@@ -130,6 +116,14 @@ export interface ActionFooterOwnProps {
    * @default undefined
    */
   classes?: ActionFooterClasses;
+
+  /**
+   * Color shared by both buttons; `applyVariant` / `cancelVariant` set their
+   * hierarchy.
+   *
+   * @default "primary"
+   */
+  color?: MergeProps<ButtonColor, ButtonColorOverrides>;
 
   /**
    * Extra props for internal parts (`root`, `applyButton`, `cancelButton`).

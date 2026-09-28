@@ -65,6 +65,17 @@ test("it should show footer actions when showFooter is set", () => {
   expect(screen.getByRole("button", { name: "Apply" })).toBeTruthy();
 });
 
+test("it should forward its color to the footer actions", () => {
+  render(<ColorPicker showFooter color="success" />);
+
+  expect(screen.getByRole("button", { name: "Apply" }).className).toContain(
+    "bg-success-500",
+  );
+  expect(screen.getByRole("button", { name: "Cancel" }).className).toContain(
+    "text-success-600",
+  );
+});
+
 test("it should commit draft value on Apply", () => {
   const onChange = vi.fn();
 

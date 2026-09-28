@@ -39,6 +39,7 @@ function ColorPicker(props: ColorPickerProps) {
   } = useColorPicker(props, {
     rounded: "md",
     format: "hex",
+    color: "primary",
   });
 
   return (
@@ -118,6 +119,7 @@ function ColorPicker(props: ColorPickerProps) {
             props.slots.footer({ apply: handleApply, cancel: handleCancel })
           ) : (
             <ActionFooter
+              color={merged.color}
               onApply={handleApply}
               onCancel={handleCancel}
               customProps={{

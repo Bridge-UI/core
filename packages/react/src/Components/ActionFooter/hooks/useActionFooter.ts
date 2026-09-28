@@ -24,10 +24,9 @@ import {
 } from "@/Utils";
 
 const actionFooterBridgeKeys = [
+  "color",
   "classes",
-  "applyColor",
   "applyLabel",
-  "cancelColor",
   "cancelLabel",
   "customProps",
   "applyVariant",
@@ -36,7 +35,7 @@ const actionFooterBridgeKeys = [
 
 type ActionFooterLibDefaults = LibDefaultsShape<
   ActionFooterOwnProps,
-  "applyColor" | "cancelColor" | "cancelVariant"
+  "color" | "cancelVariant"
 >;
 
 type ActionFooterMerged = MergeLibDefaults<
@@ -103,8 +102,8 @@ export function useActionFooter(
     return mergePartBind(
       customProps?.applyButton,
       {
+        color: merged.color,
         onClick: props.onApply,
-        color: merged.applyColor,
         variant: merged.applyVariant,
       },
       cn({
@@ -117,8 +116,8 @@ export function useActionFooter(
     return mergePartBind(
       customProps?.cancelButton,
       {
+        color: merged.color,
         onClick: props.onCancel,
-        color: merged.cancelColor,
         variant: merged.cancelVariant,
       },
       cn({

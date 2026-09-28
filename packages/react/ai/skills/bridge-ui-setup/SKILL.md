@@ -34,3 +34,4 @@ npx bridge-ui-react-ai install
 3. Mount `BridgeUIHosts` inside the provider when using action hooks (`useDialogAction`, `useModalAction`, `useDrawerAction`, `useSnackbarAction`).
 4. Semantic icon names, chrome strings, and date libs need `global.icons` / `global.i18n` / `global.dates` — import factories from `@bridge-ui/react/Adapters/Examples/{date,icon,i18n}-*` and install the matching optional peer.
 5. Prefer deep imports: `@bridge-ui/react/Components/{Name}`.
+6. App-wide default color (e.g. monochrome `"black"`): set `global.defaultColor` once — do not repeat `color` in every `components.{Name}.defaultProps`. Rebrand `primary` in theme CSS instead.

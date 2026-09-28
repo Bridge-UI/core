@@ -57,10 +57,19 @@ test("it should emit apply and cancel when the buttons are clicked", async () =>
   expect(wrapper.emitted("cancel")).toHaveLength(1);
 });
 
-test("it should let customProps.applyButton color win over applyColor", () => {
+test("it should share color across both buttons with different variants", () => {
+  mountActionFooter({ props: { color: "info" } });
+
+  const buttons = document.body.querySelectorAll("button");
+
+  expect(buttons[0]?.className).toContain("text-info-600");
+  expect(buttons[1]?.className).toContain("bg-info-500");
+});
+
+test("it should let customProps.applyButton color win over color", () => {
   mountActionFooter({
     props: {
-      applyColor: "info",
+      color: "info",
       customProps: { applyButton: { color: "error" } },
     },
   });
@@ -77,7 +86,7 @@ test("it should apply ActionFooter defaultProps from BridgeUIProvider", () => {
     },
     props: {
       components: {
-        ActionFooter: { defaultProps: { applyColor: "info" } },
+        ActionFooter: { defaultProps: { color: "info" } },
       },
     },
   });

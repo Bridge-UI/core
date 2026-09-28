@@ -23,7 +23,6 @@ const props = withDefaults(defineProps<TooltipOwnProps>(), {
   offset: 8,
   size: "md",
   arrow: true,
-  color: "dark",
   rounded: "md",
   closeDelay: 0,
   openDelay: 200,

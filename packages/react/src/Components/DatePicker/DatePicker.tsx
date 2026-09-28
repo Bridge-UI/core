@@ -57,6 +57,7 @@ function DatePicker(props: DatePickerProps) {
             props.slots.footer({ apply: handleApply, cancel: handleCancel })
           ) : (
             <ActionFooter
+              color={merged.color}
               onApply={handleApply}
               onCancel={handleCancel}
               customProps={{

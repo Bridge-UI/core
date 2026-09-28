@@ -10,9 +10,8 @@ import {
 } from "@/Components/ActionFooter";
 
 const libDefaults = {
-  applyColor: "primary",
+  color: "primary",
   cancelVariant: "flat",
-  cancelColor: "secondary",
 } as const satisfies Partial<ActionFooterOwnProps>;
 
 function mountUseActionFooter(props: Partial<ActionFooterOwnProps> = {}) {
@@ -32,11 +31,13 @@ function mountUseActionFooter(props: Partial<ActionFooterOwnProps> = {}) {
 }
 
 test("it should return default Apply and Cancel tokens", () => {
-  const { merged, rootBind } = mountUseActionFooter();
+  const { merged, rootBind, applyButtonBind, cancelButtonBind } =
+    mountUseActionFooter();
 
-  expect(merged.value.applyColor).toBe("primary");
-  expect(merged.value.cancelColor).toBe("secondary");
+  expect(merged.value.color).toBe("primary");
   expect(merged.value.cancelVariant).toBe("flat");
+  expect(applyButtonBind.value.color).toBe("primary");
+  expect(cancelButtonBind.value.color).toBe("primary");
   expect(rootBind.value.class).toContain("contents");
 });
 

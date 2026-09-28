@@ -263,6 +263,33 @@ test("it should read a custom registry entry with explicit chrome", () => {
   });
 });
 
+test("it should apply global defaultColor from BridgeUIProvider", () => {
+  let result!: UseBridgeUIComponentReturn<{ color?: string }>;
+
+  const Consumer = defineComponent({
+    setup() {
+      result = useBridgeUIComponent<{ color?: string }>({
+        props: {},
+        componentName: "Button",
+        libDefaults: { color: "primary" },
+      });
+
+      return () => h("div");
+    },
+  });
+
+  mount(BridgeUIProvider, {
+    slots: {
+      default: () => h(Consumer),
+    },
+    props: {
+      global: { defaultColor: "black" },
+    },
+  });
+
+  expect(result.merged.value).toEqual({ color: "black" });
+});
+
 test("it should resolve fill from BridgeUIProvider defaultProps", () => {
   const result = mountUsePickerFill(
     {
