@@ -51,7 +51,6 @@ const props = withDefaults(defineProps<ListboxOwnProps>(), {
   loading: false,
   multiple: false,
   overlay: "auto",
-  color: "primary",
   showCheckmark: true,
   highlightedIndex: -1,
   showFooter: undefined,

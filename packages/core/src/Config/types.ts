@@ -288,6 +288,20 @@ export interface BridgeUIFormDefaults {
   size?: keyof FormFieldSize;
 }
 
+/**
+ * Color token key accepted by `global.defaultColor` — present in every palette
+ * that receives it (`primary`, `secondary`, `dark`, `black`, …).
+ */
+export type BridgeUIDefaultColor =
+  | "dark"
+  | "info"
+  | "black"
+  | "error"
+  | "primary"
+  | "success"
+  | "warning"
+  | "secondary";
+
 export interface BridgeUIGlobal {
   /**
    * Global breakpoint CSS length overrides for `useBreakpoint`.
@@ -308,6 +322,19 @@ export interface BridgeUIGlobal {
    * @default undefined
    */
   dates?: DateAdapter;
+
+  /**
+   * Default `color` for every colorable component (Button, Badge, Tabs,
+   * Checkbox, form fields, pickers, Tooltip, …), replacing the library default
+   * (`primary`, `dark`, or `secondary`). Use `"black"` for a monochrome UI;
+   * to rebrand `primary`, change the palette in CSS instead.
+   * Divider keeps its neutral default.
+   * Merge order: instance props → component `defaultProps` → `formDefaults` →
+   * `defaultColor` → lib defaults.
+   *
+   * @default undefined
+   */
+  defaultColor?: BridgeUIDefaultColor;
 
   /**
    * Global text direction.

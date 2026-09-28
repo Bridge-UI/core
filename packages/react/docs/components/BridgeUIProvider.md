@@ -161,6 +161,23 @@ Radio and Switch receive `size` only — their `rounded` stays shape-driven (`fu
 </BridgeUIProvider>
 ```
 
+### Default color
+
+Set `global.defaultColor` to replace the library default `color` (`primary`, `dark`, or `secondary`) on every colorable component: Button, ButtonGroup, Badge, Alert, Avatar, Link, Tabs, ToggleGroup, Tooltip, Snackbar, Progress, Spinner, Stepper, Pagination, Accordion, Calendar, ActionFooter, form fields, and pickers. Divider keeps its neutral default.
+
+Use `"black"` for a monochrome UI. To rebrand `primary`, change the palette in CSS instead.
+
+Merge order: instance props → `components.{Name}.defaultProps` → chrome → `formDefaults` → `defaultColor` → library defaults. Explicit props and `invalid` / error states are unaffected.
+
+```tsx
+<BridgeUIProvider
+  global={{ defaultColor: "black" }}
+  components={{ Alert: { defaultProps: { color: "info" } } }}
+>
+  <App />
+</BridgeUIProvider>
+```
+
 ### Shared chrome
 
 `FormField`, `FormControl`, `BaseField`, and `TimePanel` are registry keys. Set them once to theme a family; a public entry still overrides `defaultProps`. Chrome tokens live on the shared key (`components.FormField.tokens`, `components.BaseField.tokens`). Dropdown tokens live on `components.Listbox`. Set `components.Listbox.defaultProps.matchWidth` so Select / Autocomplete menus match the field width. Cancel / Apply in pickers and listboxes live on `components.ActionFooter`.
@@ -300,11 +317,11 @@ setGlobal({ mobileBreakpoint: "md" });
 
 ## Props
 
-| Prop         | Type                       | Default | Description                                                                                                             |
-| ------------ | -------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `children`   | `ReactNode`                | —       | App tree rendered inside the provider                                                                                   |
-| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                                                                                  |
-| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `timeZone`, `mobileBreakpoint`, `breakpoints`, `icons`, `i18n`, `dates`, `formDefaults` |
+| Prop         | Type                       | Default | Description                                                                                                                             |
+| ------------ | -------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `children`   | `ReactNode`                | —       | App tree rendered inside the provider                                                                                                   |
+| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                                                                                                  |
+| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `timeZone`, `mobileBreakpoint`, `breakpoints`, `icons`, `i18n`, `dates`, `formDefaults`, `defaultColor` |
 
 **useBridgeUI():** `global`, `components`, `setGlobal`, `setComponents`, `setLocale`, `setTheme`, `setTimeZone`, `setDirection`
 

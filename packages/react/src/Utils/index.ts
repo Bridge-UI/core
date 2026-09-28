@@ -99,6 +99,7 @@ export const mergeNestedComponentProps =
  * Registry entry + props merged with Bridge defaults for a named component.
  * `chrome` inherits another entry's `classes` / `defaultProps` (e.g.
  * `"FormField"`) and, for form chrome, `global.formDefaults`.
+ * Colorable components (or their chrome) also receive `global.defaultColor`.
  */
 export function useBridgeUIComponent<
   P extends object,
@@ -136,6 +137,7 @@ export function useBridgeUIComponent<
       chromeName: chrome,
       props: stableProps,
       libDefaults: resolvedLibDefaults,
+      defaultColor: bridge?.global.defaultColor,
       formDefaults: bridge?.global.formDefaults,
     }) as P;
   }, [
@@ -144,6 +146,7 @@ export function useBridgeUIComponent<
     stableProps,
     componentName,
     resolvedLibDefaults,
+    bridge?.global.defaultColor,
     bridge?.global.formDefaults,
   ]);
 

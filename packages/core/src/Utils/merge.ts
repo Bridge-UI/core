@@ -18,6 +18,7 @@ import { twMerge } from "tailwind-merge";
 // ** Local Imports
 import type {
   BridgeUIComponentsConfig,
+  BridgeUIDefaultColor,
   BridgeUIFormDefaults,
 } from "@/Config/types";
 import type { ClassPropKey, MergePartBind } from "@/Utils/types";
@@ -90,6 +91,90 @@ export const BRIDGE_UI_FORM_SHAPE_ROUNDED_NAMES = [
 ] as const satisfies ReadonlyArray<
   (typeof BRIDGE_UI_FORM_COMPONENT_NAMES)[number]
 >;
+
+/**
+ * Registry keys that receive `global.defaultColor` on `color`.
+ * Divider is omitted: its default is a neutral separator, not an accent.
+ */
+export const BRIDGE_UI_COLOR_COMPONENT_NAMES = [
+  "Link",
+  "Tabs",
+  "Alert",
+  "Badge",
+  "Radio",
+  "Avatar",
+  "Button",
+  "Rating",
+  "Select",
+  "Slider",
+  "Switch",
+  "Listbox",
+  "Spinner",
+  "Stepper",
+  "Tooltip",
+  "Calendar",
+  "Checkbox",
+  "OtpField",
+  "Progress",
+  "Snackbar",
+  "Textarea",
+  "Accordion",
+  "DateField",
+  "FormField",
+  "TextField",
+  "TimeField",
+  "TimePanel",
+  "ColorField",
+  "DatePicker",
+  "FileUpload",
+  "Pagination",
+  "TimePicker",
+  "ButtonGroup",
+  "NumberField",
+  "ToggleGroup",
+  "Autocomplete",
+  "DateTimeField",
+  "PasswordField",
+  "DateRangeField",
+  "DateTimePicker",
+  "RichTextEditor",
+  "TimeRangeField",
+  "DateRangePicker",
+  "TimeRangePicker",
+  "DateTimeRangeField",
+  "DateTimeRangePicker",
+] as const satisfies ReadonlyArray<keyof BridgeUIComponentsConfig>;
+
+/**
+ * Returns `{ color: defaultColor }` when `componentName` (or its `chromeName`)
+ * is listed in {@link BRIDGE_UI_COLOR_COMPONENT_NAMES}.
+ */
+export function resolveBridgeUIDefaultColor({
+  chromeName,
+  defaultColor,
+  componentName,
+}: {
+  chromeName?: keyof BridgeUIComponentsConfig;
+  componentName?: keyof BridgeUIComponentsConfig;
+  defaultColor?: BridgeUIDefaultColor;
+}): undefined | { color: BridgeUIDefaultColor } {
+  if (isNil(defaultColor) || isNil(componentName)) {
+    return undefined;
+  }
+
+  const colorName = find([componentName, chromeName], (name) => {
+    return (
+      !isNil(name) &&
+      (BRIDGE_UI_COLOR_COMPONENT_NAMES as ReadonlyArray<string>).includes(name)
+    );
+  });
+
+  if (isNil(colorName)) {
+    return undefined;
+  }
+
+  return { color: defaultColor };
+}
 
 /**
  * Reads `defaultProps[prop]` from the public registry entry, then `chromeName`.
@@ -377,9 +462,10 @@ export function createMergeNestedComponentProps(
 /**
  * Merges props with Bridge UI defaults and registry defaults.
  *
- * Order (later wins): `libDefaults` → `formDefaults` (form components only) →
- * chrome registry `defaultProps` (`chromeName`) → public registry
- * `defaultProps` → instance `props`.
+ * Order (later wins): `libDefaults` → `defaultColor` (colorable components
+ * only) → `formDefaults` (form components only) → chrome registry
+ * `defaultProps` (`chromeName`) → public registry `defaultProps` → instance
+ * `props`.
  */
 export function mergePropsWithBridgeUIDefaults<
   P extends object,
@@ -389,12 +475,14 @@ export function mergePropsWithBridgeUIDefaults<
   chromeName,
   components,
   libDefaults,
+  defaultColor,
   formDefaults,
   componentName,
 }: {
   chromeName?: keyof BridgeUIComponentsConfig;
   componentName?: K;
   components: null | undefined | BridgeUIComponentsConfig;
+  defaultColor?: BridgeUIDefaultColor;
   formDefaults?: BridgeUIFormDefaults;
   libDefaults?: Partial<P>;
   props: P;
@@ -414,6 +502,12 @@ export function mergePropsWithBridgeUIDefaults<
     componentName,
   }) as undefined | Partial<P>;
 
+  const fromDefaultColor = resolveBridgeUIDefaultColor({
+    chromeName,
+    defaultColor,
+    componentName,
+  }) as undefined | Partial<P>;
+
   const omitNonMergeable = (value: undefined | Partial<P>) => {
     return omit(value ?? {}, [
       ...BRIDGE_UI_NON_MERGEABLE_PROP_KEYS,
@@ -422,6 +516,7 @@ export function mergePropsWithBridgeUIDefaults<
 
   const merged = mergeBridgeUILayeredClasses<P>(
     omitNonMergeable(libDefaults),
+    fromDefaultColor,
     omitNonMergeable(fromFormDefaults),
     omitNonMergeable(fromChrome),
     omitNonMergeable(fromRegistry),
