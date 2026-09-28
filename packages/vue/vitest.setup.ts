@@ -1,8 +1,8 @@
 // ** Local Imports
-import { createLucideIconAdapter } from "@/Adapters/Examples/icon-lucide";
+import { createMockIconAdapter } from "@/Adapters/Icon/mockIconAdapter";
 import { setIconAdapterForTests } from "@/Adapters/Icon/useIconAdapter";
 import { createMockRichTextAdapter } from "@/Adapters/RichText/mockRichTextAdapter";
 import { setRichTextAdapterForTests } from "@/Adapters/RichText/useRichTextAdapter";
 
-setIconAdapterForTests(createLucideIconAdapter());
+setIconAdapterForTests(createMockIconAdapter());
 setRichTextAdapterForTests(createMockRichTextAdapter());

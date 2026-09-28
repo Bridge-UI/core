@@ -35,12 +35,7 @@ function collectLibEntries(dir: string) {
         continue;
       }
 
-      const isIndex = name === "index.ts";
-      const isExampleAdapter =
-        name.endsWith(".ts") &&
-        relative(dir, currentDir).replaceAll("\\", "/") === "Adapters/Examples";
-
-      if (!isIndex && !isExampleAdapter) {
+      if (name !== "index.ts") {
         continue;
       }
 
@@ -86,25 +81,10 @@ export default defineConfig({
       external: [
         "vue",
         "clsx",
-        "luxon",
-        "dayjs",
-        /^dayjs\//,
-        "moment",
-        "date-fns",
-        "vue-i18n",
         /^es-toolkit/,
-        /^@tiptap\//,
-        "@lucide/vue",
         "tailwind-merge",
-        "moment-timezone",
         /^@bridge-ui\/core/,
-        /^@heroicons\/vue/,
-        "@tabler/icons-vue",
         "@tanstack/vue-table",
-        "@phosphor-icons/vue",
-        "@fortawesome/vue-fontawesome",
-        "@fortawesome/free-solid-svg-icons",
-        "@fortawesome/fontawesome-svg-core",
       ],
     },
   },

@@ -234,7 +234,7 @@ export interface RichTextEditorHandle {
  * Unlike Date / Icon / I18n adapters (singleton services), this is a
  * **factory**: each {@link mount} returns a per-instance handle.
  *
- * See `packages/{react,vue}/Adapters/Examples` for sample implementations.
+ * Ready implementation: `@bridge-ui/adapters/{react,vue}/rich-text-tiptap`.
  */
 export interface RichTextEditorAdapter {
   /**

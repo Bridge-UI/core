@@ -18,7 +18,7 @@ export function setRichTextAdapterForTests(
 /**
  * Returns the active rich-text adapter from {@link BridgeUIProvider}.
  * `RichTextEditor` requires `global.richText` (e.g.
- * `@bridge-ui/react/Adapters/Examples/rich-text-tiptap`).
+ * `@bridge-ui/adapters/react/rich-text-tiptap`).
  */
 export function useRichTextAdapter(): undefined | RichTextEditorAdapter {
   const bridge = useBridgeUI();

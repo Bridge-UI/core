@@ -34,12 +34,7 @@ function collectLibEntries(dir: string) {
         continue;
       }
 
-      const isIndex = name === "index.ts";
-      const isExampleAdapter =
-        name.endsWith(".ts") &&
-        relative(dir, currentDir).replaceAll("\\", "/") === "Adapters/Examples";
-
-      if (!isIndex && !isExampleAdapter) {
+      if (name !== "index.ts") {
         continue;
       }
 
@@ -82,28 +77,13 @@ export default defineConfig({
       },
       external: [
         "clsx",
-        "luxon",
-        "dayjs",
-        /^dayjs\//,
         "react",
-        "moment",
-        "i18next",
-        "date-fns",
         "react-dom",
         /^es-toolkit/,
-        /^@tiptap\//,
-        "lucide-react",
         "tailwind-merge",
-        "moment-timezone",
         "react/jsx-runtime",
         /^@bridge-ui\/core/,
-        /^@heroicons\/react/,
-        "@tabler/icons-react",
         "@tanstack/react-table",
-        "@phosphor-icons/react",
-        "@fortawesome/react-fontawesome",
-        "@fortawesome/free-solid-svg-icons",
-        "@fortawesome/fontawesome-svg-core",
       ],
     },
   },

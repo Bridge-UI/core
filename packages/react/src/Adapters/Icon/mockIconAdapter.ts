@@ -1,9 +1,11 @@
 /**
- * Lucide icon adapter. Wire via `BridgeUIProvider` / `createBridgeUI` `global.icons`.
- * Requires the optional `@lucide/vue` peer.
+ * Lucide-backed icon adapter for Vitest / Cypress component suites.
+ * Uses the `lucide-react` devDependency; apps wire `global.icons` via
+ * `@bridge-ui/adapters`.
  */
 
 // ** External Imports
+import { get } from "es-toolkit/compat";
 import {
   Bell,
   Bold,
@@ -49,8 +51,7 @@ import {
   Underline,
   User,
   X,
-} from "@lucide/vue";
-import { get } from "es-toolkit/compat";
+} from "lucide-react";
 
 // ** Core Imports
 import type { IconAdapter, SemanticIconName } from "@bridge-ui/core/Adapters";
@@ -103,9 +104,9 @@ const icons = {
 } satisfies Record<SemanticIconName, unknown>;
 
 /**
- * Builds a Lucide-backed {@link IconAdapter} for Bridge semantic icon names.
+ * Creates a Lucide-backed {@link IconAdapter} for tests.
  */
-export function createLucideIconAdapter(): IconAdapter {
+export function createMockIconAdapter(): IconAdapter {
   return {
     resolve(name) {
       return get(icons, name);

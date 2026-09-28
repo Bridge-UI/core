@@ -365,7 +365,7 @@ export function useRichTextEditor(
 
     if (isNil(richText)) {
       throw new Error(
-        "[BridgeUI] RichTextEditor requires BridgeUIProvider global.richText. See packages/{react,vue}/Adapters/Examples/rich-text-tiptap.",
+        "[BridgeUI] RichTextEditor requires BridgeUIProvider global.richText. See @bridge-ui/adapters/vue/rich-text-tiptap.",
       );
     }
 

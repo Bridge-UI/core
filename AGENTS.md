@@ -25,6 +25,8 @@ npx bridge-ui-react-ai install
 
 Skills are thin routers — examples live in package `docs/`.
 
+Ready-made adapters (date, icon, i18n, rich-text) live in a separate repository: [`Bridge-UI/adapters`](https://github.com/Bridge-UI/adapters) (`@bridge-ui/adapters`). This monorepo only owns the adapter contracts in `@bridge-ui/core/Adapters`.
+
 ## Documentation index
 
 - Monorepo index: [`docs/README.md`](./docs/README.md)

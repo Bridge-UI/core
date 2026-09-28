@@ -28,11 +28,11 @@ import { BridgeUIProvider, useBridgeUI } from "@bridge-ui/react";
 
 ### Icon adapter
 
-Provide `global.icons` when using semantic icon names (`"clear"`, `"check"`, …). Optional `normalize` converts library-native values (e.g. Font Awesome definitions) so `<Icon icon={faCoffee} />` works. Ready adapters: `@bridge-ui/react/Adapters/Examples/icon-lucide` (and `icon-heroicons`, `icon-tabler`, `icon-phosphor`, `icon-fontawesome`). Install the matching icon library next to `@bridge-ui/react`.
+Provide `global.icons` when using semantic icon names (`"clear"`, `"check"`, …). Optional `normalize` converts library-native values (e.g. Font Awesome definitions) so `<Icon icon={faCoffee} />` works. Ready adapters: `@bridge-ui/adapters/react/icon-lucide` (and `icon-heroicons`, `icon-tabler`, `icon-phosphor`, `icon-fontawesome`). Install `@bridge-ui/adapters` and the matching icon library.
 
 ```ts
 import { BridgeUIProvider } from "@bridge-ui/react";
-import { createLucideIconAdapter } from "@bridge-ui/react/Adapters/Examples/icon-lucide";
+import { createLucideIconAdapter } from "@bridge-ui/adapters/react/icon-lucide";
 
 const icons = createLucideIconAdapter();
 ```
@@ -45,11 +45,11 @@ const icons = createLucideIconAdapter();
 
 ### i18n adapter
 
-Provide `global.i18n` to translate Bridge chrome strings (`"Close"`, `"Hide password"`, …). Lookup is gettext-style (source English text is the key). Without an adapter, the source string is used. `setLocale` updates Bridge `locale` and calls optional `i18n.setLocale` (i18next / vue-i18n / dictionary). Persistence (localStorage, backend) stays in the app. Ready adapters: `@bridge-ui/react/Adapters/Examples/i18n-dictionary` and `Adapters/Examples/i18n-i18next`. See [I18n](./I18n.md).
+Provide `global.i18n` to translate Bridge chrome strings (`"Close"`, `"Hide password"`, …). Lookup is gettext-style (source English text is the key). Without an adapter, the source string is used. `setLocale` updates Bridge `locale` and calls optional `i18n.setLocale` (i18next / vue-i18n / dictionary). Persistence (localStorage, backend) stays in the app. Ready adapters: `@bridge-ui/adapters/react/i18n-dictionary` and `@bridge-ui/adapters/react/i18n-i18next`. See [I18n](./I18n.md).
 
 ```ts
 import { BridgeUIProvider } from "@bridge-ui/react";
-import { createDictionaryI18nAdapter } from "@bridge-ui/react/Adapters/Examples/i18n-dictionary";
+import { createDictionaryI18nAdapter } from "@bridge-ui/adapters/react/i18n-dictionary";
 
 const i18n = createDictionaryI18nAdapter();
 ```
@@ -62,7 +62,7 @@ const i18n = createDictionaryI18nAdapter();
 
 ### Date adapter
 
-Provide `global.dates` to replace the native `Date` adapter used by calendars and pickers. Without one, each provider creates its own native `Date` adapter. Ready adapters: `@bridge-ui/react/Adapters/Examples/date-dayjs` (and `date-date-fns`, `date-luxon`, `date-moment`). Install the matching date library next to `@bridge-ui/react`. `setTimeZone` updates Bridge `timeZone` and calls optional `dates.setTimeZone`.
+Provide `global.dates` to replace the native `Date` adapter used by calendars and pickers. Without one, each provider creates its own native `Date` adapter. Ready adapters: `@bridge-ui/adapters/react/date-dayjs` (and `date-date-fns`, `date-luxon`, `date-moment`). Install `@bridge-ui/adapters` and the matching date library. `setTimeZone` updates Bridge `timeZone` and calls optional `dates.setTimeZone`.
 
 Bridge locales stay `en-US` / `pt-BR`. Native, Luxon, and date-fns already use those tags. Day.js and Moment want ids like `en` / `pt-br` — pass that map to the factory and import the matching locale files.
 
@@ -74,7 +74,7 @@ import "dayjs/locale/pt-br";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { BridgeUIProvider } from "@bridge-ui/react";
-import { createDayjsDateAdapter } from "@bridge-ui/react/Adapters/Examples/date-dayjs";
+import { createDayjsDateAdapter } from "@bridge-ui/adapters/react/date-dayjs";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -87,7 +87,7 @@ const dates = createDayjsDateAdapter({
 
 ```ts
 import "moment-timezone";
-import { createMomentDateAdapter } from "@bridge-ui/react/Adapters/Examples/date-moment";
+import { createMomentDateAdapter } from "@bridge-ui/adapters/react/date-moment";
 
 const dates = createMomentDateAdapter({
   "en-US": "en",
@@ -103,11 +103,11 @@ const dates = createMomentDateAdapter({
 
 ### Rich-text adapter
 
-Provide `global.richText` when using `RichTextEditor`. There is no native default — mounting without an adapter throws. Ready adapter: `@bridge-ui/react/Adapters/Examples/rich-text-tiptap`. Install the TipTap peers next to `@bridge-ui/react`.
+Provide `global.richText` when using `RichTextEditor`. There is no native default — mounting without an adapter throws. Ready adapter: `@bridge-ui/adapters/react/rich-text-tiptap`. Install `@bridge-ui/adapters` and the TipTap peers.
 
 ```ts
 import { BridgeUIProvider } from "@bridge-ui/react";
-import { createTiptapRichTextAdapter } from "@bridge-ui/react/Adapters/Examples/rich-text-tiptap";
+import { createTiptapRichTextAdapter } from "@bridge-ui/adapters/react/rich-text-tiptap";
 
 const richText = createTiptapRichTextAdapter();
 ```

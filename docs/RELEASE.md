@@ -28,7 +28,16 @@ npx bridge-ui-react-ai install
 npx bridge-ui-vue-ai install
 ```
 
-Component docs live in `packages/react/docs/components/` and `packages/vue/docs/components/`. Adapter factories ship as package subpaths (`@bridge-ui/react/Adapters/Examples/...`, `@bridge-ui/vue/Adapters/Examples/...`). This folder only keeps the [docs index](./README.md) and this release guide.
+Component docs live in `packages/react/docs/components/` and `packages/vue/docs/components/`. This folder only keeps the [docs index](./README.md) and this release guide.
+
+## `@bridge-ui/adapters`
+
+Ready-made adapters live in a separate repository, [Bridge-UI/adapters](https://github.com/Bridge-UI/adapters), with **independent semver** and its own release workflow (tag `v*` on that repo). It depends only on `@bridge-ui/core` (peer `^<minor>`), never on react or vue.
+
+When a core release changes `@bridge-ui/core/Adapters` contracts or the adapter classes in `theme.css` (e.g. `bridge-rich-text-editable`):
+
+1. Publish core/react/vue first (this guide).
+2. In `Bridge-UI/adapters`, update the `@bridge-ui/core` peer and devDependency range if needed, then release a new adapters version.
 
 ## Prerequisites
 

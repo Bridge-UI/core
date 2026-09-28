@@ -141,5 +141,21 @@ export default defineConfig(
       ],
     },
   },
+  {
+    files: ["packages/*/src/**/*.{ts,tsx,vue}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["./*", "../*"],
+              message: "Use the `@/` alias instead of relative imports.",
+            },
+          ],
+        },
+      ],
+    },
+  },
   eslintConfigPrettier,
 );

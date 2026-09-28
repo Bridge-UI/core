@@ -313,9 +313,9 @@ export interface BridgeUIGlobal {
   /**
    * Date adapter used by calendars and pickers (`format`, `parse`, calendar math).
    * When omitted, each provider creates its own native `Date` adapter.
-   * Ready adapters ship from `@bridge-ui/react` / `@bridge-ui/vue`
-   * (`Adapters/Examples/date-dayjs`, `date-date-fns`, `date-luxon`, `date-moment`). Install the matching
-   * date library next to the Bridge package.
+   * Ready adapters ship from `@bridge-ui/adapters/{react,vue}/*`
+   * (`date-dayjs`, `date-date-fns`, `date-luxon`, `date-moment`). Install the matching
+   * date library next to `@bridge-ui/adapters`.
    * Optional `setLocale` / `setTimeZone` are synced from Bridge `setLocale` /
    * `setTimeZone`. Per-component `timeZone` still overrides on adapter methods.
    *
@@ -357,8 +357,8 @@ export interface BridgeUIGlobal {
    * (`"Close"`, `"Hide password"`, …). Source English text is the lookup key.
    * When omitted, `resolveMessage` returns the source string.
    * Optional `setLocale` is invoked by Bridge `setLocale`.
-   * Ready adapters ship from `@bridge-ui/react` / `@bridge-ui/vue`
-   * (`Adapters/Examples/i18n-dictionary`, `i18n-i18next`, `i18n-vue-i18n`).
+   * Ready adapters ship from `@bridge-ui/adapters/{react,vue}/*`
+   * (`i18n-dictionary`, `i18n-i18next`, `i18n-vue-i18n`).
    *
    * @default undefined
    */
@@ -367,8 +367,8 @@ export interface BridgeUIGlobal {
   /**
    * Icon adapter used to resolve semantic icon names.
    * Required when components use semantic names (`"clear"`, `"check"`, …).
-   * Ready adapters ship from `@bridge-ui/react` / `@bridge-ui/vue`
-   * (`Adapters/Examples/icon-lucide`, `icon-heroicons`, `icon-tabler`, `icon-phosphor`, `icon-fontawesome`).
+   * Ready adapters ship from `@bridge-ui/adapters/{react,vue}/*`
+   * (`icon-lucide`, `icon-heroicons`, `icon-tabler`, `icon-phosphor`, `icon-fontawesome`).
    *
    * @default undefined
    */
@@ -391,8 +391,8 @@ export interface BridgeUIGlobal {
   /**
    * Rich-text engine adapter used by `RichTextEditor`.
    * Required when mounting `RichTextEditor` (no native default in core).
-   * Ready adapters ship from `@bridge-ui/react` / `@bridge-ui/vue`
-   * (`Adapters/Examples/rich-text-tiptap`).
+   * Ready adapters ship from `@bridge-ui/adapters/{react,vue}/*`
+   * (`rich-text-tiptap`).
    *
    * @default undefined
    */

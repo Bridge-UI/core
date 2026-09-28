@@ -20,20 +20,20 @@ npx bridge-ui-vue-ai install
 
 ## Required reading
 
-| Topic                                                                            | Doc                                                   |
-| -------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| Provider / plugin, `global`, `components`, icons, i18n, dates, custom components | `.ai/docs/components/BridgeUIProvider.md`             |
-| Icon adapter usage                                                               | `.ai/docs/components/Icon.md`                         |
-| i18n adapter                                                                     | `.ai/docs/components/I18n.md`                         |
-| Breakpoints                                                                      | `.ai/docs/components/useBreakpoint.md`                |
-| Adapter factories                                                                | `@bridge-ui/vue/Adapters/Examples/{date,icon,i18n}-*` |
+| Topic                                                                            | Doc                                                    |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| Provider / plugin, `global`, `components`, icons, i18n, dates, custom components | `.ai/docs/components/BridgeUIProvider.md`              |
+| Icon adapter usage                                                               | `.ai/docs/components/Icon.md`                          |
+| i18n adapter                                                                     | `.ai/docs/components/I18n.md`                          |
+| Breakpoints                                                                      | `.ai/docs/components/useBreakpoint.md`                 |
+| Adapter factories                                                                | `@bridge-ui/adapters/vue/{date,icon,i18n,rich-text}-*` |
 
 ## Hard rules
 
 1. Tailwind CSS **v4** + `@import "@bridge-ui/vue/theme.css"`.
 2. Use `app.use(createBridgeUI({ ... }))` and/or `<BridgeUIProvider>`.
 3. Mount `BridgeUIHosts` when using action hooks (`useDialogAction`, `useModalAction`, `useDrawerAction`, `useSnackbarAction`).
-4. Semantic icon names, chrome strings, and date libs need `global.icons` / `global.i18n` / `global.dates` — import factories from `@bridge-ui/vue/Adapters/Examples/{date,icon,i18n}-*` and install the matching optional peer.
+4. Semantic icon names, chrome strings, and date libs need `global.icons` / `global.i18n` / `global.dates` — install `@bridge-ui/adapters`, import factories from `@bridge-ui/adapters/vue/{date,icon,i18n,rich-text}-*`, and install the matching optional peer.
 5. Prefer deep imports: `@bridge-ui/vue/Components/{Name}`.
 6. Do not destructure `useBreakpoint()` helpers — keep the reactive object.
 7. App-wide default color (e.g. monochrome `"black"`): set `global.defaultColor` once — do not repeat `color` in every `components.{Name}.defaultProps`. Rebrand `primary` in theme CSS instead.

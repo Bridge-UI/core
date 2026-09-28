@@ -2,7 +2,7 @@
 
 Consumer guidelines and Agent Skills for `@bridge-ui/react`.
 
-Component **examples live in** [`../docs/components/`](../docs/components/). Adapter factories: `@bridge-ui/react/Adapters/Examples/{date,icon,i18n}-*`. Skills only route agents to those pages.
+Component **examples live in** [`../docs/components/`](../docs/components/). Adapter factories: `@bridge-ui/adapters/react/{date,icon,i18n,rich-text}-*`. Skills only route agents to those pages.
 
 ```bash
 npx bridge-ui-react-ai install
