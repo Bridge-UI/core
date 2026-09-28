@@ -86,17 +86,31 @@ Component reference for **React**. This folder ships with the npm package.
 
 ## Adapters
 
-Import from a subpath and install the matching optional peer. They are **not** re-exported from `@bridge-ui/react`.
+Ready-made adapters ship in the separate `@bridge-ui/adapters` package. Install it, import from a subpath, and install the matching optional peer (date lib, icon set, i18n lib, TipTap).
 
-- `@bridge-ui/react/Adapters/Examples/date-date-fns`
-- `@bridge-ui/react/Adapters/Examples/date-dayjs`
-- `@bridge-ui/react/Adapters/Examples/date-luxon`
-- `@bridge-ui/react/Adapters/Examples/date-moment`
-- `@bridge-ui/react/Adapters/Examples/icon-lucide`
-- `@bridge-ui/react/Adapters/Examples/icon-heroicons`
-- `@bridge-ui/react/Adapters/Examples/icon-tabler`
-- `@bridge-ui/react/Adapters/Examples/icon-phosphor`
-- `@bridge-ui/react/Adapters/Examples/icon-fontawesome`
-- `@bridge-ui/react/Adapters/Examples/i18n-dictionary`
-- `@bridge-ui/react/Adapters/Examples/i18n-i18next`
-- `@bridge-ui/react/Adapters/Examples/rich-text-tiptap`
+```bash
+npm install @bridge-ui/adapters
+```
+
+- `@bridge-ui/adapters/react/date-date-fns`
+- `@bridge-ui/adapters/react/date-dayjs`
+- `@bridge-ui/adapters/react/date-luxon`
+- `@bridge-ui/adapters/react/date-moment`
+- `@bridge-ui/adapters/react/icon-lucide`
+- `@bridge-ui/adapters/react/icon-heroicons`
+- `@bridge-ui/adapters/react/icon-tabler`
+- `@bridge-ui/adapters/react/icon-phosphor`
+- `@bridge-ui/adapters/react/icon-fontawesome`
+- `@bridge-ui/adapters/react/i18n-dictionary`
+- `@bridge-ui/adapters/react/i18n-i18next`
+- `@bridge-ui/adapters/react/rich-text-tiptap`
+
+### Migrating from `Adapters/Examples`
+
+`@bridge-ui/react/Adapters/Examples/*` was removed. Swap the import prefix — factory names are unchanged:
+
+| Before                                      | After                              |
+| ------------------------------------------- | ---------------------------------- |
+| `@bridge-ui/react/Adapters/Examples/<name>` | `@bridge-ui/adapters/react/<name>` |
+
+`@bridge-ui/react` no longer declares the adapter libraries as peers. Keep them in your app dependencies. No extra Tailwind `@source` is needed: the TipTap editable class ships in `@bridge-ui/react/theme.css`.

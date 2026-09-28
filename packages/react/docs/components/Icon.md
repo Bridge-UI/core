@@ -2,7 +2,7 @@
 
 Renders an icon from a semantic name (via the icon adapter) or a concrete icon component, with design-system sizing.
 
-Semantic names require an icon adapter on `BridgeUIProvider` (`global.icons`). Import a ready adapter from `@bridge-ui/react/Adapters/Examples/icon-*` and install the matching icon library.
+Semantic names require an icon adapter on `BridgeUIProvider` (`global.icons`). Import a ready adapter from `@bridge-ui/adapters/react/icon-*` and install the matching icon library.
 
 ## Import
 
@@ -26,7 +26,7 @@ import { Info } from "lucide-react";
 
 ```ts
 import { BridgeUIProvider } from "@bridge-ui/react";
-import { createLucideIconAdapter } from "@bridge-ui/react/Adapters/Examples/icon-lucide";
+import { createLucideIconAdapter } from "@bridge-ui/adapters/react/icon-lucide";
 
 const icons = createLucideIconAdapter();
 ```
@@ -39,13 +39,13 @@ const icons = createLucideIconAdapter();
 
 Other ready adapters (same `create*IconAdapter()` shape):
 
-| Import                                                | Library                     | Peer                             |
-| ----------------------------------------------------- | --------------------------- | -------------------------------- |
-| `@bridge-ui/react/Adapters/Examples/icon-lucide`      | Lucide                      | `lucide-react`                   |
-| `@bridge-ui/react/Adapters/Examples/icon-heroicons`   | Heroicons (24 outline)      | `@heroicons/react`               |
-| `@bridge-ui/react/Adapters/Examples/icon-tabler`      | Tabler Icons                | `@tabler/icons-react`            |
-| `@bridge-ui/react/Adapters/Examples/icon-phosphor`    | Phosphor Icons              | `@phosphor-icons/react`          |
-| `@bridge-ui/react/Adapters/Examples/icon-fontawesome` | Font Awesome 6 (free solid) | `@fortawesome/react-fontawesome` |
+| Import                                       | Library                     | Peer                             |
+| -------------------------------------------- | --------------------------- | -------------------------------- |
+| `@bridge-ui/adapters/react/icon-lucide`      | Lucide                      | `lucide-react`                   |
+| `@bridge-ui/adapters/react/icon-heroicons`   | Heroicons (24 outline)      | `@heroicons/react`               |
+| `@bridge-ui/adapters/react/icon-tabler`      | Tabler Icons                | `@tabler/icons-react`            |
+| `@bridge-ui/adapters/react/icon-phosphor`    | Phosphor Icons              | `@phosphor-icons/react`          |
+| `@bridge-ui/adapters/react/icon-fontawesome` | Font Awesome 6 (free solid) | `@fortawesome/react-fontawesome` |
 
 ### Font Awesome definitions
 
@@ -54,7 +54,7 @@ With the Font Awesome adapter, pass definitions directly — `normalize` wraps t
 ```ts
 import { BridgeUIProvider } from "@bridge-ui/react";
 import { faCoffee } from "@fortawesome/free-solid-svg-icons";
-import { createFontAwesomeIconAdapter } from "@bridge-ui/react/Adapters/Examples/icon-fontawesome";
+import { createFontAwesomeIconAdapter } from "@bridge-ui/adapters/react/icon-fontawesome";
 
 const icons = createFontAwesomeIconAdapter();
 ```

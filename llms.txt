@@ -6,7 +6,9 @@
 
 - packages/react — React components (+ transitive `@bridge-ui/core`)
 - packages/vue — Vue components (+ transitive `@bridge-ui/core`)
-- packages/core — types, tokens, utils
+- packages/core — types, tokens, utils, adapter contracts
+
+Ready-made adapters: `@bridge-ui/adapters` (separate repo: https://github.com/Bridge-UI/adapters)
 
 ## Docs (per package)
 

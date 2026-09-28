@@ -86,17 +86,31 @@ Component reference for **Vue**. This folder ships with the npm package.
 
 ## Adapters
 
-Import from a subpath and install the matching optional peer. They are **not** re-exported from `@bridge-ui/vue`.
+Ready-made adapters ship in the separate `@bridge-ui/adapters` package. Install it, import from a subpath, and install the matching optional peer (date lib, icon set, i18n lib, TipTap).
 
-- `@bridge-ui/vue/Adapters/Examples/date-date-fns`
-- `@bridge-ui/vue/Adapters/Examples/date-dayjs`
-- `@bridge-ui/vue/Adapters/Examples/date-luxon`
-- `@bridge-ui/vue/Adapters/Examples/date-moment`
-- `@bridge-ui/vue/Adapters/Examples/icon-lucide`
-- `@bridge-ui/vue/Adapters/Examples/icon-heroicons`
-- `@bridge-ui/vue/Adapters/Examples/icon-tabler`
-- `@bridge-ui/vue/Adapters/Examples/icon-phosphor`
-- `@bridge-ui/vue/Adapters/Examples/icon-fontawesome`
-- `@bridge-ui/vue/Adapters/Examples/i18n-dictionary`
-- `@bridge-ui/vue/Adapters/Examples/i18n-vue-i18n`
-- `@bridge-ui/vue/Adapters/Examples/rich-text-tiptap`
+```bash
+npm install @bridge-ui/adapters
+```
+
+- `@bridge-ui/adapters/vue/date-date-fns`
+- `@bridge-ui/adapters/vue/date-dayjs`
+- `@bridge-ui/adapters/vue/date-luxon`
+- `@bridge-ui/adapters/vue/date-moment`
+- `@bridge-ui/adapters/vue/icon-lucide`
+- `@bridge-ui/adapters/vue/icon-heroicons`
+- `@bridge-ui/adapters/vue/icon-tabler`
+- `@bridge-ui/adapters/vue/icon-phosphor`
+- `@bridge-ui/adapters/vue/icon-fontawesome`
+- `@bridge-ui/adapters/vue/i18n-dictionary`
+- `@bridge-ui/adapters/vue/i18n-vue-i18n`
+- `@bridge-ui/adapters/vue/rich-text-tiptap`
+
+### Migrating from `Adapters/Examples`
+
+`@bridge-ui/vue/Adapters/Examples/*` was removed. Swap the import prefix — factory names are unchanged:
+
+| Before                                    | After                            |
+| ----------------------------------------- | -------------------------------- |
+| `@bridge-ui/vue/Adapters/Examples/<name>` | `@bridge-ui/adapters/vue/<name>` |
+
+`@bridge-ui/vue` no longer declares the adapter libraries as peers. Keep them in your app dependencies. No extra Tailwind `@source` is needed: the TipTap editable class ships in `@bridge-ui/vue/theme.css`.
