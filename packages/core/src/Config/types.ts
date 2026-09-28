@@ -329,8 +329,8 @@ export interface BridgeUIGlobal {
    * (`primary`, `dark`, or `secondary`). Use `"black"` for a monochrome UI;
    * to rebrand `primary`, change the palette in CSS instead.
    * Divider and Tooltip keep their neutral defaults.
-   * Merge order: instance props → component `defaultProps` → `formDefaults` →
-   * `defaultColor` → lib defaults.
+   * Merge order: instance props → component `defaultProps` → chrome
+   * `defaultProps` → `formDefaults` → `defaultColor` → lib defaults.
    *
    * @default undefined
    */
