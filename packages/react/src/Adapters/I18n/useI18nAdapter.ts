@@ -20,7 +20,7 @@ export function setI18nAdapterForTests(adapter: undefined | I18nAdapter) {
 /**
  * Returns the active i18n adapter from {@link BridgeUIProvider}.
  * When unset, {@link useResolveMessage} returns the English source string.
- * Ready adapters: `@bridge-ui/react/Adapters/Examples`.
+ * Ready adapters: `@bridge-ui/adapters/react/i18n-*`.
  */
 export function useI18nAdapter(): undefined | I18nAdapter {
   const bridge = useBridgeUI();

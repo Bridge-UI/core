@@ -21,7 +21,7 @@ export function setRichTextAdapterForTests(
 /**
  * Returns the active rich-text adapter from {@link BridgeUIProvider}.
  * `RichTextEditor` requires `global.richText` (e.g.
- * `@bridge-ui/vue/Adapters/Examples/rich-text-tiptap`).
+ * `@bridge-ui/adapters/vue/rich-text-tiptap`).
  */
 export function useRichTextAdapter(): ComputedRef<
   undefined | RichTextEditorAdapter
