@@ -118,6 +118,33 @@ app.use(
 );
 ```
 
+### Custom global values
+
+Packages can add their own keys to `global` by augmenting `BridgeUIGlobal`. Nested providers and `setGlobal` merge every key by the same rule:
+
+- Plain data (`breakpoints`, `formDefaults`, custom settings objects) is deep-merged.
+- Functions, class instances, and objects with a function member (adapters) are replaced — the last defined value wins, and `undefined` keeps the previous one.
+
+Only the top-level members of a value are checked. An object whose functions sit deeper (`{ hooks: { onSave } }`) is deep-merged.
+
+```ts
+import "@bridge-ui/core/Config";
+
+declare module "@bridge-ui/core/Config" {
+  interface BridgeUIGlobal {
+    editor?: { format: (value: string) => string };
+  }
+}
+```
+
+```ts
+app.use(
+  createBridgeUI({
+    global: { editor: { format: (value) => value.trim() } },
+  }),
+);
+```
+
 ### Form density defaults
 
 Set `global.formDefaults` to apply shared `size` / `rounded` to form controls (TextField, Select, Checkbox, FileUpload, Slider, OtpField, …). Does not affect Button, Progress, Modal, etc.
@@ -210,6 +237,53 @@ app.use(
           cancelColor: "secondary",
         },
       },
+    },
+  }),
+);
+```
+
+### Custom components
+
+Components shipped outside Bridge can use the registry too. Augment `BridgeUIComponentsRegistry` so `components.{Name}` is typed, then read it with `useBridgeUIComponent` from `@bridge-ui/vue/Utils`.
+
+Pass `chrome` to inherit a shared entry (`FormField`, `FormControl`, `BaseField`, `TimePanel`). Its `defaultProps` apply below the component's own entry, and form chrome (`FormField`, `FormControl`, `BaseField`) also applies `global.formDefaults`. `entry` and `chromeEntry` return the raw registry entries (`classes`, `tokens`).
+
+```ts
+import "@bridge-ui/core/Config";
+
+declare module "@bridge-ui/core/Config" {
+  interface BridgeUIComponentsRegistry {
+    Editor: Partial<{
+      classes: { root?: string };
+      defaultProps: Partial<{ size: "sm" | "md" | "lg" }>;
+    }>;
+  }
+}
+```
+
+```ts
+import { useBridgeUIComponent } from "@bridge-ui/vue/Utils";
+
+type EditorProps = { size?: "sm" | "md" | "lg"; variant?: string };
+
+export function useEditor(props: EditorProps) {
+  const { merged, entry, chromeEntry } = useBridgeUIComponent<EditorProps>({
+    chrome: "FormField",
+    props: () => props,
+    componentName: "Editor",
+    libDefaults: { size: "md" },
+  });
+
+  return { merged, entry, chromeEntry };
+}
+```
+
+```ts
+app.use(
+  createBridgeUI({
+    components: {
+      Editor: { defaultProps: { size: "sm" } },
+      FormField: { defaultProps: { variant: "filled" } },
     },
   }),
 );
