@@ -10,6 +10,7 @@ import { hasNamedSlot } from "@/Utils";
 
 function RichTextEditor(props: RichTextEditorProps) {
   const {
+    color,
     slots,
     tools,
     linkHref,
@@ -59,6 +60,7 @@ function RichTextEditor(props: RichTextEditorProps) {
             <TextField
               size="sm"
               type="url"
+              color={color}
               value={linkHref}
               hideErrorMessage
               className="w-full"
@@ -79,6 +81,7 @@ function RichTextEditor(props: RichTextEditorProps) {
 
           <div className="flex items-center justify-end gap-2 border-t border-dark-100 bg-dark-50 px-3 py-2 dark:border-dark-800 dark:bg-dark-950/40">
             <ActionFooter
+              color={color}
               onApply={confirmLink}
               onCancel={closeLinkEditor}
               customProps={{

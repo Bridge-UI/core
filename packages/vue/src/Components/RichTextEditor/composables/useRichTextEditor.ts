@@ -238,12 +238,14 @@ export function useRichTextEditor(
     },
   );
 
+  const color = computed(() => formField.merged.value.color ?? "primary");
+
   const toolbarColor = computed(() => {
     if (formField.invalidated.value) {
       return "error";
     }
 
-    return formField.merged.value.color ?? "primary";
+    return color.value;
   });
 
   function isToolbarButtonDisabled(tool: RichTextTool) {
@@ -507,6 +509,7 @@ export function useRichTextEditor(
   }
 
   return {
+    color,
     slots,
     tools,
     format,

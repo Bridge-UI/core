@@ -2,7 +2,7 @@
 
 Cancel / Apply pair used as the default footer in pickers and listboxes. The host keeps the footer bar; `ActionFooter` only renders the buttons.
 
-Both buttons share one `color`; `applyVariant` / `cancelVariant` set their hierarchy. Inside pickers and listboxes the footer follows the host `color` (`<DatePicker color="success" showFooter />` gets a green footer).
+Both buttons share one `color`; `applyVariant` / `cancelVariant` set their hierarchy. Inside pickers, listboxes and the `RichTextEditor` link editor the footer follows the host `color` (`<DatePicker color="success" showFooter />` gets a green footer).
 
 Theme the variants once through `components.ActionFooter.defaultProps`. Instance `customProps.applyButton` / `cancelButton` still win, including a per-button `color`.
 

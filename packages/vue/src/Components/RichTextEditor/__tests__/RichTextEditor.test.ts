@@ -154,6 +154,34 @@ test("it should apply a link from the url field", async () => {
   wrapper.unmount();
 });
 
+test("it should forward its color to the link editor", async () => {
+  const wrapper = mount(RichTextEditor, {
+    attachTo: document.body,
+    props: { color: "success" },
+  });
+
+  await flushPromises();
+  await wrapper.get('[aria-label="Link"]').trigger("click");
+  await flushPromises();
+
+  const urlField = document.body
+    .querySelector('input[aria-label="URL"]')
+    ?.closest('[class*="ring-success-600"]');
+
+  const buttons = [...document.body.querySelectorAll("button")];
+  const apply = buttons.find((button) => button.textContent === "Apply");
+  const cancel = buttons.find((button) => button.textContent === "Cancel");
+
+  expect(urlField).toBeTruthy();
+  expect(urlField?.contains(wrapper.get("[contenteditable]").element)).toBe(
+    false,
+  );
+  expect(apply?.className).toContain("bg-success-500");
+  expect(cancel?.className).toContain("text-success-600");
+
+  wrapper.unmount();
+});
+
 test("it should leave the link unset when the url field is cancelled", async () => {
   const wrapper = mount(RichTextEditor, { attachTo: document.body });
 

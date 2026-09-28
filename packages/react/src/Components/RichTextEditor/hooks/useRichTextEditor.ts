@@ -222,12 +222,14 @@ export function useRichTextEditor(props: RichTextEditorProps) {
     },
   );
 
+  const color = derived(() => formField.merged.color ?? "primary");
+
   const toolbarColor = derived(() => {
     if (formField.invalidated) {
       return "error";
     }
 
-    return formField.merged.color ?? "primary";
+    return color;
   });
 
   const isToolbarButtonDisabled = useCallback(
@@ -469,6 +471,7 @@ export function useRichTextEditor(props: RichTextEditorProps) {
   const canConfirmLink = linkHref.trim().length > 0;
 
   return {
+    color,
     slots,
     tools,
     format,
