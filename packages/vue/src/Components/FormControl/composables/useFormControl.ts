@@ -93,13 +93,7 @@ export function useFormControl(
 
   const registryName = options.componentName ?? "FormControl";
 
-  const chrome = computed(() => {
-    if (registryName === "FormControl") {
-      return undefined;
-    }
-
-    return "FormControl";
-  });
+  const chrome = registryName === "FormControl" ? undefined : "FormControl";
 
   const {
     merged,

@@ -136,13 +136,7 @@ export function useFormField(
 
   const registryName = options.componentName ?? "FormField";
 
-  const chrome = derived(() => {
-    if (registryName === "FormField") {
-      return undefined;
-    }
-
-    return "FormField";
-  });
+  const chrome = registryName === "FormField" ? undefined : "FormField";
 
   const {
     merged,

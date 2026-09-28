@@ -104,13 +104,10 @@ export function useBaseField(
 
   const registryName = options.componentName ?? "BaseField";
 
-  const chrome = computed(() => {
-    if (registryName === "BaseField" || registryName === "FileUpload") {
-      return undefined;
-    }
-
-    return "BaseField";
-  });
+  const chrome =
+    registryName === "BaseField" || registryName === "FileUpload"
+      ? undefined
+      : "BaseField";
 
   const {
     merged,

@@ -3,6 +3,7 @@ import type { ClassValue } from "clsx";
 import clsx from "clsx";
 import {
   compact,
+  find,
   get,
   isNil,
   isString,
@@ -155,18 +156,12 @@ export function resolveBridgeUIFormDefaults<
     return undefined;
   }
 
-  const isFormName = (name?: string): name is string => {
+  const formName = find([componentName, chromeName], (name) => {
     return (
       !isNil(name) &&
       (BRIDGE_UI_FORM_COMPONENT_NAMES as ReadonlyArray<string>).includes(name)
     );
-  };
-
-  const formName = isFormName(componentName)
-    ? componentName
-    : isFormName(chromeName)
-      ? chromeName
-      : undefined;
+  });
 
   if (isNil(formName)) {
     return undefined;

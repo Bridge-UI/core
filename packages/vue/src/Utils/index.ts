@@ -151,7 +151,7 @@ export function useFieldShowFooter({
   showFooter,
   componentName,
 }: {
-  chrome?: keyof BridgeUIComponentsConfig;
+  chrome?: MaybeRefOrGetter<undefined | keyof BridgeUIComponentsConfig>;
   componentName: undefined | keyof BridgeUIComponentsConfig;
   overlay: MaybeRefOrGetter<ResolvedFieldOverlay>;
   showFooter: MaybeRefOrGetter<boolean | undefined>;
@@ -161,8 +161,8 @@ export function useFieldShowFooter({
   return computed(() => {
     const registryShowFooter = getBridgeUIRegistryDefaultProp<boolean>({
       componentName,
-      chromeName: chrome,
       prop: "showFooter",
+      chromeName: toValue(chrome),
       components: unref(bridge?.components),
     });
 
@@ -183,7 +183,7 @@ export function usePickerFill({
   overlay,
   componentName,
 }: {
-  chrome?: keyof BridgeUIComponentsConfig;
+  chrome?: MaybeRefOrGetter<undefined | keyof BridgeUIComponentsConfig>;
   componentName: undefined | keyof BridgeUIComponentsConfig;
   fill: MaybeRefOrGetter<boolean | undefined>;
   overlay?: MaybeRefOrGetter<undefined | ResolvedFieldOverlay>;
@@ -194,7 +194,7 @@ export function usePickerFill({
     const registryFill = getBridgeUIRegistryDefaultProp<boolean>({
       prop: "fill",
       componentName,
-      chromeName: chrome,
+      chromeName: toValue(chrome),
       components: unref(bridge?.components),
     });
 
