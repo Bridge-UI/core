@@ -232,6 +232,7 @@ export function useDateRangeField(
   });
 
   const showFooter = useFieldShowFooter({
+    chrome: "FormField",
     overlay: resolvedOverlay,
     componentName: "DateRangeField",
     showFooter: () => dateOnly.value.showFooter,
@@ -311,6 +312,7 @@ export function useDateRangeField(
   });
 
   const fill = usePickerFill({
+    chrome: "FormField",
     overlay: resolvedOverlay,
     componentName: "DateRangeField",
     fill: () => dateOnly.value.fill,

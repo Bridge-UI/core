@@ -133,6 +133,7 @@ export function useDateTimeField(
   });
 
   const fill = usePickerFill({
+    chrome: "FormField",
     overlay: resolvedOverlay,
     componentName: "DateTimeField",
     fill: () => dateTimeOnly.value.fill,
@@ -254,6 +255,7 @@ export function useDateTimeField(
   }
 
   const showFooter = useFieldShowFooter({
+    chrome: "FormField",
     overlay: resolvedOverlay,
     componentName: "DateTimeField",
     showFooter: () => dateTimeOnly.value.showFooter,

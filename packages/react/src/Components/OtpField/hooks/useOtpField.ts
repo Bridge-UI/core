@@ -116,6 +116,7 @@ export function useOtpField(
     "OtpField"
   >({
     libDefaults,
+    chrome: "BaseField",
     props: componentProps,
     componentName: "OtpField",
   });

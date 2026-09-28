@@ -86,6 +86,7 @@ export function useTimeRangePicker(
     "TimeRangePicker"
   >({
     libDefaults,
+    chrome: "TimePanel",
     props: componentProps,
     componentName: "TimeRangePicker",
   });

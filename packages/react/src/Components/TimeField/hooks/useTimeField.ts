@@ -130,6 +130,7 @@ export function useTimeField(props: TimeFieldProps) {
 
   const fill = usePickerFill({
     fill: timeOnly.fill,
+    chrome: "FormField",
     overlay: resolvedOverlay,
     componentName: "TimeField",
   });
@@ -240,6 +241,7 @@ export function useTimeField(props: TimeFieldProps) {
   });
 
   const showFooter = useFieldShowFooter({
+    chrome: "FormField",
     overlay: resolvedOverlay,
     componentName: "TimeField",
     showFooter: timeOnly.showFooter,

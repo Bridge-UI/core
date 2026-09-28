@@ -1,9 +1,11 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
+import { createElement, type ReactNode } from "react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
 import { useCheckbox, type CheckboxOwnProps } from "@/Components/Checkbox";
+import { BridgeUIProvider } from "@/Provider/BridgeUIProvider";
 
 const libDefaults = {
   size: "md",
@@ -20,6 +22,19 @@ test("it should apply default md size classes on control", () => {
 
   expect(result.current.controlBind.className).toContain("w-5");
   expect(result.current.controlBind.className).toContain("h-5");
+});
+
+test("it should inherit size from FormControl registry defaultProps", () => {
+  const { result } = renderHook(() => useCheckbox({}, libDefaults), {
+    wrapper: ({ children }: { children: ReactNode }) =>
+      createElement(BridgeUIProvider, {
+        children,
+        components: { FormControl: { defaultProps: { size: "lg" } } },
+      }),
+  });
+
+  expect(result.current.controlBind.className).toContain("w-6");
+  expect(result.current.controlBind.className).toContain("h-6");
 });
 
 test("it should default to unchecked in uncontrolled mode", () => {

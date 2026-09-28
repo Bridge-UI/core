@@ -174,6 +174,7 @@ export function useSlider(
     "Slider"
   >({
     libDefaults,
+    chrome: "BaseField",
     componentName: "Slider",
     props: () => {
       return {

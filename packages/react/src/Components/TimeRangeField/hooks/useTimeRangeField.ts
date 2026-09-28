@@ -238,6 +238,7 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
   };
 
   const showFooter = useFieldShowFooter({
+    chrome: "FormField",
     showFooter: timeOnly.showFooter,
     componentName: "TimeRangeField",
     overlay: resolveFieldOverlay(timeOnly.overlay, breakpoint.mobile),
@@ -310,6 +311,7 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
 
   const fill = usePickerFill({
     fill: timeOnly.fill,
+    chrome: "FormField",
     overlay: resolvedOverlay,
     componentName: "TimeRangeField",
   });

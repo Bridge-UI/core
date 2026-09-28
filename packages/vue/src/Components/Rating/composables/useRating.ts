@@ -127,6 +127,7 @@ export function useRating(
     "Rating"
   >({
     libDefaults,
+    chrome: "BaseField",
     componentName: "Rating",
     props: () => {
       return split.value.componentProps;

@@ -78,6 +78,7 @@ export function useSwitch(
     "Switch"
   >({
     libDefaults,
+    chrome: "FormControl",
     componentName: "Switch",
     props: () => split.value.componentProps,
   });

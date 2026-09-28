@@ -100,6 +100,14 @@ export function useBaseField(
 
   const registryName = options.componentName ?? "BaseField";
 
+  const chrome = derived(() => {
+    if (registryName === "BaseField" || registryName === "FileUpload") {
+      return undefined;
+    }
+
+    return "BaseField";
+  });
+
   const {
     merged,
     entry: bridgeBaseField,
@@ -108,6 +116,7 @@ export function useBaseField(
     BaseFieldMerged,
     NonNullable<BaseFieldOptions["componentName"]>
   >({
+    chrome,
     libDefaults,
     props: componentProps,
     componentName: registryName,

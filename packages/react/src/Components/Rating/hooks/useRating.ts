@@ -123,6 +123,7 @@ export function useRating(
     "Rating"
   >({
     libDefaults,
+    chrome: "BaseField",
     props: componentProps,
     componentName: "Rating",
   });

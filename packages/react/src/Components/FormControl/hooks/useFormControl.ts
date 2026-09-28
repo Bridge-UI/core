@@ -81,6 +81,16 @@ export function useFormControl(
     bridgeKeys: formControlBridgeKeys,
   });
 
+  const registryName = options.componentName ?? "FormControl";
+
+  const chrome = derived(() => {
+    if (registryName === "FormControl") {
+      return undefined;
+    }
+
+    return "FormControl";
+  });
+
   const {
     merged,
     entry: bridgeFormControl,
@@ -89,9 +99,10 @@ export function useFormControl(
     FormControlMerged,
     NonNullable<FormControlOptions["componentName"]>
   >({
+    chrome,
     libDefaults,
     props: componentProps,
-    componentName: options.componentName ?? "FormControl",
+    componentName: registryName,
   });
 
   const slots = derived(() => {

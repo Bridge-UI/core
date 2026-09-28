@@ -944,14 +944,12 @@ export type {
   TooltipSizeItem,
 } from "@/Tokens/Tooltip";
 export {
-  BRIDGE_UI_CHROME_FALLBACK,
   BRIDGE_UI_FORM_COMPONENT_NAMES,
   BRIDGE_UI_FORM_SHAPE_ROUNDED_NAMES,
   adjustAutosizeTextareaHeight,
   cn,
   createMergeNestedComponentProps,
   createMergePartBind,
-  getBridgeUIChromeComponentName,
   getBridgeUIRegistryDefaultProp,
   getColorToken,
   mergeBridgeUILayeredClasses,

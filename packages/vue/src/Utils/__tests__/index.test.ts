@@ -3,12 +3,17 @@ import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
 import { computed, defineComponent, effectScope, h } from "vue";
 
+// ** Core Imports
+import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config";
+
 // ** Local Imports
 import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 import {
+  useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
   useFieldShowFooter,
   usePickerFill,
+  type UseBridgeUIComponentReturn,
 } from "@/Utils";
 
 function mountUseFieldShowFooter(
@@ -214,6 +219,48 @@ test("it should keep an explicit fill false on drawer overlays", () => {
   });
 
   expect(result.value).toBe(false);
+});
+
+test("it should read a custom registry entry with explicit chrome", () => {
+  let result!: UseBridgeUIComponentReturn<{ size?: string; variant?: string }>;
+
+  const Consumer = defineComponent({
+    setup() {
+      result = useBridgeUIComponent<{ size?: string; variant?: string }>({
+        props: {},
+        chrome: "FormField",
+        componentName: "Editor" as keyof BridgeUIComponentsConfig,
+      });
+
+      return () => h("div");
+    },
+  });
+
+  mount(BridgeUIProvider, {
+    slots: {
+      default: () => h(Consumer),
+    },
+    props: {
+      components: {
+        Editor: {
+          defaultProps: { size: "sm" },
+          classes: { root: "editor-root" },
+        },
+        FormField: {
+          classes: { label: "chrome-label" },
+          defaultProps: { variant: "filled" },
+        },
+      } as BridgeUIComponentsConfig,
+    },
+  });
+
+  expect(result.merged.value).toEqual({ size: "sm", variant: "filled" });
+  expect(result.entry.value).toMatchObject({
+    classes: { root: "editor-root" },
+  });
+  expect(result.chromeEntry.value).toMatchObject({
+    classes: { label: "chrome-label" },
+  });
 });
 
 test("it should resolve fill from BridgeUIProvider defaultProps", () => {

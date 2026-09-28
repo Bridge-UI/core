@@ -260,6 +260,7 @@ export function useDateTimeRangeField(
   });
 
   const showFooter = useFieldShowFooter({
+    chrome: "FormField",
     overlay: resolvedOverlay,
     componentName: "DateTimeRangeField",
     showFooter: () => dateTimeOnly.value.showFooter,
@@ -339,6 +340,7 @@ export function useDateTimeRangeField(
   });
 
   const fill = usePickerFill({
+    chrome: "FormField",
     overlay: resolvedOverlay,
     componentName: "DateTimeRangeField",
     fill: () => dateTimeOnly.value.fill,
