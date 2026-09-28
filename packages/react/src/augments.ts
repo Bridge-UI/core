@@ -72,10 +72,7 @@ declare module "@bridge-ui/core/Config" {
   interface ActionFooterConfigOverrides {
     classes: ActionFooterClasses;
     defaultProps: Partial<
-      Pick<
-        ActionFooterProps,
-        "applyColor" | "cancelColor" | "applyVariant" | "cancelVariant"
-      >
+      Pick<ActionFooterProps, "color" | "applyVariant" | "cancelVariant">
     >;
   }
 

@@ -9,9 +9,8 @@ import {
 } from "@/Components/ActionFooter";
 
 const libDefaults = {
-  applyColor: "primary",
+  color: "primary",
   cancelVariant: "flat",
-  cancelColor: "secondary",
 } as const satisfies Partial<ActionFooterOwnProps>;
 
 function renderUseActionFooter(props: Partial<ActionFooterOwnProps> = {}) {
@@ -21,9 +20,10 @@ function renderUseActionFooter(props: Partial<ActionFooterOwnProps> = {}) {
 test("it should return default Apply and Cancel tokens", () => {
   const { result } = renderUseActionFooter();
 
-  expect(result.current.merged.applyColor).toBe("primary");
-  expect(result.current.merged.cancelColor).toBe("secondary");
+  expect(result.current.merged.color).toBe("primary");
   expect(result.current.merged.cancelVariant).toBe("flat");
+  expect(result.current.applyButtonBind.color).toBe("primary");
+  expect(result.current.cancelButtonBind.color).toBe("primary");
   expect(result.current.rootBind.className).toContain("contents");
 });
 

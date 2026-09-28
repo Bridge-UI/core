@@ -251,9 +251,8 @@ app.use(
     components: {
       ActionFooter: {
         defaultProps: {
-          applyColor: "info",
-          cancelVariant: "flat",
-          cancelColor: "secondary",
+          applyVariant: "solid",
+          cancelVariant: "outline",
         },
       },
     },

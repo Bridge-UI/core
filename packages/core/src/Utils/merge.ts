@@ -132,6 +132,7 @@ export const BRIDGE_UI_COLOR_COMPONENT_NAMES = [
   "ButtonGroup",
   "NumberField",
   "ToggleGroup",
+  "ActionFooter",
   "Autocomplete",
   "DateTimeField",
   "PasswordField",

@@ -520,10 +520,9 @@ export interface AccordionItemConfigBase {
 export interface ActionFooterConfigBase {
   classes: object;
   defaultProps: Partial<{
-    applyColor: keyof ButtonColor;
     applyVariant: keyof ButtonVariant;
-    cancelColor: keyof ButtonColor;
     cancelVariant: keyof ButtonVariant;
+    color: keyof ButtonColor;
   }>;
 }
 

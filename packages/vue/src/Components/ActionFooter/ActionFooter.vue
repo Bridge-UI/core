@@ -17,9 +17,8 @@ const { rootBind, applyLabel, cancelLabel, applyButtonBind, cancelButtonBind } =
   useActionFooter(
     props,
     {
-      applyColor: "primary",
+      color: "primary",
       cancelVariant: "flat",
-      cancelColor: "secondary",
     },
     emit,
   );

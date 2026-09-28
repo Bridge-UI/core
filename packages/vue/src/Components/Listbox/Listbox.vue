@@ -349,6 +349,7 @@ function handleCancel() {
       <div v-if="showFooter" v-bind="footerBind">
         <slot name="footer" :apply="handleApply" :cancel="handleCancel">
           <ActionFooter
+            :color="merged.color"
             v-on:apply="handleApply"
             v-on:cancel="handleCancel"
             :custom-props="{

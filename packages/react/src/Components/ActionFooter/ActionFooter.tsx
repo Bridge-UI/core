@@ -11,9 +11,8 @@ function ActionFooter(props: ActionFooterProps) {
     applyButtonBind,
     cancelButtonBind,
   } = useActionFooter(props, {
-    applyColor: "primary",
+    color: "primary",
     cancelVariant: "flat",
-    cancelColor: "secondary",
   });
 
   return (

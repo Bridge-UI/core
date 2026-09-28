@@ -244,9 +244,8 @@ Merge order: instance props → `components.{Name}.defaultProps` → chrome → 
   components={{
     ActionFooter: {
       defaultProps: {
-        applyColor: "info",
-        cancelVariant: "flat",
-        cancelColor: "secondary",
+        applyVariant: "solid",
+        cancelVariant: "outline",
       },
     },
   }}
