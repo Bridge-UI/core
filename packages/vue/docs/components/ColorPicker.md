@@ -41,19 +41,20 @@ import { ColorPicker } from "@bridge-ui/vue/Components/ColorPicker";
 
 ## Props
 
-| Prop           | Type                     | Default | Description                                                         |
-| -------------- | ------------------------ | ------- | ------------------------------------------------------------------- |
-| `alpha`        | `boolean`                | —       | Shows the alpha slider. Unset: `true` for `hexa` / `rgba` / `hsla`. |
-| `classes`      | `ColorPickerClasses`     | —       | Classes for picker regions.                                         |
-| `customProps`  | `ColorPickerCustomProps` | —       | Extra props for internal parts.                                     |
-| `defaultValue` | `string \| null`         | `null`  | Uncontrolled initial value.                                         |
-| `disabled`     | `boolean`                | `false` | Disables the picker.                                                |
-| `fill`         | `boolean`                | `false` | Fills the container width.                                          |
-| `format`       | `ColorFormat`            | `"hex"` | Serialized output: `hex`, `hexa`, `rgb`, `rgba`, `hsl`, `hsla`.     |
-| `readOnly`     | `boolean`                | `false` | Prevents selection.                                                 |
-| `rounded`      | `ColorPickerRounded`     | `"md"`  | Border radius of the picker shell and swatches.                     |
-| `showFooter`   | `boolean`                | `false` | Shows Cancel / Apply. Selection is draft until Apply.               |
-| `swatches`     | `string[]`               | —       | Preset colors shown below the sliders.                              |
+| Prop           | Type                     | Default     | Description                                                         |
+| -------------- | ------------------------ | ----------- | ------------------------------------------------------------------- |
+| `alpha`        | `boolean`                | —           | Shows the alpha slider. Unset: `true` for `hexa` / `rgba` / `hsla`. |
+| `classes`      | `ColorPickerClasses`     | —           | Classes for picker regions.                                         |
+| `color`        | `ButtonColor`            | `"primary"` | Color of the Cancel / Apply footer actions.                         |
+| `customProps`  | `ColorPickerCustomProps` | —           | Extra props for internal parts.                                     |
+| `defaultValue` | `string \| null`         | `null`      | Uncontrolled initial value.                                         |
+| `disabled`     | `boolean`                | `false`     | Disables the picker.                                                |
+| `fill`         | `boolean`                | `false`     | Fills the container width.                                          |
+| `format`       | `ColorFormat`            | `"hex"`     | Serialized output: `hex`, `hexa`, `rgb`, `rgba`, `hsl`, `hsla`.     |
+| `readOnly`     | `boolean`                | `false`     | Prevents selection.                                                 |
+| `rounded`      | `ColorPickerRounded`     | `"md"`      | Border radius of the picker shell and swatches.                     |
+| `showFooter`   | `boolean`                | `false`     | Shows Cancel / Apply. Selection is draft until Apply.               |
+| `swatches`     | `string[]`               | —           | Preset colors shown below the sliders.                              |
 
 ### v-model
 

@@ -757,6 +757,7 @@ export interface ColorPickerConfigBase {
   classes: object;
   defaultProps: Partial<{
     alpha: boolean;
+    color: keyof ButtonColor;
     fill: boolean;
     format: "hex" | "hsl" | "rgb" | "hexa" | "hsla" | "rgba";
     rounded: keyof ColorPickerRounded;

@@ -130,6 +130,7 @@ export const BRIDGE_UI_COLOR_COMPONENT_NAMES = [
   "Pagination",
   "TimePicker",
   "ButtonGroup",
+  "ColorPicker",
   "NumberField",
   "ToggleGroup",
   "ActionFooter",

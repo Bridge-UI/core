@@ -48,6 +48,7 @@ import {
 const colorPickerBridgeKeys = [
   "fill",
   "alpha",
+  "color",
   "value",
   "format",
   "classes",
@@ -62,7 +63,7 @@ const colorPickerBridgeKeys = [
 
 type ColorPickerLibDefaults = LibDefaultsShape<
   ColorPickerOwnProps,
-  "format" | "rounded"
+  "color" | "format" | "rounded"
 >;
 
 type ColorPickerMerged = MergeLibDefaults<
