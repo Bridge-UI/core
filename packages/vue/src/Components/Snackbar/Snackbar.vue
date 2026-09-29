@@ -88,10 +88,6 @@ const hasRight = computed(() => {
   return Boolean(slots.right);
 });
 
-const teleportDisabled = computed(() => {
-  return merged.value.teleportTo === false;
-});
-
 const teleportTarget = computed(() => {
   if (merged.value.teleportTo === false) {
     return "body";
@@ -102,8 +98,8 @@ const teleportTarget = computed(() => {
 </script>
 
 <template>
-  <Teleport v-if="rendered" :to="teleportTarget" :disabled="teleportDisabled">
-    <div v-bind="portalBind" v-if="rendered && isPortaled">
+  <Teleport :to="teleportTarget" v-if="rendered && isPortaled">
+    <div v-bind="portalBind">
       <div class="w-full max-w-sm pointer-events-auto">
         <div
           :ref="setPanelRef"
@@ -183,83 +179,83 @@ const teleportTarget = computed(() => {
         </div>
       </div>
     </div>
+  </Teleport>
 
-    <div
-      :ref="setPanelRef"
-      v-bind="panelBind"
-      v-else-if="rendered"
-      :class="cn(panelBind.class, { flex: hasRight })"
-    >
-      <div v-bind="contentBind(hasRight)">
+  <div
+    :ref="setPanelRef"
+    v-bind="panelBind"
+    v-else-if="rendered"
+    :class="cn(panelBind.class, { flex: hasRight })"
+  >
+    <div v-bind="contentBind(hasRight)">
+      <div
+        :class="{
+          'flex items-start': !hasRight,
+          'w-full flex': hasRight,
+        }"
+      >
         <div
+          v-if="hasIcon"
+          class="shrink-0"
           :class="{
-            'flex items-start': !hasRight,
-            'w-full flex': hasRight,
+            'w-6': Boolean(resolvedIcon || slots.icon),
+            'pt-0.5': Boolean(merged.img),
           }"
         >
+          <slot name="icon" />
+
+          <img
+            alt=""
+            :src="merged.img"
+            class="w-10 h-10 rounded-full"
+            v-if="!slots.icon && merged.img"
+          />
+
+          <Icon
+            v-bind="iconBind"
+            :icon="resolvedIcon"
+            v-if="!slots.icon && !merged.img && resolvedIcon"
+          />
+        </div>
+
+        <div class="w-0 flex-1 pt-0.5" :class="{ 'ml-3': hasIcon }">
+          <p v-if="hasTitle" v-bind="titleBind">
+            <slot name="title">{{ merged.title }}</slot>
+          </p>
+
+          <p v-if="hasDescription" v-bind="descriptionBind">
+            <slot name="description">{{ merged.description }}</slot>
+          </p>
+
+          <slot />
+
           <div
-            v-if="hasIcon"
-            class="shrink-0"
-            :class="{
-              'w-6': Boolean(resolvedIcon || slots.icon),
-              'pt-0.5': Boolean(merged.img),
-            }"
+            v-if="slots.actions"
+            class="flex mt-3 gap-x-3"
+            :class="merged.classes?.actions"
           >
-            <slot name="icon" />
-
-            <img
-              alt=""
-              :src="merged.img"
-              class="w-10 h-10 rounded-full"
-              v-if="!slots.icon && merged.img"
-            />
-
-            <Icon
-              v-bind="iconBind"
-              :icon="resolvedIcon"
-              v-if="!slots.icon && !merged.img && resolvedIcon"
-            />
-          </div>
-
-          <div class="w-0 flex-1 pt-0.5" :class="{ 'ml-3': hasIcon }">
-            <p v-if="hasTitle" v-bind="titleBind">
-              <slot name="title">{{ merged.title }}</slot>
-            </p>
-
-            <p v-if="hasDescription" v-bind="descriptionBind">
-              <slot name="description">{{ merged.description }}</slot>
-            </p>
-
-            <slot />
-
-            <div
-              v-if="slots.actions"
-              class="flex mt-3 gap-x-3"
-              :class="merged.classes?.actions"
-            >
-              <slot name="actions" />
-            </div>
-          </div>
-
-          <div class="flex ml-4 shrink-0">
-            <slot name="trailing" />
-
-            <button
-              type="button"
-              v-on:click="requestClose"
-              v-if="merged.closeButton !== false"
-              :aria-label="resolveMessage('Close')"
-              class="cursor-pointer inline-flex rounded-md text-dark-400 hover:text-dark-500 focus:outline-hidden"
-            >
-              <Icon size="lg" icon="clear" />
-            </button>
+            <slot name="actions" />
           </div>
         </div>
+
+        <div class="flex ml-4 shrink-0">
+          <slot name="trailing" />
+
+          <button
+            type="button"
+            v-on:click="requestClose"
+            v-if="merged.closeButton !== false"
+            :aria-label="resolveMessage('Close')"
+            class="cursor-pointer inline-flex rounded-md text-dark-400 hover:text-dark-500 focus:outline-hidden"
+          >
+            <Icon size="lg" icon="clear" />
+          </button>
+        </div>
       </div>
-
-      <slot name="right" />
-
-      <div v-if="showProgress" v-bind="progressBind" />
     </div>
-  </Teleport>
+
+    <slot name="right" />
+
+    <div v-if="showProgress" v-bind="progressBind" />
+  </div>
 </template>

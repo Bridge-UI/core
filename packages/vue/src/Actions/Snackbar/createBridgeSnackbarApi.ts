@@ -116,6 +116,10 @@ export function createBridgeSnackbarApi(
   }
 
   function syncShow(id: LayerId, show: boolean) {
+    if (show && !entries.value.some((entry) => entry.id === id && entry.show)) {
+      return;
+    }
+
     entries.value = syncLayerShow(entries.value, id, show);
   }
 

@@ -3,6 +3,7 @@ import {
   act,
   fireEvent,
   render,
+  renderHook,
   screen,
   waitFor,
 } from "@testing-library/react";
@@ -19,6 +20,7 @@ import {
   BridgeSnackbarHostMissingError,
   useSnackbarAction,
 } from "@/Actions/Snackbar";
+import { useBridgeSnackbarController } from "@/Actions/Snackbar/createBridgeSnackbarController";
 import { Menu } from "@/Components/Menu";
 
 afterEach(() => {
@@ -337,6 +339,27 @@ test("it should remove slide snackbars when transitionend never fires", async ()
   );
 });
 
+test("it should ignore a show sync after the snackbar was closed", () => {
+  const { result } = renderHook(() => {
+    return useBridgeSnackbarController({ timeout: false });
+  });
+
+  let id = "";
+
+  act(() => {
+    id = result.current.open({
+      title: "Saved",
+      transition: "none",
+    });
+    result.current.close(id);
+    result.current.syncShow(id, true);
+  });
+
+  expect(result.current.entries.find((entry) => entry.id === id)?.show).toBe(
+    false,
+  );
+});
+
 test("it should not revive dismissed snackbars when a menu opens", async () => {
   function Consumer() {
     const snackbar = useSnackbarAction();
@@ -382,8 +405,13 @@ test("it should not revive dismissed snackbars when a menu opens", async () => {
   );
 
   fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
+  fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
+  fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
 
   expect(document.body.textContent).not.toContain("Timed out");
+  expect(
+    document.body.querySelectorAll('[data-snackbar-part="panel"]'),
+  ).toHaveLength(0);
 });
 
 test("it should override host timeout", async () => {

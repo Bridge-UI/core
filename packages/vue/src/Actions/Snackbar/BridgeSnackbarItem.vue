@@ -5,7 +5,6 @@ import { computed } from "vue";
 // ** Core Imports
 import {
   completeLayerHide,
-  invokeLayerDismiss,
   mergeLayerShellProps,
   usesTrailingSnackbarActions,
 } from "@bridge-ui/core/Layer";
@@ -33,7 +32,7 @@ const snackbarRounded = computed(() => {
 });
 
 const dismissFromSnackbar = () => {
-  invokeLayerDismiss(props.api.entries.value, props.entry.id);
+  props.api.close(props.entry.id);
 };
 
 function runAction(handler?: () => void) {
@@ -65,8 +64,8 @@ const hasTrailing = computed(() => {
 <template>
   <Snackbar
     :stack-id="entry.id"
-    :teleport-to="false"
     v-bind="snackbarProps"
+    :teleport-to="false"
     :model-value="entry.show"
     v-on:close="dismissFromSnackbar"
     v-on:update:model-value="api.syncShow(entry.id, $event)"
