@@ -3,7 +3,7 @@
 import { ref, useTemplateRef } from "vue";
 
 // ** Core Imports
-import type { RichTextValue } from "@bridge-ui/core/Adapters";
+import type { RichTextValue } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import { ActionFooter } from "@/Components/ActionFooter";

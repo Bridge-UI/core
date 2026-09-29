@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 
 /**
- * Core unit tests for RichTextEditor adapter helpers.
+ * Core unit tests for RichTextEditor document helpers.
  */
 
 // ** External Imports
@@ -16,7 +16,7 @@ import {
   RICH_TEXT_TOOL_LABELS,
   RICH_TEXT_TOOLS,
   richTextValuesEqual,
-} from "@/Adapters/richText";
+} from "@/Domain/richText";
 
 describe("isRichTextTool", () => {
   test("it should accept known tools", () => {

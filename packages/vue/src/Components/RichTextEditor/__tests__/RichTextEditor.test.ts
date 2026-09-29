@@ -108,11 +108,11 @@ test("it should emit update:modelValue when content is edited", async () => {
 
   await flushPromises();
 
-  const surface = wrapper.find('[role="textbox"]');
-  expect(surface.attributes("contenteditable")).toBe("true");
+  expect(wrapper.find('[role="textbox"]').attributes("contenteditable")).toBe(
+    "true",
+  );
 
-  surface.element.innerHTML = "<p>Updated</p>";
-  await surface.trigger("input");
+  await wrapper.get('[aria-label="Heading 1"]').trigger("click");
   await flushPromises();
 
   expect(wrapper.emitted("update:modelValue")).toBeTruthy();

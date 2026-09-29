@@ -4,12 +4,9 @@ import { mount } from "cypress/vue";
 // ** Local Imports
 import { createMockIconAdapter } from "@/Adapters/Icon/mockIconAdapter";
 import { setIconAdapterForTests } from "@/Adapters/Icon/useIconAdapter";
-import { createMockRichTextAdapter } from "@/Adapters/RichText/mockRichTextAdapter";
-import { setRichTextAdapterForTests } from "@/Adapters/RichText/useRichTextAdapter";
 import "./component.css";
 
 setIconAdapterForTests(createMockIconAdapter());
-setRichTextAdapterForTests(createMockRichTextAdapter());
 
 declare global {
   // Cypress Chainable is ambient-namespace augmentation only.

@@ -17,11 +17,10 @@ import {
   RICH_TEXT_TOOL_ICONS,
   RICH_TEXT_TOOL_LABELS,
   richTextValuesEqual,
-  type RichTextEditorHandle,
   type RichTextFormat,
   type RichTextTool,
   type RichTextValue,
-} from "@bridge-ui/core/Adapters";
+} from "@bridge-ui/core/Domain";
 import { richTextEditorSizeProps as sizeProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
@@ -33,7 +32,6 @@ import {
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
-import { useRichTextAdapter } from "@/Adapters/RichText";
 import type { ButtonOwnProps } from "@/Components/Button/button.types";
 import {
   formFieldBridgeKeys,
@@ -45,6 +43,10 @@ import type {
   RichTextEditorEmits,
   RichTextEditorOwnProps,
 } from "@/Components/RichTextEditor/richTextEditor.types";
+import {
+  mountTiptapEditor,
+  type TiptapEditorHandle,
+} from "@/Components/RichTextEditor/tiptapEditor";
 import {
   mergePartBind,
   useBridgeUIComponent,
@@ -77,7 +79,7 @@ type RichTextEditorMerged = MergeLibDefaults<
 >;
 
 /**
- * Composes FormField chrome + rich-text adapter surface for Vue.
+ * Composes FormField chrome and the TipTap surface for Vue.
  */
 export function useRichTextEditor(
   props: RichTextEditorOwnProps,
@@ -88,13 +90,12 @@ export function useRichTextEditor(
   const attrs = useAttrs();
   const slots = useSlots();
   const resolveMessage = useResolveMessage();
-  const adapter = useRichTextAdapter();
 
   const linkHref = ref("");
   const selectionTick = ref(0);
   const hostRef = ref<null | HTMLDivElement>(null);
   const linkAnchor = ref<null | HTMLElement>(null);
-  const handleRef = ref<null | RichTextEditorHandle>(null);
+  const handleRef = ref<null | TiptapEditorHandle>(null);
 
   const split = computed(() => {
     return splitComponentProps<
@@ -353,20 +354,13 @@ export function useRichTextEditor(
     }
   }
 
-  function mountAdapter() {
+  function mountEditor() {
     destroyHandle();
 
     const surface = contentRef.value;
-    const richText = adapter.value;
 
     if (isNil(surface)) {
       return;
-    }
-
-    if (isNil(richText)) {
-      throw new Error(
-        "[BridgeUI] RichTextEditor requires BridgeUIProvider global.richText. See @bridge-ui/adapters/vue/rich-text-tiptap.",
-      );
     }
 
     // Host is outside Vue's VNode children so TipTap DOM survives patches.
@@ -375,9 +369,8 @@ export function useRichTextEditor(
     surface.appendChild(host);
     hostRef.value = host;
 
-    handleRef.value = richText.mount({
+    handleRef.value = mountTiptapEditor({
       element: host,
-      tools: tools.value,
       value: model.value,
       format: format.value,
       readOnly: isReadOnly.value,
@@ -397,9 +390,9 @@ export function useRichTextEditor(
   }
 
   watch(
-    [format, adapter, contentRef],
+    [format, contentRef],
     () => {
-      mountAdapter();
+      mountEditor();
     },
     { flush: "post" },
   );

@@ -20,7 +20,7 @@ export const RICH_TEXT_TOOLS = [
 ] as const;
 
 /**
- * Toolbar action id used by {@link RichTextEditorAdapter} and public `tools` props.
+ * Toolbar action id used by `RichTextEditor` `tools`.
  */
 export type RichTextTool = (typeof RICH_TEXT_TOOLS)[number];
 
@@ -30,8 +30,7 @@ export type RichTextTool = (typeof RICH_TEXT_TOOLS)[number];
 export type RichTextFormat = "html" | "json";
 
 /**
- * Engine-agnostic JSON document.
- * Shape is defined by the mounted adapter (e.g. ProseMirror / TipTap JSON).
+ * TipTap JSON document (`Editor.getJSON()`).
  */
 export type RichTextJSON = Record<string, unknown>;
 
@@ -41,7 +40,7 @@ export type RichTextJSON = Record<string, unknown>;
 export type RichTextValue = string | RichTextJSON;
 
 /**
- * Optional payload for {@link RichTextEditorHandle.run} (e.g. link `href`).
+ * Optional payload for a toolbar command (e.g. link `href`).
  */
 export type RichTextToolPayload = {
   /**
@@ -54,82 +53,6 @@ export type RichTextToolPayload = {
    * Prefer `heading1` / `heading2` / `heading3` tools when possible.
    */
   level?: 1 | 2 | 3;
-};
-
-/**
- * Options passed to {@link RichTextEditorAdapter.mount}.
- */
-export type RichTextMountOptions = {
-  /**
-   * `aria-describedby` on the editable root.
-   */
-  ariaDescribedBy?: string;
-
-  /**
-   * `aria-disabled` on the editable root.
-   */
-  ariaDisabled?: boolean;
-
-  /**
-   * `aria-invalid` on the editable root.
-   */
-  ariaInvalid?: boolean;
-
-  /**
-   * `aria-readonly` on the editable root.
-   */
-  ariaReadonly?: boolean;
-
-  /**
-   * Disable editing and command execution.
-   */
-  disabled?: boolean;
-
-  /**
-   * Host element the engine mounts into.
-   */
-  element: HTMLElement;
-
-  /**
-   * Document format for `value` / `onChange` / handle get/set.
-   */
-  format: RichTextFormat;
-
-  /**
-   * Optional `id` applied to the editable root (for FormField label association).
-   * Prefer the contenteditable node, not a non-editable wrapper.
-   */
-  id?: string;
-
-  /**
-   * Called whenever the document changes.
-   */
-  onChange: (value: RichTextValue) => void;
-
-  /**
-   * Called when the selection changes (toolbar active state).
-   */
-  onSelectionChange?: () => void;
-
-  /**
-   * Empty-state hint in the content area.
-   */
-  placeholder?: string;
-
-  /**
-   * View-only surface; commands should no-op.
-   */
-  readOnly?: boolean;
-
-  /**
-   * Toolbar actions the editor should support.
-   */
-  tools: RichTextTool[];
-
-  /**
-   * Initial document for the mount `format`.
-   */
-  value?: RichTextValue;
 };
 
 /**
@@ -166,82 +89,6 @@ export type RichTextA11yOptions = {
    */
   placeholder?: string;
 };
-
-/**
- * Per-editor handle returned by {@link RichTextEditorAdapter.mount}.
- */
-export interface RichTextEditorHandle {
-  /**
-   * Blurs the editable surface when supported.
-   */
-  blur?: () => void;
-
-  /**
-   * Whether `tool` can run in the current selection / state.
-   */
-  can: (tool: RichTextTool) => boolean;
-
-  /**
-   * Tears down the editor instance.
-   */
-  destroy: () => void;
-
-  /**
-   * Focuses the editable surface.
-   */
-  focus: () => void;
-
-  /**
-   * Returns the current document in the mount `format`.
-   */
-  getValue: () => RichTextValue;
-
-  /**
-   * Whether `tool` is active in the current selection.
-   */
-  isActive: (tool: RichTextTool) => boolean;
-
-  /**
-   * Runs a toolbar command (toggle mark, set link, …).
-   */
-  run: (tool: RichTextTool, payload?: RichTextToolPayload) => void;
-
-  /**
-   * Updates a11y attributes and the empty-state placeholder after mount.
-   */
-  setA11y: (options: RichTextA11yOptions) => void;
-
-  /**
-   * Updates the disabled flag after mount.
-   */
-  setDisabled: (disabled: boolean) => void;
-
-  /**
-   * Updates the read-only flag after mount.
-   */
-  setReadOnly: (readOnly: boolean) => void;
-
-  /**
-   * Replaces the document. Must match the mount `format`.
-   */
-  setValue: (value: RichTextValue) => void;
-}
-
-/**
- * Pluggable rich-text engine for Bridge UI.
- * Apps provide an adapter via `BridgeUIProvider` `global.richText`.
- *
- * Unlike Date / Icon / I18n adapters (singleton services), this is a
- * **factory**: each {@link mount} returns a per-instance handle.
- *
- * Ready implementation: `@bridge-ui/adapters/{react,vue}/rich-text-tiptap`.
- */
-export interface RichTextEditorAdapter {
-  /**
-   * Mounts an editor into `options.element` and returns a handle.
-   */
-  mount: (options: RichTextMountOptions) => RichTextEditorHandle;
-}
 
 /**
  * Default toolbar set for RichTextEditor when `tools` is omitted.

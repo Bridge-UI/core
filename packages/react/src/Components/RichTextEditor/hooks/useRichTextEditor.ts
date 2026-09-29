@@ -17,10 +17,9 @@ import {
   RICH_TEXT_TOOL_ICONS,
   RICH_TEXT_TOOL_LABELS,
   richTextValuesEqual,
-  type RichTextEditorHandle,
   type RichTextFormat,
   type RichTextTool,
-} from "@bridge-ui/core/Adapters";
+} from "@bridge-ui/core/Domain";
 import { richTextEditorSizeProps as sizeProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
@@ -32,7 +31,6 @@ import {
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
-import { useRichTextAdapter } from "@/Adapters/RichText";
 import type { ButtonProps } from "@/Components/Button/button.types";
 import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
 import {
@@ -45,6 +43,10 @@ import type {
   RichTextEditorOwnProps,
   RichTextEditorProps,
 } from "@/Components/RichTextEditor/richTextEditor.types";
+import {
+  mountTiptapEditor,
+  type TiptapEditorHandle,
+} from "@/Components/RichTextEditor/tiptapEditor";
 import {
   derived,
   mergePartBind,
@@ -80,14 +82,13 @@ type RichTextEditorMerged = MergeLibDefaults<
 
 export function useRichTextEditor(props: RichTextEditorProps) {
   const resolveMessage = useResolveMessage();
-  const adapter = useRichTextAdapter();
 
   const [, setSelectionTick] = useState(0);
   const onChangeRef = useRef(props.onChange);
   const [linkHref, setLinkHref] = useState("");
   const hostRef = useRef<null | HTMLDivElement>(null);
   const surfaceRef = useRef<null | HTMLDivElement>(null);
-  const handleRef = useRef<null | RichTextEditorHandle>(null);
+  const handleRef = useRef<null | TiptapEditorHandle>(null);
   const [linkAnchor, setLinkAnchor] = useState<null | HTMLElement>(null);
   const [surfaceEl, setSurfaceEl] = useState<null | HTMLDivElement>(null);
 
@@ -285,12 +286,6 @@ export function useRichTextEditor(props: RichTextEditorProps) {
       return;
     }
 
-    if (isNil(adapter)) {
-      throw new Error(
-        "[BridgeUI] RichTextEditor requires BridgeUIProvider global.richText. See @bridge-ui/adapters/react/rich-text-tiptap.",
-      );
-    }
-
     // Host is outside React's child fiber so TipTap DOM survives re-renders
     // and FormField chrome class updates without React wiping `.ProseMirror`.
     const host = document.createElement("div");
@@ -298,8 +293,7 @@ export function useRichTextEditor(props: RichTextEditorProps) {
     surfaceEl.appendChild(host);
     hostRef.current = host;
 
-    const handle = adapter.mount({
-      tools,
+    const handle = mountTiptapEditor({
       format,
       element: host,
       value: valueProp,
@@ -325,8 +319,8 @@ export function useRichTextEditor(props: RichTextEditorProps) {
       hostRef.current = null;
       host.remove();
     };
-    // Mount once per surface / adapter / format; controlled value syncs below.
-  }, [format, adapter, surfaceEl, bumpSelection]);
+    // Mount once per surface / format; controlled value syncs below.
+  }, [format, surfaceEl, bumpSelection]);
 
   useEffect(() => {
     const handle = handleRef.current;

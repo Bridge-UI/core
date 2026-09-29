@@ -4,7 +4,7 @@ import { expect, test } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
 // ** Core Imports
-import type { RichTextValue } from "@bridge-ui/core/Adapters";
+import type { RichTextValue } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import { useRichTextEditor } from "@/Components/RichTextEditor";

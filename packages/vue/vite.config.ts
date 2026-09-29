@@ -84,6 +84,7 @@ export default defineConfig({
         /^es-toolkit/,
         "tailwind-merge",
         /^@bridge-ui\/core/,
+        /^@tiptap\//,
         "@tanstack/vue-table",
       ],
     },

@@ -94,9 +94,7 @@ test("it should call onChange when content is edited", () => {
     />,
   );
 
-  const surface = screen.getByRole("textbox");
-  surface.innerHTML = "<p>Updated</p>";
-  fireEvent.input(surface);
+  fireEvent.click(screen.getByRole("button", { name: "Heading 1" }));
 
   expect(onChange).toHaveBeenCalled();
 });

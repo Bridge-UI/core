@@ -83,6 +83,7 @@ export default defineConfig({
         "tailwind-merge",
         "react/jsx-runtime",
         /^@bridge-ui\/core/,
+        /^@tiptap\//,
         "@tanstack/react-table",
       ],
     },

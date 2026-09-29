@@ -12,7 +12,3 @@ export type {
   IconSourceValueOverrides,
   SemanticIconName,
 } from "@/Adapters/Icon";
-export {
-  setRichTextAdapterForTests,
-  useRichTextAdapter,
-} from "@/Adapters/RichText";

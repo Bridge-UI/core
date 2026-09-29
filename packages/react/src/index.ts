@@ -15,10 +15,6 @@ export type {
   SemanticIconName,
 } from "@/Adapters/Icon";
 export {
-  setRichTextAdapterForTests,
-  useRichTextAdapter,
-} from "@/Adapters/RichText";
-export {
   Accordion,
   useAccordion,
   useAccordionContext,
@@ -572,19 +568,6 @@ export type {
   RatingSizeOverrides,
   RatingSlots,
 } from "@/Components/Rating";
-export { RichTextEditor, useRichTextEditor } from "@/Components/RichTextEditor";
-export type {
-  RichTextEditorCallbacks,
-  RichTextEditorClasses,
-  RichTextEditorColorOverrides,
-  RichTextEditorCustomProps,
-  RichTextEditorOwnProps,
-  RichTextEditorProps,
-  RichTextEditorRoundedOverrides,
-  RichTextEditorSizeOverrides,
-  RichTextEditorSlots,
-  RichTextEditorVariantOverrides,
-} from "@/Components/RichTextEditor";
 export { Select } from "@/Components/Select";
 export type {
   SelectClasses,

@@ -51,7 +51,7 @@ import type { RadioClasses, RadioProps } from "@/Components/Radio";
 import type {
   RichTextEditorClasses,
   RichTextEditorProps,
-} from "@/Components/RichTextEditor";
+} from "@/Components/RichTextEditor/richTextEditor.types";
 import type { SelectClasses, SelectProps } from "@/Components/Select";
 import type {
   SidebarClasses,
