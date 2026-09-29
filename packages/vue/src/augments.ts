@@ -18,6 +18,13 @@ import type {
 import type { CardClasses, CardProps } from "@/Components/Card";
 import type { CarouselClasses, CarouselProps } from "@/Components/Carousel";
 import type { CarouselSlideClasses } from "@/Components/CarouselSlide";
+import type { ChartClasses, ChartProps } from "@/Components/Chart";
+import type {
+  ChartLegendClasses,
+  ChartLegendProps,
+} from "@/Components/ChartLegend";
+import type { ChartSeriesProps } from "@/Components/ChartSeries";
+import type { ChartTooltipClasses } from "@/Components/ChartTooltip";
 import type { CheckboxClasses, CheckboxProps } from "@/Components/Checkbox";
 import type { ChipClasses, ChipProps } from "@/Components/Chip";
 import type { DividerClasses, DividerProps } from "@/Components/Divider";
@@ -162,6 +169,28 @@ declare module "@bridge-ui/core/Config" {
 
   interface CarouselSlideConfigOverrides {
     classes: CarouselSlideClasses;
+  }
+
+  interface ChartConfigOverrides {
+    classes: ChartClasses;
+    defaultProps: Partial<
+      Pick<ChartProps, "size" | "height" | "palette" | "animation">
+    >;
+  }
+
+  interface ChartLegendConfigOverrides {
+    classes: ChartLegendClasses;
+    defaultProps: Partial<
+      Pick<ChartLegendProps, "align" | "position" | "interactive">
+    >;
+  }
+
+  interface ChartSeriesConfigOverrides {
+    defaultProps: Partial<Pick<ChartSeriesProps, "type" | "curve">>;
+  }
+
+  interface ChartTooltipConfigOverrides {
+    classes: ChartTooltipClasses;
   }
 
   interface CheckboxConfigOverrides {
