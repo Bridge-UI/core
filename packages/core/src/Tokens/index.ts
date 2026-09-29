@@ -119,6 +119,18 @@ export type {
 export { sizeProps as carouselSizeProps } from "@/Tokens/Carousel";
 export type { CarouselSize, CarouselSizeItem } from "@/Tokens/Carousel";
 export {
+  colorProps as chartColorProps,
+  sizeProps as chartSizeProps,
+  themeProps as chartThemeProps,
+} from "@/Tokens/Chart";
+export type {
+  ChartColor,
+  ChartColorItem,
+  ChartSize,
+  ChartSizeItem,
+  ChartTheme,
+} from "@/Tokens/Chart";
+export {
   colorProps as checkboxColorProps,
   roundedProps as checkboxRoundedProps,
   sizeProps as checkboxSizeProps,

@@ -2,6 +2,7 @@
 import type { DateAdapter } from "@/Adapters/date";
 import type { I18nAdapter } from "@/Adapters/i18n";
 import type { IconAdapter, SemanticIconName } from "@/Adapters/icon";
+import type { ChartCurve, ChartType } from "@/Domain/chart";
 import type { RichTextTool } from "@/Domain/richText";
 import type {
   AccordionColor,
@@ -65,6 +66,12 @@ import type {
   CardVariantItem,
 } from "@/Tokens/Card";
 import type { CarouselSize, CarouselSizeItem } from "@/Tokens/Carousel";
+import type {
+  ChartColorItem,
+  ChartSize,
+  ChartSizeItem,
+  ChartTheme,
+} from "@/Tokens/Chart";
 import type {
   CheckboxColor,
   CheckboxColorItem,
@@ -422,6 +429,10 @@ export interface CalendarConfigOverrides {}
 export interface CardConfigOverrides {}
 export interface CarouselConfigOverrides {}
 export interface CarouselSlideConfigOverrides {}
+export interface ChartConfigOverrides {}
+export interface ChartLegendConfigOverrides {}
+export interface ChartSeriesConfigOverrides {}
+export interface ChartTooltipConfigOverrides {}
 export interface CheckboxConfigOverrides {}
 export interface ChipConfigOverrides {}
 export interface ColorFieldConfigOverrides {}
@@ -697,6 +708,41 @@ export interface CarouselConfigBase {
 export interface CarouselSlideConfigBase {
   classes: object;
   defaultProps: Partial<object>;
+}
+
+export interface ChartConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    animation: boolean;
+    height: number | string;
+    palette: string[];
+    size: keyof ChartSize;
+  }>;
+  tokens: Partial<{
+    color: Record<string, ChartColorItem>;
+    size: Record<string, ChartSizeItem>;
+    theme: Partial<ChartTheme>;
+  }>;
+}
+
+export interface ChartLegendConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    align: "end" | "start" | "center";
+    interactive: boolean;
+    position: "top" | "bottom";
+  }>;
+}
+
+export interface ChartSeriesConfigBase {
+  defaultProps: Partial<{
+    curve: ChartCurve;
+    type: ChartType;
+  }>;
+}
+
+export interface ChartTooltipConfigBase {
+  classes: object;
 }
 
 export interface CheckboxConfigBase {
@@ -1674,6 +1720,16 @@ export interface BridgeUIComponentsRegistry {
   Carousel: Partial<Overwrite<CarouselConfigBase, CarouselConfigOverrides>>;
   CarouselSlide: Partial<
     Overwrite<CarouselSlideConfigBase, CarouselSlideConfigOverrides>
+  >;
+  Chart: Partial<Overwrite<ChartConfigBase, ChartConfigOverrides>>;
+  ChartLegend: Partial<
+    Overwrite<ChartLegendConfigBase, ChartLegendConfigOverrides>
+  >;
+  ChartSeries: Partial<
+    Overwrite<ChartSeriesConfigBase, ChartSeriesConfigOverrides>
+  >;
+  ChartTooltip: Partial<
+    Overwrite<ChartTooltipConfigBase, ChartTooltipConfigOverrides>
   >;
   Checkbox: Partial<Overwrite<CheckboxConfigBase, CheckboxConfigOverrides>>;
   Chip: Partial<Overwrite<ChipConfigBase, ChipConfigOverrides>>;
