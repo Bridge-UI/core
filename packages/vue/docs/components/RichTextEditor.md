@@ -1,6 +1,6 @@
 # RichTextEditor
 
-Formatted text input with FormField chrome and a pluggable editing engine. Bridge owns the toolbar, tokens, and a11y; the document engine comes from `global.richText` (no native default).
+Formatted text input with FormField chrome. Bridge owns the toolbar, tokens, and a11y. The document engine is TipTap.
 
 Sanitize HTML before rendering it outside the editor — XSS prevention stays in the app.
 
@@ -10,28 +10,7 @@ Sanitize HTML before rendering it outside the editor — XSS prevention stays in
 import { RichTextEditor } from "@bridge-ui/vue/Components/RichTextEditor";
 ```
 
-## Adapter
-
-Provide `global.richText` on `BridgeUIProvider`. Ready adapter:
-
-```ts
-import { BridgeUIProvider } from "@bridge-ui/vue";
-import { createTiptapRichTextAdapter } from "@bridge-ui/adapters/vue/rich-text-tiptap";
-
-const richText = createTiptapRichTextAdapter();
-```
-
-```vue
-<BridgeUIProvider :global="{ richText }">
-  <App />
-</BridgeUIProvider>
-```
-
-| Adapter                                    | Peer(s)                                                                              | Notes            |
-| ------------------------------------------ | ------------------------------------------------------------------------------------ | ---------------- |
-| `@bridge-ui/adapters/vue/rich-text-tiptap` | `@tiptap/core`, `@tiptap/pm`, `@tiptap/starter-kit`, `@tiptap/extension-placeholder` | ProseMirror JSON |
-
-Custom engines can implement `RichTextEditorAdapter` and pass them via `global.richText`.
+Install `@tiptap/core`, `@tiptap/pm`, `@tiptap/starter-kit`, and `@tiptap/extension-placeholder` next to `@bridge-ui/vue` when you use `RichTextEditor`.
 
 ## Examples
 

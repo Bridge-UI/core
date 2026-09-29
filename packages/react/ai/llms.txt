@@ -37,5 +37,4 @@ After install:
 - `@bridge-ui/adapters/react/{date-date-fns,date-dayjs,date-luxon,date-moment}`
 - `@bridge-ui/adapters/react/{icon-lucide,icon-heroicons,icon-tabler,icon-phosphor,icon-fontawesome}`
 - `@bridge-ui/adapters/react/{i18n-dictionary,i18n-i18next}`
-- `@bridge-ui/adapters/react/rich-text-tiptap`
 - `@bridge-ui/react/docs/components/{Name}.md`

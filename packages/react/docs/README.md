@@ -103,7 +103,6 @@ npm install @bridge-ui/adapters
 - `@bridge-ui/adapters/react/icon-fontawesome`
 - `@bridge-ui/adapters/react/i18n-dictionary`
 - `@bridge-ui/adapters/react/i18n-i18next`
-- `@bridge-ui/adapters/react/rich-text-tiptap`
 
 ### Migrating from `Adapters/Examples`
 
@@ -113,4 +112,4 @@ npm install @bridge-ui/adapters
 | ------------------------------------------- | ---------------------------------- |
 | `@bridge-ui/react/Adapters/Examples/<name>` | `@bridge-ui/adapters/react/<name>` |
 
-`@bridge-ui/react` no longer declares the adapter libraries as peers. Keep them in your app dependencies. No extra Tailwind `@source` is needed: the TipTap editable class ships in `@bridge-ui/react/theme.css`.
+`@bridge-ui/react` no longer declares the adapter libraries as peers. Keep them in your app dependencies. No extra Tailwind `@source` is needed.

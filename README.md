@@ -32,7 +32,7 @@ Building accessible forms, overlays, and feedback from scratch is slow. Bridge U
 | `@bridge-ui/vue`   | Vue components (depends on `@bridge-ui/core`)   |
 | `@bridge-ui/core`  | Shared types, tokens, and utilities             |
 
-Ready-made date, icon, i18n, and rich-text adapters ship separately in [`@bridge-ui/adapters`](https://github.com/Bridge-UI/adapters).
+Ready-made date, icon, and i18n adapters ship separately in [`@bridge-ui/adapters`](https://github.com/Bridge-UI/adapters).
 
 ```bash
 npm install @bridge-ui/react   # or @bridge-ui/vue

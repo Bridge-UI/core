@@ -37,5 +37,4 @@ After install:
 - `@bridge-ui/adapters/vue/{date-date-fns,date-dayjs,date-luxon,date-moment}`
 - `@bridge-ui/adapters/vue/{icon-lucide,icon-heroicons,icon-tabler,icon-phosphor,icon-fontawesome}`
 - `@bridge-ui/adapters/vue/{i18n-dictionary,i18n-vue-i18n}`
-- `@bridge-ui/adapters/vue/rich-text-tiptap`
 - `@bridge-ui/vue/docs/components/{Name}.md`
