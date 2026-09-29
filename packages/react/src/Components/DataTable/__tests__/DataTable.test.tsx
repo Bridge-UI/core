@@ -631,7 +631,11 @@ test("it should truncate ellipsis cells", () => {
     />,
   );
 
+  expect(screen.getByRole("table").className).toContain("table-fixed");
   expect(screen.getByText("Ada Lovelace").className).toContain("text-ellipsis");
+  expect(screen.getAllByRole("cell")[0]?.className).toContain(
+    "overflow-hidden",
+  );
 });
 
 test("it should show the ellipsis tooltip on the first pointer enter", async () => {

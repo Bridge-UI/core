@@ -1,6 +1,6 @@
 // ** External Imports
 import { isFunction } from "es-toolkit/compat";
-import { Fragment, memo, useId, useState, type ReactNode } from "react";
+import { Fragment, memo, useId, useRef, useState, type ReactNode } from "react";
 
 // ** Core Imports
 import { cn } from "@bridge-ui/core/Utils";
@@ -87,50 +87,37 @@ function DataTableCellContent({
 }: {
   cell: { content: ReactNode; ellipsis: boolean; tooltip?: string };
 }) {
+  const anchorRef = useRef<HTMLDivElement>(null);
   const [tooltipShow, setTooltipShow] = useState(false);
-  const [tooltipReady, setTooltipReady] = useState(false);
 
   if (!cell.ellipsis) {
     return cell.content;
   }
 
-  const truncated = (
-    <div className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
-      {cell.content}
-    </div>
-  );
-
-  if (!cell.tooltip) {
-    return truncated;
-  }
-
-  const openDeferredTooltip = () => {
-    setTooltipReady(true);
-    setTooltipShow(true);
-  };
-
-  if (!tooltipReady) {
-    return (
-      <div
-        onFocusCapture={openDeferredTooltip}
-        onPointerEnter={openDeferredTooltip}
-        className="block min-w-0 w-full max-w-full"
-      >
-        {truncated}
-      </div>
-    );
-  }
-
   return (
-    <Tooltip
-      show={tooltipShow}
-      content={cell.tooltip}
-      onShowChange={setTooltipShow}
-      slots={{ trigger: truncated }}
-      customProps={{
-        trigger: { className: "block min-w-0 w-full max-w-full" },
-      }}
-    />
+    <Fragment>
+      <div
+        ref={anchorRef}
+        className="block min-w-0 w-full max-w-full overflow-hidden"
+        onBlurCapture={cell.tooltip ? () => setTooltipShow(false) : undefined}
+        onFocusCapture={cell.tooltip ? () => setTooltipShow(true) : undefined}
+        onPointerEnter={cell.tooltip ? () => setTooltipShow(true) : undefined}
+        onPointerLeave={cell.tooltip ? () => setTooltipShow(false) : undefined}
+      >
+        <div className="overflow-hidden text-ellipsis whitespace-nowrap">
+          {cell.content}
+        </div>
+      </div>
+
+      {cell.tooltip ? (
+        <Tooltip
+          show={tooltipShow}
+          anchorEl={anchorRef}
+          content={cell.tooltip}
+          onShowChange={setTooltipShow}
+        />
+      ) : null}
+    </Fragment>
   );
 }
 

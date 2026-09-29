@@ -642,6 +642,8 @@ test("it should truncate ellipsis cells", () => {
     },
   });
 
+  expect(wrapper.get("table").classes()).toContain("table-fixed");
+  expect(wrapper.get("td").classes()).toContain("overflow-hidden");
   expect(wrapper.get(".text-ellipsis").text()).toBe("Ada Lovelace");
 });
 
