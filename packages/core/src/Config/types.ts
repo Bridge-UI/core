@@ -2,7 +2,7 @@
 import type { DateAdapter } from "@/Adapters/date";
 import type { I18nAdapter } from "@/Adapters/i18n";
 import type { IconAdapter, SemanticIconName } from "@/Adapters/icon";
-import type { RichTextEditorAdapter, RichTextTool } from "@/Adapters/richText";
+import type { RichTextTool } from "@/Domain/richText";
 import type {
   AccordionColor,
   AccordionColorItem,
@@ -387,16 +387,6 @@ export interface BridgeUIGlobal {
    * @default "sm"
    */
   mobileBreakpoint: string;
-
-  /**
-   * Rich-text engine adapter used by `RichTextEditor`.
-   * Required when mounting `RichTextEditor` (no native default in core).
-   * Ready adapters ship from `@bridge-ui/adapters/{react,vue}/*`
-   * (`rich-text-tiptap`).
-   *
-   * @default undefined
-   */
-  richText?: RichTextEditorAdapter;
 
   /**
    * Global theme.

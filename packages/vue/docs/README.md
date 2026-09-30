@@ -103,7 +103,6 @@ npm install @bridge-ui/adapters
 - `@bridge-ui/adapters/vue/icon-fontawesome`
 - `@bridge-ui/adapters/vue/i18n-dictionary`
 - `@bridge-ui/adapters/vue/i18n-vue-i18n`
-- `@bridge-ui/adapters/vue/rich-text-tiptap`
 
 ### Migrating from `Adapters/Examples`
 
@@ -113,4 +112,4 @@ npm install @bridge-ui/adapters
 | ----------------------------------------- | -------------------------------- |
 | `@bridge-ui/vue/Adapters/Examples/<name>` | `@bridge-ui/adapters/vue/<name>` |
 
-`@bridge-ui/vue` no longer declares the adapter libraries as peers. Keep them in your app dependencies. No extra Tailwind `@source` is needed: the TipTap editable class ships in `@bridge-ui/vue/theme.css`.
+`@bridge-ui/vue` no longer declares the adapter libraries as peers. Keep them in your app dependencies. No extra Tailwind `@source` is needed.

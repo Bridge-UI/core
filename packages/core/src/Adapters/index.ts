@@ -29,23 +29,3 @@ export type {
   SemanticIconName,
   SemanticIconNameOverrides,
 } from "@/Adapters/icon";
-export {
-  DEFAULT_RICH_TEXT_TOOLS,
-  RICH_TEXT_TOOLS,
-  RICH_TEXT_TOOL_ICONS,
-  RICH_TEXT_TOOL_LABELS,
-  applyRichTextEditableA11y,
-  isRichTextTool,
-  richTextValuesEqual,
-} from "@/Adapters/richText";
-export type {
-  RichTextA11yOptions,
-  RichTextEditorAdapter,
-  RichTextEditorHandle,
-  RichTextFormat,
-  RichTextJSON,
-  RichTextMountOptions,
-  RichTextTool,
-  RichTextToolPayload,
-  RichTextValue,
-} from "@/Adapters/richText";

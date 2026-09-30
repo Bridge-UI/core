@@ -6,7 +6,7 @@ import type {
   RichTextFormat,
   RichTextTool,
   RichTextValue,
-} from "@bridge-ui/core/Adapters";
+} from "@bridge-ui/core/Domain";
 import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

@@ -54,10 +54,6 @@
       "import": "./dist/Adapters/I18n/index.js",
       "types": "./dist/Adapters/I18n/index.d.ts"
     },
-    "./Adapters/RichText": {
-      "import": "./dist/Adapters/RichText/index.js",
-      "types": "./dist/Adapters/RichText/index.d.ts"
-    },
     "./Actions": {
       "import": "./dist/Actions/index.js",
       "types": "./dist/Actions/index.d.ts"
@@ -85,10 +81,26 @@
   ],
   "peerDependencies": {
     "@tanstack/vue-table": "^9.2.0",
+    "@tiptap/core": "^3.0.0",
+    "@tiptap/extension-placeholder": "^3.0.0",
+    "@tiptap/pm": "^3.0.0",
+    "@tiptap/starter-kit": "^3.0.0",
     "vue": "^3.4.0"
   },
   "peerDependenciesMeta": {
     "@tanstack/vue-table": {
+      "optional": true
+    },
+    "@tiptap/core": {
+      "optional": true
+    },
+    "@tiptap/extension-placeholder": {
+      "optional": true
+    },
+    "@tiptap/pm": {
+      "optional": true
+    },
+    "@tiptap/starter-kit": {
       "optional": true
     }
   },
@@ -114,6 +126,10 @@
     "@tailwindcss/cli": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/vue-table": "^9.2.4",
+    "@tiptap/core": "^3.31.3",
+    "@tiptap/extension-placeholder": "^3.31.3",
+    "@tiptap/pm": "^3.31.3",
+    "@tiptap/starter-kit": "^3.31.3",
     "@types/node": "^26.6.2",
     "@vue/language-core": "^3.3.11",
     "@vue/test-utils": "^2.5.1",

@@ -19,19 +19,19 @@ npx bridge-ui-react-ai install
 
 ## Required reading
 
-| Topic                                                                   | Doc                                                      |
-| ----------------------------------------------------------------------- | -------------------------------------------------------- |
-| Provider, `global`, `components`, icons, i18n, dates, custom components | `.ai/docs/components/BridgeUIProvider.md`                |
-| Icon adapter usage                                                      | `.ai/docs/components/Icon.md`                            |
-| i18n adapter                                                            | `.ai/docs/components/I18n.md`                            |
-| Breakpoints                                                             | `.ai/docs/components/useBreakpoint.md`                   |
-| Adapter factories                                                       | `@bridge-ui/adapters/react/{date,icon,i18n,rich-text}-*` |
+| Topic                                                                   | Doc                                            |
+| ----------------------------------------------------------------------- | ---------------------------------------------- |
+| Provider, `global`, `components`, icons, i18n, dates, custom components | `.ai/docs/components/BridgeUIProvider.md`      |
+| Icon adapter usage                                                      | `.ai/docs/components/Icon.md`                  |
+| i18n adapter                                                            | `.ai/docs/components/I18n.md`                  |
+| Breakpoints                                                             | `.ai/docs/components/useBreakpoint.md`         |
+| Adapter factories                                                       | `@bridge-ui/adapters/react/{date,icon,i18n}-*` |
 
 ## Hard rules
 
 1. Tailwind CSS **v4** + `@import "@bridge-ui/react/theme.css"`.
 2. Wrap the app with `BridgeUIProvider`.
 3. Mount `BridgeUIHosts` inside the provider when using action hooks (`useDialogAction`, `useModalAction`, `useDrawerAction`, `useSnackbarAction`).
-4. Semantic icon names, chrome strings, and date libs need `global.icons` / `global.i18n` / `global.dates` — install `@bridge-ui/adapters`, import factories from `@bridge-ui/adapters/react/{date,icon,i18n,rich-text}-*`, and install the matching optional peer.
+4. Semantic icon names, chrome strings, and date libs need `global.icons` / `global.i18n` / `global.dates` — install `@bridge-ui/adapters`, import factories from `@bridge-ui/adapters/react/{date,icon,i18n}-*`, and install the matching optional peer.
 5. Prefer deep imports: `@bridge-ui/react/Components/{Name}`.
 6. App-wide default color (e.g. monochrome `"black"`): set `global.defaultColor` once — do not repeat `color` in every `components.{Name}.defaultProps`. Rebrand `primary` in theme CSS instead.

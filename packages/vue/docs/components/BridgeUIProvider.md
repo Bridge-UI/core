@@ -101,23 +101,6 @@ const dates = createMomentDateAdapter({
 });
 ```
 
-### Rich-text adapter
-
-Provide `global.richText` when using `RichTextEditor`. There is no native default — mounting without an adapter throws. Ready adapter: `@bridge-ui/adapters/vue/rich-text-tiptap`. Install `@bridge-ui/adapters` and the TipTap peers.
-
-```ts
-import { createBridgeUI } from "@bridge-ui/vue";
-import { createTiptapRichTextAdapter } from "@bridge-ui/adapters/vue/rich-text-tiptap";
-
-const richText = createTiptapRichTextAdapter();
-
-app.use(
-  createBridgeUI({
-    global: { richText },
-  }),
-);
-```
-
 ### Custom global values
 
 Packages can add their own keys to `global` by augmenting `BridgeUIGlobal`. Nested providers and `setGlobal` merge every key by the same rule:

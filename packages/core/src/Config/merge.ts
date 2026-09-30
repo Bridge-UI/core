@@ -28,7 +28,7 @@ import { mergeBridgeUILayeredClasses } from "@/Utils";
 /**
  * True for values that must replace-on-write instead of deep-merging:
  * functions, non-plain objects (class instances), and plain objects with a
- * function member (adapters such as `dates`, `icons`, `i18n`, `richText`).
+ * function member (adapters such as `dates`, `icons`, `i18n`).
  * Only top-level members are checked; deeper functions still deep-merge.
  */
 function isReplaceOnWriteValue(value: unknown): boolean {

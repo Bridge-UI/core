@@ -292,6 +292,23 @@ export {
 } from "@/Domain/rating";
 export type { RatingDirection, RatingValue } from "@/Domain/rating";
 export {
+  DEFAULT_RICH_TEXT_TOOLS,
+  RICH_TEXT_TOOLS,
+  RICH_TEXT_TOOL_ICONS,
+  RICH_TEXT_TOOL_LABELS,
+  applyRichTextEditableA11y,
+  isRichTextTool,
+  richTextValuesEqual,
+} from "@/Domain/richText";
+export type {
+  RichTextA11yOptions,
+  RichTextFormat,
+  RichTextJSON,
+  RichTextTool,
+  RichTextToolPayload,
+  RichTextValue,
+} from "@/Domain/richText";
+export {
   DEFAULT_SELECT_ASYNC_DEBOUNCE,
   DEFAULT_SELECT_ASYNC_LIMIT,
   commitFreeSoloValue,

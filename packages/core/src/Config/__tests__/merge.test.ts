@@ -99,18 +99,6 @@ test("it should replace i18n adapters instead of deep-merging them", () => {
   expect(result.i18n?.t("close" as never)).toBe("second");
 });
 
-test("it should replace richText adapters instead of deep-merging them", () => {
-  const first = { mount: () => ({}) as never };
-  const second = { mount: () => ({}) as never };
-
-  const result = mergeBridgeUIGlobal({
-    partials: [{ richText: second }],
-    base: { ...BRIDGE_UI_DEFAULT_GLOBAL, richText: first },
-  });
-
-  expect(result.richText).toBe(second);
-});
-
 test("it should keep an adapter when a later layer leaves it undefined", () => {
   const icons = { resolve: () => "icon" };
 
