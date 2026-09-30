@@ -384,7 +384,6 @@ export function useRichTextEditor(
       ariaDescribedBy: formField.ariaDescribedBy.value,
       onChange: (next) => {
         model.value = next;
-        emit("update:modelValue", next);
       },
     });
   }
