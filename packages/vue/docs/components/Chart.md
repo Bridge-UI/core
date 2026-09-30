@@ -14,7 +14,7 @@ import { ChartSeries } from "@bridge-ui/vue/Components/ChartSeries";
 import { ChartTooltip } from "@bridge-ui/vue/Components/ChartTooltip";
 ```
 
-Install `echarts` next to `@bridge-ui/vue` when you use `Chart`. The import is tree-shaken (line, bar, grid, SVG renderer).
+Install `echarts` next to `@bridge-ui/vue` when you use `Chart`. The import is tree-shaken (line, bar, grid, SVG renderer). `Chart` stays off the `@bridge-ui/vue` root so apps that never import it do not load `echarts`.
 
 ## Examples
 

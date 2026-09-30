@@ -14,7 +14,7 @@ import { ChartSeries } from "@bridge-ui/react/Components/ChartSeries";
 import { ChartTooltip } from "@bridge-ui/react/Components/ChartTooltip";
 ```
 
-Install `echarts` next to `@bridge-ui/react` when you use `Chart`. The import is tree-shaken (line, bar, grid, SVG renderer).
+Install `echarts` next to `@bridge-ui/react` when you use `Chart`. The import is tree-shaken (line, bar, grid, SVG renderer). `Chart` stays off the `@bridge-ui/react` root so apps that never import it do not load `echarts`.
 
 ## Examples
 

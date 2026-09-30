@@ -234,42 +234,6 @@ export type {
   CarouselSlideProps,
   CarouselSlideSlots,
 } from "@/Components/CarouselSlide";
-export { Chart, useChart, useChartContext } from "@/Components/Chart";
-export type {
-  ChartClasses,
-  ChartColorOverrides,
-  ChartContextValue,
-  ChartCustomProps,
-  ChartOwnProps,
-  ChartProps,
-  ChartResolvedSeries,
-  ChartSeriesColor,
-  ChartSizeOverrides,
-  ChartSlots,
-} from "@/Components/Chart";
-export { ChartAxis, useChartAxis } from "@/Components/ChartAxis";
-export type { ChartAxisOwnProps, ChartAxisProps } from "@/Components/ChartAxis";
-export { ChartLegend, useChartLegend } from "@/Components/ChartLegend";
-export type {
-  ChartLegendClasses,
-  ChartLegendCustomProps,
-  ChartLegendOwnProps,
-  ChartLegendProps,
-} from "@/Components/ChartLegend";
-export { ChartSeries, useChartSeries } from "@/Components/ChartSeries";
-export type {
-  ChartSeriesOwnProps,
-  ChartSeriesProps,
-} from "@/Components/ChartSeries";
-export { ChartTooltip, useChartTooltip } from "@/Components/ChartTooltip";
-export type {
-  ChartTooltipClasses,
-  ChartTooltipContentContext,
-  ChartTooltipCustomProps,
-  ChartTooltipOwnProps,
-  ChartTooltipProps,
-  ChartTooltipSlots,
-} from "@/Components/ChartTooltip";
 export { Checkbox, useCheckbox } from "@/Components/Checkbox";
 export type {
   CheckboxClasses,
