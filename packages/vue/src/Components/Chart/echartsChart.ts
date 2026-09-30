@@ -127,7 +127,8 @@ export function buildEchartsOption(options: ChartRenderOptions): EChartsOption {
     grid: {
       left: 4,
       right: 12,
-      containLabel: true,
+      outerBoundsMode: "same",
+      outerBoundsContain: "axisLabel",
       top: isNil(yAxis.label) ? 12 : nameGap,
       bottom: isNil(xAxis.label) ? 4 : nameGap,
     },

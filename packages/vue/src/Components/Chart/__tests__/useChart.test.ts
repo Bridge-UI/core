@@ -178,3 +178,11 @@ test("it should map series and axes onto the plot option", () => {
 
   expect(format(12)).toBe("$12");
 });
+
+test("it should contain axis labels through outer bounds", () => {
+  const grid = buildEchartsOption(plotOptions).grid as Record<string, unknown>;
+
+  expect(grid.containLabel).toBeUndefined();
+  expect(grid.outerBoundsMode).toBe("same");
+  expect(grid.outerBoundsContain).toBe("axisLabel");
+});
