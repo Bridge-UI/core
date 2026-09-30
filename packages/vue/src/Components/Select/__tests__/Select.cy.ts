@@ -72,5 +72,5 @@ test("it should clear the selection", () => {
   });
 
   cy.get('[aria-label="Clear selection"]').click();
-  cy.get("@onUpdate").should("have.been.calledWith", null);
+  cy.get("@onUpdate").should("have.been.calledOnceWith", "");
 });
