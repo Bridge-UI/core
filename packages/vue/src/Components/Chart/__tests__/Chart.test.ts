@@ -1,6 +1,7 @@
 // ** External Imports
-import { flushPromises, mount } from "@vue/test-utils";
-import { expect, test } from "vitest";
+import { flushPromises, mount, type VueWrapper } from "@vue/test-utils";
+import { getInstanceByDom } from "echarts/core";
+import { afterEach, expect, test, vi } from "vitest";
 import { h } from "vue";
 
 // ** Local Imports
@@ -8,6 +9,64 @@ import { Chart } from "@/Components/Chart";
 import { ChartSeries } from "@/Components/ChartSeries";
 
 const categories = ["Jan", "Feb", "Mar"];
+
+type PlotSize = { height: number; width: number };
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+});
+
+/**
+ * happy-dom has no layout: stub the plot size and drive `ResizeObserver` by hand.
+ */
+function stubPlotSize(initial: PlotSize) {
+  let size = initial;
+  const callbacks = new Set<ResizeObserverCallback>();
+
+  vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockImplementation(
+    () => size.width,
+  );
+  vi.spyOn(HTMLElement.prototype, "clientHeight", "get").mockImplementation(
+    () => size.height,
+  );
+
+  vi.stubGlobal(
+    "ResizeObserver",
+    class {
+      callback: ResizeObserverCallback;
+
+      constructor(callback: ResizeObserverCallback) {
+        this.callback = callback;
+      }
+
+      observe() {
+        callbacks.add(this.callback);
+      }
+
+      unobserve() {}
+
+      disconnect() {
+        callbacks.delete(this.callback);
+      }
+    },
+  );
+
+  return async (next: PlotSize) => {
+    size = next;
+
+    callbacks.forEach((callback) => {
+      callback([], {} as ResizeObserver);
+    });
+
+    await flushPromises();
+  };
+}
+
+function getEchartsHost(wrapper: VueWrapper) {
+  return wrapper.get<HTMLElement>("[role='img'] [aria-hidden='true'] > div")
+    .element;
+}
 
 async function mountChart(
   props: Record<string, unknown> = {},
@@ -38,10 +97,10 @@ test("it should render a figure with an accessible plot summary", async () => {
   const plot = wrapper.find("[role='img']");
   const label = plot.attributes("aria-label") ?? "";
 
-  expect(label).toContain("Revenue");
-  expect(label).toContain("Costs");
   expect(label).toContain("Jan");
   expect(label).toContain("Mar");
+  expect(label).toContain("Costs");
+  expect(label).toContain("Revenue");
   expect(plot.attributes("tabindex")).toBe("0");
 
   wrapper.unmount();
@@ -153,4 +212,44 @@ test("it should apply width, height, and class", async () => {
   );
 
   wrapper.unmount();
+});
+
+test("it should wait for a plot size before mounting ECharts and follow resizes", async () => {
+  const resize = stubPlotSize({ width: 0, height: 0 });
+  const wrapper = await mountChart({ animation: false });
+  const host = getEchartsHost(wrapper);
+
+  expect(getInstanceByDom(host)).toBeUndefined();
+
+  await resize({ width: 320, height: 180 });
+
+  const chart = getInstanceByDom(host);
+
+  expect(chart?.getWidth()).toBe(320);
+  expect(chart?.getHeight()).toBe(180);
+  expect(host.querySelector("svg")).toBeTruthy();
+
+  await resize({ width: 480, height: 200 });
+
+  expect(chart?.getWidth()).toBe(480);
+  expect(chart?.getHeight()).toBe(200);
+  expect(getInstanceByDom(host)).toBe(chart);
+
+  wrapper.unmount();
+});
+
+test("it should dispose ECharts and remove its host on unmount", async () => {
+  stubPlotSize({ width: 320, height: 180 });
+
+  const wrapper = await mountChart({ animation: false });
+  const host = getEchartsHost(wrapper);
+  const chart = getInstanceByDom(host);
+
+  expect(chart).toBeDefined();
+
+  wrapper.unmount();
+
+  expect(host.isConnected).toBe(false);
+  expect(chart?.isDisposed()).toBe(true);
+  expect(getInstanceByDom(host)).toBeUndefined();
 });
