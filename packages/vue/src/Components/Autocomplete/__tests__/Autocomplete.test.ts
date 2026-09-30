@@ -99,11 +99,12 @@ test("it should open the menu and select an option", async () => {
   await option?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
   await flushPromises();
 
+  expect(wrapper.emitted("change")).toEqual([["active"]]);
+  expect(wrapper.emitted("update:modelValue")).toEqual([["active"]]);
   expect(wrapper.emitted("select")?.[0]?.[0]).toMatchObject({
     label: "Active",
     value: "active",
   });
-  expect(wrapper.emitted("update:modelValue")?.[0]).toEqual(["active"]);
 });
 
 test("it should clear the selected value", async () => {
@@ -118,7 +119,8 @@ test("it should clear the selected value", async () => {
   await clearButton.trigger("click");
 
   expect(wrapper.emitted("clear")).toHaveLength(1);
-  expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([null]);
+  expect(wrapper.emitted("change")).toEqual([[""]]);
+  expect(wrapper.emitted("update:modelValue")).toEqual([[""]]);
 });
 
 test("it should not show the clear control when readonly", () => {
@@ -388,7 +390,7 @@ test("it should commit free-solo text on Enter by default", async () => {
   await combobox.trigger("keydown", { key: "Enter" });
   await flushPromises();
 
-  expect(wrapper.emitted("update:modelValue")?.at(-1)).toEqual(["custom"]);
+  expect(wrapper.emitted("update:modelValue")).toEqual([["custom"]]);
 });
 
 test("it should not commit free-solo text when freeSolo is disabled", async () => {

@@ -99,11 +99,12 @@ test("it should open the menu and select an option", async () => {
   await option?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
   await flushPromises();
 
+  expect(wrapper.emitted("change")).toEqual([["active"]]);
+  expect(wrapper.emitted("update:modelValue")).toEqual([["active"]]);
   expect(wrapper.emitted("select")?.[0]?.[0]).toMatchObject({
     label: "Active",
     value: "active",
   });
-  expect(wrapper.emitted("update:modelValue")?.[0]).toEqual(["active"]);
 });
 
 test("it should keep selection draft until Apply when showFooter is set", async () => {
@@ -132,7 +133,7 @@ test("it should keep selection draft until Apply when showFooter is set", async 
   await apply?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
   await flushPromises();
 
-  expect(wrapper.emitted("update:modelValue")?.[0]).toEqual(["active"]);
+  expect(wrapper.emitted("update:modelValue")).toEqual([["active"]]);
 });
 
 test("it should discard draft selection on Cancel when showFooter is set", async () => {
@@ -197,7 +198,8 @@ test("it should clear the selected value", async () => {
   await clearButton.trigger("click");
 
   expect(wrapper.emitted("clear")).toHaveLength(1);
-  expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([null]);
+  expect(wrapper.emitted("change")).toEqual([[""]]);
+  expect(wrapper.emitted("update:modelValue")).toEqual([[""]]);
 });
 
 test("it should not show the clear control when readonly", () => {

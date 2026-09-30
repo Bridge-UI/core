@@ -522,21 +522,17 @@ export function useSelect(
     return activeValues.value.some((item) => selectValuesEqual(item, value));
   }
 
-  function setModel(next: null | undefined | SelectValue | SelectValue[]) {
-    model.value = next as typeof model.value;
-  }
-
-  function emitChange(next: null | undefined | SelectValue | SelectValue[]) {
+  function commitValue(next: null | undefined | SelectValue | SelectValue[]) {
     if (multiple.value) {
       const value = Array.isArray(next) ? next : [];
-      emit("update:modelValue", value);
+      model.value = value;
       emit("change", value);
 
       return;
     }
 
     const value = (next ?? "") as SelectValue;
-    emit("update:modelValue", value);
+    model.value = value;
     emit("change", value);
   }
 
@@ -623,8 +619,7 @@ export function useSelect(
         emit("select", option);
       }
 
-      setModel(current);
-      emitChange(current);
+      commitValue(current);
       searchQuery.value = "";
       highlightedIndex.value = -1;
       void nextTick(() => {
@@ -635,20 +630,17 @@ export function useSelect(
       return;
     }
 
-    setModel(option.value);
-    emitChange(option.value);
+    commitValue(option.value);
     emit("select", option);
     closeMenu();
   }
 
   function handleApply() {
     if (multiple.value) {
-      setModel(draftValues.value);
-      emitChange(draftValues.value);
+      commitValue(draftValues.value);
     } else {
       const next = draftValues.value[0] ?? null;
-      setModel(next);
-      emitChange(next);
+      commitValue(next);
     }
 
     closeMenu();
@@ -673,11 +665,9 @@ export function useSelect(
     }
 
     if (multiple.value) {
-      setModel([]);
-      emitChange([]);
+      commitValue([]);
     } else {
-      setModel(null);
-      emitChange(null);
+      commitValue(null);
     }
 
     emit("clear");
@@ -696,8 +686,7 @@ export function useSelect(
       (value) => !selectValuesEqual(value, option.value),
     );
 
-    setModel(current);
-    emitChange(current);
+    commitValue(current);
     emit("deselect", option);
     void nextTick(() => adjustHeight(triggerRef.value as HTMLTextAreaElement));
   }
