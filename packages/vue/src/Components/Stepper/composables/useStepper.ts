@@ -117,7 +117,6 @@ export function useStepper(
     }
 
     model.value = index;
-    emit("update:modelValue", index);
     emit("change", index);
   }
 

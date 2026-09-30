@@ -112,7 +112,6 @@ export function useDataTablePagination(
 
     model.value = clamped;
     emit("change", clamped);
-    emit("update:modelValue", clamped);
   };
 
   const goPrevious = () => {

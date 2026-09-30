@@ -78,7 +78,7 @@ test("it should register toggles and auto-select the first enabled one", () => {
   expect(result.contextValue.value.toggleValues).toEqual(["a", "b"]);
 });
 
-test("it should emit change and update:modelValue when selecting", () => {
+test("it should set the model and emit change when selecting", () => {
   const { emit, model, result } = mountUseToggleGroup({}, ref("a"));
 
   result.contextValue.value.registerToggleItem("a");
@@ -87,7 +87,7 @@ test("it should emit change and update:modelValue when selecting", () => {
 
   expect(model.value).toBe("b");
   expect(emit).toHaveBeenCalledWith("change", "b");
-  expect(emit).toHaveBeenCalledWith("update:modelValue", "b");
+  expect(emit).not.toHaveBeenCalledWith("update:modelValue", "b");
 });
 
 test("it should not select a disabled toggle", () => {

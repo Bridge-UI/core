@@ -51,7 +51,7 @@ test("it should expose context defaults from useAccordion", () => {
   expect(result.contextValue.value.disabled).toBe(false);
 });
 
-test("it should emit change and update:modelValue when toggling an item", () => {
+test("it should set the model and emit change when toggling an item", () => {
   const { emit, model, result } = mountUseAccordion({}, ref("a"));
 
   result.contextValue.value.registerItem("a");
@@ -60,7 +60,7 @@ test("it should emit change and update:modelValue when toggling an item", () => 
 
   expect(model.value).toBe("b");
   expect(emit).toHaveBeenCalledWith("change", "b");
-  expect(emit).toHaveBeenCalledWith("update:modelValue", "b");
+  expect(emit).not.toHaveBeenCalledWith("update:modelValue", "b");
 });
 
 test("it should not toggle a disabled item", () => {

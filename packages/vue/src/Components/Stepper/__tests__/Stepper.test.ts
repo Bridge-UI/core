@@ -72,7 +72,7 @@ test("it should select a completed step when clicked in linear mode", async () =
 
   await account?.trigger("click");
 
-  expect(wrapper.emitted("update:modelValue")?.at(-1)?.[0]).toBe(0);
+  expect(wrapper.emitted("update:modelValue")).toEqual([[0]]);
 });
 
 test("it should not select an upcoming step in linear mode", async () => {
@@ -103,7 +103,7 @@ test("it should select an upcoming step when linear is false", async () => {
 
   await profile?.trigger("click");
 
-  expect(wrapper.emitted("update:modelValue")?.at(-1)?.[0]).toBe(1);
+  expect(wrapper.emitted("update:modelValue")).toEqual([[1]]);
 });
 
 test("it should not select a disabled step", async () => {

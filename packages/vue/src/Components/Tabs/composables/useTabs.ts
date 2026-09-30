@@ -101,7 +101,6 @@ export function useTabs(
     }
 
     model.value = next;
-    emit("update:modelValue", next);
     emit("change", next);
   }
 

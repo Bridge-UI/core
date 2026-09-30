@@ -111,7 +111,6 @@ export function useAccordion(
     const next = toggleAccordionItem(expanded.value, value, multiple.value);
 
     model.value = next;
-    emit("update:modelValue", next);
     emit("change", next);
   }
 

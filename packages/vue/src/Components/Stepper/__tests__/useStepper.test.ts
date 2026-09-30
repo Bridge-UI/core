@@ -47,7 +47,7 @@ test("it should expose context defaults from useStepper", () => {
   expect(result.contextValue.value.orientation).toBe("horizontal");
 });
 
-test("it should emit change and update:modelValue when selecting a step", () => {
+test("it should set the model and emit change when selecting a step", () => {
   const { emit, model, result } = mountUseStepper({}, ref(0));
 
   result.contextValue.value.registerStep("a");
@@ -59,7 +59,7 @@ test("it should emit change and update:modelValue when selecting a step", () => 
 
   expect(model.value).toBe(0);
   expect(emit).toHaveBeenCalledWith("change", 0);
-  expect(emit).toHaveBeenCalledWith("update:modelValue", 0);
+  expect(emit).not.toHaveBeenCalledWith("update:modelValue", 0);
 });
 
 test("it should not select a disabled step", () => {

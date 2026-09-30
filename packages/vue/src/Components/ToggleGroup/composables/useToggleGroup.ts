@@ -153,7 +153,6 @@ export function useToggleGroup(
 
     model.value = next;
     focusedValue.value = nextValue;
-    emit("update:modelValue", next);
     emit("change", next);
   }
 

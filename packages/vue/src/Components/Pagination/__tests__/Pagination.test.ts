@@ -45,8 +45,8 @@ test("it should emit change and update:modelValue when a page is clicked", async
 
   await wrapper.find("button[aria-label='Page 3']").trigger("click");
 
-  expect(wrapper.emitted("change")?.[0]).toEqual([3]);
-  expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([3]);
+  expect(wrapper.emitted("change")).toEqual([[3]]);
+  expect(wrapper.emitted("update:modelValue")).toEqual([[3]]);
 });
 
 test("it should collapse long ranges with ellipsis", () => {

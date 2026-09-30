@@ -82,8 +82,9 @@ test("it should change selection when a toggle is clicked", async () => {
 
   await vue?.trigger("click");
 
-  expect(wrapper.emitted("change")?.[0]).toEqual(["vue"]);
+  expect(wrapper.emitted("change")).toEqual([["vue"]]);
   expect(vue?.attributes("aria-checked")).toBe("true");
+  expect(wrapper.emitted("update:modelValue")).toEqual([["vue"]]);
 });
 
 test("it should not select a disabled toggle", async () => {
@@ -149,10 +150,14 @@ test("it should allow multiple selections when multiple is set", async () => {
 
   await vue?.trigger("click");
 
-  expect(wrapper.emitted("change")?.[0]).toEqual([["react", "vue"]]);
   expect(vue?.attributes("aria-pressed")).toBe("true");
+  expect(wrapper.emitted("change")?.[0]).toEqual([["react", "vue"]]);
 
   await react?.trigger("click");
 
   expect(wrapper.emitted("change")?.[1]).toEqual([["vue"]]);
+  expect(wrapper.emitted("update:modelValue")).toEqual([
+    [["react", "vue"]],
+    [["vue"]],
+  ]);
 });

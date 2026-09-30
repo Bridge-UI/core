@@ -86,6 +86,7 @@ test("it should change selection when a tab is clicked", async () => {
   await beta?.trigger("click");
 
   expect(wrapper.emitted("change")).toEqual([["b"]]);
+  expect(wrapper.emitted("update:modelValue")).toEqual([["b"]]);
 
   const selected = wrapper
     .findAll('[role="tab"]')
@@ -126,6 +127,7 @@ test("it should move selection with arrow keys when activation is automatic", as
   });
 
   expect(wrapper.emitted("change")).toEqual([["b"]]);
+  expect(wrapper.emitted("update:modelValue")).toEqual([["b"]]);
 });
 
 test("it should let a TabPanel override the inherited keepMounted", () => {

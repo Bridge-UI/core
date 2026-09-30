@@ -60,7 +60,7 @@ test("it should register tabs and auto-select the first enabled one", () => {
   expect(result.contextValue.value.tabValues).toEqual(["a", "b"]);
 });
 
-test("it should emit change and update:modelValue when selecting a tab", () => {
+test("it should set the model and emit change when selecting a tab", () => {
   const { emit, model, result } = mountUseTabs({}, ref("a"));
 
   result.contextValue.value.registerTab("a");
@@ -69,7 +69,7 @@ test("it should emit change and update:modelValue when selecting a tab", () => {
 
   expect(model.value).toBe("b");
   expect(emit).toHaveBeenCalledWith("change", "b");
-  expect(emit).toHaveBeenCalledWith("update:modelValue", "b");
+  expect(emit).not.toHaveBeenCalledWith("update:modelValue", "b");
 });
 
 test("it should not select a disabled tab", () => {

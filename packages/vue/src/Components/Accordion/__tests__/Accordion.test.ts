@@ -91,7 +91,7 @@ test("it should expand another item when clicked in single mode", async () => {
 
   await returns?.trigger("click");
 
-  expect(wrapper.emitted("update:modelValue")?.at(-1)?.[0]).toBe("b");
+  expect(wrapper.emitted("update:modelValue")).toEqual([["b"]]);
 
   const expanded = wrapper
     .findAll("button")
@@ -112,7 +112,7 @@ test("it should collapse the open item when clicked again in single mode", async
 
   await shipping?.trigger("click");
 
-  expect(wrapper.emitted("update:modelValue")?.at(-1)?.[0]).toBe("");
+  expect(wrapper.emitted("update:modelValue")).toEqual([[""]]);
 });
 
 test("it should not toggle a disabled item", async () => {
@@ -142,7 +142,7 @@ test("it should allow multiple expanded items when multiple is true", async () =
 
   await returns?.trigger("click");
 
-  expect(wrapper.emitted("update:modelValue")?.at(-1)?.[0]).toEqual(["a", "b"]);
+  expect(wrapper.emitted("update:modelValue")).toEqual([[["a", "b"]]]);
 });
 
 test("it should apply outlined variant classes on the root", () => {

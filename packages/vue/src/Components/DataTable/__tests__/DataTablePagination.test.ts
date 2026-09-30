@@ -42,8 +42,8 @@ test("it should render first and last controls without page numbers", async () =
 
   await wrapper.find("button[aria-label='Last page']").trigger("click");
 
-  expect(wrapper.emitted("change")?.[0]).toEqual([7]);
-  expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([7]);
+  expect(wrapper.emitted("change")).toEqual([[7]]);
+  expect(wrapper.emitted("update:modelValue")).toEqual([[7]]);
 });
 
 test("it should disable last and next on the last page", () => {
