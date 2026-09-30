@@ -1,8 +1,10 @@
 // ** External Imports
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { useState } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Core Imports
+import type { RichTextJSON, RichTextValue } from "@bridge-ui/core/Domain";
 import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
@@ -13,6 +15,28 @@ afterEach(() => {
   vi.unstubAllGlobals();
   resetLayerStackForTests();
 });
+
+function paragraphDoc(text: string): RichTextJSON {
+  return {
+    type: "doc",
+    content: [{ type: "paragraph", content: [{ text, type: "text" }] }],
+  };
+}
+
+function EchoingEditor(props: { onChange: (value: RichTextValue) => void }) {
+  const [value, setValue] = useState<RichTextValue>("<p>Hi</p>");
+
+  return (
+    <RichTextEditor
+      value={value}
+      aria-label="Description"
+      onChange={(next) => {
+        props.onChange(next);
+        setValue(next);
+      }}
+    />
+  );
+}
 
 test("it should render a contenteditable surface", () => {
   render(<RichTextEditor aria-label="Description" />);
@@ -97,6 +121,90 @@ test("it should call onChange when content is edited", () => {
   fireEvent.click(screen.getByRole("button", { name: "Heading 1" }));
 
   expect(onChange).toHaveBeenCalled();
+});
+
+test("it should sync the editor when the controlled value changes", () => {
+  const onChange = vi.fn();
+
+  const view = render(
+    <RichTextEditor
+      value="<p>Hi</p>"
+      onChange={onChange}
+      aria-label="Description"
+    />,
+  );
+
+  const textbox = screen.getByRole("textbox");
+
+  expect(textbox.querySelector("p")?.textContent).toBe("Hi");
+
+  view.rerender(
+    <RichTextEditor
+      onChange={onChange}
+      value="<h2>Bye</h2>"
+      aria-label="Description"
+    />,
+  );
+
+  expect(screen.getByRole("textbox")).toBe(textbox);
+  expect(textbox.querySelector("h2")?.textContent).toBe("Bye");
+  expect(textbox.textContent).not.toContain("Hi");
+
+  view.rerender(
+    <RichTextEditor value="" onChange={onChange} aria-label="Description" />,
+  );
+
+  expect(textbox.textContent).toBe("");
+  expect(onChange).not.toHaveBeenCalled();
+});
+
+test("it should sync a json document when the controlled value changes", () => {
+  const onChange = vi.fn();
+
+  const view = render(
+    <RichTextEditor
+      format="json"
+      onChange={onChange}
+      aria-label="Description"
+      value={paragraphDoc("Hi")}
+    />,
+  );
+
+  const textbox = screen.getByRole("textbox");
+
+  expect(textbox.textContent).toBe("Hi");
+
+  view.rerender(
+    <RichTextEditor
+      format="json"
+      onChange={onChange}
+      aria-label="Description"
+      value={paragraphDoc("Bye")}
+    />,
+  );
+
+  expect(textbox.textContent).toBe("Bye");
+  expect(onChange).not.toHaveBeenCalled();
+  expect(screen.getByRole("textbox")).toBe(textbox);
+});
+
+test("it should keep the edit when the parent echoes onChange back as value", () => {
+  const onChange = vi.fn();
+
+  render(<EchoingEditor onChange={onChange} />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Heading 1" }));
+
+  const textbox = screen.getByRole("textbox");
+
+  expect(onChange).toHaveBeenCalledTimes(1);
+  expect(textbox.querySelector("h1")?.textContent).toBe("Hi");
+  expect(onChange.mock.calls[0]?.[0]).toContain("<h1>Hi</h1>");
+  expect(
+    screen
+      .getByRole("button", { name: "Heading 1" })
+      .getAttribute("aria-pressed"),
+  ).toBe("true");
 });
 
 test("it should set aria-describedby when description is shown", () => {

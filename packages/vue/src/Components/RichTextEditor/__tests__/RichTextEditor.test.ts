@@ -3,6 +3,7 @@ import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Core Imports
+import type { RichTextJSON } from "@bridge-ui/core/Domain";
 import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
@@ -13,6 +14,13 @@ afterEach(() => {
   resetLayerStackForTests();
   document.body.innerHTML = "";
 });
+
+function paragraphDoc(text: string): RichTextJSON {
+  return {
+    type: "doc",
+    content: [{ type: "paragraph", content: [{ text, type: "text" }] }],
+  };
+}
 
 test("it should render a contenteditable surface", async () => {
   const wrapper = mount(RichTextEditor);
@@ -116,6 +124,76 @@ test("it should emit update:modelValue when content is edited", async () => {
   await flushPromises();
 
   expect(wrapper.emitted("update:modelValue")).toBeTruthy();
+});
+
+test("it should sync the editor when modelValue changes", async () => {
+  const wrapper = mount(RichTextEditor, {
+    props: { modelValue: "<p>Hi</p>" },
+  });
+
+  await flushPromises();
+
+  const textbox = wrapper.get('[role="textbox"]').element;
+
+  expect(textbox.querySelector("p")?.textContent).toBe("Hi");
+
+  await wrapper.setProps({ modelValue: "<h2>Bye</h2>" });
+  await flushPromises();
+
+  expect(wrapper.get('[role="textbox"]').element).toBe(textbox);
+  expect(textbox.querySelector("h2")?.textContent).toBe("Bye");
+  expect(textbox.textContent).not.toContain("Hi");
+
+  await wrapper.setProps({ modelValue: "" });
+  await flushPromises();
+
+  expect(textbox.textContent).toBe("");
+  expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+});
+
+test("it should sync a json document when modelValue changes", async () => {
+  const wrapper = mount(RichTextEditor, {
+    props: { format: "json", modelValue: paragraphDoc("Hi") },
+  });
+
+  await flushPromises();
+
+  const textbox = wrapper.get('[role="textbox"]').element;
+
+  expect(textbox.textContent).toBe("Hi");
+
+  await wrapper.setProps({ modelValue: paragraphDoc("Bye") });
+  await flushPromises();
+
+  expect(textbox.textContent).toBe("Bye");
+  expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+  expect(wrapper.get('[role="textbox"]').element).toBe(textbox);
+});
+
+test("it should keep the edit when the parent echoes update:modelValue back", async () => {
+  const wrapper = mount(RichTextEditor, {
+    props: {
+      modelValue: "<p>Hi</p>",
+      "onUpdate:modelValue": (value: unknown) => {
+        wrapper.setProps({ modelValue: value });
+      },
+    },
+  });
+
+  await flushPromises();
+  await wrapper.get('[aria-label="Heading 1"]').trigger("click");
+  await flushPromises();
+
+  const emitted = wrapper.emitted("update:modelValue") ?? [];
+
+  expect(emitted).toHaveLength(1);
+  expect(emitted[0]?.[0]).toContain("<h1>Hi</h1>");
+  expect(
+    wrapper.get('[role="textbox"]').element.querySelector("h1")?.textContent,
+  ).toBe("Hi");
+  expect(
+    wrapper.get('[aria-label="Heading 1"]').attributes("aria-pressed"),
+  ).toBe("true");
 });
 
 test("it should apply a link from the url field", async () => {
