@@ -1,0 +1,217 @@
+// ** External Imports
+import { get, isEqual, isNil } from "es-toolkit/compat";
+import {
+  useCallback,
+  useLayoutEffect,
+  useState,
+  type HTMLAttributes,
+} from "react";
+
+// ** Core Imports
+import {
+  formatChartValue,
+  resolveChartTooltipPosition,
+  type ChartTooltipItem,
+  type ChartTooltipPosition,
+} from "@bridge-ui/core/Domain";
+import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
+
+// ** Local Imports
+import { useChartContext } from "@/Components/Chart/ChartContext";
+import type {
+  ChartTooltipClasses,
+  ChartTooltipContentContext,
+  ChartTooltipOwnProps,
+  ChartTooltipProps,
+} from "@/Components/ChartTooltip/chartTooltip.types";
+import {
+  derived,
+  mergePartBind,
+  useBridgeUIComponent,
+  useBridgeUIMergedRegistryClasses,
+} from "@/Utils";
+
+const chartTooltipBridgeKeys = [
+  "slots",
+  "classes",
+  "customProps",
+  "formatValue",
+] as const satisfies readonly (keyof ChartTooltipOwnProps)[];
+
+export function useChartTooltip(props: ChartTooltipProps) {
+  const chart = useChartContext();
+
+  const [tooltipEl, setTooltipEl] = useState<null | HTMLDivElement>(null);
+
+  const [position, setPosition] = useState<null | ChartTooltipPosition>(null);
+
+  const { componentProps, inheritedAttrs } = splitComponentProps<
+    ChartTooltipProps,
+    typeof chartTooltipBridgeKeys
+  >({
+    props,
+    bridgeKeys: chartTooltipBridgeKeys,
+  });
+
+  const { merged, entry: bridgeChartTooltip } = useBridgeUIComponent<
+    ChartTooltipOwnProps,
+    "ChartTooltip"
+  >({
+    props: componentProps,
+    componentName: "ChartTooltip",
+  });
+
+  const mergedClasses = useBridgeUIMergedRegistryClasses<ChartTooltipClasses>({
+    props: componentProps,
+    entry: bridgeChartTooltip,
+  });
+
+  const customProps = derived(() => {
+    return merged.customProps;
+  });
+
+  const slots = derived(() => {
+    return componentProps.slots;
+  });
+
+  const { getBounds, activeIndex, tooltipItems, getTooltipAnchor } = chart;
+
+  const isOpen = derived(() => {
+    return !isNil(activeIndex) && tooltipItems.length > 0;
+  });
+
+  useLayoutEffect(() => {
+    if (!isOpen || isNil(tooltipEl) || isNil(activeIndex)) {
+      return;
+    }
+
+    const anchor = getTooltipAnchor(activeIndex);
+
+    const next = isNil(anchor)
+      ? null
+      : resolveChartTooltipPosition({
+          anchor,
+          bounds: getBounds(),
+          size: {
+            width: tooltipEl.offsetWidth,
+            height: tooltipEl.offsetHeight,
+          },
+        });
+
+    setPosition((previous) => {
+      return isEqual(previous, next) ? previous : next;
+    });
+  }, [
+    isOpen,
+    tooltipEl,
+    getBounds,
+    activeIndex,
+    tooltipItems,
+    getTooltipAnchor,
+  ]);
+
+  const context = derived((): null | ChartTooltipContentContext => {
+    if (isNil(activeIndex)) {
+      return null;
+    }
+
+    return {
+      index: activeIndex,
+      items: tooltipItems,
+      category: chart.categories[activeIndex] ?? "",
+    };
+  });
+
+  const formatValue = useCallback(
+    (item: ChartTooltipItem) => {
+      return (
+        merged.formatValue?.(item.value, item) ??
+        formatChartValue(item.value, chart.locale)
+      );
+    },
+    [chart.locale, merged.formatValue],
+  );
+
+  const rootBind = derived((): HTMLAttributes<HTMLDivElement> => {
+    return mergePartBind(customProps?.root, inheritedAttrs, {
+      ref: setTooltipEl,
+      "aria-hidden": true,
+      style: {
+        top: position?.top ?? 0,
+        left: position?.left ?? 0,
+        visibility: isNil(position) ? "hidden" : "visible",
+      },
+      className: cn({
+        "pointer-events-none absolute z-20 flex min-w-32 flex-col": true,
+        "rounded-md border border-dark-200 bg-white text-dark-700 shadow-lg": true,
+        "dark:border-dark-700 dark:bg-dark-900 dark:text-dark-100": true,
+        [chart.tokenClasses.tooltip ?? ""]: true,
+        [get(mergedClasses, "root") ?? ""]: true,
+      }),
+    }) as HTMLAttributes<HTMLDivElement>;
+  });
+
+  const titleBind = derived((): HTMLAttributes<HTMLDivElement> => {
+    return {
+      className: cn({
+        "font-semibold": true,
+        [get(mergedClasses, "title") ?? ""]: true,
+      }),
+    };
+  });
+
+  const itemBind = derived((): HTMLAttributes<HTMLDivElement> => {
+    return {
+      className: cn({
+        "flex items-center gap-2": true,
+        [get(mergedClasses, "item") ?? ""]: true,
+      }),
+    };
+  });
+
+  const getSwatchBind = useCallback(
+    (item: ChartTooltipItem): HTMLAttributes<HTMLSpanElement> => {
+      return {
+        style: { backgroundColor: item.color },
+        className: cn({
+          "shrink-0 rounded-full": true,
+          [chart.tokenClasses.swatch ?? ""]: true,
+          [get(mergedClasses, "swatch") ?? ""]: true,
+        }),
+      };
+    },
+    [mergedClasses, chart.tokenClasses.swatch],
+  );
+
+  const labelBind = derived((): HTMLAttributes<HTMLSpanElement> => {
+    return {
+      className: cn({
+        "flex-1 text-dark-500 dark:text-dark-400": true,
+        [get(mergedClasses, "label") ?? ""]: true,
+      }),
+    };
+  });
+
+  const valueBind = derived((): HTMLAttributes<HTMLSpanElement> => {
+    return {
+      className: cn({
+        "font-medium tabular-nums": true,
+        [get(mergedClasses, "value") ?? ""]: true,
+      }),
+    };
+  });
+
+  return {
+    slots,
+    isOpen,
+    merged,
+    context,
+    itemBind,
+    rootBind,
+    labelBind,
+    titleBind,
+    valueBind,
+    formatValue,
+    getSwatchBind,
+  };
+}

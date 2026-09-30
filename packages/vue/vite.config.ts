@@ -83,6 +83,7 @@ export default defineConfig({
         "clsx",
         /^es-toolkit/,
         "tailwind-merge",
+        /^echarts/,
         /^@bridge-ui\/core/,
         /^@tiptap\//,
         "@tanstack/vue-table",

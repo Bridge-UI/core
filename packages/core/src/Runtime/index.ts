@@ -14,6 +14,14 @@ export type {
   BreakpointObserverOptions,
   BreakpointSnapshot,
 } from "@/Runtime/breakpoint";
+export {
+  normalizeCssColor,
+  observeColorScheme,
+  prefersReducedMotion,
+  readChartTheme,
+  readCssColor,
+  type ChartThemeProbeClasses,
+} from "@/Runtime/color";
 export { hasDocument, hasWindow } from "@/Runtime/env";
 export {
   createFocusTrap,

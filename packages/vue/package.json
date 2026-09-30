@@ -85,6 +85,7 @@
     "@tiptap/extension-placeholder": "^3.0.0",
     "@tiptap/pm": "^3.0.0",
     "@tiptap/starter-kit": "^3.0.0",
+    "echarts": "^5.0.0 || ^6.0.0",
     "vue": "^3.4.0"
   },
   "peerDependenciesMeta": {
@@ -101,6 +102,9 @@
       "optional": true
     },
     "@tiptap/starter-kit": {
+      "optional": true
+    },
+    "echarts": {
       "optional": true
     }
   },
@@ -130,6 +134,7 @@
     "@tiptap/extension-placeholder": "^3.31.3",
     "@tiptap/pm": "^3.31.3",
     "@tiptap/starter-kit": "^3.31.3",
+    "echarts": "^6.1.0",
     "@types/node": "^26.6.2",
     "@vue/language-core": "^3.3.11",
     "@vue/test-utils": "^2.5.1",

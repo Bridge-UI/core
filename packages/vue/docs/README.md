@@ -22,6 +22,7 @@ Component reference for **Vue**. This folder ships with the npm package.
 - [CalendarYear](./components/CalendarYear.md)
 - [Card](./components/Card.md)
 - [Carousel](./components/Carousel.md)
+- [Chart](./components/Chart.md)
 - [Checkbox](./components/Checkbox.md)
 - [ColorField](./components/ColorField.md)
 - [ColorPicker](./components/ColorPicker.md)
