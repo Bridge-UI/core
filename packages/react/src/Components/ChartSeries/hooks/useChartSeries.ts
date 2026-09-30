@@ -28,8 +28,8 @@ export function useChartSeries(
   props: ChartSeriesProps,
   libDefaults: ChartSeriesLibDefaults,
 ) {
-  const chart = useChartContext();
   const reactId = useId();
+  const chart = useChartContext();
   const id = `${chart.id}-series${reactId.replace(/:/g, "")}`;
 
   const { merged } = useBridgeUIComponent<ChartSeriesMerged, "ChartSeries">({

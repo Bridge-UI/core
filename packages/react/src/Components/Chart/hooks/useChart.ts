@@ -117,9 +117,9 @@ export function useChart(props: ChartProps, libDefaults: ChartLibDefaults) {
   const renderedOptionsRef = useRef<null | ChartRenderOptions>(null);
 
   const [schemeTick, setSchemeTick] = useState(0);
-  const [colors, setColors] = useState<Record<string, string>>({});
   const [hiddenSeries, setHiddenSeries] = useState<string[]>([]);
   const [entries, setEntries] = useState<ChartSeriesEntry[]>([]);
+  const [colors, setColors] = useState<Record<string, string>>({});
   const [plotEl, setPlotEl] = useState<null | HTMLDivElement>(null);
   const [rootEl, setRootEl] = useState<null | HTMLDivElement>(null);
   const [hostEl, setHostEl] = useState<null | HTMLDivElement>(null);
