@@ -133,9 +133,9 @@ export function useChart(
   const schemeTick = ref(0);
   const hiddenSeries = ref<string[]>([]);
   const entries = ref<ChartSeriesEntry[]>([]);
+  const plotSize = shallowRef({ width: 0, height: 0 });
   const colors = shallowRef<Record<string, string>>({});
   const theme = shallowRef<null | ChartRenderTheme>(null);
-  const plotSize = shallowRef({ width: 0, height: 0 });
 
   const active = shallowRef<ChartActive>({
     index: null,

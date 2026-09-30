@@ -745,6 +745,10 @@ export function useDataTable<T extends Record<string, unknown>>(
     });
   });
 
+  const hasEllipsisColumn = computed(() => {
+    return headerViews.value.some((header) => header.ellipsis);
+  });
+
   const hasStickyColumns = computed(() => {
     return headerViews.value.some((header) => {
       return Boolean(header.stickyStyle);
@@ -886,17 +890,18 @@ export function useDataTable<T extends Record<string, unknown>>(
             merged.value.loading && merged.value.loadingVariant === "bar",
           [get(mergedClasses.value, "header") ?? ""]: true,
         }),
-        table: cn({
-          "border-separate border-spacing-0":
-            hasStickyColumns.value && !stickyHeaderEnabled.value,
-          [get(mergedClasses.value, "table") ?? ""]: true,
-        }),
         root: cn({
           "overflow-auto": stickyHeaderBoxed.value,
           [get(mergedClasses.value, "wrapper") ?? ""]: true,
           [stickyHeaderBoxed.value
             ? (get(mergedClasses.value, "root") ?? "")
             : ""]: true,
+        }),
+        table: cn({
+          "w-full table-fixed": hasEllipsisColumn.value,
+          "border-separate border-spacing-0":
+            hasStickyColumns.value && !stickyHeaderEnabled.value,
+          [get(mergedClasses.value, "table") ?? ""]: true,
         }),
       },
     };
@@ -981,6 +986,7 @@ export function useDataTable<T extends Record<string, unknown>>(
         style: getColumnLayoutStyle(cell),
         class: cn({
           "min-w-0": true,
+          "overflow-hidden": cell.ellipsis,
           "border-e-0": isChrome,
           "after:hidden": isChrome,
           [get(variantItem.value, "cellSticky") ?? ""]: Boolean(

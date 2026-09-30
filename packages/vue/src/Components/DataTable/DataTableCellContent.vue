@@ -12,48 +12,32 @@ defineProps<{
   tooltip?: string;
 }>();
 
-const tooltipShow = ref(false);
-const tooltipReady = ref(false);
+const anchorRef = ref<null | HTMLElement>(null);
 
-function openDeferredTooltip() {
-  tooltipShow.value = true;
-  tooltipReady.value = true;
-}
+const tooltipShow = ref(false);
 </script>
 
 <template>
   <slot v-if="!ellipsis" />
 
   <div
-    v-else-if="!tooltip"
-    class="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap"
+    v-else
+    ref="anchorRef"
+    class="block min-w-0 w-full max-w-full overflow-hidden"
+    v-on:focusin="tooltip ? (tooltipShow = true) : undefined"
+    v-on:focusout="tooltip ? (tooltipShow = false) : undefined"
+    v-on:pointerenter="tooltip ? (tooltipShow = true) : undefined"
+    v-on:pointerleave="tooltip ? (tooltipShow = false) : undefined"
   >
-    <slot />
-  </div>
-
-  <div
-    v-else-if="!tooltipReady"
-    v-on:focusin="openDeferredTooltip"
-    v-on:pointerenter="openDeferredTooltip"
-    class="block min-w-0 w-full max-w-full"
-  >
-    <div class="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
+    <div class="overflow-hidden text-ellipsis whitespace-nowrap">
       <slot />
     </div>
   </div>
 
   <Tooltip
-    v-else
     :content="tooltip"
     v-model="tooltipShow"
-    :custom-props="{
-      trigger: { class: 'block min-w-0 w-full max-w-full' },
-    }"
-  >
-    <template #trigger>
-      <div class="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
-        <slot />
-      </div>
-    </template>
-  </Tooltip>
+    :anchor-el="anchorRef"
+    v-if="ellipsis && tooltip"
+  />
 </template>

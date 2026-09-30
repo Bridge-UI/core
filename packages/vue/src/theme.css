@@ -280,7 +280,7 @@
     @apply dark:disabled:hover:text-dark-400 dark:disabled:hover:bg-transparent;
   }
 
-  /* Editable surface emitted by `@bridge-ui/adapters` `rich-text-tiptap`. */
+  /* Editable surface emitted by RichTextEditor's TipTap mount. */
   .bridge-rich-text-editable {
     @apply flex-1 outline-none;
   }

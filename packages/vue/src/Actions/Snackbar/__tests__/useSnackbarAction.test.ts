@@ -13,6 +13,7 @@ import {
   BridgeSnackbarHostMissingError,
   useSnackbarAction,
 } from "@/Actions/Snackbar";
+import { createBridgeSnackbarApi } from "@/Actions/Snackbar/createBridgeSnackbarApi";
 import { Menu } from "@/Components/Menu";
 import { defineHeadlessComponent } from "@/Utils";
 
@@ -316,6 +317,19 @@ test("it should remove slide snackbars when transitionend never fires", async ()
   });
 });
 
+test("it should ignore a show sync after the snackbar was closed", () => {
+  const api = createBridgeSnackbarApi({ timeout: false });
+  const id = api.open({
+    title: "Saved",
+    transition: "none",
+  });
+
+  api.close(id);
+  api.syncShow(id, true);
+
+  expect(api.entries.value.find((entry) => entry.id === id)?.show).toBe(false);
+});
+
 test("it should not revive dismissed snackbars when a menu opens", async () => {
   const menuOpen = ref(false);
 
@@ -365,7 +379,18 @@ test("it should not revive dismissed snackbars when a menu opens", async () => {
   await flushPromises();
   await nextTick();
 
+  menuOpen.value = false;
+  await flushPromises();
+  await nextTick();
+
+  menuOpen.value = true;
+  await flushPromises();
+  await nextTick();
+
   expect(document.body.textContent).not.toContain("Timed out");
+  expect(
+    document.body.querySelectorAll('[data-snackbar-part="panel"]'),
+  ).toHaveLength(0);
 });
 
 test("it should override host timeout", async () => {

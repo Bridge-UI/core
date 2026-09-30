@@ -4,11 +4,7 @@ import { useContext, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 
 // ** Core Imports
-import {
-  completeLayerHide,
-  invokeLayerDismiss,
-  mergeLayerShellProps,
-} from "@bridge-ui/core/Layer";
+import { completeLayerHide, mergeLayerShellProps } from "@bridge-ui/core/Layer";
 import {
   hasDocument,
   resolveModalPortalElement,
@@ -103,7 +99,7 @@ export function BridgeSnackbarHost({
               stackId={entryId}
               {...snackbarProps}
               teleportTo={false}
-              onClose={() => invokeLayerDismiss(api.entries, entryId)}
+              onClose={() => api.close(entryId)}
               onShowChange={(show) => {
                 api.syncShow(entryId, show);
               }}

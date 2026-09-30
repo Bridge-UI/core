@@ -49,8 +49,8 @@ test("it should not show the tooltip by default", () => {
     },
   });
 
+  expect(wrapper.html()).toContain("<!--teleport start-->");
   expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
-  expect(wrapper.findComponent({ name: "Teleport" }).exists()).toBe(false);
 });
 
 test("it should open on pointer enter when openDelay is 0", async () => {

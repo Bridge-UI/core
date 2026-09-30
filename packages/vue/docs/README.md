@@ -87,7 +87,7 @@ Component reference for **Vue**. This folder ships with the npm package.
 
 ## Adapters
 
-Ready-made adapters ship in the separate `@bridge-ui/adapters` package. Install it, import from a subpath, and install the matching optional peer (date lib, icon set, i18n lib, TipTap).
+Ready-made adapters ship in the separate `@bridge-ui/adapters` package. Install it, import from a subpath, and install the matching optional peer (date lib, icon set, or i18n lib).
 
 ```bash
 npm install @bridge-ui/adapters

@@ -957,6 +957,8 @@ export function useDataTable<T extends Record<string, unknown>>(
   }, [paginationEl]);
 
   const tableProps = useMemo(() => {
+    const hasEllipsisColumn = headerViews.some((header) => header.ellipsis);
+
     const hasStickyColumns = headerViews.some((header) => {
       return Boolean(header.stickyStyle);
     });
@@ -989,15 +991,16 @@ export function useDataTable<T extends Record<string, unknown>>(
           "relative z-40": merged.loading && merged.loadingVariant === "bar",
           [get(mergedClasses, "header") ?? ""]: true,
         }),
-        table: cn({
-          "border-separate border-spacing-0":
-            hasStickyColumns && !stickyHeaderEnabled,
-          [get(mergedClasses, "table") ?? ""]: true,
-        }),
         root: cn({
           "overflow-auto": stickyHeaderBoxed,
           [get(mergedClasses, "wrapper") ?? ""]: true,
           [stickyHeaderBoxed ? (get(mergedClasses, "root") ?? "") : ""]: true,
+        }),
+        table: cn({
+          "w-full table-fixed": hasEllipsisColumn,
+          "border-separate border-spacing-0":
+            hasStickyColumns && !stickyHeaderEnabled,
+          [get(mergedClasses, "table") ?? ""]: true,
         }),
       },
     };
@@ -1081,6 +1084,7 @@ export function useDataTable<T extends Record<string, unknown>>(
           style: getDataTableColumnLayoutStyle(cell, stickyHeaderEnabled),
           className: cn({
             "min-w-0": true,
+            "overflow-hidden": cell.ellipsis,
             "border-e-0": isChrome,
             "after:hidden": isChrome,
             [get(variantItem, "cellSticky") ?? ""]: Boolean(cell.stickyStyle),

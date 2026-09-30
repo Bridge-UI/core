@@ -642,6 +642,8 @@ test("it should truncate ellipsis cells", () => {
     },
   });
 
+  expect(wrapper.get("table").classes()).toContain("table-fixed");
+  expect(wrapper.get("td").classes()).toContain("overflow-hidden");
   expect(wrapper.get(".text-ellipsis").text()).toBe("Ada Lovelace");
 });
 
@@ -671,6 +673,95 @@ test("it should show the ellipsis tooltip on the first pointer enter", async () 
   expect(tooltip?.style.position).toBe("fixed");
   expect(tooltip?.style.top.length).toBeGreaterThan(0);
   expect(tooltip?.textContent).toContain("Ada Lovelace");
+});
+
+test("it should close the ellipsis tooltip on pointer leave", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: {
+      rows,
+      columns: [
+        {
+          id: "name",
+          header: "Name",
+          ellipsis: true,
+          cell: (row: User) => row.name,
+        },
+      ],
+    },
+  });
+
+  const anchor = wrapper.get(".block.min-w-0.w-full.max-w-full");
+
+  await anchor.trigger("pointerenter");
+  await flushPromises();
+
+  expect(
+    document.body.querySelector('[role="tooltip"]')?.textContent,
+  ).toContain("Ada Lovelace");
+
+  await anchor.trigger("pointerleave");
+  await flushPromises();
+
+  expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+});
+
+test("it should keep a single ellipsis tooltip when moving between cells", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: {
+      rows,
+      columns: [
+        {
+          id: "name",
+          header: "Name",
+          ellipsis: true,
+          cell: (row: User) => row.name,
+        },
+      ],
+    },
+  });
+
+  const anchors = wrapper.findAll(".block.min-w-0.w-full.max-w-full");
+
+  await anchors[0]?.trigger("pointerenter");
+  await flushPromises();
+  await anchors[0]?.trigger("pointerleave");
+  await anchors[1]?.trigger("pointerenter");
+  await flushPromises();
+
+  const tooltips = document.body.querySelectorAll('[role="tooltip"]');
+
+  expect(tooltips).toHaveLength(1);
+  expect(tooltips[0]?.textContent).toContain("Alan Turing");
+});
+
+test("it should anchor the ellipsis tooltip to the truncated cell", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: {
+      rows,
+      columns: [
+        {
+          id: "name",
+          header: "Name",
+          ellipsis: true,
+          cell: (row: User) => row.name,
+        },
+      ],
+    },
+  });
+
+  const anchor = wrapper.get(".block.min-w-0.w-full.max-w-full");
+  const rect = vi.spyOn(anchor.element, "getBoundingClientRect");
+
+  await anchor.trigger("pointerenter");
+  await flushPromises();
+
+  expect(rect).toHaveBeenCalled();
+  expect(
+    document.body.querySelector('[role="tooltip"]')?.textContent,
+  ).toContain("Ada Lovelace");
 });
 
 test("it should hide columns listed in hiddenColumns", () => {
