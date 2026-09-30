@@ -1,7 +1,7 @@
 {
   "type": "module",
   "license": "MIT",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "author": "BridgeUI",
   "sideEffects": false,
   "name": "@bridge-ui/vue",
@@ -109,7 +109,7 @@
     }
   },
   "dependencies": {
-    "@bridge-ui/core": "^0.15.0",
+    "@bridge-ui/core": "^0.16.0",
     "@tailwindcss/typography": "^0.5.20",
     "clsx": "^2.1.1",
     "es-toolkit": "^1.52.0",
@@ -134,10 +134,10 @@
     "@tiptap/extension-placeholder": "^3.31.3",
     "@tiptap/pm": "^3.31.3",
     "@tiptap/starter-kit": "^3.31.3",
-    "echarts": "^6.1.0",
     "@types/node": "^26.6.2",
     "@vue/language-core": "^3.3.11",
     "@vue/test-utils": "^2.5.1",
+    "echarts": "^6.1.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
     "vue": "^3.5.43",
