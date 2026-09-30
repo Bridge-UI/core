@@ -667,6 +667,111 @@ test("it should show the ellipsis tooltip on the first pointer enter", async () 
   expect(tooltip.style.top.length).toBeGreaterThan(0);
 });
 
+test("it should close the ellipsis tooltip on pointer leave", async () => {
+  render(
+    <DataTable
+      rows={rows}
+      columns={[
+        {
+          id: "name",
+          header: "Name",
+          ellipsis: true,
+          cell: (row) => row.name,
+        },
+      ]}
+    />,
+  );
+
+  const anchor = screen.getByText("Ada Lovelace").parentElement!;
+
+  fireEvent.pointerEnter(anchor);
+
+  await waitFor(() => {
+    expect(screen.getByRole("tooltip").textContent).toContain("Ada Lovelace");
+  });
+
+  fireEvent.pointerLeave(anchor);
+
+  await waitFor(() => {
+    expect(screen.queryByRole("tooltip")).toBeNull();
+  });
+});
+
+test("it should keep a single ellipsis tooltip when moving between cells", async () => {
+  render(
+    <DataTable
+      rows={rows}
+      columns={[
+        {
+          id: "name",
+          header: "Name",
+          ellipsis: true,
+          cell: (row) => row.name,
+        },
+      ]}
+    />,
+  );
+
+  const ada = screen.getByText("Ada Lovelace").parentElement!;
+  const alan = screen.getByText("Alan Turing").parentElement!;
+
+  fireEvent.pointerEnter(ada);
+
+  await waitFor(() => {
+    expect(screen.getByRole("tooltip").textContent).toContain("Ada Lovelace");
+  });
+
+  fireEvent.pointerLeave(ada);
+  fireEvent.pointerEnter(alan);
+
+  await waitFor(() => {
+    expect(screen.getAllByRole("tooltip")).toHaveLength(1);
+    expect(screen.getByRole("tooltip").textContent).toContain("Alan Turing");
+  });
+});
+
+test("it should anchor the ellipsis tooltip to the truncated cell", async () => {
+  render(
+    <DataTable
+      rows={rows}
+      columns={[
+        {
+          id: "name",
+          header: "Name",
+          ellipsis: true,
+          cell: (row) => row.name,
+        },
+      ]}
+    />,
+  );
+
+  const anchor = screen.getByText("Ada Lovelace").parentElement!;
+
+  vi.spyOn(anchor, "getBoundingClientRect").mockReturnValue({
+    x: 40,
+    y: 320,
+    top: 320,
+    left: 40,
+    right: 160,
+    width: 120,
+    height: 24,
+    bottom: 344,
+    toJSON: () => ({}),
+  } as DOMRect);
+
+  fireEvent.pointerEnter(anchor);
+
+  const tooltip = await waitFor(() => {
+    const node = screen.getByRole("tooltip");
+
+    expect(Number.parseFloat(node.style.top)).toBeGreaterThan(100);
+
+    return node;
+  });
+
+  expect(tooltip.textContent).toContain("Ada Lovelace");
+});
+
 test("it should show search and columns controls when show props are set", () => {
   render(
     <DataTable showSearch rows={rows} columns={columns} showColumnVisibility />,
