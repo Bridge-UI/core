@@ -22,6 +22,7 @@ import {
   subscribeLayerStack,
   type LayerStackHandle,
 } from "@bridge-ui/core/Layer";
+import { requestAfterNextPaint } from "@bridge-ui/core/Runtime";
 import {
   snackbarColorProps,
   snackbarPaddingProps,
@@ -132,37 +133,22 @@ export function useSnackbar(
   } = options;
 
   const remainingMsRef = useRef(0);
-
   const layerStackIdRef = useRef("");
-
   const timerStartedAtRef = useRef(0);
-
   const pendingLeaveRef = useRef(false);
-
   const progressTransitionMsRef = useRef(0);
-
   const panelRef = useRef<HTMLDivElement>(null);
-
   const [rendered, setRendered] = useState(show);
-
   const stackOrderRef = useRef<null | number>(null);
-
   const [timerPaused, setTimerPaused] = useState(false);
-
   const [progressScale, setProgressScale] = useState(1);
-
   const [progressActive, setProgressActive] = useState(false);
-
   const stackHandleRef = useRef<null | LayerStackHandle>(null);
-
   const timerRef = useRef<null | ReturnType<typeof setTimeout>>(null);
-
+  const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
   const leaveFallbackTimeoutRef = useRef<null | ReturnType<typeof setTimeout>>(
     null,
   );
-
-  const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
-
   const [transitionState, setTransitionState] = useState<"open" | "closed">(
     "closed",
   );
@@ -479,13 +465,9 @@ export function useSnackbar(
     setProgressActive(false);
     setProgressScale(1);
 
-    const frame = requestAnimationFrame(() => {
+    return requestAfterNextPaint(() => {
       setProgressActive(true);
     });
-
-    return () => {
-      cancelAnimationFrame(frame);
-    };
   }, [durationMs, showProgress]);
 
   useLayoutEffect(() => {

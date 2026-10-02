@@ -25,6 +25,7 @@ import {
   subscribeLayerStack,
   type LayerStackHandle,
 } from "@bridge-ui/core/Layer";
+import { requestAfterNextPaint } from "@bridge-ui/core/Runtime";
 import {
   snackbarColorProps,
   snackbarPaddingProps,
@@ -128,38 +129,22 @@ export function useSnackbar(
   const attrs = useAttrs();
 
   const rendered = ref(false);
-
   const layerStackId = ref("");
-
   const progressScale = ref(1);
-
   const remainingMsRef = ref(0);
-
   const timerPaused = ref(false);
-
   const pendingLeave = ref(false);
-
   const timerStartedAtRef = ref(0);
-
   const progressActive = ref(false);
-
-  const progressTransitionMsRef = ref(0);
-
-  const panelRef = ref<null | HTMLElement>(null);
-
-  const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
-
-  const transitionState = ref<"open" | "closed">("closed");
-
-  const timerRef = ref<null | ReturnType<typeof setTimeout>>(null);
-
   let stackOrder: null | number = null;
-
+  const progressTransitionMsRef = ref(0);
+  const panelRef = ref<null | HTMLElement>(null);
   let stackHandle: null | LayerStackHandle = null;
-
-  let leaveFallbackTimeout: null | ReturnType<typeof setTimeout> = null;
-
+  const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
   let unsubscribeLayerStack: null | (() => void) = null;
+  const transitionState = ref<"open" | "closed">("closed");
+  const timerRef = ref<null | ReturnType<typeof setTimeout>>(null);
+  let leaveFallbackTimeout: null | ReturnType<typeof setTimeout> = null;
 
   const split = computed(() => {
     return splitComponentProps<SnackbarProps, typeof snackbarBridgeKeys>({
@@ -470,24 +455,19 @@ export function useSnackbar(
 
   watch(
     [durationMs, showProgress],
-    ([visible]) => {
-      if (!visible) {
-        progressActive.value = false;
-        progressScale.value = 1;
-
-        return;
-      }
-
+    ([, visible], _previous, onCleanup) => {
       progressActive.value = false;
       progressScale.value = 1;
 
-      const frame = requestAnimationFrame(() => {
-        progressActive.value = true;
-      });
+      if (!visible) {
+        return;
+      }
 
-      return () => {
-        cancelAnimationFrame(frame);
-      };
+      onCleanup(
+        requestAfterNextPaint(() => {
+          progressActive.value = true;
+        }),
+      );
     },
     { immediate: true },
   );
