@@ -129,22 +129,39 @@ export function useSnackbar(
   const attrs = useAttrs();
 
   const rendered = ref(false);
+
   const layerStackId = ref("");
+
   const progressScale = ref(1);
+
   const remainingMsRef = ref(0);
+
   const timerPaused = ref(false);
+
   const pendingLeave = ref(false);
+
   const timerStartedAtRef = ref(0);
+
   const progressActive = ref(false);
+
   let stackOrder: null | number = null;
+
   const progressTransitionMsRef = ref(0);
+
   const panelRef = ref<null | HTMLElement>(null);
+
   let stackHandle: null | LayerStackHandle = null;
+
   let enterPaintCancel: null | (() => void) = null;
+
   const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
+
   let unsubscribeLayerStack: null | (() => void) = null;
+
   const transitionState = ref<"open" | "closed">("closed");
+
   const timerRef = ref<null | ReturnType<typeof setTimeout>>(null);
+
   let leaveFallbackTimeout: null | ReturnType<typeof setTimeout> = null;
 
   const split = computed(() => {

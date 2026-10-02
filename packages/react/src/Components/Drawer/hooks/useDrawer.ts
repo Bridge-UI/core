@@ -130,19 +130,31 @@ export function useDrawer(
   const { onClose, stackId, onShowChange, show = false } = options;
 
   const layerStackIdRef = useRef("");
+
   const pendingLeaveRef = useRef(false);
+
   const [active, setActive] = useState(show);
+
   const [mounted, setMounted] = useState(show);
+
   const panelRef = useRef<HTMLDivElement>(null);
+
   const leaveTransitionEndsPendingRef = useRef(0);
+
   const stackOrderRef = useRef<null | number>(null);
+
   const focusTrapRef = useRef<null | FocusTrap>(null);
+
   const stackHandleRef = useRef<null | LayerStackHandle>(null);
+
   const enterPaintCancelRef = useRef<null | (() => void)>(null);
+
   const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
+
   const leaveFallbackTimeoutRef = useRef<null | ReturnType<typeof setTimeout>>(
     null,
   );
+
   const [transitionState, setTransitionState] = useState<"open" | "closed">(
     "closed",
   );
