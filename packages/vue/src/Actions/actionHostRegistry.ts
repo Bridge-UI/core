@@ -1,5 +1,5 @@
 // ** External Imports
-import { onUnmounted } from "vue";
+import { onBeforeMount, onUnmounted } from "vue";
 
 // ** Core Imports
 import {
@@ -26,10 +26,17 @@ export const snackbarActionHosts =
   createActionHostRegistry<BridgeSnackbarController>();
 
 /**
- * Registers `api` until the current component unmounts.
+ * Registers `api` while the current component is mounted. Lifecycle hooks
+ * never run during SSR, so server renders don't leak hosts into the registry.
  */
 export function registerActionHost<T>(registry: ActionHostRegistry<T>, api: T) {
-  const unregister = registry.register(api);
+  let unregister: null | (() => void) = null;
 
-  onUnmounted(unregister);
+  onBeforeMount(() => {
+    unregister = registry.register(api);
+  });
+
+  onUnmounted(() => {
+    unregister?.();
+  });
 }

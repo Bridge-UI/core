@@ -1,12 +1,19 @@
 // ** External Imports
 import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test } from "vitest";
-import { defineComponent, h, nextTick } from "vue";
+import { createSSRApp, defineComponent, h, nextTick } from "vue";
+import { renderToString } from "vue/server-renderer";
 
 // ** Core Imports
 import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
+import {
+  dialogActionHosts,
+  drawerActionHosts,
+  modalActionHosts,
+  snackbarActionHosts,
+} from "@/Actions/actionHostRegistry";
 import BridgeUIHosts from "@/Actions/BridgeUIHosts.vue";
 import { useDialogAction } from "@/Actions/Dialog";
 import { useDrawerAction } from "@/Actions/Drawer";
@@ -154,4 +161,13 @@ test("it should open a snackbar from drawer content opened via action", async ()
 
   expect(document.body.textContent).toContain("Panel");
   expect(document.body.textContent).toContain("From drawer");
+});
+
+test("it should not register hosts during server rendering", async () => {
+  await renderToString(createSSRApp({ render: () => h(BridgeUIHosts) }));
+
+  expect(modalActionHosts.resolve(null)).toBeUndefined();
+  expect(dialogActionHosts.resolve(null)).toBeUndefined();
+  expect(drawerActionHosts.resolve(null)).toBeUndefined();
+  expect(snackbarActionHosts.resolve(null)).toBeUndefined();
 });
