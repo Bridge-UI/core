@@ -140,6 +140,7 @@ export function useSnackbar(
   const progressTransitionMsRef = ref(0);
   const panelRef = ref<null | HTMLElement>(null);
   let stackHandle: null | LayerStackHandle = null;
+  let enterPaintCancel: null | (() => void) = null;
   const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
   let unsubscribeLayerStack: null | (() => void) = null;
   const transitionState = ref<"open" | "closed">("closed");
@@ -283,6 +284,11 @@ export function useSnackbar(
     }
   }
 
+  function cancelEnterPaint() {
+    enterPaintCancel?.();
+    enterPaintCancel = null;
+  }
+
   function setShow(next: boolean) {
     if (!next) {
       options.onClose?.();
@@ -315,6 +321,7 @@ export function useSnackbar(
   }
 
   function startLeave() {
+    cancelEnterPaint();
     clearDismissTimer();
     pendingLeave.value = true;
 
@@ -344,10 +351,9 @@ export function useSnackbar(
 
     transitionState.value = "closed";
 
-    void nextTick(() => {
-      requestAnimationFrame(() => {
-        transitionState.value = "open";
-      });
+    cancelEnterPaint();
+    enterPaintCancel = requestAfterNextPaint(() => {
+      transitionState.value = "open";
     });
   }
 
@@ -529,6 +535,7 @@ export function useSnackbar(
   onBeforeUnmount(() => {
     clearDismissTimer();
     clearLeaveFallback();
+    cancelEnterPaint();
     unsubscribeLayerStack?.();
     unsubscribeLayerStack = null;
     stackHandle?.release();

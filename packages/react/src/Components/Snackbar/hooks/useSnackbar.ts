@@ -144,6 +144,7 @@ export function useSnackbar(
   const [progressScale, setProgressScale] = useState(1);
   const [progressActive, setProgressActive] = useState(false);
   const stackHandleRef = useRef<null | LayerStackHandle>(null);
+  const enterPaintCancelRef = useRef<null | (() => void)>(null);
   const timerRef = useRef<null | ReturnType<typeof setTimeout>>(null);
   const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
   const leaveFallbackTimeoutRef = useRef<null | ReturnType<typeof setTimeout>>(
@@ -291,6 +292,11 @@ export function useSnackbar(
     }
   }
 
+  function cancelEnterPaint() {
+    enterPaintCancelRef.current?.();
+    enterPaintCancelRef.current = null;
+  }
+
   function setShow(next: boolean) {
     if (!next) {
       onClose?.();
@@ -319,6 +325,7 @@ export function useSnackbar(
   }
 
   function startLeave() {
+    cancelEnterPaint();
     clearDismissTimer();
     pendingLeaveRef.current = true;
 
@@ -348,7 +355,8 @@ export function useSnackbar(
 
     setTransitionState("closed");
 
-    requestAnimationFrame(() => {
+    cancelEnterPaint();
+    enterPaintCancelRef.current = requestAfterNextPaint(() => {
       setTransitionState("open");
     });
   }
@@ -438,6 +446,8 @@ export function useSnackbar(
         clearTimeout(leaveFallbackTimeoutRef.current);
         leaveFallbackTimeoutRef.current = null;
       }
+
+      enterPaintCancelRef.current?.();
     };
   }, []);
 

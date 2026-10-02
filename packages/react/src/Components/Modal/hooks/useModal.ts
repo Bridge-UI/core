@@ -29,6 +29,7 @@ import {
 import {
   createFocusTrap,
   isModalBackdropClick,
+  requestAfterNextPaint,
   type FocusTrap,
 } from "@bridge-ui/core/Runtime";
 import {
@@ -131,6 +132,7 @@ export function useModal(
   const stackOrderRef = useRef<null | number>(null);
   const focusTrapRef = useRef<null | FocusTrap>(null);
   const stackHandleRef = useRef<null | LayerStackHandle>(null);
+  const enterPaintCancelRef = useRef<null | (() => void)>(null);
   const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
   const leaveFallbackTimeoutRef = useRef<null | ReturnType<typeof setTimeout>>(
     null,
@@ -251,6 +253,11 @@ export function useModal(
     }
   }
 
+  function cancelEnterPaint() {
+    enterPaintCancelRef.current?.();
+    enterPaintCancelRef.current = null;
+  }
+
   function finishLeave() {
     if (!pendingLeaveRef.current) {
       return;
@@ -275,6 +282,7 @@ export function useModal(
   }
 
   function startLeave() {
+    cancelEnterPaint();
     stackHandleRef.current?.releaseScrollLock();
     pendingLeaveRef.current = true;
 
@@ -319,7 +327,8 @@ export function useModal(
 
     setTransitionState("closed");
 
-    requestAnimationFrame(() => {
+    cancelEnterPaint();
+    enterPaintCancelRef.current = requestAfterNextPaint(() => {
       setTransitionState("open");
     });
   }
@@ -477,6 +486,8 @@ export function useModal(
         clearTimeout(leaveFallbackTimeoutRef.current);
         leaveFallbackTimeoutRef.current = null;
       }
+
+      enterPaintCancelRef.current?.();
     };
   }, []);
 

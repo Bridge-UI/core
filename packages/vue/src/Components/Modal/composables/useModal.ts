@@ -31,6 +31,7 @@ import {
 import {
   createFocusTrap,
   isModalBackdropClick,
+  requestAfterNextPaint,
   type FocusTrap,
 } from "@bridge-ui/core/Runtime";
 import {
@@ -133,6 +134,7 @@ export function useModal(
   let focusTrap: null | FocusTrap = null;
   const panelRef = ref<null | HTMLElement>(null);
   let stackHandle: null | LayerStackHandle = null;
+  let enterPaintCancel: null | (() => void) = null;
   const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
   let unsubscribeLayerStack: null | (() => void) = null;
   const transitionState = ref<"open" | "closed">("closed");
@@ -345,6 +347,11 @@ export function useModal(
     }
   }
 
+  function cancelEnterPaint() {
+    enterPaintCancel?.();
+    enterPaintCancel = null;
+  }
+
   function finishLeave() {
     if (!pendingLeave) {
       return;
@@ -370,6 +377,7 @@ export function useModal(
   }
 
   function startLeave() {
+    cancelEnterPaint();
     stackHandle?.releaseScrollLock();
     pendingLeave = true;
 
@@ -414,10 +422,9 @@ export function useModal(
 
     transitionState.value = "closed";
 
-    void nextTick(() => {
-      requestAnimationFrame(() => {
-        transitionState.value = "open";
-      });
+    cancelEnterPaint();
+    enterPaintCancel = requestAfterNextPaint(() => {
+      transitionState.value = "open";
     });
   }
 
@@ -569,6 +576,7 @@ export function useModal(
 
   onBeforeUnmount(() => {
     clearLeaveFallback();
+    cancelEnterPaint();
     unsubscribeLayerStack?.();
     unsubscribeLayerStack = null;
     releaseFocusTrap();
