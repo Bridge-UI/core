@@ -22,6 +22,7 @@ import {
   getModalPanelTransitionClass,
   hasModalTransition,
   LAYER_STACK_BASE_Z_INDEX,
+  MODAL_LEAVE_FALLBACK_MS,
   pushLayerStack,
   resolveEffectiveModalTransition,
   subscribeLayerStack,
@@ -123,28 +124,19 @@ export function useModal(
 ) {
   const attrs = useAttrs();
 
-  const active = ref(false);
-
-  const mounted = ref(false);
-
-  const layerStackId = ref("");
-
-  const panelRef = ref<null | HTMLElement>(null);
-
   let pendingLeave = false;
-
+  const active = ref(false);
+  const mounted = ref(false);
+  const layerStackId = ref("");
   let leaveTransitionEndsPending = 0;
-
   let stackOrder: null | number = null;
-
   let focusTrap: null | FocusTrap = null;
-
+  const panelRef = ref<null | HTMLElement>(null);
   let stackHandle: null | LayerStackHandle = null;
-  let unsubscribeLayerStack: null | (() => void) = null;
-
   const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
-
+  let unsubscribeLayerStack: null | (() => void) = null;
   const transitionState = ref<"open" | "closed">("closed");
+  let leaveFallbackTimeout: null | ReturnType<typeof setTimeout> = null;
 
   const show = computed(() => {
     return toValue(options.show ?? false);
@@ -346,12 +338,20 @@ export function useModal(
     syncFocusTrap();
   }
 
+  function clearLeaveFallback() {
+    if (leaveFallbackTimeout !== null) {
+      clearTimeout(leaveFallbackTimeout);
+      leaveFallbackTimeout = null;
+    }
+  }
+
   function finishLeave() {
     if (!pendingLeave) {
       return;
     }
 
     pendingLeave = false;
+    clearLeaveFallback();
     leaveTransitionEndsPending = 0;
     active.value = false;
     releaseFocusTrap();
@@ -387,11 +387,23 @@ export function useModal(
 
     if (leaveTransitionEndsPending === 0) {
       finishLeave();
+
+      return;
     }
+
+    clearLeaveFallback();
+    leaveFallbackTimeout = setTimeout(() => {
+      leaveFallbackTimeout = null;
+
+      if (leaveTransitionEndsPending > 0) {
+        finishLeave();
+      }
+    }, MODAL_LEAVE_FALLBACK_MS);
   }
 
   function scheduleOpen() {
     pendingLeave = false;
+    clearLeaveFallback();
     leaveTransitionEndsPending = 0;
 
     if (!transitionEnabled.value) {
@@ -556,6 +568,7 @@ export function useModal(
   );
 
   onBeforeUnmount(() => {
+    clearLeaveFallback();
     unsubscribeLayerStack?.();
     unsubscribeLayerStack = null;
     releaseFocusTrap();

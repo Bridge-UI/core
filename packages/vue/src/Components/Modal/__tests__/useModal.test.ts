@@ -70,6 +70,20 @@ test("it should set show to false when overlay is clicked", () => {
   expect(show.value).toBe(false);
 });
 
+test("it should finish closing when transitionend never fires", async () => {
+  const show = ref(true);
+
+  const { result } = mountUseModal({ transition: "fade" }, show);
+
+  result.handleOverlayClick();
+
+  expect(show.value).toBe(true);
+
+  await vi.waitUntil(() => !show.value, { timeout: 1000 });
+
+  expect(result.mounted.value).toBe(false);
+});
+
 test("it should apply fade transition classes on overlay when transition is fade", () => {
   const { result } = mountUseModal({ transition: "fade" });
 

@@ -26,6 +26,12 @@ import {
 export const LAYER_STACK_BASE_Z_INDEX = 1000;
 
 /**
+ * Fallback ms to finish leave when `transitionend` never fires.
+ * Matches `duration-300` modal transitions with a small buffer.
+ */
+export const MODAL_LEAVE_FALLBACK_MS = 350;
+
+/**
  * CSS custom property set on `:root` while body scroll is locked.
  * Use on `position: fixed` / `sticky` chrome (e.g. site headers) if needed:
  * `padding-inline-end: var(--bridge-scrollbar-compensation, 0px)`.

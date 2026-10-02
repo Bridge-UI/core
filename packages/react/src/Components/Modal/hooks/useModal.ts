@@ -20,6 +20,7 @@ import {
   getModalPanelTransitionClass,
   hasModalTransition,
   LAYER_STACK_BASE_Z_INDEX,
+  MODAL_LEAVE_FALLBACK_MS,
   pushLayerStack,
   resolveEffectiveModalTransition,
   subscribeLayerStack,
@@ -122,25 +123,18 @@ export function useModal(
   const { onClose, stackId, onShowChange, show = false } = options;
 
   const layerStackIdRef = useRef("");
-
-  const [active, setActive] = useState(show);
-
-  const [mounted, setMounted] = useState(show);
-
   const pendingLeaveRef = useRef(false);
-
+  const [active, setActive] = useState(show);
+  const [mounted, setMounted] = useState(show);
   const panelRef = useRef<HTMLDivElement>(null);
-
   const leaveTransitionEndsPendingRef = useRef(0);
-
   const stackOrderRef = useRef<null | number>(null);
-
   const focusTrapRef = useRef<null | FocusTrap>(null);
-
   const stackHandleRef = useRef<null | LayerStackHandle>(null);
-
   const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
-
+  const leaveFallbackTimeoutRef = useRef<null | ReturnType<typeof setTimeout>>(
+    null,
+  );
   const [transitionState, setTransitionState] = useState<"open" | "closed">(
     "closed",
   );
@@ -250,12 +244,20 @@ export function useModal(
     focusTrapRef.current = null;
   }
 
+  function clearLeaveFallback() {
+    if (leaveFallbackTimeoutRef.current !== null) {
+      clearTimeout(leaveFallbackTimeoutRef.current);
+      leaveFallbackTimeoutRef.current = null;
+    }
+  }
+
   function finishLeave() {
     if (!pendingLeaveRef.current) {
       return;
     }
 
     pendingLeaveRef.current = false;
+    clearLeaveFallback();
     leaveTransitionEndsPendingRef.current = 0;
     setActive(false);
     releaseFocusTrap();
@@ -290,11 +292,23 @@ export function useModal(
 
     if (leaveTransitionEndsPendingRef.current === 0) {
       finishLeave();
+
+      return;
     }
+
+    clearLeaveFallback();
+    leaveFallbackTimeoutRef.current = setTimeout(() => {
+      leaveFallbackTimeoutRef.current = null;
+
+      if (leaveTransitionEndsPendingRef.current > 0) {
+        finishLeave();
+      }
+    }, MODAL_LEAVE_FALLBACK_MS);
   }
 
   function scheduleOpen() {
     pendingLeaveRef.current = false;
+    clearLeaveFallback();
     leaveTransitionEndsPendingRef.current = 0;
 
     if (!transitionEnabled) {
@@ -456,6 +470,15 @@ export function useModal(
     merged.disableEnforceFocus,
     merged.disableRestoreFocus,
   ]);
+
+  useEffect(() => {
+    return () => {
+      if (leaveFallbackTimeoutRef.current !== null) {
+        clearTimeout(leaveFallbackTimeoutRef.current);
+        leaveFallbackTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!active) {

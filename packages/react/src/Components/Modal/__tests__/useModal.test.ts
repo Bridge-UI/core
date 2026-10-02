@@ -1,5 +1,5 @@
 // ** External Imports
-import { renderHook } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
@@ -68,6 +68,28 @@ test("it should call onShowChange on escape keydown", () => {
   window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
 
   expect(onShowChange).toHaveBeenCalledWith(false);
+});
+
+test("it should finish closing when transitionend never fires", async () => {
+  const onShowChange = vi.fn();
+
+  const { result } = renderUseModal(
+    { transition: "fade" },
+    { show: true, onShowChange },
+  );
+
+  act(() => {
+    result.current.handleOverlayClick();
+  });
+
+  expect(onShowChange).not.toHaveBeenCalled();
+
+  await waitFor(
+    () => {
+      expect(onShowChange).toHaveBeenCalledWith(false);
+    },
+    { timeout: 1000 },
+  );
 });
 
 test("it should disable fade transition when prefers-reduced-motion is set", () => {
