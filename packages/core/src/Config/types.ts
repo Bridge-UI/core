@@ -179,6 +179,10 @@ import type {
   RadioSize,
 } from "@/Tokens/Radio";
 import type { RatingColor, RatingColorItem, RatingSize } from "@/Tokens/Rating";
+import type {
+  ResizableOrientation,
+  ResizableOrientationItem,
+} from "@/Tokens/Resizable";
 import type { RichTextEditorSizeItem } from "@/Tokens/RichTextEditor";
 import type {
   SidebarCollapsible,
@@ -468,6 +472,9 @@ export interface PasswordFieldConfigOverrides {}
 export interface ProgressConfigOverrides {}
 export interface RadioConfigOverrides {}
 export interface RatingConfigOverrides {}
+export interface ResizableConfigOverrides {}
+export interface ResizableHandleConfigOverrides {}
+export interface ResizablePanelConfigOverrides {}
 export interface RichTextEditorConfigOverrides {}
 export interface SelectConfigOverrides {}
 export interface SidebarConfigOverrides {}
@@ -1303,6 +1310,36 @@ export interface RatingConfigBase {
   }>;
 }
 
+export interface ResizableConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    disabled: boolean;
+    keyboardStep: number;
+    orientation: keyof ResizableOrientation;
+  }>;
+  tokens: Partial<{
+    orientation: Record<string, ResizableOrientationItem>;
+  }>;
+}
+
+export interface ResizableHandleConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    disabled: boolean;
+    withHandle: boolean;
+  }>;
+}
+
+export interface ResizablePanelConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    collapsedSize: number;
+    collapsible: boolean;
+    maxSize: number;
+    minSize: number;
+  }>;
+}
+
 export interface RichTextEditorConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -1798,6 +1835,13 @@ export interface BridgeUIComponentsRegistry {
   Progress: Partial<Overwrite<ProgressConfigBase, ProgressConfigOverrides>>;
   Radio: Partial<Overwrite<RadioConfigBase, RadioConfigOverrides>>;
   Rating: Partial<Overwrite<RatingConfigBase, RatingConfigOverrides>>;
+  Resizable: Partial<Overwrite<ResizableConfigBase, ResizableConfigOverrides>>;
+  ResizableHandle: Partial<
+    Overwrite<ResizableHandleConfigBase, ResizableHandleConfigOverrides>
+  >;
+  ResizablePanel: Partial<
+    Overwrite<ResizablePanelConfigBase, ResizablePanelConfigOverrides>
+  >;
   RichTextEditor: Partial<
     Overwrite<RichTextEditorConfigBase, RichTextEditorConfigOverrides>
   >;
