@@ -535,6 +535,7 @@ export {
   prefersReducedMotion,
   readChartTheme,
   readCssColor,
+  requestAfterNextPaint,
   resetBreakpointCachesForTests,
   resolveBreakpoints,
   resolveModalPortalElement,
