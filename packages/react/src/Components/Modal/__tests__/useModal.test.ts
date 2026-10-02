@@ -1,6 +1,9 @@
 // ** External Imports
-import { renderHook } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { afterEach, expect, test, vi } from "vitest";
+
+// ** Core Imports
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
 import {
@@ -8,12 +11,37 @@ import {
   type ModalOwnProps,
   type ModalProps,
 } from "@/Components/Modal";
-import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 afterEach(() => {
+  vi.unstubAllGlobals();
   resetLayerStackForTests();
   document.body.style.overflow = "";
 });
+
+function queueAnimationFrames() {
+  const queue = new Map<number, FrameRequestCallback>();
+  let nextId = 0;
+
+  vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
+    nextId += 1;
+    queue.set(nextId, callback);
+
+    return nextId;
+  });
+
+  vi.stubGlobal("cancelAnimationFrame", (id: number) => {
+    queue.delete(id);
+  });
+
+  return () => {
+    const pending = [...queue.values()];
+
+    queue.clear();
+    pending.forEach((callback) => {
+      callback(0);
+    });
+  };
+}
 
 const libDefaults = {
   size: "md",
@@ -68,6 +96,73 @@ test("it should call onShowChange on escape keydown", () => {
   window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
 
   expect(onShowChange).toHaveBeenCalledWith(false);
+});
+
+test("it should finish closing when transitionend never fires", async () => {
+  const onShowChange = vi.fn();
+
+  const { result } = renderUseModal(
+    { transition: "fade" },
+    { show: true, onShowChange },
+  );
+
+  act(() => {
+    result.current.handleOverlayClick();
+  });
+
+  expect(onShowChange).not.toHaveBeenCalled();
+
+  await waitFor(
+    () => {
+      expect(onShowChange).toHaveBeenCalledWith(false);
+    },
+    { timeout: 1000 },
+  );
+});
+
+test("it should wait for the first paint before entering", () => {
+  const flushFrame = queueAnimationFrames();
+
+  const { result, unmount } = renderUseModal(
+    { transition: "fade" },
+    { show: true },
+  );
+
+  act(() => {
+    flushFrame();
+  });
+
+  expect(result.current.overlayBind["data-state"]).toBe("closed");
+
+  act(() => {
+    flushFrame();
+  });
+
+  expect(result.current.overlayBind["data-state"]).toBe("open");
+
+  unmount();
+});
+
+test("it should not reopen when closed before the enter frame fires", () => {
+  const flushFrame = queueAnimationFrames();
+
+  const { result, unmount } = renderUseModal(
+    { transition: "fade" },
+    { show: true },
+  );
+
+  act(() => {
+    result.current.handleOverlayClick();
+  });
+
+  act(() => {
+    flushFrame();
+    flushFrame();
+  });
+
+  expect(result.current.overlayBind["data-state"]).toBe("closed");
+
+  unmount();
 });
 
 test("it should disable fade transition when prefers-reduced-motion is set", () => {

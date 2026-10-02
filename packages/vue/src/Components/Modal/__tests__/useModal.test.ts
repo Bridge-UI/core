@@ -1,16 +1,44 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { afterEach, expect, test, vi } from "vitest";
-import { defineComponent, h, ref } from "vue";
+import { defineComponent, h, nextTick, ref } from "vue";
+
+// ** Core Imports
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
 import { useModal, type ModalOwnProps } from "@/Components/Modal";
-import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 afterEach(() => {
+  vi.unstubAllGlobals();
   resetLayerStackForTests();
   document.body.style.overflow = "";
 });
+
+function queueAnimationFrames() {
+  const queue = new Map<number, FrameRequestCallback>();
+  let nextId = 0;
+
+  vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
+    nextId += 1;
+    queue.set(nextId, callback);
+
+    return nextId;
+  });
+
+  vi.stubGlobal("cancelAnimationFrame", (id: number) => {
+    queue.delete(id);
+  });
+
+  return () => {
+    const pending = [...queue.values()];
+
+    queue.clear();
+    pending.forEach((callback) => {
+      callback(0);
+    });
+  };
+}
 
 const libDefaults: Partial<ModalOwnProps> = {
   size: "md",
@@ -36,9 +64,9 @@ function mountUseModal(props: Partial<ModalOwnProps> = {}, show = ref(true)) {
     },
   });
 
-  mount(Wrapper);
+  const wrapper = mount(Wrapper);
 
-  return { show, result };
+  return { show, result, wrapper };
 }
 
 test("it should return default size as md", () => {
@@ -68,6 +96,56 @@ test("it should set show to false when overlay is clicked", () => {
   result.handleOverlayClick();
 
   expect(show.value).toBe(false);
+});
+
+test("it should finish closing when transitionend never fires", async () => {
+  const show = ref(true);
+
+  const { result } = mountUseModal({ transition: "fade" }, show);
+
+  result.handleOverlayClick();
+
+  expect(show.value).toBe(true);
+
+  await vi.waitUntil(() => !show.value, { timeout: 1000 });
+
+  expect(result.mounted.value).toBe(false);
+});
+
+test("it should wait for the first paint before entering", async () => {
+  const flushFrame = queueAnimationFrames();
+
+  const { result, wrapper } = mountUseModal({ transition: "fade" });
+
+  await nextTick();
+  flushFrame();
+  await nextTick();
+
+  expect(result.overlayBind.value["data-state"]).toBe("closed");
+
+  flushFrame();
+  await nextTick();
+
+  expect(result.overlayBind.value["data-state"]).toBe("open");
+
+  wrapper.unmount();
+});
+
+test("it should not reopen when closed before the enter frame fires", async () => {
+  const flushFrame = queueAnimationFrames();
+
+  const { result, wrapper } = mountUseModal({ transition: "fade" });
+
+  await nextTick();
+  result.handleOverlayClick();
+
+  flushFrame();
+  flushFrame();
+  await nextTick();
+
+  expect(result.overlayBind.value["data-state"]).toBe("closed");
+
+  wrapper.unmount();
 });
 
 test("it should apply fade transition classes on overlay when transition is fade", () => {

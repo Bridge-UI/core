@@ -25,6 +25,7 @@ import {
   subscribeLayerStack,
   type LayerStackHandle,
 } from "@bridge-ui/core/Layer";
+import { requestAfterNextPaint } from "@bridge-ui/core/Runtime";
 import {
   snackbarColorProps,
   snackbarPaddingProps,
@@ -143,23 +144,25 @@ export function useSnackbar(
 
   const progressActive = ref(false);
 
+  let stackOrder: null | number = null;
+
   const progressTransitionMsRef = ref(0);
 
   const panelRef = ref<null | HTMLElement>(null);
 
+  let stackHandle: null | LayerStackHandle = null;
+
+  let enterPaintCancel: null | (() => void) = null;
+
   const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
+
+  let unsubscribeLayerStack: null | (() => void) = null;
 
   const transitionState = ref<"open" | "closed">("closed");
 
   const timerRef = ref<null | ReturnType<typeof setTimeout>>(null);
 
-  let stackOrder: null | number = null;
-
-  let stackHandle: null | LayerStackHandle = null;
-
   let leaveFallbackTimeout: null | ReturnType<typeof setTimeout> = null;
-
-  let unsubscribeLayerStack: null | (() => void) = null;
 
   const split = computed(() => {
     return splitComponentProps<SnackbarProps, typeof snackbarBridgeKeys>({
@@ -298,6 +301,11 @@ export function useSnackbar(
     }
   }
 
+  function cancelEnterPaint() {
+    enterPaintCancel?.();
+    enterPaintCancel = null;
+  }
+
   function setShow(next: boolean) {
     if (!next) {
       options.onClose?.();
@@ -330,6 +338,7 @@ export function useSnackbar(
   }
 
   function startLeave() {
+    cancelEnterPaint();
     clearDismissTimer();
     pendingLeave.value = true;
 
@@ -359,10 +368,9 @@ export function useSnackbar(
 
     transitionState.value = "closed";
 
-    void nextTick(() => {
-      requestAnimationFrame(() => {
-        transitionState.value = "open";
-      });
+    cancelEnterPaint();
+    enterPaintCancel = requestAfterNextPaint(() => {
+      transitionState.value = "open";
     });
   }
 
@@ -470,24 +478,19 @@ export function useSnackbar(
 
   watch(
     [durationMs, showProgress],
-    ([visible]) => {
-      if (!visible) {
-        progressActive.value = false;
-        progressScale.value = 1;
-
-        return;
-      }
-
+    ([, visible], _previous, onCleanup) => {
       progressActive.value = false;
       progressScale.value = 1;
 
-      const frame = requestAnimationFrame(() => {
-        progressActive.value = true;
-      });
+      if (!visible) {
+        return;
+      }
 
-      return () => {
-        cancelAnimationFrame(frame);
-      };
+      onCleanup(
+        requestAfterNextPaint(() => {
+          progressActive.value = true;
+        }),
+      );
     },
     { immediate: true },
   );
@@ -549,6 +552,7 @@ export function useSnackbar(
   onBeforeUnmount(() => {
     clearDismissTimer();
     clearLeaveFallback();
+    cancelEnterPaint();
     unsubscribeLayerStack?.();
     unsubscribeLayerStack = null;
     stackHandle?.release();

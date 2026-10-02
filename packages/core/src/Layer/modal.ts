@@ -7,6 +7,7 @@ import { resetActionHostRegistriesForTests } from "@/Layer/actionHost";
 import { resetOpenMenuLayersForTests } from "@/Layer/menu";
 import { createLayerId } from "@/Layer/registry";
 import type { LayerId } from "@/Layer/types";
+import { prefersReducedMotion } from "@/Runtime/color";
 import { hasDocument, hasWindow } from "@/Runtime/env";
 import {
   transitionProps,
@@ -23,6 +24,12 @@ import {
  * overlays will now render underneath them.
  */
 export const LAYER_STACK_BASE_Z_INDEX = 1000;
+
+/**
+ * Fallback ms to finish leave when `transitionend` never fires.
+ * Matches `duration-300` modal transitions with a small buffer.
+ */
+export const MODAL_LEAVE_FALLBACK_MS = 350;
 
 /**
  * CSS custom property set on `:root` while body scroll is locked.
@@ -562,21 +569,5 @@ export function resetLayerStackForTests() {
 export function resolveEffectiveModalTransition(
   transition: keyof ModalTransition,
 ): keyof ModalTransition {
-  if (transition === "none") {
-    return "none";
-  }
-
-  if (!hasWindow()) {
-    return transition;
-  }
-
-  try {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return "none";
-    }
-  } catch {
-    // ignore matchMedia errors (older environments)
-  }
-
-  return transition;
+  return prefersReducedMotion() ? "none" : transition;
 }

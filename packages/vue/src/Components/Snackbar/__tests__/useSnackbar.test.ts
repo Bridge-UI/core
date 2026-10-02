@@ -1,7 +1,7 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { afterEach, expect, test, vi } from "vitest";
-import { defineComponent, h, ref } from "vue";
+import { defineComponent, h, nextTick, ref } from "vue";
 
 // ** Core Imports
 import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
@@ -10,10 +10,36 @@ import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 import { useSnackbar, type SnackbarOwnProps } from "@/Components/Snackbar";
 
 afterEach(() => {
+  vi.unstubAllGlobals();
   resetLayerStackForTests();
   document.body.innerHTML = "";
   document.body.style.overflow = "";
 });
+
+function queueAnimationFrames() {
+  const queue = new Map<number, FrameRequestCallback>();
+  let nextId = 0;
+
+  vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
+    nextId += 1;
+    queue.set(nextId, callback);
+
+    return nextId;
+  });
+
+  vi.stubGlobal("cancelAnimationFrame", (id: number) => {
+    queue.delete(id);
+  });
+
+  return () => {
+    const pending = [...queue.values()];
+
+    queue.clear();
+    pending.forEach((callback) => {
+      callback(0);
+    });
+  };
+}
 
 const libDefaults: Partial<SnackbarOwnProps> = {
   rounded: "lg",
@@ -47,9 +73,9 @@ function mountUseSnackbar(
     },
   });
 
-  mount(Wrapper);
+  const wrapper = mount(Wrapper);
 
-  return { show, result };
+  return { show, result, wrapper };
 }
 
 test("it should return default color as primary", () => {
@@ -172,4 +198,26 @@ test("it should freeze progress bar scale when hover pauses the timer", async ()
   expect(result.progressBind.value.style?.transition).toBe("none");
 
   vi.restoreAllMocks();
+});
+
+test("it should start the progress bar after the first paint", async () => {
+  const flushFrame = queueAnimationFrames();
+
+  const { result, wrapper } = mountUseSnackbar({
+    duration: 5000,
+    transition: "none",
+  });
+
+  await nextTick();
+  flushFrame();
+  await nextTick();
+
+  expect(result.progressBind.value.style?.transform).toBe("scaleX(1)");
+
+  flushFrame();
+  await nextTick();
+
+  expect(result.progressBind.value.style?.transform).toBe("scaleX(0)");
+
+  wrapper.unmount();
 });

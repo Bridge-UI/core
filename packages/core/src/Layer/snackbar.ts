@@ -2,7 +2,7 @@
 import { isNil } from "es-toolkit/compat";
 
 // ** Local Imports
-import { hasWindow } from "@/Runtime/env";
+import { prefersReducedMotion } from "@/Runtime/color";
 import type { SnackbarPadding } from "@/Tokens/Snackbar/Padding";
 import {
   transitionProps,
@@ -39,23 +39,7 @@ export function hasSnackbarTransition(
 export function resolveEffectiveSnackbarTransition(
   transition: keyof SnackbarTransition,
 ): keyof SnackbarTransition {
-  if (transition === "none") {
-    return "none";
-  }
-
-  if (!hasWindow()) {
-    return transition;
-  }
-
-  try {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return "none";
-    }
-  } catch {
-    // ignore matchMedia errors (older environments)
-  }
-
-  return transition;
+  return prefersReducedMotion() ? "none" : transition;
 }
 
 /**

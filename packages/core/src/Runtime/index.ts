@@ -22,7 +22,7 @@ export {
   readCssColor,
   type ChartThemeProbeClasses,
 } from "@/Runtime/color";
-export { hasDocument, hasWindow } from "@/Runtime/env";
+export { hasDocument, hasWindow, requestAfterNextPaint } from "@/Runtime/env";
 export {
   createFocusTrap,
   createFocusable,

@@ -29,6 +29,7 @@ import {
 import {
   createFocusTrap,
   isModalBackdropClick,
+  requestAfterNextPaint,
   type FocusTrap,
 } from "@bridge-ui/core/Runtime";
 import {
@@ -130,11 +131,11 @@ export function useDrawer(
 
   const layerStackIdRef = useRef("");
 
+  const pendingLeaveRef = useRef(false);
+
   const [active, setActive] = useState(show);
 
   const [mounted, setMounted] = useState(show);
-
-  const pendingLeaveRef = useRef(false);
 
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -146,11 +147,13 @@ export function useDrawer(
 
   const stackHandleRef = useRef<null | LayerStackHandle>(null);
 
+  const enterPaintCancelRef = useRef<null | (() => void)>(null);
+
+  const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
+
   const leaveFallbackTimeoutRef = useRef<null | ReturnType<typeof setTimeout>>(
     null,
   );
-
-  const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
 
   const [transitionState, setTransitionState] = useState<"open" | "closed">(
     "closed",
@@ -281,6 +284,11 @@ export function useDrawer(
     }
   }
 
+  function cancelEnterPaint() {
+    enterPaintCancelRef.current?.();
+    enterPaintCancelRef.current = null;
+  }
+
   function finishLeave() {
     if (!pendingLeaveRef.current) {
       return;
@@ -305,6 +313,7 @@ export function useDrawer(
   }
 
   function startLeave() {
+    cancelEnterPaint();
     stackHandleRef.current?.releaseScrollLock();
     pendingLeaveRef.current = true;
 
@@ -349,7 +358,8 @@ export function useDrawer(
 
     setTransitionState("closed");
 
-    requestAnimationFrame(() => {
+    cancelEnterPaint();
+    enterPaintCancelRef.current = requestAfterNextPaint(() => {
       setTransitionState("open");
     });
   }
@@ -507,6 +517,8 @@ export function useDrawer(
         clearTimeout(leaveFallbackTimeoutRef.current);
         leaveFallbackTimeoutRef.current = null;
       }
+
+      enterPaintCancelRef.current?.();
     };
   }, []);
 

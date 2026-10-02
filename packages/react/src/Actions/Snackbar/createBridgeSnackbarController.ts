@@ -127,13 +127,7 @@ export function useBridgeSnackbarController(
   );
 
   const syncShow = useCallback((id: LayerId, show: boolean) => {
-    setEntries((current) => {
-      if (show && !current.some((entry) => entry.id === id && entry.show)) {
-        return current;
-      }
-
-      return syncLayerShow(current, id, show);
-    });
+    setEntries((current) => syncLayerShow(current, id, show));
   }, []);
 
   return useMemo(() => {

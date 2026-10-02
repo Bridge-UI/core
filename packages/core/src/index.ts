@@ -462,6 +462,7 @@ export type {
 export {
   DRAWER_LEAVE_FALLBACK_MS,
   LAYER_STACK_BASE_Z_INDEX,
+  MODAL_LEAVE_FALLBACK_MS,
   SCROLLBAR_COMPENSATION_VAR,
   SNACKBAR_LEAVE_FALLBACK_MS,
   acquireLayerStackOrder,
@@ -535,6 +536,7 @@ export {
   prefersReducedMotion,
   readChartTheme,
   readCssColor,
+  requestAfterNextPaint,
   resetBreakpointCachesForTests,
   resolveBreakpoints,
   resolveModalPortalElement,

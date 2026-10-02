@@ -20,6 +20,7 @@ import {
   getModalPanelTransitionClass,
   hasModalTransition,
   LAYER_STACK_BASE_Z_INDEX,
+  MODAL_LEAVE_FALLBACK_MS,
   pushLayerStack,
   resolveEffectiveModalTransition,
   subscribeLayerStack,
@@ -28,6 +29,7 @@ import {
 import {
   createFocusTrap,
   isModalBackdropClick,
+  requestAfterNextPaint,
   type FocusTrap,
 } from "@bridge-ui/core/Runtime";
 import {
@@ -123,11 +125,11 @@ export function useModal(
 
   const layerStackIdRef = useRef("");
 
+  const pendingLeaveRef = useRef(false);
+
   const [active, setActive] = useState(show);
 
   const [mounted, setMounted] = useState(show);
-
-  const pendingLeaveRef = useRef(false);
 
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -139,7 +141,13 @@ export function useModal(
 
   const stackHandleRef = useRef<null | LayerStackHandle>(null);
 
+  const enterPaintCancelRef = useRef<null | (() => void)>(null);
+
   const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
+
+  const leaveFallbackTimeoutRef = useRef<null | ReturnType<typeof setTimeout>>(
+    null,
+  );
 
   const [transitionState, setTransitionState] = useState<"open" | "closed">(
     "closed",
@@ -250,12 +258,25 @@ export function useModal(
     focusTrapRef.current = null;
   }
 
+  function clearLeaveFallback() {
+    if (leaveFallbackTimeoutRef.current !== null) {
+      clearTimeout(leaveFallbackTimeoutRef.current);
+      leaveFallbackTimeoutRef.current = null;
+    }
+  }
+
+  function cancelEnterPaint() {
+    enterPaintCancelRef.current?.();
+    enterPaintCancelRef.current = null;
+  }
+
   function finishLeave() {
     if (!pendingLeaveRef.current) {
       return;
     }
 
     pendingLeaveRef.current = false;
+    clearLeaveFallback();
     leaveTransitionEndsPendingRef.current = 0;
     setActive(false);
     releaseFocusTrap();
@@ -273,6 +294,7 @@ export function useModal(
   }
 
   function startLeave() {
+    cancelEnterPaint();
     stackHandleRef.current?.releaseScrollLock();
     pendingLeaveRef.current = true;
 
@@ -290,11 +312,23 @@ export function useModal(
 
     if (leaveTransitionEndsPendingRef.current === 0) {
       finishLeave();
+
+      return;
     }
+
+    clearLeaveFallback();
+    leaveFallbackTimeoutRef.current = setTimeout(() => {
+      leaveFallbackTimeoutRef.current = null;
+
+      if (leaveTransitionEndsPendingRef.current > 0) {
+        finishLeave();
+      }
+    }, MODAL_LEAVE_FALLBACK_MS);
   }
 
   function scheduleOpen() {
     pendingLeaveRef.current = false;
+    clearLeaveFallback();
     leaveTransitionEndsPendingRef.current = 0;
 
     if (!transitionEnabled) {
@@ -305,7 +339,8 @@ export function useModal(
 
     setTransitionState("closed");
 
-    requestAnimationFrame(() => {
+    cancelEnterPaint();
+    enterPaintCancelRef.current = requestAfterNextPaint(() => {
       setTransitionState("open");
     });
   }
@@ -456,6 +491,17 @@ export function useModal(
     merged.disableEnforceFocus,
     merged.disableRestoreFocus,
   ]);
+
+  useEffect(() => {
+    return () => {
+      if (leaveFallbackTimeoutRef.current !== null) {
+        clearTimeout(leaveFallbackTimeoutRef.current);
+        leaveFallbackTimeoutRef.current = null;
+      }
+
+      enterPaintCancelRef.current?.();
+    };
+  }, []);
 
   useEffect(() => {
     if (!active) {
