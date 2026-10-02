@@ -7,6 +7,7 @@ import { resetActionHostRegistriesForTests } from "@/Layer/actionHost";
 import { resetOpenMenuLayersForTests } from "@/Layer/menu";
 import { createLayerId } from "@/Layer/registry";
 import type { LayerId } from "@/Layer/types";
+import { prefersReducedMotion } from "@/Runtime/color";
 import { hasDocument, hasWindow } from "@/Runtime/env";
 import {
   transitionProps,
@@ -562,21 +563,5 @@ export function resetLayerStackForTests() {
 export function resolveEffectiveModalTransition(
   transition: keyof ModalTransition,
 ): keyof ModalTransition {
-  if (transition === "none") {
-    return "none";
-  }
-
-  if (!hasWindow()) {
-    return transition;
-  }
-
-  try {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return "none";
-    }
-  } catch {
-    // ignore matchMedia errors (older environments)
-  }
-
-  return transition;
+  return prefersReducedMotion() ? "none" : transition;
 }

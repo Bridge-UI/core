@@ -2,7 +2,7 @@
 import { get, isNil, isString } from "es-toolkit/compat";
 
 // ** Local Imports
-import { hasWindow } from "@/Runtime/env";
+import { prefersReducedMotion } from "@/Runtime/color";
 import {
   transitionProps,
   type DrawerPlacement,
@@ -70,21 +70,5 @@ export function hasDrawerTransition(
 export function resolveEffectiveDrawerTransition(
   transition: keyof DrawerTransition,
 ): keyof DrawerTransition {
-  if (transition === "none") {
-    return "none";
-  }
-
-  if (!hasWindow()) {
-    return transition;
-  }
-
-  try {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return "none";
-    }
-  } catch {
-    // ignore matchMedia errors (older environments)
-  }
-
-  return transition;
+  return prefersReducedMotion() ? "none" : transition;
 }
