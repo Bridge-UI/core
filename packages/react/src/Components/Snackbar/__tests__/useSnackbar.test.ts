@@ -13,10 +13,36 @@ import {
 } from "@/Components/Snackbar";
 
 afterEach(() => {
+  vi.unstubAllGlobals();
   resetLayerStackForTests();
   document.body.innerHTML = "";
   document.body.style.overflow = "";
 });
+
+function queueAnimationFrames() {
+  const queue = new Map<number, FrameRequestCallback>();
+  let nextId = 0;
+
+  vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
+    nextId += 1;
+    queue.set(nextId, callback);
+
+    return nextId;
+  });
+
+  vi.stubGlobal("cancelAnimationFrame", (id: number) => {
+    queue.delete(id);
+  });
+
+  return () => {
+    const pending = [...queue.values()];
+
+    queue.clear();
+    pending.forEach((callback) => {
+      callback(0);
+    });
+  };
+}
 
 const libDefaults = {
   rounded: "lg",
@@ -220,4 +246,27 @@ test("it should freeze progress bar scale when hover pauses the timer", async ()
   expect(result.current.progressBind.style?.transform).toBe("scaleX(0.5)");
 
   vi.restoreAllMocks();
+});
+
+test("it should start the progress bar after the first paint", () => {
+  const flushFrame = queueAnimationFrames();
+
+  const { result, unmount } = renderUseSnackbar(
+    { duration: 5000, transition: "none" },
+    { show: true },
+  );
+
+  act(() => {
+    flushFrame();
+  });
+
+  expect(result.current.progressBind.style?.transform).toBe("scaleX(1)");
+
+  act(() => {
+    flushFrame();
+  });
+
+  expect(result.current.progressBind.style?.transform).toBe("scaleX(0)");
+
+  unmount();
 });

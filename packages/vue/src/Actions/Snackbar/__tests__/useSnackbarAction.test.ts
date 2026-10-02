@@ -379,6 +379,78 @@ test("it should not revive dismissed snackbars when a menu opens", async () => {
   ).toHaveLength(0);
 });
 
+test("it should not revive a snackbar when a menu opens during its leave", async () => {
+  const menuOpen = ref(false);
+
+  let close = () => {};
+
+  const Consumer = defineComponent({
+    setup() {
+      const snackbar = useSnackbarAction();
+
+      const id = snackbar.open({
+        title: "Leaving",
+        transition: "slide",
+      });
+
+      close = () => {
+        snackbar.close(id);
+      };
+
+      return () =>
+        h(
+          Menu,
+          {
+            modelValue: menuOpen.value,
+            "onUpdate:modelValue": (value: boolean) => {
+              menuOpen.value = value;
+            },
+          },
+          {
+            trigger: () => h("button", { type: "button" }, "Open menu"),
+            default: () =>
+              h("button", { type: "button", role: "menuitem" }, "Item"),
+          },
+        );
+    },
+  });
+
+  mount(BridgeSnackbarHost, {
+    attachTo: document.body,
+    props: { timeout: false },
+    slots: { default: () => h(Consumer) },
+  });
+
+  await vi.waitUntil(() => {
+    return document.body.querySelector(
+      '[data-snackbar-part="panel"][data-state="open"]',
+    );
+  });
+
+  close();
+  await nextTick();
+
+  menuOpen.value = true;
+  await flushPromises();
+  await nextTick();
+
+  menuOpen.value = false;
+  await flushPromises();
+  await nextTick();
+
+  await vi.waitUntil(
+    () => {
+      return (
+        document.body.querySelectorAll('[data-snackbar-part="panel"]')
+          .length === 0
+      );
+    },
+    { timeout: 1000 },
+  );
+
+  expect(document.body.textContent).not.toContain("Leaving");
+});
+
 test("it should override host timeout", async () => {
   const Consumer = defineHeadlessComponent(() => {
     const snackbar = useSnackbarAction();

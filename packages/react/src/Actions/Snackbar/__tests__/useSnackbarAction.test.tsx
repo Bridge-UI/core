@@ -7,7 +7,7 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { isString } from "es-toolkit/compat";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Core Imports
@@ -389,6 +389,73 @@ test("it should not revive dismissed snackbars when a menu opens", async () => {
   expect(
     document.body.querySelectorAll('[data-snackbar-part="panel"]'),
   ).toHaveLength(0);
+});
+
+test("it should not revive a snackbar when a menu opens during its leave", async () => {
+  function Consumer() {
+    const snackbar = useSnackbarAction();
+    const snackbarIdRef = useRef("");
+    const [menuOpen, setMenuOpen] = useState(false);
+
+    useEffect(() => {
+      snackbarIdRef.current = snackbar.open({
+        title: "Leaving",
+        transition: "slide",
+      });
+    }, [snackbar]);
+
+    return (
+      <>
+        <button
+          type="button"
+          onClick={() => snackbar.close(snackbarIdRef.current)}
+        >
+          Dismiss
+        </button>
+
+        <Menu
+          show={menuOpen}
+          onShowChange={setMenuOpen}
+          slots={{
+            trigger: <span>Open menu</span>,
+          }}
+        >
+          <button type="button" role="menuitem">
+            Item
+          </button>
+        </Menu>
+      </>
+    );
+  }
+
+  render(
+    <BridgeSnackbarHost timeout={false}>
+      <Consumer />
+    </BridgeSnackbarHost>,
+  );
+
+  await waitFor(() => {
+    expect(
+      document.body.querySelector(
+        '[data-snackbar-part="panel"][data-state="open"]',
+      ),
+    ).not.toBeNull();
+  });
+
+  fireEvent.click(screen.getByRole("button", { name: "Dismiss" }));
+  fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
+  fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
+
+  await waitFor(
+    () => {
+      expect(
+        document.body.querySelectorAll('[data-snackbar-part="panel"]'),
+      ).toHaveLength(0);
+    },
+    { timeout: 1000 },
+  );
+
+  expect(document.body.textContent).not.toContain("Leaving");
 });
 
 test("it should override host timeout", async () => {
