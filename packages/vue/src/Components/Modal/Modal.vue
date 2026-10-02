@@ -86,8 +86,8 @@ const showBackdrop = computed(() => {
 </script>
 
 <template>
-  <Teleport :to="teleportTarget" :disabled="teleportDisabled">
-    <div v-if="mounted" v-bind="rootBind">
+  <Teleport v-if="mounted" :to="teleportTarget" :disabled="teleportDisabled">
+    <div v-bind="rootBind">
       <div aria-hidden="true" v-if="showBackdrop" v-bind="overlayBind" />
 
       <div v-bind="wrapperBind">

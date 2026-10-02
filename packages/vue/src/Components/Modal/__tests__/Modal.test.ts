@@ -48,8 +48,8 @@ function mountModal(options: Parameters<typeof mount<typeof Modal>>[1] = {}) {
 test("it should not render in the document when modelValue is false", () => {
   const wrapper = mountModal({ props: { modelValue: false } });
 
-  expect(wrapper.html()).toContain("<!--teleport start-->");
   expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+  expect(wrapper.findComponent({ name: "Teleport" }).exists()).toBe(false);
 });
 
 test("it should teleport to body when modelValue is true", () => {

@@ -58,8 +58,8 @@ test("it should open the menu when the trigger is clicked", async () => {
     },
   });
 
-  expect(wrapper.html()).toContain("<!--teleport start-->");
   expect(document.body.querySelector('[role="menu"]')).toBeNull();
+  expect(wrapper.findComponent({ name: "Teleport" }).exists()).toBe(false);
 
   const button = wrapper.find("button");
 
