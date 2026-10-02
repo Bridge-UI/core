@@ -56,6 +56,18 @@ import type {
 import type { ProgressClasses, ProgressProps } from "@/Components/Progress";
 import type { RadioClasses, RadioProps } from "@/Components/Radio";
 import type {
+  ResizableClasses,
+  ResizableProps,
+} from "@/Components/Resizable/resizable.types";
+import type {
+  ResizableHandleClasses,
+  ResizableHandleProps,
+} from "@/Components/ResizableHandle/resizableHandle.types";
+import type {
+  ResizablePanelClasses,
+  ResizablePanelProps,
+} from "@/Components/ResizablePanel/resizablePanel.types";
+import type {
   RichTextEditorClasses,
   RichTextEditorProps,
 } from "@/Components/RichTextEditor/richTextEditor.types";
@@ -327,6 +339,30 @@ declare module "@bridge-ui/core/Config" {
     classes: RadioClasses;
     defaultProps: Partial<
       Pick<RadioProps, "size" | "color" | "rounded" | "hideErrorMessage">
+    >;
+  }
+
+  interface ResizableConfigOverrides {
+    classes: ResizableClasses;
+    defaultProps: Partial<
+      Pick<ResizableProps, "disabled" | "orientation" | "keyboardStep">
+    >;
+  }
+
+  interface ResizableHandleConfigOverrides {
+    classes: ResizableHandleClasses;
+    defaultProps: Partial<
+      Pick<ResizableHandleProps, "disabled" | "withHandle">
+    >;
+  }
+
+  interface ResizablePanelConfigOverrides {
+    classes: ResizablePanelClasses;
+    defaultProps: Partial<
+      Pick<
+        ResizablePanelProps,
+        "maxSize" | "minSize" | "collapsible" | "collapsedSize"
+      >
     >;
   }
 
