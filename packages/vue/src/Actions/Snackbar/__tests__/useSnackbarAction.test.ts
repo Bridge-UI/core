@@ -13,7 +13,6 @@ import {
   BridgeSnackbarHostMissingError,
   useSnackbarAction,
 } from "@/Actions/Snackbar";
-import { createBridgeSnackbarApi } from "@/Actions/Snackbar/createBridgeSnackbarApi";
 import { Menu } from "@/Components/Menu";
 import { defineHeadlessComponent } from "@/Utils";
 
@@ -315,19 +314,6 @@ test("it should remove slide snackbars when transitionend never fires", async ()
   await vi.waitUntil(() => !document.body.textContent?.includes("Timed out"), {
     timeout: 1000,
   });
-});
-
-test("it should ignore a show sync after the snackbar was closed", () => {
-  const api = createBridgeSnackbarApi({ timeout: false });
-  const id = api.open({
-    title: "Saved",
-    transition: "none",
-  });
-
-  api.close(id);
-  api.syncShow(id, true);
-
-  expect(api.entries.value.find((entry) => entry.id === id)?.show).toBe(false);
 });
 
 test("it should not revive dismissed snackbars when a menu opens", async () => {

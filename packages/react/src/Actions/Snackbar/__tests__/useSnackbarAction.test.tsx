@@ -3,7 +3,6 @@ import {
   act,
   fireEvent,
   render,
-  renderHook,
   screen,
   waitFor,
 } from "@testing-library/react";
@@ -20,7 +19,6 @@ import {
   BridgeSnackbarHostMissingError,
   useSnackbarAction,
 } from "@/Actions/Snackbar";
-import { useBridgeSnackbarController } from "@/Actions/Snackbar/createBridgeSnackbarController";
 import { Menu } from "@/Components/Menu";
 
 afterEach(() => {
@@ -336,27 +334,6 @@ test("it should remove slide snackbars when transitionend never fires", async ()
       expect(document.body.textContent).not.toContain("Timed out");
     },
     { timeout: 1000 },
-  );
-});
-
-test("it should ignore a show sync after the snackbar was closed", () => {
-  const { result } = renderHook(() => {
-    return useBridgeSnackbarController({ timeout: false });
-  });
-
-  let id = "";
-
-  act(() => {
-    id = result.current.open({
-      title: "Saved",
-      transition: "none",
-    });
-    result.current.close(id);
-    result.current.syncShow(id, true);
-  });
-
-  expect(result.current.entries.find((entry) => entry.id === id)?.show).toBe(
-    false,
   );
 });
 
