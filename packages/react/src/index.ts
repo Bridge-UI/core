@@ -568,6 +568,36 @@ export type {
   RatingSizeOverrides,
   RatingSlots,
 } from "@/Components/Rating";
+export {
+  Resizable,
+  useResizable,
+  useResizableContext,
+} from "@/Components/Resizable";
+export type {
+  ResizableCallbacks,
+  ResizableClasses,
+  ResizableContextValue,
+  ResizableOwnProps,
+  ResizableProps,
+} from "@/Components/Resizable";
+export {
+  ResizableHandle,
+  useResizableHandle,
+} from "@/Components/ResizableHandle";
+export type {
+  ResizableHandleClasses,
+  ResizableHandleCustomProps,
+  ResizableHandleOwnProps,
+  ResizableHandleProps,
+  ResizableHandleSlots,
+} from "@/Components/ResizableHandle";
+export { ResizablePanel, useResizablePanel } from "@/Components/ResizablePanel";
+export type {
+  ResizablePanelCallbacks,
+  ResizablePanelClasses,
+  ResizablePanelOwnProps,
+  ResizablePanelProps,
+} from "@/Components/ResizablePanel";
 export { Select } from "@/Components/Select";
 export type {
   SelectClasses,

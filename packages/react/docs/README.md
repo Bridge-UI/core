@@ -55,6 +55,7 @@ Component reference for **React**. This folder ships with the npm package.
 - [Progress](./components/Progress.md)
 - [Radio](./components/Radio.md)
 - [Rating](./components/Rating.md)
+- [Resizable](./components/Resizable.md)
 - [RichTextEditor](./components/RichTextEditor.md)
 - [Select](./components/Select.md)
 - [Sidebar](./components/Sidebar.md)
