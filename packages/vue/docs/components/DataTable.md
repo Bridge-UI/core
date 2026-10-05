@@ -133,6 +133,25 @@ When `page` and `page-count` (or `total-count`) are set, DataTable does not sort
 />
 ```
 
+### Cursor pagination
+
+For APIs that return `next_cursor` / `prev_cursor` instead of a page total, bind `v-model:cursor` (or pass `next-cursor` / `prev-cursor`). DataTable then does not sort, filter, or slice `rows` locally, and the footer shows a previous / next `Pagination` instead of the "Page X of Y" label. The per-page Select stays. A `null` cursor disables its control:
+
+```vue
+<DataTable
+  :rows="audits"
+  :columns="columns"
+  v-model:cursor="cursor"
+  v-model:sorting="sorting"
+  v-model:filters="filters"
+  v-model:per-page="perPage"
+  :next-cursor="pagination.next_cursor"
+  :prev-cursor="pagination.prev_cursor"
+/>
+```
+
+DataTable never resets the cursor. Set it back to `null` in the app when sorting, filters, or per-page change. `#pagination` also receives `cursor`, `nextCursor`, `prevCursor`, `hasNext`, `hasPrevious`, `onNext`, and `onPrevious`. Do not combine cursor props with `page` + `page-count` / `total-count`: cursor paging wins and a warning is logged in development.
+
 ### Empty, loading, and footer
 
 Empty rows render `EmptyState` at the table `size`, with the semantic `inbox` icon and the i18n title `"No data"`. `#empty` replaces it. `loading` keeps the table visible. `loadingVariant="overlay"` (default) dims the table with a spin; `loadingVariant="bar"` dims the table and draws a progress line under the header. `#loading` replaces the indicator. `#footer` renders below the table, above the chrome footer:
