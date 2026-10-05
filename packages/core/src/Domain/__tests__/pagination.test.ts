@@ -2,7 +2,10 @@
 import { describe, expect, test } from "vitest";
 
 // ** Local Imports
-import { getPaginationItems } from "@/Domain/pagination";
+import {
+  getPaginationCursorAvailability,
+  getPaginationItems,
+} from "@/Domain/pagination";
 
 describe("getPaginationItems", () => {
   test("it should return every page when the range fits", () => {
@@ -99,5 +102,17 @@ describe("getPaginationItems", () => {
         boundaryCount: 1,
       }),
     ).toEqual([]);
+  });
+});
+
+describe("getPaginationCursorAvailability", () => {
+  test("it should follow the cursor unless the flag is explicit", () => {
+    expect(getPaginationCursorAvailability(undefined, undefined)).toBe(
+      undefined,
+    );
+    expect(getPaginationCursorAvailability(undefined, "a")).toBe(true);
+    expect(getPaginationCursorAvailability(undefined, null)).toBe(false);
+    expect(getPaginationCursorAvailability(true, null)).toBe(true);
+    expect(getPaginationCursorAvailability(false, "a")).toBe(false);
   });
 });
