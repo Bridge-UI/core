@@ -48,6 +48,7 @@ import {
 
 // ** Core Imports
 import {
+  DATATABLE_AMBIGUOUS_PAGING_WARNING,
   DATATABLE_EXPAND_COLUMN_ID,
   DATATABLE_SELECTION_COLUMN_ID,
   getDataTableAriaSort,
@@ -57,6 +58,7 @@ import {
   getDataTableColumnSearch,
   getDataTableDefaultCellContent,
   getDataTableFooterLayout,
+  getDataTablePaginationSlotProps,
   getDataTablePerPageSelectOptions,
   getDataTableResolvedPageCount,
   getDataTableResolvedPerPage,
@@ -70,7 +72,9 @@ import {
   isDataTableColumnFiltered,
   isDataTableColumnSearchable,
   isDataTableColumnSearched,
+  isDataTableCursorPaged,
   isDataTableExpandEnabled,
+  isDataTablePagingAmbiguous,
   isDataTablePerPageEnabled,
   isDataTableSearchEnabled,
   isDataTableSelectionEnabled,
@@ -129,6 +133,7 @@ const dataTableBridgeKeys = [
   "rows",
   "size",
   "slots",
+  "cursor",
   "search",
   "classes",
   "columns",
@@ -144,6 +149,8 @@ const dataTableBridgeKeys = [
   "hoverable",
   "pageCount",
   "selection",
+  "nextCursor",
+  "prevCursor",
   "showSearch",
   "totalCount",
   "customProps",
@@ -155,6 +162,7 @@ const dataTableBridgeKeys = [
   "selectionMode",
   "columnsOverlay",
   "loadingVariant",
+  "onCursorChange",
   "onSearchChange",
   "perPageOptions",
   "onFiltersChange",
@@ -168,6 +176,7 @@ const dataTableBridgeKeys = [
   "onHiddenColumnsChange",
 ] as const satisfies readonly (
   | "onPageChange"
+  | "onCursorChange"
   | "onSearchChange"
   | "onFiltersChange"
   | "onPerPageChange"
@@ -202,6 +211,7 @@ type DataTableMerged<T> = MergeLibDefaults<
   Pick<
     DataTableProps<T>,
     | "onPageChange"
+    | "onCursorChange"
     | "onSearchChange"
     | "onFiltersChange"
     | "onPerPageChange"
@@ -501,11 +511,36 @@ export function useDataTable<T extends Record<string, unknown>>(
     return isDataTableSelectionMultiple(merged.selectionMode);
   });
 
+  const cursorPaged = derived(() => {
+    return isDataTableCursorPaged({
+      cursor: merged.cursor,
+      nextCursor: merged.nextCursor,
+      prevCursor: merged.prevCursor,
+      hasCursorHandler: merged.onCursorChange !== undefined,
+    });
+  });
+
+  const pagingAmbiguous = derived(() => {
+    return isDataTablePagingAmbiguous(
+      merged.page,
+      merged.pageCount,
+      merged.totalCount,
+      cursorPaged,
+    );
+  });
+
+  useEffect(() => {
+    if (pagingAmbiguous && process.env.NODE_ENV !== "production") {
+      console.warn(DATATABLE_AMBIGUOUS_PAGING_WARNING);
+    }
+  }, [pagingAmbiguous]);
+
   const serverPaged = derived(() => {
     return isDataTableServerPaged(
       merged.page,
       merged.pageCount,
       merged.totalCount,
+      cursorPaged,
     );
   });
 
@@ -515,6 +550,7 @@ export function useDataTable<T extends Record<string, unknown>>(
       merged.perPage,
       merged.pageCount,
       merged.totalCount,
+      cursorPaged,
     );
   });
 
@@ -839,6 +875,10 @@ export function useDataTable<T extends Record<string, unknown>>(
   });
 
   const resolvedPageCount = useMemo(() => {
+    if (cursorPaged) {
+      return undefined;
+    }
+
     return getDataTableResolvedPageCount({
       clientPaged,
       perPage: merged.perPage,
@@ -848,6 +888,7 @@ export function useDataTable<T extends Record<string, unknown>>(
     });
   }, [
     clientPaged,
+    cursorPaged,
     merged.perPage,
     merged.pageCount,
     merged.totalCount,
@@ -855,7 +896,11 @@ export function useDataTable<T extends Record<string, unknown>>(
   ]);
 
   const showPager = derived(() => {
-    return Boolean(slots?.pagination) || resolvedPageCount !== undefined;
+    return (
+      Boolean(slots?.pagination) ||
+      cursorPaged ||
+      resolvedPageCount !== undefined
+    );
   });
 
   const showFooterBar = derived(() => {
@@ -1358,14 +1403,28 @@ export function useDataTable<T extends Record<string, unknown>>(
   );
 
   const paginationSlotProps = useMemo((): DataTablePaginationSlotProps => {
-    return {
-      page: merged.page ?? 1,
-      count: resolvedPageCount ?? 1,
+    return getDataTablePaginationSlotProps({
+      cursorPaged,
+      page: merged.page,
+      cursor: merged.cursor,
+      count: resolvedPageCount,
+      nextCursor: merged.nextCursor,
+      prevCursor: merged.prevCursor,
       onPageChange: (page) => {
         mergedRef.current.onPageChange?.(page);
       },
-    };
-  }, [merged.page, resolvedPageCount]);
+      onCursorChange: (cursor) => {
+        mergedRef.current.onCursorChange?.(cursor);
+      },
+    });
+  }, [
+    cursorPaged,
+    merged.page,
+    merged.cursor,
+    resolvedPageCount,
+    merged.nextCursor,
+    merged.prevCursor,
+  ]);
 
   const selectedSlotProps = useMemo((): DataTableSelectedSlotProps => {
     return {
@@ -1470,6 +1529,7 @@ export function useDataTable<T extends Record<string, unknown>>(
     getCellBind,
     columnCount,
     clientPaged,
+    cursorPaged,
     serverPaged,
     showPerPage,
     showToolbar,

@@ -18,6 +18,7 @@ import type {
   DataTableStickyEdge,
   DataTableStickyHeader,
   FieldOverlayMode,
+  PaginationCursor,
 } from "@bridge-ui/core/Domain";
 import type {
   TableAlign,
@@ -30,6 +31,7 @@ import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 // ** Local Imports
 import type { CheckboxProps } from "@/Components/Checkbox/checkbox.types";
 import type { DataTablePaginationProps } from "@/Components/DataTable/dataTablePagination.types";
+import type { PaginationProps } from "@/Components/Pagination/pagination.types";
 import type { ProgressProps } from "@/Components/Progress/progress.types";
 import type { RadioProps } from "@/Components/Radio/radio.types";
 import type { SelectProps } from "@/Components/Select/select.types";
@@ -95,6 +97,14 @@ export interface DataTableCallbacks {
    * @default undefined
    */
   onColumnSearchChange?: (search: DataTableColumnSearch) => void;
+
+  /**
+   * Called with `nextCursor` / `prevCursor` when the cursor pager navigates.
+   * Passing it turns on cursor paging. DataTable never resets the cursor.
+   *
+   * @default undefined
+   */
+  onCursorChange?: (cursor: PaginationCursor) => void;
 
   /**
    * Called when expanded row ids change.
@@ -260,6 +270,25 @@ export interface DataTableCustomProps {
   >;
 
   /**
+   * Extra props for the built-in cursor pager (`Pagination` in simple mode).
+   *
+   * @default undefined
+   */
+  cursorPagination?: Partial<
+    Omit<
+      PaginationProps,
+      | "mode"
+      | "onNext"
+      | "hasNext"
+      | "nextCursor"
+      | "onPrevious"
+      | "prevCursor"
+      | "hasPrevious"
+      | "onCursorChange"
+    >
+  >;
+
+  /**
    * Props forwarded to the empty-state region.
    *
    * @default undefined
@@ -419,6 +448,15 @@ export interface DataTableOwnProps<T> {
   columnsShowFooter?: boolean;
 
   /**
+   * Current cursor in cursor paging. Passing it (even `null`) turns on cursor
+   * paging: DataTable does not sort, filter, or slice `rows` locally and shows
+   * a previous / next pager.
+   *
+   * @default undefined
+   */
+  cursor?: PaginationCursor;
+
+  /**
    * Extra props for internal parts (`table`, `wrapper`, checkboxes, …).
    *
    * @default undefined
@@ -492,6 +530,13 @@ export interface DataTableOwnProps<T> {
   loadingVariant?: DataTableLoadingVariant;
 
   /**
+   * Cursor of the next page in cursor paging. `null` disables next.
+   *
+   * @default undefined
+   */
+  nextCursor?: PaginationCursor;
+
+  /**
    * Controlled page for the built-in chrome pager (1-based).
    *
    * @default undefined
@@ -519,6 +564,13 @@ export interface DataTableOwnProps<T> {
    * @default [10, 25, 50, 100]
    */
   perPageOptions?: number[];
+
+  /**
+   * Cursor of the previous page in cursor paging. `null` disables previous.
+   *
+   * @default undefined
+   */
+  prevCursor?: PaginationCursor;
 
   /**
    * Corner radius of the table wrapper, header, and footer.
@@ -659,7 +711,8 @@ export interface DataTableSlots<T = unknown> {
 
   /**
    * Replaces the built-in chrome pager. A function receives page / count /
-   * `onPageChange`.
+   * `onPageChange`, plus cursor / `nextCursor` / `prevCursor` / `hasNext` /
+   * `hasPrevious` / `onNext` / `onPrevious`.
    */
   pagination?: ReactNode | ((props: DataTablePaginationSlotProps) => ReactNode);
 
