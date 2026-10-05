@@ -7,6 +7,7 @@ import type {
 } from "react";
 
 // ** Core Imports
+import type { PaginationCursor } from "@bridge-ui/core/Domain";
 import type {
   PaginationColor,
   PaginationRounded,
@@ -30,6 +31,14 @@ export interface PaginationCallbacks {
    * @default undefined
    */
   onChange?: (page: number) => void;
+
+  /**
+   * Called with `nextCursor` / `prevCursor` when next / previous is
+   * activated in simple mode (only when that cursor prop is passed).
+   *
+   * @default undefined
+   */
+  onCursorChange?: (cursor: PaginationCursor) => void;
 
   /**
    * Called when next is activated in simple mode.
@@ -190,14 +199,16 @@ export interface PaginationOwnProps {
   disabled?: boolean;
 
   /**
-   * Whether next is available (`mode="simple"`).
+   * Whether next is available (`mode="simple"`). Defaults to
+   * `nextCursor !== null` when `nextCursor` is passed.
    *
    * @default undefined
    */
   hasNext?: boolean;
 
   /**
-   * Whether previous is available (`mode="simple"`).
+   * Whether previous is available (`mode="simple"`). Defaults to
+   * `prevCursor !== null` when `prevCursor` is passed.
    *
    * @default undefined
    */
@@ -225,11 +236,25 @@ export interface PaginationOwnProps {
   mode?: "simple" | "numbered";
 
   /**
+   * Cursor of the next page (`mode="simple"`). `null` disables next.
+   *
+   * @default undefined
+   */
+  nextCursor?: PaginationCursor;
+
+  /**
    * Controlled page (1-based, numbered mode).
    *
    * @default undefined
    */
   page?: number;
+
+  /**
+   * Cursor of the previous page (`mode="simple"`). `null` disables previous.
+   *
+   * @default undefined
+   */
+  prevCursor?: PaginationCursor;
 
   /**
    * Control corner radius (`ghost` / `text` items and `outlined` group edges).

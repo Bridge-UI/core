@@ -88,6 +88,63 @@ test("it should support simple prev/next mode", async () => {
   expect(wrapper.emitted("previous")).toBeUndefined();
 });
 
+test("it should emit update:cursor before next and previous", async () => {
+  const wrapper = mountPagination({
+    props: { cursor: "b", mode: "simple", nextCursor: "c", prevCursor: "a" },
+  });
+
+  await wrapper.find("button[aria-label='Next']").trigger("click");
+  await wrapper.find("button[aria-label='Previous']").trigger("click");
+
+  expect(wrapper.emitted("update:cursor")).toEqual([["c"], ["a"]]);
+  expect(wrapper.emitted("next")).toHaveLength(1);
+  expect(wrapper.emitted("previous")).toHaveLength(1);
+});
+
+test("it should disable controls when a cursor is null", async () => {
+  const wrapper = mountPagination({
+    props: { mode: "simple", nextCursor: null, prevCursor: null },
+  });
+
+  const next = wrapper.find("button[aria-label='Next']");
+  const previous = wrapper.find("button[aria-label='Previous']");
+
+  expect(next.attributes("disabled")).toBeDefined();
+  expect(previous.attributes("disabled")).toBeDefined();
+
+  await next.trigger("click");
+
+  expect(wrapper.emitted("update:cursor")).toBeUndefined();
+  expect(wrapper.emitted("next")).toBeUndefined();
+});
+
+test("it should let hasNext and hasPrevious override the cursors", () => {
+  const wrapper = mountPagination({
+    props: {
+      hasNext: false,
+      mode: "simple",
+      nextCursor: "c",
+      prevCursor: null,
+      hasPrevious: true,
+    },
+  });
+
+  expect(
+    wrapper.find("button[aria-label='Next']").attributes("disabled"),
+  ).toBeDefined();
+  expect(
+    wrapper.find("button[aria-label='Previous']").attributes("disabled"),
+  ).toBeUndefined();
+});
+
+test("it should keep next enabled in simple mode without hasNext", () => {
+  const wrapper = mountPagination({ props: { mode: "simple" } });
+
+  expect(
+    wrapper.find("button[aria-label='Next']").attributes("disabled"),
+  ).toBeUndefined();
+});
+
 test("it should apply visual variants", async () => {
   const wrapper = mountPagination({
     props: { count: 3, modelValue: 1, variant: "outlined" },

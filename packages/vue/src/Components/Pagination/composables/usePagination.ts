@@ -4,7 +4,9 @@ import { computed, useAttrs, useSlots, type Ref, type SetupContext } from "vue";
 
 // ** Core Imports
 import {
+  getPaginationCursorAvailability,
   getPaginationItems,
+  type PaginationCursor,
   type PaginationEntry,
 } from "@bridge-ui/core/Domain";
 import {
@@ -46,6 +48,8 @@ const paginationBridgeKeys = [
   "variant",
   "disabled",
   "modelValue",
+  "nextCursor",
+  "prevCursor",
   "customProps",
   "hasPrevious",
   "siblingCount",
@@ -78,6 +82,7 @@ export function usePagination(
   libDefaults: PaginationLibDefaults,
   model: Ref<number | undefined>,
   emit: SetupContext<PaginationEmits>["emit"],
+  cursorModel?: Ref<undefined | PaginationCursor>,
 ) {
   const resolveMessage = useResolveMessage();
   const attrs = useAttrs();
@@ -102,6 +107,33 @@ export function usePagination(
   const customProps = computed(() => {
     return merged.value.customProps;
   });
+
+  const hasNext = computed(() => {
+    return getPaginationCursorAvailability(
+      merged.value.hasNext,
+      merged.value.nextCursor,
+    );
+  });
+
+  const hasPrevious = computed(() => {
+    return getPaginationCursorAvailability(
+      merged.value.hasPrevious,
+      merged.value.prevCursor,
+    );
+  });
+
+  const setCursor = (cursor: undefined | PaginationCursor) => {
+    if (cursor === undefined) {
+      return;
+    }
+
+    if (cursorModel) {
+      cursorModel.value = cursor;
+      return;
+    }
+
+    emit("update:cursor", cursor);
+  };
 
   const page = computed(() => {
     if (merged.value.mode === "simple") {
@@ -191,10 +223,11 @@ export function usePagination(
     }
 
     if (merged.value.mode === "simple") {
-      if (merged.value.hasPrevious === false) {
+      if (hasPrevious.value === false) {
         return;
       }
 
+      setCursor(merged.value.prevCursor);
       emit("previous");
       return;
     }
@@ -208,10 +241,11 @@ export function usePagination(
     }
 
     if (merged.value.mode === "simple") {
-      if (merged.value.hasNext === false) {
+      if (hasNext.value === false) {
         return;
       }
 
+      setCursor(merged.value.nextCursor);
       emit("next");
       return;
     }
@@ -225,7 +259,7 @@ export function usePagination(
     }
 
     if (merged.value.mode === "simple") {
-      return merged.value.hasPrevious === false;
+      return hasPrevious.value === false;
     }
 
     return page.value <= 1;
@@ -237,7 +271,7 @@ export function usePagination(
     }
 
     if (merged.value.mode === "simple") {
-      return merged.value.hasNext === false;
+      return hasNext.value === false;
     }
 
     return page.value >= (merged.value.count ?? 0);

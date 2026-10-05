@@ -7,6 +7,7 @@ import type {
 } from "vue";
 
 // ** Core Imports
+import type { PaginationCursor } from "@bridge-ui/core/Domain";
 import type {
   PaginationColor,
   PaginationRounded,
@@ -130,6 +131,13 @@ export interface PaginationEmits {
   previous: [];
 
   /**
+   * Emitted with `nextCursor` / `prevCursor` when next / previous is
+   * activated in simple mode (`v-model:cursor`, only when that cursor prop is
+   * passed). Fires before `next` / `previous`.
+   */
+  "update:cursor": [cursor: PaginationCursor];
+
+  /**
    * Emitted when `v-model` should update.
    */
   "update:modelValue": [page: number];
@@ -168,6 +176,14 @@ export interface PaginationOwnProps {
   count?: number;
 
   /**
+   * Current cursor, bound with `v-model:cursor` (`mode="simple"`). Set to
+   * `nextCursor` / `prevCursor` when the user navigates.
+   *
+   * @default undefined
+   */
+  cursor?: PaginationCursor;
+
+  /**
    * Extra props for internal parts.
    *
    * @default undefined
@@ -182,14 +198,16 @@ export interface PaginationOwnProps {
   disabled?: boolean;
 
   /**
-   * Whether next is available (`mode="simple"`).
+   * Whether next is available (`mode="simple"`). Defaults to
+   * `nextCursor !== null` when `nextCursor` is passed.
    *
    * @default undefined
    */
   hasNext?: boolean;
 
   /**
-   * Whether previous is available (`mode="simple"`).
+   * Whether previous is available (`mode="simple"`). Defaults to
+   * `prevCursor !== null` when `prevCursor` is passed.
    *
    * @default undefined
    */
@@ -222,6 +240,20 @@ export interface PaginationOwnProps {
    * @default 1
    */
   modelValue?: number;
+
+  /**
+   * Cursor of the next page (`mode="simple"`). `null` disables next.
+   *
+   * @default undefined
+   */
+  nextCursor?: PaginationCursor;
+
+  /**
+   * Cursor of the previous page (`mode="simple"`). `null` disables previous.
+   *
+   * @default undefined
+   */
+  prevCursor?: PaginationCursor;
 
   /**
    * Control corner radius (`ghost` / `text` items and `outlined` group edges).
