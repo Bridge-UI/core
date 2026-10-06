@@ -36,14 +36,14 @@ import { ResizablePanel } from "@bridge-ui/vue/Components/ResizablePanel";
 </Resizable>
 ```
 
-### With a grip
+### Without a grip
 
-`with-handle` shows a grip on the handle.
+Each handle shows a grip by default. `hide-grip` leaves only the line.
 
 ```vue
 <Resizable class="h-64">
   <ResizablePanel>One</ResizablePanel>
-  <ResizableHandle with-handle />
+  <ResizableHandle hide-grip />
   <ResizablePanel>Two</ResizablePanel>
 </Resizable>
 ```
@@ -94,7 +94,7 @@ A `collapsible` panel collapses to `collapsed-size` (default `0`) once it is dra
   >
     Sidebar
   </ResizablePanel>
-  <ResizableHandle with-handle />
+  <ResizableHandle />
   <ResizablePanel>Content</ResizablePanel>
 </Resizable>
 ```
@@ -159,7 +159,6 @@ function save(layout: number[]) {
 
 ```vue
 <ResizableHandle
-  with-handle
   :classes="{
     root: 'bg-primary-200',
     grip: 'flex h-5 w-3 items-center justify-center text-xs',
@@ -211,14 +210,14 @@ function save(layout: number[]) {
 
 ### ResizableHandle
 
-| Prop          | Type                         | Default | Description                        |
-| ------------- | ---------------------------- | ------- | ---------------------------------- |
-| `classes`     | `ResizableHandleClasses`     | —       | Classes for `root` and `grip`.     |
-| `customProps` | `ResizableHandleCustomProps` | —       | Extra props for the `grip`.        |
-| `disabled`    | `boolean`                    | `false` | Lock this handle.                  |
-| `withHandle`  | `boolean`                    | `false` | Show a visible grip on the handle. |
+| Prop          | Type                         | Default | Description                           |
+| ------------- | ---------------------------- | ------- | ------------------------------------- |
+| `classes`     | `ResizableHandleClasses`     | —       | Classes for `root` and `grip`.        |
+| `customProps` | `ResizableHandleCustomProps` | —       | Extra props for the `grip`.           |
+| `disabled`    | `boolean`                    | `false` | Lock this handle.                     |
+| `hideGrip`    | `boolean`                    | `false` | Hide the grip and show only the line. |
 
-Slot `grip`: content inside the grip (`with-handle`).
+Slot `grip`: content inside the grip.
 
 ## Related components
 

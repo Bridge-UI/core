@@ -3,7 +3,7 @@
  */
 export interface ResizableOrientationItem {
   /**
-   * Classes for the visible grip inside a handle (`withHandle`).
+   * Classes for the visible grip inside a handle.
    */
   "grip": string;
 

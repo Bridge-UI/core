@@ -12,7 +12,7 @@ import {
 
 const libDefaults = {
   disabled: false,
-  withHandle: false,
+  hideGrip: false,
 } as const;
 
 function mountUseResizableHandle(props: ResizableHandleOwnProps = {}) {
@@ -40,18 +40,17 @@ function mountUseResizableHandle(props: ResizableHandleOwnProps = {}) {
 test("it should bind a focusable separator", () => {
   const { result } = mountUseResizableHandle();
 
-  expect(result.showGrip.value).toBe(false);
+  expect(result.showGrip.value).toBe(true);
   expect(result.disabled.value).toBe(false);
   expect(result.rootBind.value.tabindex).toBe(0);
   expect(result.rootBind.value.role).toBe("separator");
   expect(result.rootBind.value["aria-orientation"]).toBe("vertical");
 });
 
-test("it should show the grip with withHandle", () => {
-  const { result } = mountUseResizableHandle({ withHandle: true });
+test("it should hide the grip with hideGrip", () => {
+  const { result } = mountUseResizableHandle({ hideGrip: true });
 
-  expect(result.showGrip.value).toBe(true);
-  expect(result.gripBind.value["data-part"]).toBe("grip");
+  expect(result.showGrip.value).toBe(false);
 });
 
 test("it should leave the tab order when disabled", () => {

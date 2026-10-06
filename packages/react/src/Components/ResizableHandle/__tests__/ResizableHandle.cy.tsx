@@ -10,7 +10,7 @@ test("it should show a grip and collapse with Enter in the browser", () => {
         <ResizablePanel collapsible minSize={20}>
           One
         </ResizablePanel>
-        <ResizableHandle withHandle />
+        <ResizableHandle />
         <ResizablePanel>Two</ResizablePanel>
       </Resizable>
     </div>,

@@ -351,9 +351,7 @@ declare module "@bridge-ui/core/Config" {
 
   interface ResizableHandleConfigOverrides {
     classes: ResizableHandleClasses;
-    defaultProps: Partial<
-      Pick<ResizableHandleProps, "disabled" | "withHandle">
-    >;
+    defaultProps: Partial<Pick<ResizableHandleProps, "disabled" | "hideGrip">>;
   }
 
   interface ResizablePanelConfigOverrides {

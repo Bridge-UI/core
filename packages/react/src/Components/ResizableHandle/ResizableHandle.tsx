@@ -4,7 +4,7 @@ import type { ResizableHandleProps } from "@/Components/ResizableHandle/resizabl
 
 const resizableHandleLibDefaults = {
   disabled: false,
-  withHandle: false,
+  hideGrip: false,
 } as const;
 
 function ResizableHandle(props: ResizableHandleProps) {

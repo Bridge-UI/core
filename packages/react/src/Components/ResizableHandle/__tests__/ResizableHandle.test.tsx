@@ -11,43 +11,43 @@ afterEach(() => {
   cleanup();
 });
 
-test("it should render a grip with withHandle", () => {
+test("it should render a grip by default", () => {
   const { container } = render(
     <Resizable>
       <ResizablePanel>One</ResizablePanel>
-      <ResizableHandle withHandle classes={{ grip: "bg-primary-500" }} />
+      <ResizableHandle classes={{ grip: "bg-primary-500" }} />
       <ResizablePanel>Two</ResizablePanel>
     </Resizable>,
   );
 
   const grip = container.querySelector("[data-part='grip']");
 
-  expect(grip?.getAttribute("aria-hidden")).toBe("true");
   expect(grip?.className).toContain("bg-primary-500");
+  expect(grip?.getAttribute("aria-hidden")).toBe("true");
+});
+
+test("it should hide the grip with hideGrip", () => {
+  const { container } = render(
+    <Resizable>
+      <ResizablePanel>One</ResizablePanel>
+      <ResizableHandle hideGrip />
+      <ResizablePanel>Two</ResizablePanel>
+    </Resizable>,
+  );
+
+  expect(container.querySelector("[data-part='grip']")).toBeNull();
 });
 
 test("it should render the grip slot", () => {
   render(
     <Resizable>
       <ResizablePanel>One</ResizablePanel>
-      <ResizableHandle withHandle slots={{ grip: "⋮" }} />
+      <ResizableHandle slots={{ grip: "⋮" }} />
       <ResizablePanel>Two</ResizablePanel>
     </Resizable>,
   );
 
   expect(screen.getByText("⋮").getAttribute("data-part")).toBe("grip");
-});
-
-test("it should not render a grip by default", () => {
-  const { container } = render(
-    <Resizable>
-      <ResizablePanel>One</ResizablePanel>
-      <ResizableHandle />
-      <ResizablePanel>Two</ResizablePanel>
-    </Resizable>,
-  );
-
-  expect(container.querySelector("[data-part='grip']")).toBeNull();
 });
 
 test("it should toggle a collapsible panel with Enter", () => {

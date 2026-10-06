@@ -32,13 +32,13 @@ const resizableHandleBridgeKeys = [
   "slots",
   "classes",
   "disabled",
-  "withHandle",
+  "hideGrip",
   "customProps",
 ] as const satisfies readonly (keyof ResizableHandleOwnProps)[];
 
 type ResizableHandleLibDefaults = LibDefaultsShape<
   ResizableHandleOwnProps,
-  "disabled" | "withHandle"
+  "disabled" | "hideGrip"
 >;
 
 type ResizableHandleMerged = MergeLibDefaults<
@@ -110,7 +110,7 @@ export function useResizableHandle(
   });
 
   const showGrip = derived(() => {
-    return merged.withHandle === true;
+    return merged.hideGrip !== true;
   });
 
   const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {

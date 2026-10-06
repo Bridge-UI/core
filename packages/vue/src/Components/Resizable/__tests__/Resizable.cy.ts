@@ -6,14 +6,14 @@ import { Resizable } from "@/Components/Resizable";
 import { ResizableHandle } from "@/Components/ResizableHandle";
 import { ResizablePanel } from "@/Components/ResizablePanel";
 
-function host(withHandle: boolean) {
+function host(hideGrip: boolean) {
   return defineComponent({
     setup() {
       return () =>
         h("div", { style: { width: "600px", height: "200px" } }, [
           h(Resizable, null, () => [
             h(ResizablePanel, null, () => "One"),
-            h(ResizableHandle, { withHandle }),
+            h(ResizableHandle, { hideGrip }),
             h(ResizablePanel, null, () => "Two"),
           ]),
         ]);
@@ -22,7 +22,7 @@ function host(withHandle: boolean) {
 }
 
 test("it should resize panels by dragging in the browser", () => {
-  cy.mount(host(true));
+  cy.mount(host(false));
 
   cy.contains("One").should("be.visible");
   cy.get("[data-part='handle']").should("have.attr", "aria-valuenow", "50");
@@ -43,7 +43,7 @@ test("it should resize panels by dragging in the browser", () => {
 });
 
 test("it should resize panels with the keyboard in the browser", () => {
-  cy.mount(host(false));
+  cy.mount(host(true));
 
   cy.get("[data-part='handle']").focus();
   cy.get("[data-part='handle']").trigger("keydown", { key: "ArrowLeft" });

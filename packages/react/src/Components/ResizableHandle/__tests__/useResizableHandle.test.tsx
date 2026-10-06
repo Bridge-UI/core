@@ -13,7 +13,7 @@ afterEach(() => {
 
 const libDefaults = {
   disabled: false,
-  withHandle: false,
+  hideGrip: false,
 } as const;
 
 function wrapper({ children }: { children: ReactNode }) {
@@ -25,21 +25,20 @@ test("it should bind a focusable separator", () => {
     wrapper,
   });
 
-  expect(result.current.showGrip).toBe(false);
+  expect(result.current.showGrip).toBe(true);
   expect(result.current.disabled).toBe(false);
   expect(result.current.rootBind.tabIndex).toBe(0);
   expect(result.current.rootBind.role).toBe("separator");
   expect(result.current.rootBind["aria-orientation"]).toBe("vertical");
 });
 
-test("it should show the grip with withHandle", () => {
+test("it should hide the grip with hideGrip", () => {
   const { result } = renderHook(
-    () => useResizableHandle({ withHandle: true }, libDefaults),
+    () => useResizableHandle({ hideGrip: true }, libDefaults),
     { wrapper },
   );
 
-  expect(result.current.showGrip).toBe(true);
-  expect(result.current.gripBind["data-part"]).toBe("grip");
+  expect(result.current.showGrip).toBe(false);
 });
 
 test("it should leave the tab order when disabled", () => {

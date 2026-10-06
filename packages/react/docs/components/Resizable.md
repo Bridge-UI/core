@@ -36,14 +36,14 @@ import { ResizablePanel } from "@bridge-ui/react/Components/ResizablePanel";
 </Resizable>
 ```
 
-### With a grip
+### Without a grip
 
-`withHandle` shows a grip on the handle.
+Each handle shows a grip by default. `hideGrip` leaves only the line.
 
 ```tsx
 <Resizable className="h-64">
   <ResizablePanel>One</ResizablePanel>
-  <ResizableHandle withHandle />
+  <ResizableHandle hideGrip />
   <ResizablePanel>Two</ResizablePanel>
 </Resizable>
 ```
@@ -97,7 +97,7 @@ const [collapsed, setCollapsed] = useState(false);
   >
     Sidebar
   </ResizablePanel>
-  <ResizableHandle withHandle />
+  <ResizableHandle />
   <ResizablePanel>Content</ResizablePanel>
 </Resizable>;
 ```
@@ -159,7 +159,6 @@ const saved = JSON.parse(localStorage.getItem("layout") ?? "[30, 70]");
 
 ```tsx
 <ResizableHandle
-  withHandle
   slots={{ grip: "⋮" }}
   classes={{
     root: "bg-primary-200",
@@ -204,13 +203,13 @@ const saved = JSON.parse(localStorage.getItem("layout") ?? "[30, 70]");
 
 ### ResizableHandle
 
-| Prop          | Type                         | Default | Description                        |
-| ------------- | ---------------------------- | ------- | ---------------------------------- |
-| `classes`     | `ResizableHandleClasses`     | —       | Classes for `root` and `grip`.     |
-| `customProps` | `ResizableHandleCustomProps` | —       | Extra props for the `grip`.        |
-| `disabled`    | `boolean`                    | `false` | Lock this handle.                  |
-| `slots`       | `ResizableHandleSlots`       | —       | `grip` content.                    |
-| `withHandle`  | `boolean`                    | `false` | Show a visible grip on the handle. |
+| Prop          | Type                         | Default | Description                           |
+| ------------- | ---------------------------- | ------- | ------------------------------------- |
+| `classes`     | `ResizableHandleClasses`     | —       | Classes for `root` and `grip`.        |
+| `customProps` | `ResizableHandleCustomProps` | —       | Extra props for the `grip`.           |
+| `disabled`    | `boolean`                    | `false` | Lock this handle.                     |
+| `hideGrip`    | `boolean`                    | `false` | Hide the grip and show only the line. |
+| `slots`       | `ResizableHandleSlots`       | —       | `grip` content.                       |
 
 ## Related components
 

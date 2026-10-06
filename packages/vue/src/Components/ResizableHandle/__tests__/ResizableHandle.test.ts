@@ -39,28 +39,27 @@ async function mountGroup(
   return wrapper;
 }
 
-test("it should render a grip with withHandle", async () => {
+test("it should render a grip by default", async () => {
   const wrapper = await mountGroup({
-    withHandle: true,
     classes: { grip: "bg-primary-500" },
   });
 
   const grip = wrapper.get("[data-part='grip']");
 
-  expect(grip.attributes("aria-hidden")).toBe("true");
   expect(grip.classes()).toContain("bg-primary-500");
+  expect(grip.attributes("aria-hidden")).toBe("true");
 });
 
 test("it should render the grip slot", async () => {
-  const wrapper = await mountGroup({ withHandle: true }, {}, {
+  const wrapper = await mountGroup({}, {}, {
     grip: () => "⋮",
   } as unknown as Slots);
 
   expect(wrapper.get("[data-part='grip']").text()).toBe("⋮");
 });
 
-test("it should not render a grip by default", async () => {
-  const wrapper = await mountGroup();
+test("it should hide the grip with hideGrip", async () => {
+  const wrapper = await mountGroup({ hideGrip: true });
 
   expect(wrapper.find("[data-part='grip']").exists()).toBe(false);
 });
@@ -88,8 +87,8 @@ test("it should ignore keys on a disabled handle", async () => {
 
   await handle.trigger("keydown", { key: "ArrowRight" });
 
-  expect(handle.attributes("aria-valuenow")).toBe("50");
   expect(handle.attributes("data-disabled")).toBe("");
+  expect(handle.attributes("aria-valuenow")).toBe("50");
 });
 
 test("it should keep a custom aria-label", async () => {

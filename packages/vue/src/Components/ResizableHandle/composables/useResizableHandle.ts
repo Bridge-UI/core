@@ -34,13 +34,13 @@ import {
 const resizableHandleBridgeKeys = [
   "classes",
   "disabled",
-  "withHandle",
+  "hideGrip",
   "customProps",
 ] as const satisfies readonly (keyof ResizableHandleOwnProps)[];
 
 type ResizableHandleLibDefaults = LibDefaultsShape<
   ResizableHandleOwnProps,
-  "disabled" | "withHandle"
+  "disabled" | "hideGrip"
 >;
 
 type ResizableHandleMerged = MergeLibDefaults<
@@ -122,7 +122,7 @@ export function useResizableHandle(
   });
 
   const showGrip = computed(() => {
-    return merged.value.withHandle === true;
+    return merged.value.hideGrip !== true;
   });
 
   const index = computed(() => {

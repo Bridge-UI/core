@@ -1326,7 +1326,7 @@ export interface ResizableHandleConfigBase {
   classes: object;
   defaultProps: Partial<{
     disabled: boolean;
-    withHandle: boolean;
+    hideGrip: boolean;
   }>;
 }
 

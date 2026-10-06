@@ -18,7 +18,7 @@ test("it should show a grip and collapse with Enter in the browser", () => {
                 { minSize: 20, collapsible: true },
                 () => "One",
               ),
-              h(ResizableHandle, { withHandle: true }),
+              h(ResizableHandle),
               h(ResizablePanel, null, () => "Two"),
             ]),
           ]);

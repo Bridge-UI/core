@@ -12,12 +12,12 @@ defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<ResizableHandleOwnProps>(), {
   disabled: undefined,
-  withHandle: undefined,
+  hideGrip: undefined,
 });
 
 const { gripBind, rootBind, showGrip, elementRef } = useResizableHandle(props, {
   disabled: false,
-  withHandle: false,
+  hideGrip: false,
 });
 </script>
 

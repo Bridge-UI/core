@@ -8,7 +8,7 @@ test("it should resize panels by dragging in the browser", () => {
     <div style={{ width: 600, height: 200 }}>
       <Resizable>
         <ResizablePanel>One</ResizablePanel>
-        <ResizableHandle withHandle />
+        <ResizableHandle />
         <ResizablePanel>Two</ResizablePanel>
       </Resizable>
     </div>,

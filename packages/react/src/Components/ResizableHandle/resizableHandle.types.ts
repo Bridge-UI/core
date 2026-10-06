@@ -6,7 +6,7 @@ import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 export interface ResizableHandleClasses {
   /**
-   * Classes merged onto the grip (`withHandle`).
+   * Classes merged onto the grip.
    */
   grip?: string;
 
@@ -18,7 +18,7 @@ export interface ResizableHandleClasses {
 
 export interface ResizableHandleCustomProps {
   /**
-   * Props forwarded to the grip (`withHandle`).
+   * Props forwarded to the grip.
    *
    * @default undefined
    */
@@ -53,23 +53,23 @@ export interface ResizableHandleOwnProps {
   disabled?: boolean;
 
   /**
+   * Hide the grip on the handle and show only the line.
+   *
+   * @default false
+   */
+  hideGrip?: boolean;
+
+  /**
    * Custom grip content.
    *
    * @default undefined
    */
   slots?: ResizableHandleSlots;
-
-  /**
-   * Show a visible grip on the handle.
-   *
-   * @default false
-   */
-  withHandle?: boolean;
 }
 
 export interface ResizableHandleSlots {
   /**
-   * Content inside the grip (`withHandle`).
+   * Content inside the grip.
    */
   grip?: ReactNode;
 }
