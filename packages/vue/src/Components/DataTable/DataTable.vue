@@ -41,6 +41,7 @@ import {
   TableRow,
 } from "@/Components/Table";
 import { hasNamedSlot } from "@/Utils";
+import LoadingSpin from "@/Utils/LoadingSpin.vue";
 
 defineSlots<
   DataTableSlots<T> & {
@@ -473,24 +474,7 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
           :aria-hidden="loadingBar || undefined"
         >
           <slot name="loading" v-if="!loadingBar">
-            <span
-              role="status"
-              :aria-label="resolveMessage('Loading')"
-              class="relative inline-block size-5 animate-spin motion-reduce:animate-none"
-            >
-              <span
-                class="absolute inset-s-0 top-0 size-2 rounded-full bg-primary-500 opacity-30 dark:bg-primary-400"
-              />
-              <span
-                class="absolute inset-e-0 top-0 size-2 rounded-full bg-primary-500 opacity-50 dark:bg-primary-400"
-              />
-              <span
-                class="absolute inset-e-0 bottom-0 size-2 rounded-full bg-primary-500 dark:bg-primary-400"
-              />
-              <span
-                class="absolute inset-s-0 bottom-0 size-2 rounded-full bg-primary-500 opacity-70 dark:bg-primary-400"
-              />
-            </span>
+            <LoadingSpin />
           </slot>
         </div>
       </div>
