@@ -334,6 +334,11 @@ export {
   sizeProps as ratingSizeProps,
 } from "@/Tokens/Rating";
 export type { RatingColor, RatingColorItem, RatingSize } from "@/Tokens/Rating";
+export { orientationProps as resizableOrientationProps } from "@/Tokens/Resizable";
+export type {
+  ResizableOrientation,
+  ResizableOrientationItem,
+} from "@/Tokens/Resizable";
 export {
   roundedProps as richTextEditorRoundedProps,
   sizeProps as richTextEditorSizeProps,

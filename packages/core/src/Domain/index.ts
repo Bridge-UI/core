@@ -339,6 +339,33 @@ export {
 } from "@/Domain/rating";
 export type { RatingDirection, RatingValue } from "@/Domain/rating";
 export {
+  DEFAULT_RESIZABLE_KEYBOARD_STEP,
+  clampResizablePanelSize,
+  fitResizableLayout,
+  getResizableCursor,
+  getResizableHandleAria,
+  getResizableItemIndexes,
+  getResizableLayoutFromKey,
+  getResizablePanelStyle,
+  getResizablePointerDelta,
+  isResizablePanelCollapsed,
+  resizeResizableLayout,
+  resizeResizablePanel,
+  resolveResizableLayout,
+  resolveResizablePanelConstraints,
+  sortResizableItemsByDocumentOrder,
+} from "@/Domain/resizable";
+export type {
+  GetResizableLayoutFromKeyOptions,
+  GetResizablePointerDeltaOptions,
+  ResizableHandleAria,
+  ResizableItem,
+  ResizablePanelConstraints,
+  ResizeResizableLayoutOptions,
+  ResizeResizablePanelOptions,
+  ResolvedResizablePanelConstraints,
+} from "@/Domain/resizable";
+export {
   DEFAULT_RICH_TEXT_TOOLS,
   RICH_TEXT_TOOLS,
   RICH_TEXT_TOOL_ICONS,

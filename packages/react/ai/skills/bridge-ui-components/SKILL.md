@@ -2,7 +2,7 @@
 name: bridge-ui-components
 description: >-
   Use Bridge UI React components — Button, ButtonGroup, Avatar, Card, Alert, Accordion, ActionFooter, Badge, Icon,
-  Link, List, Table, DataTable, Tabs, Spinner, Skeleton, EmptyState, Sidebar, Progress, Stepper, Carousel, Chart, Pagination, TextField, Select,
+  Link, List, Table, DataTable, Tabs, Spinner, Skeleton, EmptyState, Sidebar, Progress, Stepper, Carousel, Resizable, Chart, Pagination, TextField, Select,
   Autocomplete, DateField, DatePicker, DateRangeField, DateRangePicker,
   TimeField, TimePicker, DateTimeField, DateTimePicker, ColorField, ColorPicker,
   classes, customProps, slots. Use when building UI with Bridge components.
@@ -25,6 +25,7 @@ Do **not** invent APIs. Copy examples from `.ai/docs/components/{Component}.md` 
 | Action footer                 | `.ai/docs/components/ActionFooter.md`                                 |
 | Stepper                       | `.ai/docs/components/Stepper.md`                                      |
 | Carousel                      | `.ai/docs/components/Carousel.md`                                     |
+| Resizable panels              | `.ai/docs/components/Resizable.md`                                    |
 | Chart                         | `.ai/docs/components/Chart.md`                                        |
 | Icon                          | `.ai/docs/components/Icon.md`                                         |
 | Lists                         | `.ai/docs/components/List.md`                                         |
