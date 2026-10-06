@@ -42,6 +42,7 @@ const paginationBridgeKeys = [
   "size",
   "color",
   "count",
+  "cursor",
   "classes",
   "hasNext",
   "rounded",

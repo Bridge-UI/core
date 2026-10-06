@@ -96,9 +96,9 @@ test("it should emit update:cursor before next and previous", async () => {
   await wrapper.find("button[aria-label='Next']").trigger("click");
   await wrapper.find("button[aria-label='Previous']").trigger("click");
 
-  expect(wrapper.emitted("update:cursor")).toEqual([["c"], ["a"]]);
   expect(wrapper.emitted("next")).toHaveLength(1);
   expect(wrapper.emitted("previous")).toHaveLength(1);
+  expect(wrapper.emitted("update:cursor")).toEqual([["c"], ["a"]]);
 });
 
 test("it should disable controls when a cursor is null", async () => {
@@ -114,8 +114,20 @@ test("it should disable controls when a cursor is null", async () => {
 
   await next.trigger("click");
 
-  expect(wrapper.emitted("update:cursor")).toBeUndefined();
   expect(wrapper.emitted("next")).toBeUndefined();
+  expect(wrapper.emitted("update:cursor")).toBeUndefined();
+});
+
+test("it should not forward cursor props to the root element", () => {
+  const wrapper = mountPagination({
+    props: { cursor: "b", mode: "simple", nextCursor: "c", prevCursor: "a" },
+  });
+
+  const root = wrapper.find("nav");
+
+  expect(root.attributes("cursor")).toBeUndefined();
+  expect(root.attributes("nextcursor")).toBeUndefined();
+  expect(root.attributes("prevcursor")).toBeUndefined();
 });
 
 test("it should let hasNext and hasPrevious override the cursors", () => {
