@@ -727,7 +727,7 @@ export function useChart(props: ChartProps, libDefaults: ChartLibDefaults) {
     return {
       id: `${chartId}-table`,
       className: cn({
-        "sr-only": true,
+        "sr-only block": true,
         [get(mergedClasses, "table") ?? ""]: true,
       }),
     };

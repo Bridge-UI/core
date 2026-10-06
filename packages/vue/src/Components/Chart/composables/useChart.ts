@@ -734,7 +734,7 @@ export function useChart(
     return {
       id: `${chartId}-table`,
       class: cn({
-        "sr-only": true,
+        "sr-only block": true,
         [get(mergedClasses.value, "table") ?? ""]: true,
       }),
     };
