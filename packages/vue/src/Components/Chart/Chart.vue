@@ -5,7 +5,7 @@ import { useTemplateRef } from "vue";
 // ** Local Imports
 import type { ChartOwnProps, ChartSlots } from "@/Components/Chart/chart.types";
 import { useChart } from "@/Components/Chart/composables/useChart";
-import { Skeleton } from "@/Components/Skeleton";
+import LoadingSpin from "@/Utils/LoadingSpin.vue";
 
 defineSlots<ChartSlots>();
 
@@ -51,7 +51,7 @@ const {
 
       <div v-if="isLoading" v-bind="loadingBind">
         <slot name="loading">
-          <Skeleton class="size-full" />
+          <LoadingSpin />
         </slot>
       </div>
 

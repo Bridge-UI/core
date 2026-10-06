@@ -156,6 +156,15 @@ test("it should render the loading slot while loading", () => {
   expect(screen.queryByText("No data")).toBeNull();
 });
 
+test("it should show the spinner overlay while loading", () => {
+  renderChart({ loading: true });
+
+  expect(screen.getByRole("figure").getAttribute("aria-busy")).toBe("true");
+  expect(
+    screen.getByRole("status", { hidden: true, name: "Loading" }),
+  ).toBeTruthy();
+});
+
 test("it should navigate categories with the keyboard and announce values", () => {
   renderChart();
 

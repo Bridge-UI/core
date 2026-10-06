@@ -2,8 +2,8 @@
 import type { ChartProps } from "@/Components/Chart/chart.types";
 import { ChartContext } from "@/Components/Chart/ChartContext";
 import { useChart } from "@/Components/Chart/hooks/useChart";
-import { Skeleton } from "@/Components/Skeleton";
 import { hasNamedSlot } from "@/Utils";
+import { LoadingSpin } from "@/Utils/LoadingSpin";
 
 function Chart(props: ChartProps) {
   const {
@@ -39,7 +39,7 @@ function Chart(props: ChartProps) {
               {hasNamedSlot(slots, "loading") ? (
                 slots?.loading
               ) : (
-                <Skeleton className="size-full" />
+                <LoadingSpin />
               )}
             </div>
           ) : null}

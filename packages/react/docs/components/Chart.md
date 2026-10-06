@@ -125,6 +125,8 @@ Legend entries are toggle buttons: click to hide or show a series, hover or focu
 
 ### Loading and empty
 
+While `loading` is true, the plot stays visible behind a translucent overlay with a spinner, and the root gets `aria-busy`. Use the `loading` slot to replace the spinner.
+
 ```tsx
 <Chart loading={isLoading} categories={months}>
   <ChartSeries name="Revenue" data={revenue} />
@@ -188,7 +190,7 @@ Theme tokens (`Chart.tokens.theme`) set the grid, axis, and label colors as Tail
 | `children`    | `ReactNode`            | —                        | `ChartSeries`, `ChartAxis`, `ChartLegend`, `ChartTooltip`. |
 | `classes`     | `ChartClasses`         | —                        | `root`, `plot`, `loading`, `empty`, `table`.               |
 | `height`      | `number \| string`     | `280`                    | Plot height.                                               |
-| `loading`     | `boolean`              | `false`                  | Shows the loading overlay.                                 |
+| `loading`     | `boolean`              | `false`                  | Shows the spinner overlay.                                 |
 | `palette`     | `ChartSeriesColor[]`   | primary, info, success … | Series colors in order.                                    |
 | `size`        | `ChartSize`            | `"md"`                   | Density of labels, legend, and tooltip.                    |
 | `slots`       | `{ empty?, loading? }` | —                        | Custom empty and loading content.                          |

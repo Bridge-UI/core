@@ -662,6 +662,7 @@ export function useChart(
       omit(split.value.inheritedAttrs, ["style"]),
       {
         role: "figure",
+        "aria-busy": isLoading.value || undefined,
         style: [
           { width: toChartCssSize(componentProps.value.width, "100%") },
           split.value.inheritedAttrs.style,
@@ -714,7 +715,8 @@ export function useChart(
   const loadingBind = computed((): HTMLAttributes => {
     return {
       class: cn({
-        "absolute inset-0 z-10 flex": true,
+        "absolute inset-0 z-10 flex items-center justify-center": true,
+        "bg-white/50 dark:bg-dark-900/50": true,
         [get(mergedClasses.value, "loading") ?? ""]: true,
       }),
     };
