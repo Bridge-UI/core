@@ -236,6 +236,106 @@ test("it should emit update:page when a page button is clicked", async () => {
   expect(wrapper.emitted("update:page")?.[0]).toEqual([2]);
 });
 
+test("it should render a cursor pager and no page status in cursor mode", async () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      columns,
+      perPage: 10,
+      cursor: "b",
+      nextCursor: "c",
+      prevCursor: null,
+    },
+  });
+
+  expect(wrapper.text()).not.toMatch(/Page \d+ of/);
+  expect(wrapper.find("button[aria-label='First page']").exists()).toBe(false);
+  expect(wrapper.find('[role="combobox"]').exists()).toBe(true);
+  expect(
+    wrapper.find("button[aria-label='Previous']").attributes("disabled"),
+  ).toBeDefined();
+
+  await wrapper.find("button[aria-label='Next']").trigger("click");
+
+  expect(wrapper.emitted("update:cursor")?.[0]).toEqual(["c"]);
+});
+
+test("it should not sort, filter, or slice rows locally in cursor mode", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      page: 2,
+      columns,
+      perPage: 1,
+      search: "Ada",
+      nextCursor: "c",
+      sorting: { id: "role", desc: true },
+    },
+  });
+
+  const bodyRows = wrapper.findAll("tbody tr");
+
+  expect(bodyRows).toHaveLength(2);
+  expect(bodyRows[0]?.text()).toContain("Ada Lovelace");
+  expect(bodyRows[1]?.text()).toContain("Alan Turing");
+});
+
+test("it should pass cursor props to the pagination slot", async () => {
+  let slotProps: Record<string, unknown> = {};
+
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      columns,
+      cursor: "b",
+      prevCursor: "a",
+      nextCursor: null,
+    },
+    slots: {
+      pagination: (props: Record<string, unknown>) => {
+        slotProps = props;
+
+        return "Custom pager";
+      },
+    },
+  });
+
+  expect(wrapper.text()).toContain("Custom pager");
+  expect(slotProps).toMatchObject({
+    cursor: "b",
+    hasNext: false,
+    prevCursor: "a",
+    nextCursor: null,
+    hasPrevious: true,
+  });
+
+  (slotProps.onPrevious as () => void)();
+  await flushPromises();
+
+  expect(wrapper.emitted("update:cursor")?.[0]).toEqual(["a"]);
+});
+
+test("it should warn when cursor props are mixed with numbered paging", () => {
+  const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      page: 1,
+      columns,
+      totalCount: 40,
+      nextCursor: "c",
+    },
+  });
+
+  expect(warn).toHaveBeenCalledWith(
+    expect.stringContaining("Cursor paging wins"),
+  );
+  expect(wrapper.text()).not.toMatch(/Page \d+ of/);
+
+  warn.mockRestore();
+});
+
 test("it should slice rows locally when page and perPage are set", () => {
   const wrapper = mountDataTable({
     props: {

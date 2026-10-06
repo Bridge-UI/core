@@ -498,6 +498,55 @@ test("it should emit onPageChange from paginationSlotProps", () => {
   expect(onPageChange).toHaveBeenCalledWith(3);
 });
 
+test("it should enable cursor paging without a page count", () => {
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        page: 2,
+        perPage: 1,
+        rows: people,
+        nextCursor: "c",
+        prevCursor: null,
+        columns: peopleColumns,
+      },
+      libDefaults,
+    ),
+  );
+
+  expect(result.current.showPager).toBe(true);
+  expect(result.current.cursorPaged).toBe(true);
+  expect(result.current.serverPaged).toBe(true);
+  expect(result.current.clientPaged).toBe(false);
+  expect(result.current.rowViews).toHaveLength(people.length);
+  expect(result.current.resolvedPageCount).toBeUndefined();
+});
+
+test("it should emit onCursorChange from paginationSlotProps", () => {
+  const onCursorChange = vi.fn();
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        cursor: "b",
+        rows: people,
+        onCursorChange,
+        prevCursor: "a",
+        nextCursor: null,
+        columns: peopleColumns,
+      },
+      libDefaults,
+    ),
+  );
+
+  act(() => {
+    result.current.paginationSlotProps.onNext();
+    result.current.paginationSlotProps.onPrevious();
+  });
+
+  expect(result.current.paginationSlotProps.hasNext).toBe(false);
+  expect(result.current.paginationSlotProps.hasPrevious).toBe(true);
+  expect(onCursorChange.mock.calls).toEqual([["a"]]);
+});
+
 test("it should hide columns from the hiddenColumns binding", () => {
   const { result } = renderHook(() =>
     useDataTable(

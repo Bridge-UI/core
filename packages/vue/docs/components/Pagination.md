@@ -51,15 +51,27 @@ Applies to `ghost` and `text` item corners and the `outlined` group / edge contr
 
 ### Simple (cursor / prev–next only)
 
-For APIs that do not expose a total page count:
+For APIs that return `next_cursor` / `prev_cursor` instead of a page total. `v-model:cursor` is set to `next-cursor` or `prev-cursor` when the user navigates, and a `null` cursor disables its control:
 
 ```vue
 <Pagination
   mode="simple"
+  v-model:cursor="cursor"
   aria-label="Pagination"
-  :has-next="Boolean(nextCursor)"
-  v-on:next="fetchPage(nextCursor)"
-  :has-previous="Boolean(prevCursor)"
-  v-on:previous="fetchPage(prevCursor)"
+  :next-cursor="pagination.next_cursor"
+  :prev-cursor="pagination.prev_cursor"
+/>
+```
+
+`has-next` / `has-previous` override the cursor defaults. `next` / `previous` still fire (after `update:cursor`), so prev/next without cursors keeps working:
+
+```vue
+<Pagination
+  mode="simple"
+  :has-next="hasMore"
+  v-on:next="loadNext"
+  aria-label="Pagination"
+  :has-previous="page > 1"
+  v-on:previous="loadPrevious"
 />
 ```

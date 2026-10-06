@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 
 // ** Core Imports
 import {
+  getPaginationCursorAvailability,
   getPaginationItems,
   type PaginationEntry,
 } from "@bridge-ui/core/Domain";
@@ -42,6 +43,7 @@ const paginationBridgeKeys = [
   "color",
   "count",
   "slots",
+  "cursor",
   "onNext",
   "classes",
   "hasNext",
@@ -49,7 +51,9 @@ const paginationBridgeKeys = [
   "variant",
   "disabled",
   "onChange",
+  "nextCursor",
   "onPrevious",
+  "prevCursor",
   "customProps",
   "defaultPage",
   "hasPrevious",
@@ -57,8 +61,13 @@ const paginationBridgeKeys = [
   "boundaryCount",
   "hideNextButton",
   "hidePrevButton",
+  "onCursorChange",
 ] as const satisfies readonly (
-  "onNext" | "onChange" | "onPrevious" | keyof PaginationOwnProps
+  | "onNext"
+  | "onChange"
+  | "onPrevious"
+  | "onCursorChange"
+  | keyof PaginationOwnProps
 )[];
 
 type PaginationLibDefaults = LibDefaultsShape<
@@ -80,7 +89,10 @@ type PaginationMerged = MergeLibDefaults<
   PaginationOwnProps,
   PaginationLibDefaults
 > &
-  Pick<PaginationProps, "onNext" | "onChange" | "onPrevious">;
+  Pick<
+    PaginationProps,
+    "onNext" | "onChange" | "onPrevious" | "onCursorChange"
+  >;
 
 export function usePagination(
   props: PaginationProps,
@@ -118,6 +130,17 @@ export function usePagination(
     }
 
     return isControlled ? (props.page ?? 1) : uncontrolledPage;
+  });
+
+  const hasNext = derived(() => {
+    return getPaginationCursorAvailability(merged.hasNext, merged.nextCursor);
+  });
+
+  const hasPrevious = derived(() => {
+    return getPaginationCursorAvailability(
+      merged.hasPrevious,
+      merged.prevCursor,
+    );
   });
 
   const customProps = derived(() => {
@@ -218,8 +241,12 @@ export function usePagination(
     }
 
     if (merged.mode === "simple") {
-      if (merged.hasPrevious === false) {
+      if (hasPrevious === false) {
         return;
+      }
+
+      if (merged.prevCursor !== undefined) {
+        merged.onCursorChange?.(merged.prevCursor);
       }
 
       merged.onPrevious?.();
@@ -227,7 +254,7 @@ export function usePagination(
     }
 
     setPage(page - 1);
-  }, [page, merged, setPage]);
+  }, [page, merged, setPage, hasPrevious]);
 
   const goNext = useCallback(() => {
     if (merged.disabled) {
@@ -235,8 +262,12 @@ export function usePagination(
     }
 
     if (merged.mode === "simple") {
-      if (merged.hasNext === false) {
+      if (hasNext === false) {
         return;
+      }
+
+      if (merged.nextCursor !== undefined) {
+        merged.onCursorChange?.(merged.nextCursor);
       }
 
       merged.onNext?.();
@@ -244,7 +275,7 @@ export function usePagination(
     }
 
     setPage(page + 1);
-  }, [page, merged, setPage]);
+  }, [page, merged, hasNext, setPage]);
 
   const prevDisabled = derived(() => {
     if (merged.disabled) {
@@ -252,7 +283,7 @@ export function usePagination(
     }
 
     if (merged.mode === "simple") {
-      return merged.hasPrevious === false;
+      return hasPrevious === false;
     }
 
     return page <= 1;
@@ -264,7 +295,7 @@ export function usePagination(
     }
 
     if (merged.mode === "simple") {
-      return merged.hasNext === false;
+      return hasNext === false;
     }
 
     return page >= (merged.count ?? 0);

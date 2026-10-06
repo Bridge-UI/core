@@ -178,3 +178,23 @@ test("it should keep header text from clipping truncated glyphs", () => {
       );
     });
 });
+
+test("it should render a cursor pager instead of the page status", () => {
+  cy.mount(
+    <DataTable
+      cursor="b"
+      perPage={10}
+      prevCursor="a"
+      columns={columns}
+      nextCursor={null}
+      rows={[{ id: "1", name: "Ada Lovelace" }]}
+      onCursorChange={cy.stub().as("onCursorChange")}
+    />,
+  );
+
+  cy.contains(/Page \d+ of/).should("not.exist");
+  cy.get("[role='combobox']").should("be.visible");
+  cy.get("button[aria-label='Next']").should("be.disabled");
+  cy.get("button[aria-label='Previous']").should("be.enabled").click();
+  cy.get("@onCursorChange").should("have.been.calledOnceWith", "a");
+});

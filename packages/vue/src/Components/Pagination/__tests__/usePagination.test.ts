@@ -79,3 +79,26 @@ test("it should skip page entries in simple mode", () => {
   expect(result.entries.value).toEqual([]);
   expect(result.nextBind.value.disabled).toBe(false);
 });
+
+test("it should derive simple-mode availability from the cursors", () => {
+  const { result } = mountUsePagination(
+    { mode: "simple", nextCursor: "c", prevCursor: null },
+    ref(1),
+    { ...libDefaults, mode: "simple" },
+  );
+
+  expect(result.prevBind.value.disabled).toBe(true);
+  expect(result.nextBind.value.disabled).toBe(false);
+});
+
+test("it should emit update:cursor before next", () => {
+  const { emit, result } = mountUsePagination(
+    { mode: "simple", nextCursor: "c", prevCursor: "a" },
+    ref(1),
+    { ...libDefaults, mode: "simple" },
+  );
+
+  result.nextBind.value.onClick?.({} as never);
+
+  expect(emit.mock.calls).toEqual([["update:cursor", "c"], ["next"]]);
+});

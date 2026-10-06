@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// ** Core Imports
+import type { PaginationCursor } from "@bridge-ui/core/Domain";
+
 // ** Local Imports
 import { Icon } from "@/Components/Icon";
 import { usePagination } from "@/Components/Pagination/composables/usePagination";
@@ -16,11 +19,14 @@ const emit = defineEmits<PaginationEmits>();
 
 const props = withDefaults(defineProps<PaginationOwnProps>(), {
   disabled: false,
+  hasNext: undefined,
   hideNextButton: false,
   hidePrevButton: false,
+  hasPrevious: undefined,
 });
 
 const model = defineModel<number>({ default: 1 });
+const cursor = defineModel<PaginationCursor>("cursor");
 
 const {
   entries,
@@ -52,6 +58,7 @@ const {
   },
   model,
   emit,
+  cursor,
 );
 </script>
 

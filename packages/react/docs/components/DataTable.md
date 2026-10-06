@@ -151,6 +151,29 @@ When `page` and `pageCount` (or `totalCount`) are set, DataTable does not sort o
 />
 ```
 
+### Cursor pagination
+
+For APIs that return `next_cursor` / `prev_cursor` instead of a page total, pass `cursor` / `onCursorChange` (or `nextCursor` / `prevCursor`). DataTable then does not sort, filter, or slice `rows` locally, and the footer shows a previous / next `Pagination` instead of the "Page X of Y" label. The per-page Select stays. A `null` cursor disables its control:
+
+```tsx
+<DataTable
+  rows={audits}
+  cursor={cursor}
+  columns={columns}
+  perPage={perPage}
+  sorting={sorting}
+  filters={filters}
+  onCursorChange={setCursor}
+  onSortingChange={setSorting}
+  onFiltersChange={setFilters}
+  onPerPageChange={setPerPage}
+  nextCursor={pagination.next_cursor}
+  prevCursor={pagination.prev_cursor}
+/>
+```
+
+DataTable never resets the cursor. Set it back to `null` in the app when sorting, filters, or per-page change. A `slots.pagination` function also receives `cursor`, `nextCursor`, `prevCursor`, `hasNext`, `hasPrevious`, `onNext`, and `onPrevious`. `customProps.cursorPagination` forwards extra props to the built-in cursor pager. Do not combine cursor props with `page` + `pageCount` / `totalCount`: cursor paging wins and a warning is logged in development.
+
 ### Empty, loading, and footer
 
 Empty rows render `EmptyState` at the table `size`, with the semantic `inbox` icon and the i18n title `"No data"`. `slots.empty` replaces it. `loading` keeps the table visible. `loadingVariant="overlay"` (default) dims the table with a spin; `loadingVariant="bar"` dims the table and draws a progress line under the header. `slots.loading` replaces the indicator. `slots.footer` renders below the table, above the chrome footer:

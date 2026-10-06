@@ -66,6 +66,75 @@ test("it should support simple prev/next mode", () => {
   expect(onPrevious).not.toHaveBeenCalled();
 });
 
+test("it should call onCursorChange before onNext and onPrevious", () => {
+  const calls: string[] = [];
+
+  render(
+    <Pagination
+      mode="simple"
+      nextCursor="c"
+      prevCursor="a"
+      onNext={() => calls.push("next")}
+      onPrevious={() => calls.push("previous")}
+      onCursorChange={(cursor) => calls.push(`cursor:${cursor}`)}
+    />,
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: "Next" }));
+  fireEvent.click(screen.getByRole("button", { name: "Previous" }));
+
+  expect(calls).toEqual(["cursor:c", "next", "cursor:a", "previous"]);
+});
+
+test("it should disable controls when a cursor is null", () => {
+  const onNext = vi.fn();
+  const onCursorChange = vi.fn();
+
+  render(
+    <Pagination
+      mode="simple"
+      onNext={onNext}
+      nextCursor={null}
+      prevCursor={null}
+      onCursorChange={onCursorChange}
+    />,
+  );
+
+  const next = screen.getByRole("button", { name: "Next" });
+
+  expect(next).toHaveProperty("disabled", true);
+  expect(screen.getByRole("button", { name: "Previous" })).toHaveProperty(
+    "disabled",
+    true,
+  );
+
+  fireEvent.click(next);
+
+  expect(onNext).not.toHaveBeenCalled();
+  expect(onCursorChange).not.toHaveBeenCalled();
+});
+
+test("it should let hasNext and hasPrevious override the cursors", () => {
+  render(
+    <Pagination
+      hasPrevious
+      mode="simple"
+      nextCursor="c"
+      hasNext={false}
+      prevCursor={null}
+    />,
+  );
+
+  expect(screen.getByRole("button", { name: "Next" })).toHaveProperty(
+    "disabled",
+    true,
+  );
+  expect(screen.getByRole("button", { name: "Previous" })).toHaveProperty(
+    "disabled",
+    false,
+  );
+});
+
 test("it should apply visual variants", () => {
   const { rerender, container } = render(
     <Pagination page={1} count={3} variant="outlined" />,

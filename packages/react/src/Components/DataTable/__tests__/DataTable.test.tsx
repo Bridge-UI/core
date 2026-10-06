@@ -231,6 +231,112 @@ test("it should render built-in pagination when page and pageCount are set", () 
   expect(onPageChange).toHaveBeenCalledWith(2);
 });
 
+test("it should render a cursor pager and no page status in cursor mode", () => {
+  const onCursorChange = vi.fn();
+
+  render(
+    <DataTable
+      cursor="b"
+      rows={rows}
+      perPage={10}
+      nextCursor="c"
+      columns={columns}
+      prevCursor={null}
+      onCursorChange={onCursorChange}
+    />,
+  );
+
+  expect(screen.queryByText(/Page \d+ of/)).toBeNull();
+  expect(screen.queryByRole("button", { name: "First page" })).toBeNull();
+  expect(screen.getByRole("combobox")).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Previous" })).toHaveProperty(
+    "disabled",
+    true,
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: "Next" }));
+
+  expect(onCursorChange).toHaveBeenCalledWith("c");
+});
+
+test("it should not sort, filter, or slice rows locally in cursor mode", () => {
+  render(
+    <DataTable
+      page={2}
+      perPage={1}
+      rows={rows}
+      search="Ada"
+      nextCursor="c"
+      columns={columns}
+      sorting={{ id: "role", desc: true }}
+    />,
+  );
+
+  const bodyRows = screen.getAllByRole("row").slice(1);
+
+  expect(bodyRows).toHaveLength(2);
+  expect(bodyRows[0]?.textContent).toContain("Ada Lovelace");
+  expect(bodyRows[1]?.textContent).toContain("Alan Turing");
+});
+
+test("it should pass cursor props to the pagination slot", () => {
+  const onCursorChange = vi.fn();
+  const pagination = vi.fn((props: Record<string, unknown>) => {
+    return (
+      <button type="button" onClick={props.onPrevious as () => void}>
+        Older
+      </button>
+    );
+  });
+
+  render(
+    <DataTable
+      cursor="b"
+      rows={rows}
+      prevCursor="a"
+      nextCursor={null}
+      columns={columns}
+      slots={{ pagination }}
+      onCursorChange={onCursorChange}
+    />,
+  );
+
+  expect(pagination).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      cursor: "b",
+      hasNext: false,
+      prevCursor: "a",
+      nextCursor: null,
+      hasPrevious: true,
+    }),
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: "Older" }));
+
+  expect(onCursorChange).toHaveBeenCalledWith("a");
+});
+
+test("it should warn when cursor props are mixed with numbered paging", () => {
+  const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+  render(
+    <DataTable
+      page={1}
+      rows={rows}
+      nextCursor="c"
+      totalCount={40}
+      columns={columns}
+    />,
+  );
+
+  expect(warn).toHaveBeenCalledWith(
+    expect.stringContaining("Cursor paging wins"),
+  );
+  expect(screen.queryByText(/Page \d+ of/)).toBeNull();
+
+  warn.mockRestore();
+});
+
 test("it should slice rows locally when page and perPage are set", () => {
   render(
     <DataTable

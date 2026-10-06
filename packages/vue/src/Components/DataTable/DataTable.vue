@@ -6,6 +6,7 @@ import { computed, useId, useSlots, type VNodeChild } from "vue";
 import type {
   DataTableColumnSearch,
   DataTableFilters,
+  PaginationCursor,
 } from "@bridge-ui/core/Domain";
 import { cn } from "@bridge-ui/core/Utils";
 
@@ -27,6 +28,7 @@ import DataTableSelection from "@/Components/DataTable/DataTableSelection.vue";
 import DataTableSortButton from "@/Components/DataTable/DataTableSortButton.vue";
 import { EmptyState } from "@/Components/EmptyState";
 import { Icon } from "@/Components/Icon";
+import { Pagination } from "@/Components/Pagination";
 import { Progress } from "@/Components/Progress";
 import { Select } from "@/Components/Select";
 import {
@@ -53,6 +55,7 @@ const props = withDefaults(
     Omit<
       DataTableOwnProps<T>,
       | "page"
+      | "cursor"
       | "search"
       | "filters"
       | "perPage"
@@ -86,6 +89,7 @@ const perPage = defineModel<number>("perPage");
 const search = defineModel<string>("search");
 const expanded = defineModel<string[]>("expanded");
 const selection = defineModel<string[]>("selection");
+const cursor = defineModel<PaginationCursor>("cursor");
 const filters = defineModel<DataTableFilters>("filters");
 const sorting = defineModel<DataTableSorting>("sorting");
 const hiddenColumns = defineModel<string[]>("hiddenColumns");
@@ -110,6 +114,7 @@ const {
   toolbarBind,
   getCellBind,
   columnCount,
+  cursorPaged,
   showPerPage,
   showToolbar,
   selectedBind,
@@ -153,6 +158,7 @@ const {
   },
   {
     page,
+    cursor,
     search,
     perPage,
     filters,
@@ -536,12 +542,23 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
           </span>
 
           <slot name="pagination" v-bind="paginationSlotProps">
+            <Pagination
+              size="sm"
+              v-bind="merged.customProps?.cursorPagination"
+              mode="simple"
+              v-if="cursorPaged"
+              v-on:next="paginationSlotProps.onNext"
+              :has-next="paginationSlotProps.hasNext"
+              v-on:previous="paginationSlotProps.onPrevious"
+              :has-previous="paginationSlotProps.hasPrevious"
+            />
+
             <DataTablePagination
               size="sm"
               v-bind="merged.customProps?.pagination"
               v-model="paginationPage"
               :count="resolvedPageCount"
-              v-if="resolvedPageCount !== undefined"
+              v-else-if="resolvedPageCount !== undefined"
             />
           </slot>
         </div>
