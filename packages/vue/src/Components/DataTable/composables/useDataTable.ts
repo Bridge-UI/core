@@ -38,6 +38,7 @@ import {
   ref,
   useAttrs,
   useSlots,
+  watch,
   type Ref,
   type VNode,
   type VNodeChild,
@@ -45,6 +46,7 @@ import {
 
 // ** Core Imports
 import {
+  DATATABLE_AMBIGUOUS_PAGING_WARNING,
   DATATABLE_EXPAND_COLUMN_ID,
   DATATABLE_SELECTION_COLUMN_ID,
   getDataTableAriaSort,
@@ -54,6 +56,7 @@ import {
   getDataTableColumnSearch,
   getDataTableDefaultCellContent,
   getDataTableFooterLayout,
+  getDataTablePaginationSlotProps,
   getDataTablePerPageSelectOptions,
   getDataTableResolvedPageCount,
   getDataTableResolvedPerPage,
@@ -67,7 +70,9 @@ import {
   isDataTableColumnFiltered,
   isDataTableColumnSearchable,
   isDataTableColumnSearched,
+  isDataTableCursorPaged,
   isDataTableExpandEnabled,
+  isDataTablePagingAmbiguous,
   isDataTablePerPageEnabled,
   isDataTableSearchEnabled,
   isDataTableSelectionEnabled,
@@ -99,6 +104,7 @@ import {
   type DataTableSorting,
   type DataTableStickyEdge,
   type DataTableStickyInset,
+  type PaginationCursor,
 } from "@bridge-ui/core/Domain";
 import { tableVariantProps as variantProps } from "@bridge-ui/core/Tokens";
 import {
@@ -126,6 +132,7 @@ const dataTableBridgeKeys = [
   "page",
   "rows",
   "size",
+  "cursor",
   "search",
   "classes",
   "columns",
@@ -141,6 +148,8 @@ const dataTableBridgeKeys = [
   "hoverable",
   "pageCount",
   "selection",
+  "nextCursor",
+  "prevCursor",
   "showSearch",
   "totalCount",
   "customProps",
@@ -235,6 +244,7 @@ export type DataTableVisibilityItem = {
 
 export type DataTableModels = {
   columnSearch: Ref<undefined | DataTableColumnSearch>;
+  cursor?: Ref<undefined | PaginationCursor>;
   expanded: Ref<string[] | undefined>;
   filters: Ref<undefined | DataTableFilters>;
   hiddenColumns: Ref<string[] | undefined>;
@@ -291,6 +301,7 @@ export function useDataTable<T extends Record<string, unknown>>(
         ...attrs,
         ...props,
         page: models.page.value,
+        cursor: models.cursor?.value,
         perPage: models.perPage.value,
         filters: models.filters.value,
         sorting: models.sorting.value,
@@ -375,11 +386,39 @@ export function useDataTable<T extends Record<string, unknown>>(
     return isDataTableSelectionMultiple(merged.value.selectionMode);
   });
 
+  const cursorPaged = computed(() => {
+    return isDataTableCursorPaged({
+      cursor: models.cursor?.value,
+      nextCursor: merged.value.nextCursor,
+      prevCursor: merged.value.prevCursor,
+      hasCursorHandler:
+        instance?.vnode.props?.["onUpdate:cursor"] !== undefined,
+    });
+  });
+
+  watch(
+    () => {
+      return isDataTablePagingAmbiguous(
+        models.page.value,
+        merged.value.pageCount,
+        merged.value.totalCount,
+        cursorPaged.value,
+      );
+    },
+    (ambiguous) => {
+      if (ambiguous && process.env.NODE_ENV !== "production") {
+        console.warn(DATATABLE_AMBIGUOUS_PAGING_WARNING);
+      }
+    },
+    { immediate: true },
+  );
+
   const serverPaged = computed(() => {
     return isDataTableServerPaged(
       models.page.value,
       merged.value.pageCount,
       merged.value.totalCount,
+      cursorPaged.value,
     );
   });
 
@@ -389,6 +428,7 @@ export function useDataTable<T extends Record<string, unknown>>(
       models.perPage.value,
       merged.value.pageCount,
       merged.value.totalCount,
+      cursorPaged.value,
     );
   });
 
@@ -708,6 +748,10 @@ export function useDataTable<T extends Record<string, unknown>>(
   });
 
   const resolvedPageCount = computed(() => {
+    if (cursorPaged.value) {
+      return undefined;
+    }
+
     return getDataTableResolvedPageCount({
       perPage: models.perPage.value,
       clientPaged: clientPaged.value,
@@ -723,7 +767,9 @@ export function useDataTable<T extends Record<string, unknown>>(
 
   const showPager = computed(() => {
     return (
-      Boolean(vueSlots.pagination) || resolvedPageCount.value !== undefined
+      Boolean(vueSlots.pagination) ||
+      cursorPaged.value ||
+      resolvedPageCount.value !== undefined
     );
   });
 
@@ -1162,13 +1208,22 @@ export function useDataTable<T extends Record<string, unknown>>(
   }
 
   const paginationSlotProps = computed((): DataTablePaginationSlotProps => {
-    return {
-      page: models.page.value ?? 1,
-      count: resolvedPageCount.value ?? 1,
+    return getDataTablePaginationSlotProps({
+      page: models.page.value,
+      cursor: models.cursor?.value,
+      cursorPaged: cursorPaged.value,
+      count: resolvedPageCount.value,
+      nextCursor: merged.value.nextCursor,
+      prevCursor: merged.value.prevCursor,
       onPageChange: (nextPage) => {
         models.page.value = nextPage;
       },
-    };
+      onCursorChange: (nextCursor) => {
+        if (models.cursor) {
+          models.cursor.value = nextCursor;
+        }
+      },
+    });
   });
 
   const perPageSlotProps = computed((): DataTablePerPageSlotProps => {
@@ -1335,6 +1390,7 @@ export function useDataTable<T extends Record<string, unknown>>(
     getCellBind,
     columnCount,
     clientPaged,
+    cursorPaged,
     serverPaged,
     showPerPage,
     showToolbar,

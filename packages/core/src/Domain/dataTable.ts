@@ -20,6 +20,9 @@ import {
   without,
 } from "es-toolkit/compat";
 
+// ** Local Imports
+import type { PaginationCursor } from "@/Domain/pagination";
+
 /**
  * Internal column id for the row-expand control column.
  */
@@ -61,6 +64,10 @@ export const DATATABLE_PER_PAGE_OPTIONS = [10, 25, 50, 100] as const;
 
 /** Fallback page size when `perPage` is missing or invalid. */
 export const DEFAULT_DATATABLE_PER_PAGE = 10;
+
+/** Development warning for {@link isDataTablePagingAmbiguous}. */
+export const DATATABLE_AMBIGUOUS_PAGING_WARNING =
+  "[Bridge UI] DataTable received cursor props together with `page` and `pageCount` / `totalCount`. Cursor paging wins; pass one paging mode.";
 
 /**
  * Controlled sort: one column, or `null` when unsorted.
@@ -512,7 +519,26 @@ export function toggleDataTableSorting(
 }
 
 /**
- * Whether the app owns paging (`page` plus `pageCount` or `totalCount`).
+ * Whether the app pages with cursors: `cursor` is bound (value or change
+ * handler), or `nextCursor` / `prevCursor` are passed (`null` included).
+ */
+export function isDataTableCursorPaged(input: {
+  cursor?: PaginationCursor;
+  hasCursorHandler?: boolean;
+  nextCursor?: PaginationCursor;
+  prevCursor?: PaginationCursor;
+}): boolean {
+  return (
+    input.cursor !== undefined ||
+    input.nextCursor !== undefined ||
+    input.prevCursor !== undefined ||
+    Boolean(input.hasCursorHandler)
+  );
+}
+
+/**
+ * Whether the app owns paging: cursor paging, or `page` plus `pageCount` or
+ * `totalCount`.
  *
  * DataTable does not sort, filter, or slice `rows` locally in this mode.
  */
@@ -520,24 +546,43 @@ export function isDataTableServerPaged(
   page: number | undefined,
   pageCount: number | undefined,
   totalCount?: number | undefined,
+  cursorPaged = false,
 ): boolean {
+  if (cursorPaged) {
+    return true;
+  }
+
   return !isNil(page) && (!isNil(pageCount) || !isNil(totalCount));
 }
 
 /**
+ * Whether cursor props are mixed with numbered server paging (`page` plus
+ * `pageCount` / `totalCount`). DataTable prefers cursor paging in that case.
+ */
+export function isDataTablePagingAmbiguous(
+  page: number | undefined,
+  pageCount: number | undefined,
+  totalCount: number | undefined,
+  cursorPaged: boolean,
+): boolean {
+  return cursorPaged && isDataTableServerPaged(page, pageCount, totalCount);
+}
+
+/**
  * Whether DataTable should slice filtered `rows` locally (`page` + `perPage`,
- * without `pageCount` / `totalCount`).
+ * without `pageCount` / `totalCount` and outside cursor paging).
  */
 export function isDataTableClientPaged(
   page: number | undefined,
   perPage: number | undefined,
   pageCount: number | undefined,
   totalCount?: number | undefined,
+  cursorPaged = false,
 ): boolean {
   return (
     !isNil(page) &&
     !isNil(perPage) &&
-    !isDataTableServerPaged(page, pageCount, totalCount)
+    !isDataTableServerPaged(page, pageCount, totalCount, cursorPaged)
   );
 }
 
@@ -648,9 +693,34 @@ export function sliceDataTablePage<T>(
  */
 export type DataTablePaginationSlotProps = {
   /**
-   * Total pages for the chrome pager.
+   * Total pages for the chrome pager (`1` in cursor paging).
    */
   count: number;
+
+  /**
+   * Current cursor in cursor paging (`null` on the first page).
+   */
+  cursor: PaginationCursor;
+
+  /**
+   * Whether a next page exists.
+   */
+  hasNext: boolean;
+
+  /**
+   * Whether a previous page exists.
+   */
+  hasPrevious: boolean;
+
+  /**
+   * Cursor of the next page in cursor paging.
+   */
+  nextCursor: PaginationCursor;
+
+  /**
+   * Goes to the next page (sets `cursor` to `nextCursor` in cursor paging).
+   */
+  onNext: () => void;
 
   /**
    * Called when the page should change.
@@ -658,10 +728,81 @@ export type DataTablePaginationSlotProps = {
   onPageChange: (page: number) => void;
 
   /**
+   * Goes to the previous page (sets `cursor` to `prevCursor` in cursor paging).
+   */
+  onPrevious: () => void;
+
+  /**
    * Current 1-based page.
    */
   page: number;
+
+  /**
+   * Cursor of the previous page in cursor paging.
+   */
+  prevCursor: PaginationCursor;
 };
+
+/**
+ * Builds {@link DataTablePaginationSlotProps} for numbered or cursor paging.
+ *
+ * In cursor paging, `hasNext` / `hasPrevious` follow `nextCursor` /
+ * `prevCursor`, and `onNext` / `onPrevious` call `onCursorChange`. Otherwise
+ * they step `page` within `count`.
+ */
+export function getDataTablePaginationSlotProps(input: {
+  count?: number;
+  cursor?: PaginationCursor;
+  cursorPaged: boolean;
+  nextCursor?: PaginationCursor;
+  onCursorChange: (cursor: PaginationCursor) => void;
+  onPageChange: (page: number) => void;
+  page?: number;
+  prevCursor?: PaginationCursor;
+}): DataTablePaginationSlotProps {
+  const page = input.page ?? 1;
+  const count = input.cursorPaged ? 1 : (input.count ?? 1);
+  const nextCursor = input.nextCursor ?? null;
+  const prevCursor = input.prevCursor ?? null;
+
+  const hasNext = input.cursorPaged ? nextCursor !== null : page < count;
+  const hasPrevious = input.cursorPaged ? prevCursor !== null : page > 1;
+
+  return {
+    page,
+    count,
+    hasNext,
+    nextCursor,
+    prevCursor,
+    hasPrevious,
+    cursor: input.cursor ?? null,
+    onPageChange: input.onPageChange,
+    onNext: () => {
+      if (!hasNext) {
+        return;
+      }
+
+      if (input.cursorPaged) {
+        input.onCursorChange(nextCursor);
+        return;
+      }
+
+      input.onPageChange(page + 1);
+    },
+    onPrevious: () => {
+      if (!hasPrevious) {
+        return;
+      }
+
+      if (input.cursorPaged) {
+        input.onCursorChange(prevCursor);
+        return;
+      }
+
+      input.onPageChange(page - 1);
+    },
+  };
+}
 
 /**
  * Slot props for the built-in per-page Select (or a custom `perPage` slot).

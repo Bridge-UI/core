@@ -449,6 +449,34 @@ test("it should write page from paginationSlotProps", () => {
   expect(result.paginationSlotProps.value.page).toBe(3);
 });
 
+test("it should enable cursor paging without a page count", () => {
+  const { result } = mountUseDataTable(
+    { rows: people, nextCursor: "c", prevCursor: null, columns: peopleColumns },
+    createModels({ page: ref(2), perPage: ref(1) }),
+  );
+
+  expect(result.showPager.value).toBe(true);
+  expect(result.cursorPaged.value).toBe(true);
+  expect(result.serverPaged.value).toBe(true);
+  expect(result.clientPaged.value).toBe(false);
+  expect(result.rowViews.value).toHaveLength(people.length);
+  expect(result.resolvedPageCount.value).toBeUndefined();
+});
+
+test("it should write cursor from paginationSlotProps", () => {
+  const models = createModels({ cursor: ref("b") });
+  const { result } = mountUseDataTable(
+    { rows: people, prevCursor: "a", nextCursor: null, columns: peopleColumns },
+    models,
+  );
+
+  result.paginationSlotProps.value.onNext();
+  result.paginationSlotProps.value.onPrevious();
+
+  expect(models.cursor?.value).toBe("a");
+  expect(result.paginationSlotProps.value.cursor).toBe("a");
+});
+
 test("it should hide columns from the hiddenColumns binding", () => {
   const { result } = mountUseDataTable(
     { rows: people, columns: peopleColumns },

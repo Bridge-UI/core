@@ -1,5 +1,5 @@
 // ** External Imports
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
 // ** Local Imports
 import {
@@ -23,6 +23,7 @@ import {
   getDataTableFooterLayout,
   getDataTableGridTemplate,
   getDataTableHiddenColumnIds,
+  getDataTablePaginationSlotProps,
   getDataTablePerPageOptions,
   getDataTablePerPageSelectOptions,
   getDataTableResetHiddenColumnIds,
@@ -39,8 +40,10 @@ import {
   isDataTableColumnFiltered,
   isDataTableColumnSearchable,
   isDataTableColumnSearched,
+  isDataTableCursorPaged,
   isDataTableExpandEnabled,
   isDataTablePaginationInline,
+  isDataTablePagingAmbiguous,
   isDataTablePerPageEnabled,
   isDataTableSearchEnabled,
   isDataTableSelectionEnabled,
@@ -184,6 +187,35 @@ describe("isDataTableServerPaged", () => {
     expect(isDataTableServerPaged(1, undefined)).toBe(false);
     expect(isDataTableServerPaged(undefined, 4)).toBe(false);
   });
+
+  test("it should be server-paged in cursor paging", () => {
+    expect(isDataTableServerPaged(1, undefined, undefined, true)).toBe(true);
+    expect(isDataTableServerPaged(undefined, undefined, undefined, true)).toBe(
+      true,
+    );
+  });
+});
+
+describe("isDataTableCursorPaged", () => {
+  test("it should detect a bound cursor or cursor props", () => {
+    expect(isDataTableCursorPaged({})).toBe(false);
+    expect(isDataTableCursorPaged({ cursor: null })).toBe(true);
+    expect(isDataTableCursorPaged({ prevCursor: "a" })).toBe(true);
+    expect(isDataTableCursorPaged({ nextCursor: null })).toBe(true);
+    expect(isDataTableCursorPaged({ hasCursorHandler: true })).toBe(true);
+    expect(isDataTableCursorPaged({ hasCursorHandler: false })).toBe(false);
+  });
+});
+
+describe("isDataTablePagingAmbiguous", () => {
+  test("it should flag cursor props mixed with numbered server paging", () => {
+    expect(isDataTablePagingAmbiguous(1, 4, undefined, true)).toBe(true);
+    expect(isDataTablePagingAmbiguous(1, undefined, 40, true)).toBe(true);
+    expect(isDataTablePagingAmbiguous(1, undefined, undefined, true)).toBe(
+      false,
+    );
+    expect(isDataTablePagingAmbiguous(1, 4, undefined, false)).toBe(false);
+  });
 });
 
 describe("isDataTableClientPaged", () => {
@@ -192,6 +224,90 @@ describe("isDataTableClientPaged", () => {
     expect(isDataTableClientPaged(1, 10, 4)).toBe(false);
     expect(isDataTableClientPaged(1, 10, undefined, 40)).toBe(false);
     expect(isDataTableClientPaged(1, undefined, undefined)).toBe(false);
+  });
+
+  test("it should not slice locally in cursor paging", () => {
+    expect(isDataTableClientPaged(1, 10, undefined, undefined, true)).toBe(
+      false,
+    );
+  });
+});
+
+describe("getDataTablePaginationSlotProps", () => {
+  test("it should step the page within count in numbered paging", () => {
+    const onPageChange = vi.fn();
+    const onCursorChange = vi.fn();
+
+    const props = getDataTablePaginationSlotProps({
+      page: 2,
+      count: 3,
+      onPageChange,
+      onCursorChange,
+      cursorPaged: false,
+    });
+
+    expect(props).toMatchObject({
+      page: 2,
+      count: 3,
+      cursor: null,
+      hasNext: true,
+      nextCursor: null,
+      prevCursor: null,
+      hasPrevious: true,
+    });
+
+    props.onNext();
+    props.onPrevious();
+
+    expect(onPageChange.mock.calls).toEqual([[3], [1]]);
+    expect(onCursorChange).not.toHaveBeenCalled();
+  });
+
+  test("it should set the cursor to the next or previous cursor", () => {
+    const onPageChange = vi.fn();
+    const onCursorChange = vi.fn();
+
+    const props = getDataTablePaginationSlotProps({
+      cursor: "b",
+      onPageChange,
+      onCursorChange,
+      nextCursor: "c",
+      prevCursor: "a",
+      cursorPaged: true,
+    });
+
+    expect(props).toMatchObject({
+      count: 1,
+      cursor: "b",
+      hasNext: true,
+      hasPrevious: true,
+    });
+
+    props.onNext();
+    props.onPrevious();
+
+    expect(onCursorChange.mock.calls).toEqual([["c"], ["a"]]);
+    expect(onPageChange).not.toHaveBeenCalled();
+  });
+
+  test("it should disable controls when a cursor is null", () => {
+    const onCursorChange = vi.fn();
+
+    const props = getDataTablePaginationSlotProps({
+      onCursorChange,
+      prevCursor: null,
+      nextCursor: null,
+      cursorPaged: true,
+      onPageChange: vi.fn(),
+    });
+
+    expect(props.hasNext).toBe(false);
+    expect(props.hasPrevious).toBe(false);
+
+    props.onNext();
+    props.onPrevious();
+
+    expect(onCursorChange).not.toHaveBeenCalled();
   });
 });
 

@@ -116,3 +116,29 @@ export function getPaginationItems(
     ...toPageEntries(endPages),
   ];
 }
+
+/**
+ * Cursor of a page in cursor pagination. `null` means there is no such page.
+ */
+export type PaginationCursor = null | string;
+
+/**
+ * Whether a simple-mode control (next / previous) is available.
+ *
+ * An explicit `has` flag wins. Otherwise a bound `cursor` enables the control
+ * when it is not `null`. Returns `undefined` when neither is set.
+ */
+export function getPaginationCursorAvailability(
+  has: boolean | undefined,
+  cursor: undefined | PaginationCursor,
+): boolean | undefined {
+  if (has !== undefined) {
+    return has;
+  }
+
+  if (cursor === undefined) {
+    return undefined;
+  }
+
+  return cursor !== null;
+}

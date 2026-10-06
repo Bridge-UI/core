@@ -25,6 +25,7 @@ import {
 } from "@/Components/DataTable/hooks/useDataTable";
 import { EmptyState } from "@/Components/EmptyState";
 import { Icon } from "@/Components/Icon";
+import { Pagination } from "@/Components/Pagination";
 import { Progress } from "@/Components/Progress";
 import { Select } from "@/Components/Select";
 import {
@@ -369,6 +370,7 @@ function DataTable<T extends Record<string, unknown>>(
     toolbarBind,
     getCellBind,
     columnCount,
+    cursorPaged,
     showPerPage,
     showToolbar,
     selectedBind,
@@ -695,7 +697,17 @@ function DataTable<T extends Record<string, unknown>>(
                 {renderDataTableSlot(
                   slots?.pagination,
                   paginationSlotProps,
-                  resolvedPageCount !== undefined ? (
+                  cursorPaged ? (
+                    <Pagination
+                      size="sm"
+                      {...merged.customProps?.cursorPagination}
+                      mode="simple"
+                      onNext={paginationSlotProps.onNext}
+                      hasNext={paginationSlotProps.hasNext}
+                      onPrevious={paginationSlotProps.onPrevious}
+                      hasPrevious={paginationSlotProps.hasPrevious}
+                    />
+                  ) : resolvedPageCount !== undefined ? (
                     <DataTablePagination
                       size="sm"
                       page={paginationSlotProps.page}

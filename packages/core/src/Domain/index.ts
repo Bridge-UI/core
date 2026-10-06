@@ -106,6 +106,7 @@ export type {
   RgbaColor,
 } from "@/Domain/color";
 export {
+  DATATABLE_AMBIGUOUS_PAGING_WARNING,
   DATATABLE_CHROME_COLUMN_WIDTH_PX,
   DATATABLE_EXPAND_COLUMN_ID,
   DATATABLE_PAGINATION_GAP_PX,
@@ -128,6 +129,7 @@ export {
   getDataTableFooterLayout,
   getDataTableGridTemplate,
   getDataTableHiddenColumnIds,
+  getDataTablePaginationSlotProps,
   getDataTablePerPageOptions,
   getDataTablePerPageSelectOptions,
   getDataTableResetHiddenColumnIds,
@@ -144,8 +146,10 @@ export {
   isDataTableColumnFiltered,
   isDataTableColumnSearchable,
   isDataTableColumnSearched,
+  isDataTableCursorPaged,
   isDataTableExpandEnabled,
   isDataTablePaginationInline,
+  isDataTablePagingAmbiguous,
   isDataTablePerPageEnabled,
   isDataTableSearchEnabled,
   isDataTableSelectionEnabled,
@@ -304,9 +308,13 @@ export type {
   RangePickerOrientation,
   ResolvedFieldOverlay,
 } from "@/Domain/overlay";
-export { getPaginationItems } from "@/Domain/pagination";
+export {
+  getPaginationCursorAvailability,
+  getPaginationItems,
+} from "@/Domain/pagination";
 export type {
   GetPaginationItemsOptions,
+  PaginationCursor,
   PaginationEntry,
 } from "@/Domain/pagination";
 export {
