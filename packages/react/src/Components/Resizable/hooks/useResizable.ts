@@ -508,15 +508,15 @@ export function useResizable(
     layout,
     groupId,
     startDrag,
-    orientation,
     expandPanel,
+    orientation,
     collapsePanel,
     registerPanel,
     resizeFromKey,
     getHandleState,
     registerHandle,
-    orientationItem,
     merged.disabled,
+    orientationItem,
     draggingHandleId,
   ]);
 

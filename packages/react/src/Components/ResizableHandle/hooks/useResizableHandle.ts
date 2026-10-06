@@ -87,7 +87,7 @@ export function useResizableHandle(
 
   useLayoutEffect(() => {
     return group.registerHandle(handleUid, entryRef);
-  }, [group.registerHandle, handleUid]);
+  }, [handleUid, group.registerHandle]);
 
   const slots = derived(() => {
     return props.slots;

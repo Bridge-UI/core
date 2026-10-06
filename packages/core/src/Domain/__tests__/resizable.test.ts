@@ -439,15 +439,15 @@ describe("getResizablePointerDelta", () => {
 
 describe("getResizablePanelStyle", () => {
   test("it should use the size as the flex grow", () => {
-    expect(getResizablePanelStyle(33.33333)).toEqual({ flex: "33.333 1 0px" });
     expect(getResizablePanelStyle(undefined)).toEqual({ flex: "1 1 0px" });
+    expect(getResizablePanelStyle(33.33333)).toEqual({ flex: "33.333 1 0px" });
   });
 });
 
 describe("getResizableCursor", () => {
   test("it should match the group axis", () => {
-    expect(getResizableCursor("horizontal")).toBe("col-resize");
     expect(getResizableCursor("vertical")).toBe("row-resize");
+    expect(getResizableCursor("horizontal")).toBe("col-resize");
   });
 });
 

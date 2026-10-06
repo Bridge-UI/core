@@ -134,7 +134,7 @@ export function useResizablePanel(
 
   useLayoutEffect(() => {
     return group.registerPanel(panelUid, entryRef);
-  }, [group.registerPanel, panelUid]);
+  }, [panelUid, group.registerPanel]);
 
   const size = derived(() => {
     return group.layout[panelUid];
@@ -178,7 +178,7 @@ export function useResizablePanel(
     } else if (props.collapsed === false) {
       group.expandPanel(panelUid);
     }
-  }, [props.collapsed, panelUid, group.expandPanel, group.collapsePanel]);
+  }, [panelUid, props.collapsed, group.expandPanel, group.collapsePanel]);
 
   const initialSize = derived(() => {
     if (props.collapsed && merged.collapsible) {

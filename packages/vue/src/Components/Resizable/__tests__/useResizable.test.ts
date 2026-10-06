@@ -49,16 +49,16 @@ test("it should lay panels out horizontally by default", () => {
   const { result, context } = mountUseResizable();
 
   expect(result.orientation.value).toBe("horizontal");
+  expect(context?.value.id).toContain("bridge-resizable");
   expect(result.rootBind.value.class).toContain("flex-row");
   expect(result.rootBind.value["data-orientation"]).toBe("horizontal");
-  expect(context?.value.id).toContain("bridge-resizable");
 });
 
 test("it should stack panels when vertical", () => {
   const { result, context } = mountUseResizable({ orientation: "vertical" });
 
-  expect(result.rootBind.value.class).toContain("flex-col");
   expect(context?.value.orientation).toBe("vertical");
+  expect(result.rootBind.value.class).toContain("flex-col");
 });
 
 test("it should share disabled with panels and handles", () => {

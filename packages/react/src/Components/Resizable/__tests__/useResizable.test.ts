@@ -20,8 +20,8 @@ test("it should lay panels out horizontally by default", () => {
 
   expect(result.current.orientation).toBe("horizontal");
   expect(result.current.rootBind.className).toContain("flex-row");
-  expect(result.current.rootBind["data-orientation"]).toBe("horizontal");
   expect(result.current.contextValue.id).toContain("bridge-resizable");
+  expect(result.current.rootBind["data-orientation"]).toBe("horizontal");
 });
 
 test("it should stack panels when vertical", () => {
