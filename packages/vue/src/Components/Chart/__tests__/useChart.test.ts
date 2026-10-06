@@ -115,6 +115,8 @@ test("it should report loading instead of empty", () => {
 
   expect(result.isLoading.value).toBe(true);
   expect(result.isEmpty.value).toBe(false);
+  expect(result.rootBind.value["aria-busy"]).toBe(true);
+  expect(result.loadingBind.value.class).toContain("bg-white/50");
 });
 
 const plotOptions: ChartRenderOptions = {

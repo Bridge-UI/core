@@ -39,6 +39,7 @@ import {
 } from "@/Components/Table";
 import { Tooltip } from "@/Components/Tooltip";
 import { hasNamedSlot } from "@/Utils";
+import { LoadingSpin } from "@/Utils/LoadingSpin";
 
 const dataTableLibDefaults = {
   size: "md",
@@ -119,23 +120,6 @@ function DataTableCellContent({
         />
       ) : null}
     </Fragment>
-  );
-}
-
-function DataTableLoadingSpin() {
-  const resolveMessage = useResolveMessage();
-
-  return (
-    <span
-      role="status"
-      aria-label={resolveMessage("Loading")}
-      className="relative inline-block size-5 animate-spin motion-reduce:animate-none"
-    >
-      <span className="absolute inset-s-0 top-0 size-2 rounded-full bg-primary-500 opacity-30 dark:bg-primary-400" />
-      <span className="absolute inset-e-0 top-0 size-2 rounded-full bg-primary-500 opacity-50 dark:bg-primary-400" />
-      <span className="absolute inset-e-0 bottom-0 size-2 rounded-full bg-primary-500 dark:bg-primary-400" />
-      <span className="absolute inset-s-0 bottom-0 size-2 rounded-full bg-primary-500 opacity-70 dark:bg-primary-400" />
-    </span>
   );
 }
 
@@ -619,9 +603,7 @@ function DataTable<T extends Record<string, unknown>>(
           </Table>
           {merged.loading ? (
             <div {...loadingBind} aria-hidden={loadingBar || undefined}>
-              {!loadingBar
-                ? (slots?.loading ?? <DataTableLoadingSpin />)
-                : null}
+              {!loadingBar ? (slots?.loading ?? <LoadingSpin />) : null}
             </div>
           ) : null}
         </div>

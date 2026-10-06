@@ -658,6 +658,7 @@ export function useChart(props: ChartProps, libDefaults: ChartLibDefaults) {
       {
         ref: setRootEl,
         role: "figure",
+        "aria-busy": isLoading || undefined,
         style: {
           width: toChartCssSize(componentProps.width, "100%"),
           ...inheritedAttrs.style,
@@ -707,7 +708,8 @@ export function useChart(props: ChartProps, libDefaults: ChartLibDefaults) {
   const loadingBind = derived((): HTMLAttributes<HTMLDivElement> => {
     return {
       className: cn({
-        "absolute inset-0 z-10 flex": true,
+        "absolute inset-0 z-10 flex items-center justify-center": true,
+        "bg-white/50 dark:bg-dark-900/50": true,
         [get(mergedClasses, "loading") ?? ""]: true,
       }),
     };
@@ -727,7 +729,7 @@ export function useChart(props: ChartProps, libDefaults: ChartLibDefaults) {
     return {
       id: `${chartId}-table`,
       className: cn({
-        "sr-only": true,
+        "sr-only block": true,
         [get(mergedClasses, "table") ?? ""]: true,
       }),
     };

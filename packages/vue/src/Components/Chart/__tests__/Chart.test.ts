@@ -171,6 +171,17 @@ test("it should render the loading slot while loading", async () => {
   wrapper.unmount();
 });
 
+test("it should show the spinner overlay while loading", async () => {
+  const wrapper = await mountChart({ loading: true });
+
+  expect(wrapper.get("[role='figure']").attributes("aria-busy")).toBe("true");
+  expect(wrapper.find("[role='status'][aria-label='Loading']").exists()).toBe(
+    true,
+  );
+
+  wrapper.unmount();
+});
+
 test("it should navigate categories with the keyboard and announce values", async () => {
   const wrapper = await mountChart();
 
