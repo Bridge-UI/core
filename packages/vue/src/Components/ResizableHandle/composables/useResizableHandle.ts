@@ -178,8 +178,6 @@ export function useResizableHandle(
           return;
         }
 
-        event.preventDefault();
-        (event.currentTarget as null | HTMLElement)?.focus();
         group.value.startDrag(handleUid, event);
       },
     });

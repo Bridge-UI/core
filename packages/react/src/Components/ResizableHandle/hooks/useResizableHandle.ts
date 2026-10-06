@@ -124,8 +124,6 @@ export function useResizableHandle(
       return;
     }
 
-    event.preventDefault();
-    event.currentTarget.focus();
     group.startDrag(handleUid, event);
   };
 
