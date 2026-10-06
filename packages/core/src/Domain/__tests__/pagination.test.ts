@@ -110,9 +110,9 @@ describe("getPaginationCursorAvailability", () => {
     expect(getPaginationCursorAvailability(undefined, undefined)).toBe(
       undefined,
     );
-    expect(getPaginationCursorAvailability(undefined, "a")).toBe(true);
-    expect(getPaginationCursorAvailability(undefined, null)).toBe(false);
     expect(getPaginationCursorAvailability(true, null)).toBe(true);
     expect(getPaginationCursorAvailability(false, "a")).toBe(false);
+    expect(getPaginationCursorAvailability(undefined, "a")).toBe(true);
+    expect(getPaginationCursorAvailability(undefined, null)).toBe(false);
   });
 });

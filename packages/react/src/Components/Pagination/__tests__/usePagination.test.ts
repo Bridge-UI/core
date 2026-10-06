@@ -1,5 +1,5 @@
 // ** External Imports
-import { cleanup, renderHook } from "@testing-library/react";
+import { act, cleanup, renderHook } from "@testing-library/react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
@@ -60,4 +60,42 @@ test("it should skip page entries in simple mode", () => {
 
   expect(result.current.entries).toEqual([]);
   expect(result.current.nextBind.disabled).toBe(false);
+});
+
+test("it should derive simple-mode availability from the cursors", () => {
+  const { result } = renderHook(() =>
+    usePagination(
+      { mode: "simple", nextCursor: "c", prevCursor: null },
+      { ...libDefaults, mode: "simple" },
+    ),
+  );
+
+  expect(result.current.prevBind.disabled).toBe(true);
+  expect(result.current.nextBind.disabled).toBe(false);
+});
+
+test("it should call onCursorChange with the cursor of the target page", () => {
+  const onNext = vi.fn();
+  const onCursorChange = vi.fn();
+
+  const { result } = renderHook(() =>
+    usePagination(
+      {
+        onNext,
+        cursor: "b",
+        mode: "simple",
+        onCursorChange,
+        nextCursor: "c",
+        prevCursor: "a",
+      },
+      { ...libDefaults, mode: "simple" },
+    ),
+  );
+
+  act(() => {
+    result.current.nextBind.onClick?.({} as never);
+  });
+
+  expect(onNext).toHaveBeenCalledOnce();
+  expect(onCursorChange).toHaveBeenCalledWith("c");
 });

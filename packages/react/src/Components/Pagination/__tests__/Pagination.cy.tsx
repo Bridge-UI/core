@@ -16,3 +16,19 @@ test("it should render outlined and ghost variants", () => {
   cy.mount(<Pagination page={1} count={4} variant="ghost" />);
   cy.get("ul").should("have.class", "gap-2");
 });
+
+test("it should navigate with cursors in simple mode", () => {
+  cy.mount(
+    <Pagination
+      cursor="b"
+      mode="simple"
+      nextCursor="c"
+      prevCursor={null}
+      onCursorChange={cy.stub().as("onCursorChange")}
+    />,
+  );
+
+  cy.get("button[aria-label='Previous']").should("be.disabled");
+  cy.get("button[aria-label='Next']").should("be.enabled").click();
+  cy.get("@onCursorChange").should("have.been.calledOnceWith", "c");
+});

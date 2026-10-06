@@ -187,33 +187,30 @@ describe("isDataTableServerPaged", () => {
     expect(isDataTableServerPaged(1, undefined)).toBe(false);
     expect(isDataTableServerPaged(undefined, 4)).toBe(false);
   });
+
+  test("it should be server-paged in cursor paging", () => {
+    expect(isDataTableServerPaged(1, undefined, undefined, true)).toBe(true);
+    expect(isDataTableServerPaged(undefined, undefined, undefined, true)).toBe(
+      true,
+    );
+  });
 });
 
 describe("isDataTableCursorPaged", () => {
   test("it should detect a bound cursor or cursor props", () => {
     expect(isDataTableCursorPaged({})).toBe(false);
     expect(isDataTableCursorPaged({ cursor: null })).toBe(true);
-    expect(isDataTableCursorPaged({ nextCursor: null })).toBe(true);
     expect(isDataTableCursorPaged({ prevCursor: "a" })).toBe(true);
+    expect(isDataTableCursorPaged({ nextCursor: null })).toBe(true);
     expect(isDataTableCursorPaged({ hasCursorHandler: true })).toBe(true);
     expect(isDataTableCursorPaged({ hasCursorHandler: false })).toBe(false);
-  });
-
-  test("it should be server-paged and not client-paged", () => {
-    expect(isDataTableServerPaged(undefined, undefined, undefined, true)).toBe(
-      true,
-    );
-    expect(isDataTableServerPaged(1, undefined, undefined, true)).toBe(true);
-    expect(isDataTableClientPaged(1, 10, undefined, undefined, true)).toBe(
-      false,
-    );
   });
 });
 
 describe("isDataTablePagingAmbiguous", () => {
   test("it should flag cursor props mixed with numbered server paging", () => {
-    expect(isDataTablePagingAmbiguous(1, undefined, 40, true)).toBe(true);
     expect(isDataTablePagingAmbiguous(1, 4, undefined, true)).toBe(true);
+    expect(isDataTablePagingAmbiguous(1, undefined, 40, true)).toBe(true);
     expect(isDataTablePagingAmbiguous(1, undefined, undefined, true)).toBe(
       false,
     );
@@ -227,6 +224,12 @@ describe("isDataTableClientPaged", () => {
     expect(isDataTableClientPaged(1, 10, 4)).toBe(false);
     expect(isDataTableClientPaged(1, 10, undefined, 40)).toBe(false);
     expect(isDataTableClientPaged(1, undefined, undefined)).toBe(false);
+  });
+
+  test("it should not slice locally in cursor paging", () => {
+    expect(isDataTableClientPaged(1, 10, undefined, undefined, true)).toBe(
+      false,
+    );
   });
 });
 
