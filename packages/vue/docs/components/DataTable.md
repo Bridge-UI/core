@@ -150,7 +150,7 @@ For APIs that return `next_cursor` / `prev_cursor` instead of a page total, bind
 />
 ```
 
-DataTable never resets the cursor. Set it back to `null` in the app when sorting, filters, or per-page change. `#pagination` also receives `cursor`, `nextCursor`, `prevCursor`, `hasNext`, `hasPrevious`, `onNext`, and `onPrevious`. Do not combine cursor props with `page` + `page-count` / `total-count`: cursor paging wins and a warning is logged in development.
+DataTable never resets the cursor. Set it back to `null` in the app when sorting, filters, or per-page change. `#pagination` also receives `cursor`, `nextCursor`, `prevCursor`, `hasNext`, `hasPrevious`, `onNext`, and `onPrevious`. `customProps.cursorPagination` forwards extra props to the built-in cursor pager. Do not combine cursor props with `page` + `page-count` / `total-count`: cursor paging wins and a warning is logged in development.
 
 ### Empty, loading, and footer
 

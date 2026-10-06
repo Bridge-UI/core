@@ -43,6 +43,7 @@ const paginationBridgeKeys = [
   "color",
   "count",
   "slots",
+  "cursor",
   "onNext",
   "classes",
   "hasNext",
@@ -274,7 +275,7 @@ export function usePagination(
     }
 
     setPage(page + 1);
-  }, [page, merged, setPage, hasNext]);
+  }, [page, merged, hasNext, setPage]);
 
   const prevDisabled = derived(() => {
     if (merged.disabled) {

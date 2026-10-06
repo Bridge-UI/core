@@ -1421,9 +1421,9 @@ export function useDataTable<T extends Record<string, unknown>>(
     cursorPaged,
     merged.page,
     merged.cursor,
-    resolvedPageCount,
     merged.nextCursor,
     merged.prevCursor,
+    resolvedPageCount,
   ]);
 
   const selectedSlotProps = useMemo((): DataTableSelectedSlotProps => {

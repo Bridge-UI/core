@@ -178,6 +178,14 @@ export interface PaginationOwnProps {
   count?: number;
 
   /**
+   * Current cursor (`mode="simple"`), controlled with `onCursorChange`. Set
+   * it to `nextCursor` / `prevCursor` when the user navigates.
+   *
+   * @default undefined
+   */
+  cursor?: PaginationCursor;
+
+  /**
    * Extra props for internal parts.
    *
    * @default undefined

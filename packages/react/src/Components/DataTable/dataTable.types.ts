@@ -278,6 +278,7 @@ export interface DataTableCustomProps {
     Omit<
       PaginationProps,
       | "mode"
+      | "cursor"
       | "onNext"
       | "hasNext"
       | "nextCursor"

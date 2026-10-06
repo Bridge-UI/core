@@ -61,11 +61,12 @@ Applies to `ghost` and `text` item corners and the `outlined` group / edge contr
 
 ### Simple (cursor / prev–next only)
 
-For APIs that return `next_cursor` / `prev_cursor` instead of a page total. `onCursorChange` receives `nextCursor` or `prevCursor` when the user navigates, and a `null` cursor disables its control:
+For APIs that return `next_cursor` / `prev_cursor` instead of a page total. `onCursorChange` receives `nextCursor` or `prevCursor` when the user navigates (pass the current value as `cursor`), and a `null` cursor disables its control:
 
 ```tsx
 <Pagination
   mode="simple"
+  cursor={cursor}
   aria-label="Pagination"
   onCursorChange={setCursor}
   nextCursor={pagination.next_cursor}
