@@ -134,7 +134,7 @@
     "@tiptap/extension-placeholder": "^3.31.3",
     "@tiptap/pm": "^3.31.3",
     "@tiptap/starter-kit": "^3.31.3",
-    "@types/node": "^26.6.2",
+    "@types/node": "^24.19.1",
     "@vue/language-core": "^3.3.11",
     "@vue/test-utils": "^2.5.1",
     "echarts": "^6.1.0",
