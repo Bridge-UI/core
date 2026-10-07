@@ -346,7 +346,7 @@ export function useColorPicker(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        "flex flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-800": true,
         "w-full": merged.fill,
         "w-72": !merged.fill,
         [swatchRounded]: true,

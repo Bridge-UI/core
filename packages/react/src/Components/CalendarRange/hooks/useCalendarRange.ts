@@ -550,7 +550,7 @@ export function useCalendarRange(
 
   const monthYearBind = derived(() => {
     return cn({
-      "absolute inset-0 z-10 flex flex-col bg-white p-2.5 dark:bg-dark-900": true,
+      "absolute inset-0 z-10 flex flex-col bg-white p-2.5 dark:bg-dark-800": true,
     });
   });
 
