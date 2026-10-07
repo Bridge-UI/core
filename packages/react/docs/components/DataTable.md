@@ -61,6 +61,8 @@ DataTable chrome (`plain` / `ghost` / `bordered`). The built-in footer pager is 
 
 ### Selection + pagination
 
+The chrome footer stacks its controls in a narrow table and puts them on one row from the footer width up: 32rem with two controls, 42rem with all three. Footer width is read with a CSS container query, so the server render matches the client. A control that still does not fit wraps to the next row, aligned to the end. `classes.footerBar` and `customProps.footerBar` target the footer container; `classes.pagination` targets the row of controls.
+
 The chrome footer shows a selection summary when `selection` is bound, a per-page Select when `perPage` is set (`perPageOptions`, default 10 / 25 / 50 / 100), and a first / previous / next / last pager when `page` is set with `pageCount` or `totalCount` (server fetch stays in the app). `page` + `perPage` without those totals slices `rows` locally. `slots.selected`, `slots.pagination`, and `slots.perPage` replace each control:
 
 ```tsx
