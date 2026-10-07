@@ -185,6 +185,12 @@ export interface DataTableClasses {
   footer?: string;
 
   /**
+   * Classes merged onto the chrome footer container (the size query container
+   * that wraps selection, per-page, and pager).
+   */
+  footerBar?: string;
+
+  /**
    * Classes merged onto header cells.
    */
   head?: string;
@@ -302,6 +308,14 @@ export interface DataTableCustomProps {
    * @default undefined
    */
   footer?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the chrome footer container (the size query container
+   * that wraps selection, per-page, and pager).
+   *
+   * @default undefined
+   */
+  footerBar?: HTMLAttributes<HTMLDivElement>;
 
   /**
    * Props forwarded to header cells.

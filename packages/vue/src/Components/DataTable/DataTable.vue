@@ -127,6 +127,7 @@ const {
   summaryCells,
   showFooterBar,
   expandEnabled,
+  footerBarBind,
   loadingBarBind,
   paginationBind,
   selectAllState,
@@ -483,68 +484,70 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
         <slot name="footer" />
       </div>
 
-      <div v-if="showFooterBar" v-bind="paginationBind">
-        <div v-if="showSelected" v-bind="selectedBind">
-          <slot name="selected" v-bind="selectedSlotProps">
-            {{ selectionSummary }}
-          </slot>
-        </div>
-
-        <slot name="perPage" v-bind="perPageSlotProps" v-if="showPerPage">
-          <div class="flex shrink-0 items-center gap-2">
-            <span class="text-sm whitespace-nowrap">
-              {{ resolveMessage("Rows per page") }}
-            </span>
-            <Select
-              size="sm"
-              v-bind="merged.customProps?.perPage"
-              overlay="menu"
-              :clearable="false"
-              hide-error-message
-              :options="perPageSelectOptions"
-              :custom-props="perPageSelectCustom"
-              :model-value="perPageSlotProps.perPage"
-              v-on:update:model-value="onPerPageSelect"
-              :aria-label="resolveMessage('Rows per page')"
-              :classes="{
-                ...merged.customProps?.perPage?.classes,
-                root: cn('w-20', merged.customProps?.perPage?.classes?.root),
-              }"
-            />
+      <div v-if="showFooterBar" v-bind="footerBarBind">
+        <div v-bind="paginationBind">
+          <div v-if="showSelected" v-bind="selectedBind">
+            <slot name="selected" v-bind="selectedSlotProps">
+              {{ selectionSummary }}
+            </slot>
           </div>
-        </slot>
 
-        <div v-if="showPager" class="flex shrink-0 items-center gap-3">
-          <span
-            class="text-sm font-medium whitespace-nowrap"
-            v-if="
-              resolvedPageCount !== undefined &&
-              !hasNamedSlot(tableSlots, 'pagination')
-            "
-          >
-            {{ pageStatus }}
-          </span>
-
-          <slot name="pagination" v-bind="paginationSlotProps">
-            <Pagination
-              size="sm"
-              v-bind="merged.customProps?.cursorPagination"
-              mode="simple"
-              v-if="cursorPaged"
-              v-on:next="paginationSlotProps.onNext"
-              :has-next="paginationSlotProps.hasNext"
-              v-on:previous="paginationSlotProps.onPrevious"
-              :has-previous="paginationSlotProps.hasPrevious"
-            />
-
-            <DataTablePagination
-              size="sm"
-              v-bind="merged.customProps?.pagination"
-              v-model="paginationPage"
-              :count="resolvedPageCount"
-              v-else-if="resolvedPageCount !== undefined"
-            />
+          <slot name="perPage" v-bind="perPageSlotProps" v-if="showPerPage">
+            <div class="flex shrink-0 items-center gap-2">
+              <span class="text-sm whitespace-nowrap">
+                {{ resolveMessage("Rows per page") }}
+              </span>
+              <Select
+                size="sm"
+                v-bind="merged.customProps?.perPage"
+                overlay="menu"
+                :clearable="false"
+                hide-error-message
+                :options="perPageSelectOptions"
+                :custom-props="perPageSelectCustom"
+                :model-value="perPageSlotProps.perPage"
+                v-on:update:model-value="onPerPageSelect"
+                :aria-label="resolveMessage('Rows per page')"
+                :classes="{
+                  ...merged.customProps?.perPage?.classes,
+                  root: cn('w-20', merged.customProps?.perPage?.classes?.root),
+                }"
+              />
+            </div>
           </slot>
+
+          <div v-if="showPager" class="flex shrink-0 items-center gap-3">
+            <span
+              class="text-sm font-medium whitespace-nowrap"
+              v-if="
+                resolvedPageCount !== undefined &&
+                !hasNamedSlot(tableSlots, 'pagination')
+              "
+            >
+              {{ pageStatus }}
+            </span>
+
+            <slot name="pagination" v-bind="paginationSlotProps">
+              <Pagination
+                size="sm"
+                v-bind="merged.customProps?.cursorPagination"
+                mode="simple"
+                v-if="cursorPaged"
+                v-on:next="paginationSlotProps.onNext"
+                :has-next="paginationSlotProps.hasNext"
+                v-on:previous="paginationSlotProps.onPrevious"
+                :has-previous="paginationSlotProps.hasPrevious"
+              />
+
+              <DataTablePagination
+                size="sm"
+                v-bind="merged.customProps?.pagination"
+                v-model="paginationPage"
+                :count="resolvedPageCount"
+                v-else-if="resolvedPageCount !== undefined"
+              />
+            </slot>
+          </div>
         </div>
       </div>
     </div>

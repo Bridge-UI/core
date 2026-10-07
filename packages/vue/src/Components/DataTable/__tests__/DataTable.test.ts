@@ -1,6 +1,8 @@
 // ** External Imports
 import { DOMWrapper, flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test, vi } from "vitest";
+import { createSSRApp } from "vue";
+import { renderToString } from "vue/server-renderer";
 
 // ** Core Imports
 import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
@@ -1327,10 +1329,23 @@ test("it should spread per-page and pagination across the footer", () => {
   });
 
   expect(wrapper.find(".py-3.justify-end").exists()).toBe(false);
-  expect(
-    wrapper.find(".py-3.justify-between").exists() ||
-      wrapper.find(".py-3.flex-col").exists(),
-  ).toBe(true);
+  expect(wrapper.find(".py-3").classes()).toContain(
+    "@lg/footer:justify-between",
+  );
+});
+
+test("it should render the responsive footer layout during SSR", async () => {
+  const props = { rows, page: 1, columns, perPage: 10, pageCount: 2 };
+  const html = await renderToString(createSSRApp(DataTable, props));
+  const ssrFooter = new DOMParser()
+    .parseFromString(html, "text/html")
+    .querySelector(".py-3");
+
+  expect(ssrFooter?.classList).toContain("@lg/footer:flex-row");
+  expect(ssrFooter?.parentElement?.classList).toContain("@container/footer");
+  expect(ssrFooter?.className).toBe(
+    mountDataTable({ props }).find(".py-3").element.className,
+  );
 });
 
 test("it should sort rows when sorting is controlled", () => {

@@ -130,8 +130,9 @@ test("it should stack per-page and pagination when they overflow", () => {
   );
 
   cy.contains("Rows per page")
-    .closest(".gap-3")
-    .should("have.class", "flex-col");
+    .closest(".py-3")
+    .should("have.css", "flex-direction", "column")
+    .and("have.css", "justify-content", "center");
 });
 
 test("it should keep per-page and pagination inline when they fit", () => {
@@ -147,9 +148,54 @@ test("it should keep per-page and pagination inline when they fit", () => {
   );
 
   cy.contains("Rows per page")
-    .closest(".gap-3")
-    .should("have.class", "flex-row")
-    .and("have.class", "justify-between");
+    .closest(".py-3")
+    .should("have.css", "flex-direction", "row")
+    .and("have.css", "justify-content", "space-between");
+});
+
+test("it should keep two clusters inline below the three-cluster breakpoint", () => {
+  cy.mount(
+    <DataTable
+      page={1}
+      perPage={10}
+      pageCount={100}
+      columns={columns}
+      totalCount={1000}
+      style={{ width: 560 }}
+      rows={[{ id: "1", name: "Ada Lovelace" }]}
+    />,
+  );
+
+  cy.contains("Rows per page")
+    .closest(".py-3")
+    .should("have.css", "flex-direction", "row")
+    .and("have.css", "justify-content", "space-between");
+});
+
+test("it should fit selection, per-page and pagination on one row at the breakpoint", () => {
+  cy.mount(
+    <DataTable
+      page={1}
+      perPage={10}
+      pageCount={100}
+      totalCount={1000}
+      columns={columns}
+      selection={["1"]}
+      style={{ width: 780 }}
+      rows={[{ id: "1", name: "Ada Lovelace" }]}
+    />,
+  );
+
+  cy.contains("Rows per page")
+    .closest(".py-3")
+    .should("have.css", "flex-direction", "row")
+    .then(($footer) => {
+      const centers = [...$footer.children()].map((child) => {
+        return Math.round(child.offsetTop + child.offsetHeight / 2);
+      });
+
+      expect(new Set(centers).size).to.eq(1);
+    });
 });
 
 test("it should keep header text from clipping truncated glyphs", () => {

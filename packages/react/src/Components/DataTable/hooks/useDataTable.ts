@@ -35,7 +35,6 @@ import {
 import {
   useCallback,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -83,7 +82,6 @@ import {
   isDataTableStickyHeader,
   isDataTableStickyHeaderBoxed,
   isDataTableVisibilityEnabled,
-  observeDataTablePaginationInline,
   resolveDataTableRowId,
   rowMatchesDataTableColumnSearch,
   rowMatchesDataTableToolbarSearch,
@@ -986,21 +984,6 @@ export function useDataTable<T extends Record<string, unknown>>(
     };
   }, [tableScrollEl, applyStickyPing]);
 
-  const [paginationInline, setPaginationInline] = useState(false);
-  const [paginationEl, setPaginationEl] = useState<null | HTMLElement>(null);
-
-  useLayoutEffect(() => {
-    if (!paginationEl) {
-      return;
-    }
-
-    return observeDataTablePaginationInline(paginationEl, (inline) => {
-      setPaginationInline((prev) => {
-        return prev === inline ? prev : inline;
-      });
-    });
-  }, [paginationEl]);
-
   const tableProps = useMemo(() => {
     const hasEllipsisColumn = headerViews.some((header) => header.ellipsis);
 
@@ -1242,9 +1225,8 @@ export function useDataTable<T extends Record<string, unknown>>(
       showPager,
       showPerPage,
       showSelected,
-      inline: paginationInline,
     });
-  }, [showPager, showPerPage, showSelected, paginationInline]);
+  }, [showPager, showPerPage, showSelected]);
 
   const selectedBind = useMemo(() => {
     return mergePartBind(
@@ -1252,35 +1234,51 @@ export function useDataTable<T extends Record<string, unknown>>(
       {},
       {
         className: cn({
-          grow: !footerLayout.stack,
+          grow: footerLayout.breakpoint === null,
+          "@lg/footer:grow": footerLayout.breakpoint === "compact",
+          "@2xl/footer:grow": footerLayout.breakpoint === "wide",
           "whitespace-nowrap text-sm text-dark-500 dark:text-dark-400": true,
           [get(mergedClasses, "selected") ?? ""]: true,
         }),
       },
     );
-  }, [mergedClasses, footerLayout.stack, customProps?.selected]);
+  }, [mergedClasses, customProps?.selected, footerLayout.breakpoint]);
+
+  const footerBarBind = useMemo(() => {
+    return mergePartBind(
+      customProps?.footerBar,
+      {},
+      {
+        className: cn({
+          "@container/footer": true,
+          "w-full": merged.full !== false,
+          "w-0 min-w-full": merged.full === false,
+          [get(mergedClasses, "footerBar") ?? ""]: true,
+        }),
+      },
+    );
+  }, [merged.full, mergedClasses, customProps?.footerBar]);
 
   const paginationBind = useMemo(() => {
     return mergePartBind(
       {},
       {},
       {
-        ref: setPaginationEl,
         className: cn({
-          "flex items-center gap-3 py-3 [&>*]:shrink-0": true,
-          "flex-col": footerLayout.stack,
-          "flex-row": !footerLayout.stack,
-          "justify-center": footerLayout.justify === "center",
+          "flex w-full items-center gap-3 py-3 [&>*]:shrink-0": true,
+          "flex-row": footerLayout.breakpoint === null,
+          "flex-col justify-center": footerLayout.breakpoint !== null,
+          "@lg/footer:flex-row @lg/footer:flex-wrap @lg/footer:justify-between @lg/footer:[&>:last-child]:ml-auto":
+            footerLayout.breakpoint === "compact",
+          "@2xl/footer:flex-row @2xl/footer:flex-wrap @2xl/footer:justify-between @2xl/footer:[&>:last-child]:ml-auto":
+            footerLayout.breakpoint === "wide",
           "justify-end": footerLayout.justify === "end",
-          "justify-between": footerLayout.justify === "between",
           "justify-start": footerLayout.justify === "start",
-          "w-full": merged.full !== false,
-          "w-0 min-w-full": merged.full === false,
           [get(mergedClasses, "pagination") ?? ""]: true,
         }),
       },
     );
-  }, [merged.full, mergedClasses, footerLayout, setPaginationEl]);
+  }, [footerLayout, mergedClasses]);
 
   const summaryCells = useMemo((): null | DataTableCellView[] => {
     const hasSummary = columns.some((column) => {
@@ -1542,6 +1540,7 @@ export function useDataTable<T extends Record<string, unknown>>(
     summaryCells,
     showFooterBar,
     expandEnabled,
+    footerBarBind,
     onChangeSearch,
     loadingBarBind,
     paginationBind,

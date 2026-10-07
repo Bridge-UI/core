@@ -7,6 +7,7 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { useState } from "react";
+import { renderToString } from "react-dom/server";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Core Imports
@@ -1347,9 +1348,31 @@ test("it should spread per-page and pagination across the footer", () => {
 
   expect(container.querySelector(".py-3.justify-end")).toBeNull();
   expect(
-    container.querySelector(".py-3.justify-between") ??
-      container.querySelector(".py-3.flex-col"),
-  ).toBeTruthy();
+    container
+      .querySelector(".py-3")
+      ?.classList.contains("@lg/footer:justify-between"),
+  ).toBe(true);
+});
+
+test("it should render the responsive footer layout during SSR", () => {
+  const table = (
+    <DataTable
+      page={1}
+      rows={rows}
+      perPage={10}
+      pageCount={2}
+      columns={columns}
+    />
+  );
+  const ssrFooter = new DOMParser()
+    .parseFromString(renderToString(table), "text/html")
+    .querySelector(".py-3");
+
+  expect(ssrFooter?.classList).toContain("@lg/footer:flex-row");
+  expect(ssrFooter?.parentElement?.classList).toContain("@container/footer");
+  expect(ssrFooter?.className).toBe(
+    render(table).container.querySelector(".py-3")?.className,
+  );
 });
 
 test("it should sort rows when sorting is controlled", () => {

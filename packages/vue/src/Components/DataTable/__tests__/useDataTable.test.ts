@@ -126,7 +126,7 @@ test("it should keep the selection summary at content width", () => {
   );
 });
 
-test("it should not grow the selection summary while footer clusters stack", () => {
+test("it should only grow the selection summary once footer clusters share a row", () => {
   const { result } = mountUseDataTable(
     {
       page: 1,
@@ -148,6 +148,9 @@ test("it should not grow the selection summary while footer clusters stack", () 
   );
   expect(String(result.selectedBind.value.class).split(/\s+/)).not.toContain(
     "grow",
+  );
+  expect(String(result.selectedBind.value.class).split(/\s+/)).toContain(
+    "@2xl/footer:grow",
   );
 });
 
@@ -241,9 +244,16 @@ test("it should derive page count from totalCount and perPage", () => {
   expect(result.serverPaged.value).toBe(true);
   expect(result.showPerPage.value).toBe(true);
   expect(result.resolvedPageCount.value).toBe(3);
-  expect(String(result.paginationBind.value.class)).toContain("flex-col");
-  expect(String(result.paginationBind.value.class)).toContain("justify-center");
-  expect(String(result.paginationBind.value.class)).not.toContain("flex-row");
+  const paginationClasses = String(result.paginationBind.value.class).split(
+    /\s+/,
+  );
+
+  expect(paginationClasses).toContain("flex-col");
+  expect(paginationClasses).not.toContain("flex-row");
+  expect(paginationClasses).toContain("justify-center");
+  expect(paginationClasses).toContain("@lg/footer:flex-row");
+  expect(paginationClasses).toContain("@lg/footer:justify-between");
+  expect(paginationClasses).toContain("@lg/footer:[&>:last-child]:ml-auto");
 });
 
 test("it should shrink the frame and pagination when full is false", () => {
@@ -270,12 +280,29 @@ test("it should shrink the frame and pagination when full is false", () => {
   );
 
   expect(String(result.frameBind.value.class)).toContain("w-fit");
-  expect(String(result.paginationBind.value.class).split(/\s+/)).toContain(
+  expect(String(result.footerBarBind.value.class)).toContain("min-w-full");
+  expect(String(result.footerBarBind.value.class).split(/\s+/)).toContain(
     "w-0",
   );
-  expect(String(result.paginationBind.value.class)).toContain("min-w-full");
-  expect(String(result.paginationBind.value.class).split(/\s+/)).not.toContain(
+  expect(String(result.footerBarBind.value.class).split(/\s+/)).not.toContain(
     "w-full",
+  );
+});
+
+test("it should merge classes and custom props onto the footer bar", () => {
+  const { result } = mountUseDataTable({
+    page: 1,
+    columns,
+    pageCount: 3,
+    rows: [{ id: "1", name: "Ada" }],
+    classes: { footerBar: "bg-primary-50" },
+    customProps: { footerBar: { id: "data-table-footer" } },
+  });
+
+  expect(result.footerBarBind.value.id).toBe("data-table-footer");
+  expect(String(result.footerBarBind.value.class)).toContain("bg-primary-50");
+  expect(String(result.footerBarBind.value.class)).toContain(
+    "@container/footer",
   );
 });
 

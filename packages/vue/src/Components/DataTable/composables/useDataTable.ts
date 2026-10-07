@@ -81,7 +81,6 @@ import {
   isDataTableStickyHeader,
   isDataTableStickyHeaderBoxed,
   isDataTableVisibilityEnabled,
-  observeDataTablePaginationInline,
   resolveDataTableRowId,
   rowMatchesDataTableColumnSearch,
   rowMatchesDataTableToolbarSearch,
@@ -833,33 +832,6 @@ export function useDataTable<T extends Record<string, unknown>>(
     tableScrollObserver.observe(el);
   }
 
-  const paginationInline = ref(false);
-  let unobservePaginationFit: undefined | (() => void);
-
-  function bindPaginationEl(el: null | HTMLElement) {
-    unobservePaginationFit?.();
-    unobservePaginationFit = undefined;
-
-    if (!el) {
-      return;
-    }
-
-    unobservePaginationFit = observeDataTablePaginationInline(el, (inline) => {
-      if (paginationInline.value !== inline) {
-        paginationInline.value = inline;
-      }
-    });
-  }
-
-  function onPaginationMounted(vnode: VNode) {
-    const node = vnode.el;
-    bindPaginationEl(node instanceof HTMLElement ? node : null);
-  }
-
-  function onPaginationUnmounted() {
-    bindPaginationEl(null);
-  }
-
   function onTableScroll(event: Event) {
     const userOnScroll = customProps.value?.wrapper?.onScroll;
 
@@ -902,7 +874,6 @@ export function useDataTable<T extends Record<string, unknown>>(
 
   onBeforeUnmount(() => {
     bindTableScrollEl(null);
-    bindPaginationEl(null);
   });
 
   const tableProps = computed(() => {
@@ -1133,7 +1104,6 @@ export function useDataTable<T extends Record<string, unknown>>(
     return getDataTableFooterLayout({
       showPager: showPager.value,
       showPerPage: showPerPage.value,
-      inline: paginationInline.value,
       showSelected: showSelected.value,
     });
   });
@@ -1144,9 +1114,26 @@ export function useDataTable<T extends Record<string, unknown>>(
       {},
       {
         class: cn({
-          grow: !footerLayout.value.stack,
+          grow: footerLayout.value.breakpoint === null,
+          "@lg/footer:grow": footerLayout.value.breakpoint === "compact",
+          "@2xl/footer:grow": footerLayout.value.breakpoint === "wide",
           "whitespace-nowrap text-sm text-dark-500 dark:text-dark-400": true,
           [get(mergedClasses.value, "selected") ?? ""]: true,
+        }),
+      },
+    );
+  });
+
+  const footerBarBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.footerBar,
+      {},
+      {
+        class: cn({
+          "@container/footer": true,
+          "w-full": merged.value.full !== false,
+          "w-0 min-w-full": merged.value.full === false,
+          [get(mergedClasses.value, "footerBar") ?? ""]: true,
         }),
       },
     );
@@ -1157,18 +1144,16 @@ export function useDataTable<T extends Record<string, unknown>>(
       {},
       {},
       {
-        onVnodeMounted: onPaginationMounted,
-        onVnodeUnmounted: onPaginationUnmounted,
         class: cn({
-          "flex items-center gap-3 py-3 [&>*]:shrink-0": true,
-          "flex-col": footerLayout.value.stack,
-          "flex-row": !footerLayout.value.stack,
-          "justify-center": footerLayout.value.justify === "center",
+          "flex w-full items-center gap-3 py-3 [&>*]:shrink-0": true,
+          "flex-row": footerLayout.value.breakpoint === null,
+          "flex-col justify-center": footerLayout.value.breakpoint !== null,
+          "@lg/footer:flex-row @lg/footer:flex-wrap @lg/footer:justify-between @lg/footer:[&>:last-child]:ml-auto":
+            footerLayout.value.breakpoint === "compact",
+          "@2xl/footer:flex-row @2xl/footer:flex-wrap @2xl/footer:justify-between @2xl/footer:[&>:last-child]:ml-auto":
+            footerLayout.value.breakpoint === "wide",
           "justify-end": footerLayout.value.justify === "end",
-          "justify-between": footerLayout.value.justify === "between",
           "justify-start": footerLayout.value.justify === "start",
-          "w-full": merged.value.full !== false,
-          "w-0 min-w-full": merged.value.full === false,
           [get(mergedClasses.value, "pagination") ?? ""]: true,
         }),
       },
@@ -1403,6 +1388,7 @@ export function useDataTable<T extends Record<string, unknown>>(
     summaryCells,
     showFooterBar,
     expandEnabled,
+    footerBarBind,
     onChangeSearch,
     loadingBarBind,
     paginationBind,
