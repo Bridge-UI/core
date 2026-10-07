@@ -3,18 +3,14 @@ import {
   compact,
   difference,
   drop,
-  filter,
   findLast,
-  forEach,
   fromPairs,
   get,
   intersection,
   isNil,
   isNumber,
   isString,
-  map,
   omit,
-  sum,
   take,
   union,
   without,
@@ -42,11 +38,6 @@ export const DATATABLE_CHROME_COLUMN_WIDTH_PX = 48;
  * Fallback width in px for sticky columns without a parseable `width`.
  */
 export const DATATABLE_STICKY_WIDTH_PX = 120;
-
-/**
- * Gap in px between chrome footer clusters (`gap-3`).
- */
-export const DATATABLE_PAGINATION_GAP_PX = 12;
 
 /**
  * Ringed square controls for DataTablePagination.
@@ -314,21 +305,24 @@ export type DataTableSortIcon = "chevronUp" | "chevronDown" | "chevronUpDown";
  */
 export type DataTableFooterLayout = {
   /**
-   * `justify-*` alignment while clusters share a row (or when stacking).
+   * Footer container size from which stacked clusters share one row:
+   * `"compact"` for two clusters, `"wide"` for three. `null` when a single
+   * cluster never stacks. Resolved in CSS (container query), so SSR matches
+   * the client.
    */
-  justify: "end" | "start" | "center" | "between";
+  breakpoint: null | "wide" | "compact";
 
   /**
-   * Whether footer clusters stack on separate rows.
+   * `justify-*` alignment while clusters share a row.
    */
-  stack: boolean;
+  justify: "end" | "start" | "between";
 };
 
 /**
- * Resolves flex alignment for the DataTable chrome footer.
+ * Resolves flex alignment and the stacking breakpoint for the DataTable
+ * chrome footer.
  */
 export function getDataTableFooterLayout(input: {
-  inline: boolean;
   showPager: boolean;
   showPerPage: boolean;
   showSelected: boolean;
@@ -337,21 +331,20 @@ export function getDataTableFooterLayout(input: {
     Number(input.showSelected) +
     Number(input.showPerPage) +
     Number(input.showPager);
-  const stack = clusterCount >= 2 && !input.inline;
 
-  if (stack) {
-    return { stack: true, justify: "center" };
+  if (clusterCount >= 3) {
+    return { breakpoint: "wide", justify: "between" };
   }
 
-  if (clusterCount >= 2) {
-    return { stack: false, justify: "between" };
+  if (clusterCount === 2) {
+    return { justify: "between", breakpoint: "compact" };
   }
 
   if (input.showSelected) {
-    return { stack: false, justify: "start" };
+    return { breakpoint: null, justify: "start" };
   }
 
-  return { stack: false, justify: "end" };
+  return { justify: "end", breakpoint: null };
 }
 
 /**
@@ -367,91 +360,6 @@ export function getDataTableSelectionTotal(input: {
   }
 
   return input.filteredCount;
-}
-
-/**
- * Whether footer clusters fit on one row of `containerWidth`.
- */
-export function isDataTablePaginationInline(
-  containerWidth: number,
-  childWidths: readonly number[],
-  gapPx = DATATABLE_PAGINATION_GAP_PX,
-): boolean {
-  if (childWidths.length <= 1) {
-    return true;
-  }
-
-  const used = sum(childWidths) + gapPx * (childWidths.length - 1);
-
-  return used <= containerWidth;
-}
-
-function measureDataTablePaginationInline(container: HTMLElement): boolean {
-  const children = filter(container.children, (node): node is HTMLElement => {
-    return node instanceof HTMLElement;
-  });
-
-  return isDataTablePaginationInline(
-    container.clientWidth,
-    map(children, "offsetWidth"),
-  );
-}
-
-/**
- * Watches the chrome footer and reports when selection, per-page, and pager
- * fit on one row. Returns a disconnect callback.
- */
-export function observeDataTablePaginationInline(
-  container: HTMLElement,
-  onChange: (inline: boolean) => void,
-): () => void {
-  let last: boolean | undefined;
-
-  const emit = () => {
-    const next = measureDataTablePaginationInline(container);
-
-    if (last === next) {
-      return;
-    }
-
-    last = next;
-    onChange(next);
-  };
-
-  emit();
-
-  if (typeof ResizeObserver === "undefined") {
-    return () => {};
-  }
-
-  const resizeObserver = new ResizeObserver(emit);
-
-  const observeTree = () => {
-    resizeObserver.disconnect();
-    resizeObserver.observe(container);
-    forEach(container.children, (node) => {
-      if (node instanceof Element) {
-        resizeObserver.observe(node);
-      }
-    });
-  };
-
-  observeTree();
-
-  let mutationObserver: undefined | MutationObserver;
-
-  if (typeof MutationObserver !== "undefined") {
-    mutationObserver = new MutationObserver(() => {
-      observeTree();
-      emit();
-    });
-    mutationObserver.observe(container, { subtree: true, childList: true });
-  }
-
-  return () => {
-    resizeObserver.disconnect();
-    mutationObserver?.disconnect();
-  };
 }
 
 /**

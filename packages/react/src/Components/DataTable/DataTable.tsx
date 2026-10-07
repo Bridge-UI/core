@@ -366,6 +366,7 @@ function DataTable<T extends Record<string, unknown>>(
     summaryCells,
     showFooterBar,
     expandEnabled,
+    footerBarBind,
     loadingBarBind,
     paginationBind,
     selectAllState,
@@ -613,94 +614,96 @@ function DataTable<T extends Record<string, unknown>>(
         ) : null}
 
         {showFooterBar ? (
-          <div {...paginationBind}>
-            {showSelected
-              ? renderDataTableSlot(
-                  slots?.selected,
-                  selectedSlotProps,
-                  <div {...selectedBind}>{selectionSummary}</div>,
-                )
-              : null}
+          <div {...footerBarBind}>
+            <div {...paginationBind}>
+              {showSelected
+                ? renderDataTableSlot(
+                    slots?.selected,
+                    selectedSlotProps,
+                    <div {...selectedBind}>{selectionSummary}</div>,
+                  )
+                : null}
 
-            {showPerPage
-              ? renderDataTableSlot(
-                  slots?.perPage,
-                  perPageSlotProps,
-                  <div className="flex shrink-0 items-center gap-2">
-                    <span className="text-sm whitespace-nowrap">
-                      {resolveMessage("Rows per page")}
+              {showPerPage
+                ? renderDataTableSlot(
+                    slots?.perPage,
+                    perPageSlotProps,
+                    <div className="flex shrink-0 items-center gap-2">
+                      <span className="text-sm whitespace-nowrap">
+                        {resolveMessage("Rows per page")}
+                      </span>
+                      <Select
+                        size="sm"
+                        hideErrorMessage
+                        clearable={false}
+                        aria-label={resolveMessage("Rows per page")}
+                        {...perPageCustom}
+                        overlay="menu"
+                        value={perPageSlotProps.perPage}
+                        options={perPageSlotProps.options.map((value) => {
+                          return { value, label: String(value) };
+                        })}
+                        classes={{
+                          ...perPageCustom?.classes,
+                          root: cn("w-20", perPageCustom?.classes?.root),
+                        }}
+                        onChange={(value) => {
+                          const next = Number(value);
+
+                          if (!Number.isFinite(next) || next < 1) {
+                            return;
+                          }
+
+                          perPageSlotProps.onPerPageChange(next);
+                        }}
+                        customProps={{
+                          ...perPageCustom?.customProps,
+                          listbox: {
+                            matchWidth: true,
+                            showCheckmark: false,
+                            ...perPageCustom?.customProps?.listbox,
+                          },
+                        }}
+                      />
+                    </div>,
+                  )
+                : null}
+
+              {showPager ? (
+                <div className="flex shrink-0 items-center gap-3">
+                  {resolvedPageCount !== undefined &&
+                  !hasNamedSlot(slots, "pagination") ? (
+                    <span className="text-sm font-medium whitespace-nowrap">
+                      {pageStatus}
                     </span>
-                    <Select
-                      size="sm"
-                      hideErrorMessage
-                      clearable={false}
-                      aria-label={resolveMessage("Rows per page")}
-                      {...perPageCustom}
-                      overlay="menu"
-                      value={perPageSlotProps.perPage}
-                      options={perPageSlotProps.options.map((value) => {
-                        return { value, label: String(value) };
-                      })}
-                      classes={{
-                        ...perPageCustom?.classes,
-                        root: cn("w-20", perPageCustom?.classes?.root),
-                      }}
-                      onChange={(value) => {
-                        const next = Number(value);
+                  ) : null}
 
-                        if (!Number.isFinite(next) || next < 1) {
-                          return;
-                        }
-
-                        perPageSlotProps.onPerPageChange(next);
-                      }}
-                      customProps={{
-                        ...perPageCustom?.customProps,
-                        listbox: {
-                          matchWidth: true,
-                          showCheckmark: false,
-                          ...perPageCustom?.customProps?.listbox,
-                        },
-                      }}
-                    />
-                  </div>,
-                )
-              : null}
-
-            {showPager ? (
-              <div className="flex shrink-0 items-center gap-3">
-                {resolvedPageCount !== undefined &&
-                !hasNamedSlot(slots, "pagination") ? (
-                  <span className="text-sm font-medium whitespace-nowrap">
-                    {pageStatus}
-                  </span>
-                ) : null}
-
-                {renderDataTableSlot(
-                  slots?.pagination,
-                  paginationSlotProps,
-                  cursorPaged ? (
-                    <Pagination
-                      size="sm"
-                      {...merged.customProps?.cursorPagination}
-                      mode="simple"
-                      onNext={paginationSlotProps.onNext}
-                      hasNext={paginationSlotProps.hasNext}
-                      onPrevious={paginationSlotProps.onPrevious}
-                      hasPrevious={paginationSlotProps.hasPrevious}
-                    />
-                  ) : resolvedPageCount !== undefined ? (
-                    <DataTablePagination
-                      size="sm"
-                      page={paginationSlotProps.page}
-                      count={paginationSlotProps.count}
-                      {...merged.customProps?.pagination}
-                      onChange={paginationSlotProps.onPageChange}
-                    />
-                  ) : null,
-                )}
-              </div>
-            ) : null}
+                  {renderDataTableSlot(
+                    slots?.pagination,
+                    paginationSlotProps,
+                    cursorPaged ? (
+                      <Pagination
+                        size="sm"
+                        {...merged.customProps?.cursorPagination}
+                        mode="simple"
+                        onNext={paginationSlotProps.onNext}
+                        hasNext={paginationSlotProps.hasNext}
+                        onPrevious={paginationSlotProps.onPrevious}
+                        hasPrevious={paginationSlotProps.hasPrevious}
+                      />
+                    ) : resolvedPageCount !== undefined ? (
+                      <DataTablePagination
+                        size="sm"
+                        page={paginationSlotProps.page}
+                        count={paginationSlotProps.count}
+                        {...merged.customProps?.pagination}
+                        onChange={paginationSlotProps.onPageChange}
+                      />
+                    ) : null,
+                  )}
+                </div>
+              ) : null}
+            </div>
           </div>
         ) : null}
       </div>
