@@ -212,7 +212,7 @@ export function useTimeRangePicker(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        "flex flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-800": true,
         "w-full": merged.value.fill,
         "w-fit": !merged.value.fill,
         [shellRounded]: true,

@@ -147,7 +147,7 @@ export function useChartTooltip(
       class: cn({
         "pointer-events-none absolute z-20 flex min-w-32 flex-col": true,
         "rounded-md border border-dark-200 bg-white text-dark-700 shadow-lg": true,
-        "dark:border-dark-700 dark:bg-dark-900 dark:text-dark-100": true,
+        "dark:border-dark-700 dark:bg-dark-800 dark:text-dark-100": true,
         [chart.value.tokenClasses.tooltip ?? ""]: true,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),

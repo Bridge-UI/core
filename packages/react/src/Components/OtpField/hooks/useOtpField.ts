@@ -291,6 +291,7 @@ export function useOtpField(
           "relative flex shrink-0 items-center justify-center overflow-hidden": true,
           [sizeClasses?.pin ?? ""]: true,
           [variantClasses?.pin ?? ""]: true,
+          [variantClasses?.pinDisabled ?? ""]: isDisabled && !invalidated,
           [roundedClasses?.pin ?? ""]: !isUnderlined,
           [colorPalette?.pin ?? ""]: !isUnderlined,
           [colorPalette?.underlined ?? ""]: isUnderlined,
@@ -302,9 +303,10 @@ export function useOtpField(
       );
     },
     [
+      isDisabled,
+      invalidated,
       sizeClasses,
       colorPalette,
-      invalidated,
       isUnderlined,
       roundedClasses,
       variantClasses,

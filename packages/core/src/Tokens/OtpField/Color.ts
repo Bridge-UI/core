@@ -11,21 +11,48 @@ export interface OtpFieldColorItem {
 }
 
 export interface OtpFieldColor {
+  /**
+   * `black` semantic color palette.
+   */
   "black": OtpFieldColorItem;
+
+  /**
+   * `dark` semantic color palette.
+   */
   "dark": OtpFieldColorItem;
+
+  /**
+   * `error` semantic color palette.
+   */
   "error": OtpFieldColorItem;
+
+  /**
+   * `info` semantic color palette.
+   */
   "info": OtpFieldColorItem;
+
+  /**
+   * `primary` semantic color palette.
+   */
   "primary": OtpFieldColorItem;
+
+  /**
+   * `secondary` semantic color palette.
+   */
   "secondary": OtpFieldColorItem;
+
+  /**
+   * `success` semantic color palette.
+   */
   "success": OtpFieldColorItem;
+
+  /**
+   * `warning` semantic color palette.
+   */
   "warning": OtpFieldColorItem;
 }
 
 export const colorProps: OtpFieldColor = {
-  "dark": {
-    "pin": "focus-within:ring-dark-600",
-    "underlined": "focus-within:border-dark-600",
-  },
   "info": {
     "pin": "focus-within:ring-info-600",
     "underlined": "focus-within:border-info-600",
@@ -53,5 +80,10 @@ export const colorProps: OtpFieldColor = {
   "black": {
     "pin": "focus-within:ring-black dark:focus-within:ring-white",
     "underlined": "focus-within:border-black dark:focus-within:border-white",
+  },
+  "dark": {
+    "pin": "focus-within:ring-dark-600 dark:focus-within:ring-dark-400",
+    "underlined":
+      "focus-within:border-dark-600 dark:focus-within:border-dark-400",
   },
 };

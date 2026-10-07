@@ -63,12 +63,6 @@ export interface FormFieldColor {
 }
 
 export const colorProps: FormFieldColor = {
-  "dark": {
-    "input": "focus-within:ring-dark-600",
-    "end": "group-focus-within:text-dark-500",
-    "start": "group-focus-within:text-dark-500",
-    "underlined": "focus-within:border-dark-600",
-  },
   "info": {
     "input": "focus-within:ring-info-600",
     "end": "group-focus-within:text-info-500",
@@ -110,5 +104,14 @@ export const colorProps: FormFieldColor = {
     "underlined": "focus-within:border-black dark:focus-within:border-white",
     "end": "group-focus-within:text-black dark:group-focus-within:text-white",
     "start": "group-focus-within:text-black dark:group-focus-within:text-white",
+  },
+  "dark": {
+    "input": "focus-within:ring-dark-600 dark:focus-within:ring-dark-400",
+    "underlined":
+      "focus-within:border-dark-600 dark:focus-within:border-dark-400",
+    "end":
+      "group-focus-within:text-dark-500 dark:group-focus-within:text-dark-300",
+    "start":
+      "group-focus-within:text-dark-500 dark:group-focus-within:text-dark-300",
   },
 };

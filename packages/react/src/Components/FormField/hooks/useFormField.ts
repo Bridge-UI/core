@@ -445,6 +445,8 @@ export function useFormField(
         required: mergedClasses.required,
         root: cn({
           [variantClasses?.label ?? ""]: isNotched,
+          [variantClasses?.labelDisabled ?? ""]:
+            isNotched && isDisabled && !invalidated,
           [mergedClasses.label ?? ""]: true,
         }),
       },
@@ -471,6 +473,8 @@ export function useFormField(
       classes: {
         root: cn({
           [variantClasses?.corner ?? ""]: isNotched,
+          [variantClasses?.cornerDisabled ?? ""]:
+            isNotched && isDisabled && !invalidated,
           [mergedClasses.corner ?? ""]: true,
         }),
       },
@@ -549,12 +553,12 @@ export function useFormField(
         "group/field relative flex justify-start gap-x-2 items-stretch":
           !isStacked,
         "transition-all ease-in-out duration-150 outline-none": true,
-        "bg-dark-100 dark:bg-dark-800": isDisabled && !invalidated,
         [sizeClasses?.container ?? ""]: !isTextareaControl,
         [sizeClasses?.containerTextareaLikeInput ?? ""]: isTextareaLikeInput,
         [sizeClasses?.containerTextarea ?? ""]:
           isTextareaControl && !isTextareaLikeInput,
         [variantClasses?.container ?? ""]: true,
+        [variantClasses?.containerDisabled ?? ""]: isDisabled && !invalidated,
         [roundedClasses ?? ""]: !isUnderlined,
         [containerSpacing ?? ""]: true,
         [containerColorFocus ?? ""]: true,
