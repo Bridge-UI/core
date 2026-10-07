@@ -1,7 +1,7 @@
 {
   "type": "module",
   "license": "MIT",
-  "version": "0.17.2",
+  "version": "0.17.3",
   "author": "BridgeUI",
   "sideEffects": false,
   "name": "@bridge-ui/core",
