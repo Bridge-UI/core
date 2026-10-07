@@ -407,7 +407,7 @@ function DataTable<T extends Record<string, unknown>>(
 
           <div className="flex shrink-0 items-center gap-2">
             {visibilityEnabled ? (
-              <div className="inline-flex items-center rounded-lg border border-dark-200 bg-white p-0.5 dark:border-dark-700 dark:bg-dark-900">
+              <div className="inline-flex items-center rounded-lg border border-dark-200 bg-white p-0.5 dark:border-dark-700 dark:bg-dark-800">
                 <DataTableColumnsMenu
                   items={visibilityItems}
                   overlay={merged.columnsOverlay}
