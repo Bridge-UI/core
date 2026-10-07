@@ -65,7 +65,7 @@ export const colorProps: ProgressColor = {
   },
   "dark": {
     "bar": "bg-dark-500 dark:bg-dark-400",
-    "track": "bg-dark-200 dark:bg-dark-800",
+    "track": "bg-dark-200 dark:bg-dark-700",
     "buffer": "bg-dark-500/30 dark:bg-dark-400/30",
   },
   "info": {

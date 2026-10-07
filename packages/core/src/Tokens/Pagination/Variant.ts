@@ -65,13 +65,13 @@ export const variantProps: PaginationVariant = {
     "ellipsis": "",
     "list": "gap-2",
     "itemSelected":
-      "bg-white ring-1 ring-inset ring-dark-400 dark:bg-dark-900 dark:ring-dark-500",
+      "bg-white ring-1 ring-inset ring-dark-400 dark:bg-dark-800 dark:ring-dark-500",
     "item":
       "text-dark-600 hover:bg-dark-500/10 hover:text-dark-800 dark:text-dark-400 dark:hover:bg-dark-500/15 dark:hover:text-dark-200",
   },
   "outlined": {
     "list": "isolate",
-    "itemSelected": "z-10 bg-dark-100 dark:bg-dark-800",
+    "itemSelected": "z-10 bg-dark-100 dark:bg-dark-700",
     "ellipsis":
       "relative -ml-px rounded-none ring-1 ring-inset ring-dark-300 dark:ring-dark-600 text-dark-500 dark:text-dark-400",
     "item":

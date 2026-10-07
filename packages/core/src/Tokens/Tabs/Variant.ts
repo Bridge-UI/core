@@ -78,9 +78,9 @@ export const variantProps: TabsVariant = {
   "pill": {
     "tabVertical": "",
     "listVertical": "",
-    "tabSelected": "bg-white shadow-sm dark:bg-dark-900",
+    "tabSelected": "bg-white shadow-sm dark:bg-dark-700",
     "list":
-      "inline-flex w-fit items-center bg-dark-100 dark:bg-dark-800 p-1 gap-1 rounded-lg",
+      "inline-flex w-fit items-center bg-dark-100 dark:bg-dark-950/40 p-1 gap-1 rounded-lg",
     "tab":
       "rounded-md py-1 text-dark-500 aria-[selected=false]:hover:text-dark-700 aria-[selected=false]:hover:bg-dark-500/10 dark:text-dark-400 dark:aria-[selected=false]:hover:text-dark-200 dark:aria-[selected=false]:hover:bg-dark-500/15",
   },
@@ -96,7 +96,7 @@ export const variantProps: TabsVariant = {
   "solid": {
     "listVertical": "border-b-0 border-r",
     "list": "border-b border-dark-200 dark:border-dark-700 gap-1",
-    "tabSelected": "after:bg-current bg-dark-100 dark:bg-dark-800",
+    "tabSelected": "after:bg-current bg-dark-100 dark:bg-dark-700",
     "tabVertical":
       "after:inset-x-auto after:inset-y-0 after:left-auto after:right-0 after:-bottom-auto after:h-auto after:w-0.5 -mb-0 -mr-px rounded-t-none rounded-l-md rounded-r-none",
     "tab":
@@ -105,7 +105,7 @@ export const variantProps: TabsVariant = {
   "enclosed": {
     "listVertical": "divide-x-0 divide-y",
     "tabSelected":
-      "after:bg-current bg-dark-100 font-semibold dark:bg-dark-800",
+      "after:bg-current bg-dark-100 font-semibold dark:bg-dark-700",
     "tabVertical":
       "after:inset-x-auto after:inset-y-0 after:left-auto after:right-0 after:bottom-auto after:h-auto after:w-0.5",
     "list":

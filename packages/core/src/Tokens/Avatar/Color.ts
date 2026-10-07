@@ -59,7 +59,7 @@ export const colorProps: AvatarColor = {
   },
   "dark": {
     "text": "text-dark-800 dark:text-dark-200",
-    "background": "bg-dark-100 dark:bg-dark-800",
+    "background": "bg-dark-100 dark:bg-dark-700",
   },
   "info": {
     "text": "text-info-800 dark:text-info-200",
