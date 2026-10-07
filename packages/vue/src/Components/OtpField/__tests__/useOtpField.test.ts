@@ -55,6 +55,13 @@ test("it should apply error chrome on pins when error is set", () => {
   expect(api.pinBind(0).class).toMatch(/error/);
 });
 
+test("it should apply the disabled background on pins when disabled", () => {
+  const { api } = mountUseOtpField({ disabled: true });
+
+  expect(api.pinBind(0).class).toMatch(/\bbg-dark-100\b/);
+  expect(api.pinBind(0).class).not.toMatch(/\bbg-white\b/);
+});
+
 test("it should resolve numeric input mode by default", () => {
   const { api } = mountUseOtpField();
 

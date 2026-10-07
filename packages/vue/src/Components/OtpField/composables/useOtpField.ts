@@ -302,6 +302,8 @@ export function useOtpField(
         "relative flex shrink-0 items-center justify-center overflow-hidden": true,
         [sizeClasses.value?.pin ?? ""]: true,
         [variantClasses.value?.pin ?? ""]: true,
+        [variantClasses.value?.pinDisabled ?? ""]:
+          isDisabled.value && !invalidated.value,
         [roundedClasses.value?.pin ?? ""]: !isUnderlined.value,
         [colorPalette.value?.pin ?? ""]: !isUnderlined.value,
         [colorPalette.value?.underlined ?? ""]: isUnderlined.value,

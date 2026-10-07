@@ -90,6 +90,49 @@ test("it should be disabled when disabled prop is true", () => {
   expect(isDisabled.value).toBe(true);
 });
 
+test("it should apply the variant disabled background after the variant container", () => {
+  const { containerBind } = mountUseFormField({ disabled: true });
+
+  expect(containerBind.value.class).toMatch(/\bbg-dark-100\b/);
+  expect(containerBind.value.class).not.toMatch(/\bbg-white\b/);
+});
+
+test("it should use a lighter disabled background on filled fields", () => {
+  const { containerBind } = mountUseFormField({
+    disabled: true,
+    variant: "filled",
+  });
+
+  expect(containerBind.value.class).toMatch(/\bbg-dark-50\b/);
+  expect(containerBind.value.class).not.toMatch(/\bbg-dark-100\b/);
+});
+
+test("it should keep underlined fields transparent when disabled", () => {
+  const { containerBind } = mountUseFormField({
+    disabled: true,
+    variant: "underlined",
+  });
+
+  expect(containerBind.value.class).toMatch(/\bbg-transparent\b/);
+});
+
+test("it should skip the disabled background while invalid", () => {
+  const { containerBind } = mountUseFormField({ error: true, disabled: true });
+
+  expect(containerBind.value.class).toMatch(/\bbg-error-50\b/);
+  expect(containerBind.value.class).not.toMatch(/\bbg-dark-100\b/);
+});
+
+test("it should split the notched label background when disabled", () => {
+  const { fieldLabelProps, fieldCornerProps } = mountUseFormField({
+    disabled: true,
+    variant: "notched",
+  });
+
+  expect(fieldLabelProps.value.classes?.root).toMatch(/\bbg-linear-to-b\b/);
+  expect(fieldCornerProps.value.classes?.root).toMatch(/\bbg-linear-to-b\b/);
+});
+
 test("it should be invalidated when error prop is true", () => {
   const { invalidated } = mountUseFormField({ error: true });
 
