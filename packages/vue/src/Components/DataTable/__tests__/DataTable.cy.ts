@@ -138,8 +138,9 @@ test("it should stack per-page and pagination when they overflow", () => {
   });
 
   cy.contains("Rows per page")
-    .closest(".gap-3")
-    .should("have.class", "flex-col");
+    .closest(".py-3")
+    .should("have.css", "flex-direction", "column")
+    .and("have.css", "justify-content", "center");
 });
 
 test("it should keep per-page and pagination inline when they fit", () => {
@@ -155,9 +156,54 @@ test("it should keep per-page and pagination inline when they fit", () => {
   });
 
   cy.contains("Rows per page")
-    .closest(".gap-3")
-    .should("have.class", "flex-row")
-    .and("have.class", "justify-between");
+    .closest(".py-3")
+    .should("have.css", "flex-direction", "row")
+    .and("have.css", "justify-content", "space-between");
+});
+
+test("it should keep two clusters inline below the three-cluster breakpoint", () => {
+  cy.mount(DataTable, {
+    attrs: { style: "width: 560px" },
+    props: {
+      page: 1,
+      columns,
+      perPage: 10,
+      pageCount: 100,
+      totalCount: 1000,
+      rows: [{ id: "1", name: "Ada Lovelace" }],
+    },
+  });
+
+  cy.contains("Rows per page")
+    .closest(".py-3")
+    .should("have.css", "flex-direction", "row")
+    .and("have.css", "justify-content", "space-between");
+});
+
+test("it should fit selection, per-page and pagination on one row at the breakpoint", () => {
+  cy.mount(DataTable, {
+    attrs: { style: "width: 780px" },
+    props: {
+      page: 1,
+      columns,
+      perPage: 10,
+      pageCount: 100,
+      totalCount: 1000,
+      selection: ["1"],
+      rows: [{ id: "1", name: "Ada Lovelace" }],
+    },
+  });
+
+  cy.contains("Rows per page")
+    .closest(".py-3")
+    .should("have.css", "flex-direction", "row")
+    .then(($footer) => {
+      const centers = [...$footer.children()].map((child) => {
+        return Math.round(child.offsetTop + child.offsetHeight / 2);
+      });
+
+      expect(new Set(centers).size).to.eq(1);
+    });
 });
 
 test("it should keep header text from clipping truncated glyphs", () => {

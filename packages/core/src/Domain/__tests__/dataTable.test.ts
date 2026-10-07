@@ -5,7 +5,6 @@ import { describe, expect, test, vi } from "vitest";
 import {
   DATATABLE_CHROME_COLUMN_WIDTH_PX,
   DATATABLE_EXPAND_COLUMN_ID,
-  DATATABLE_PAGINATION_GAP_PX,
   DATATABLE_PER_PAGE_OPTIONS,
   DATATABLE_SELECTION_COLUMN_ID,
   DATATABLE_STICKY_WIDTH_PX,
@@ -42,7 +41,6 @@ import {
   isDataTableColumnSearched,
   isDataTableCursorPaged,
   isDataTableExpandEnabled,
-  isDataTablePaginationInline,
   isDataTablePagingAmbiguous,
   isDataTablePerPageEnabled,
   isDataTableSearchEnabled,
@@ -72,37 +70,44 @@ import {
 } from "@/Domain/dataTable";
 
 describe("getDataTableFooterLayout", () => {
-  test("it should stack clusters when they do not fit on one row", () => {
+  test("it should use the wide breakpoint for three clusters", () => {
     expect(
       getDataTableFooterLayout({
-        inline: false,
+        showPager: true,
+        showPerPage: true,
+        showSelected: true,
+      }),
+    ).toEqual({ breakpoint: "wide", justify: "between" });
+  });
+
+  test("it should use the compact breakpoint for two clusters", () => {
+    expect(
+      getDataTableFooterLayout({
         showPager: true,
         showPerPage: true,
         showSelected: false,
       }),
-    ).toEqual({ stack: true, justify: "center" });
+    ).toEqual({ justify: "between", breakpoint: "compact" });
   });
 
   test("it should pin a single pager cluster to the end", () => {
     expect(
       getDataTableFooterLayout({
-        inline: true,
         showPager: true,
         showPerPage: false,
         showSelected: false,
       }),
-    ).toEqual({ stack: false, justify: "end" });
+    ).toEqual({ justify: "end", breakpoint: null });
   });
 
-  test("it should spread selected and controls when they fit", () => {
+  test("it should pin a single selection summary to the start", () => {
     expect(
       getDataTableFooterLayout({
-        inline: true,
-        showPager: true,
-        showPerPage: true,
+        showPager: false,
+        showPerPage: false,
         showSelected: true,
       }),
-    ).toEqual({ stack: false, justify: "between" });
+    ).toEqual({ breakpoint: null, justify: "start" });
   });
 });
 
@@ -112,18 +117,6 @@ describe("getDataTableSelectionTotal", () => {
       getDataTableSelectionTotal({ totalCount: 68, filteredCount: 10 }),
     ).toBe(68);
     expect(getDataTableSelectionTotal({ filteredCount: 10 })).toBe(10);
-  });
-});
-
-describe("isDataTablePaginationInline", () => {
-  test("it should fit one child or when children plus gap fit the bar", () => {
-    expect(isDataTablePaginationInline(200, [80])).toBe(true);
-    expect(isDataTablePaginationInline(200, [80, 80])).toBe(true);
-    expect(isDataTablePaginationInline(170, [80, 80])).toBe(false);
-    expect(
-      isDataTablePaginationInline(172, [80, 80], DATATABLE_PAGINATION_GAP_PX),
-    ).toBe(true);
-    expect(isDataTablePaginationInline(0, [0, 0])).toBe(false);
   });
 });
 

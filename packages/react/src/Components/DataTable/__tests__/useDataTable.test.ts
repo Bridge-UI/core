@@ -103,7 +103,7 @@ test("it should keep the selection summary at content width", () => {
   );
 });
 
-test("it should not grow the selection summary while footer clusters stack", () => {
+test("it should only grow the selection summary once footer clusters share a row", () => {
   const { result } = renderHook(() =>
     useDataTable(
       {
@@ -122,6 +122,9 @@ test("it should not grow the selection summary while footer clusters stack", () 
   expect(result.current.selectedBind.className).toContain("whitespace-nowrap");
   expect(result.current.selectedBind.className.split(/\s+/)).not.toContain(
     "grow",
+  );
+  expect(result.current.selectedBind.className.split(/\s+/)).toContain(
+    "@2xl/footer:grow",
   );
 });
 
@@ -200,9 +203,15 @@ test("it should derive page count from totalCount and perPage", () => {
   expect(result.current.serverPaged).toBe(true);
   expect(result.current.showPerPage).toBe(true);
   expect(result.current.resolvedPageCount).toBe(3);
-  expect(result.current.paginationBind.className).toContain("flex-col");
-  expect(result.current.paginationBind.className).toContain("justify-center");
-  expect(result.current.paginationBind.className).not.toContain("flex-row");
+  const paginationClasses =
+    result.current.paginationBind.className.split(/\s+/);
+
+  expect(paginationClasses).toContain("flex-col");
+  expect(paginationClasses).not.toContain("flex-row");
+  expect(paginationClasses).toContain("justify-center");
+  expect(paginationClasses).toContain("@lg/footer:flex-row");
+  expect(paginationClasses).toContain("@lg/footer:justify-between");
+  expect(paginationClasses).toContain("@lg/footer:[&>:last-child]:ml-auto");
 });
 
 test("it should shrink the frame and pagination when full is false", () => {
@@ -221,11 +230,31 @@ test("it should shrink the frame and pagination when full is false", () => {
   );
 
   expect(result.current.frameBind.className).toContain("w-fit");
-  expect(result.current.paginationBind.className.split(/\s+/)).toContain("w-0");
-  expect(result.current.paginationBind.className).toContain("min-w-full");
-  expect(result.current.paginationBind.className.split(/\s+/)).not.toContain(
+  expect(result.current.footerBarBind.className).toContain("min-w-full");
+  expect(result.current.footerBarBind.className.split(/\s+/)).toContain("w-0");
+  expect(result.current.footerBarBind.className.split(/\s+/)).not.toContain(
     "w-full",
   );
+});
+
+test("it should merge classes and custom props onto the footer bar", () => {
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        page: 1,
+        columns,
+        pageCount: 3,
+        rows: [{ id: "1", name: "Ada" }],
+        classes: { footerBar: "bg-primary-50" },
+        customProps: { footerBar: { id: "data-table-footer" } },
+      },
+      libDefaults,
+    ),
+  );
+
+  expect(result.current.footerBarBind.id).toBe("data-table-footer");
+  expect(result.current.footerBarBind.className).toContain("bg-primary-50");
+  expect(result.current.footerBarBind.className).toContain("@container/footer");
 });
 
 test("it should expose sticky expand visibility and summary views", () => {
