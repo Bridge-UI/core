@@ -1082,7 +1082,7 @@ export function useDataTable<T extends Record<string, unknown>>(
       {},
       {
         class: cn({
-          "absolute inset-0 z-30 bg-white/50 dark:bg-dark-900/50": true,
+          "absolute inset-0 z-30 bg-white/50 dark:bg-dark-800/50": true,
           "flex items-center justify-center":
             merged.value.loadingVariant !== "bar",
           [get(mergedClasses.value, "loading") ?? ""]: true,
@@ -1122,7 +1122,7 @@ export function useDataTable<T extends Record<string, unknown>>(
       {
         class: cn({
           "w-0 min-w-full": merged.value.full === false,
-          "border-t border-dark-200 bg-dark-50 px-3 py-2.5 text-sm text-dark-600 dark:border-dark-700 dark:bg-dark-800 dark:text-dark-300": true,
+          "border-t border-dark-200 bg-dark-50 px-3 py-2.5 text-sm text-dark-600 dark:border-dark-700 dark:bg-dark-700/50 dark:text-dark-300": true,
           [get(mergedClasses.value, "footer") ?? ""]: true,
         }),
       },

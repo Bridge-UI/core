@@ -261,7 +261,7 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
       <div class="flex shrink-0 items-center gap-2">
         <div
           v-if="visibilityEnabled"
-          class="inline-flex items-center rounded-lg border border-dark-200 bg-white p-0.5 dark:border-dark-700 dark:bg-dark-900"
+          class="inline-flex items-center rounded-lg border border-dark-200 bg-white p-0.5 dark:border-dark-700 dark:bg-dark-800"
         >
           <DataTableColumnsMenu
             :items="visibilityItems"
