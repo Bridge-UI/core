@@ -46,8 +46,8 @@ const label = computed(() => {
         :class="
           cn({
             '-mb-1': true,
-            'text-dark-800 dark:text-dark-100': sort === 'ascending',
-            'text-dark-300 dark:text-dark-600': sort !== 'ascending',
+            'opacity-100': sort === 'ascending',
+            'opacity-35': sort !== 'ascending',
           })
         "
       />
@@ -57,8 +57,8 @@ const label = computed(() => {
         icon="chevronDown"
         :class="
           cn({
-            'text-dark-800 dark:text-dark-100': sort === 'descending',
-            'text-dark-300 dark:text-dark-600': sort !== 'descending',
+            'opacity-100': sort === 'descending',
+            'opacity-35': sort !== 'descending',
           })
         "
       />

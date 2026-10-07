@@ -34,8 +34,8 @@ export function DataTableSortButton({
           icon="chevronUp"
           className={cn({
             "-mb-1": true,
-            "text-dark-800 dark:text-dark-100": ariaSort === "ascending",
-            "text-dark-300 dark:text-dark-600": ariaSort !== "ascending",
+            "opacity-100": ariaSort === "ascending",
+            "opacity-35": ariaSort !== "ascending",
           })}
         />
 
@@ -43,8 +43,8 @@ export function DataTableSortButton({
           size="lg"
           icon="chevronDown"
           className={cn({
-            "text-dark-800 dark:text-dark-100": ariaSort === "descending",
-            "text-dark-300 dark:text-dark-600": ariaSort !== "descending",
+            "opacity-100": ariaSort === "descending",
+            "opacity-35": ariaSort !== "descending",
           })}
         />
       </span>
