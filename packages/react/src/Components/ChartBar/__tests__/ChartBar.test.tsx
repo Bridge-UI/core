@@ -91,6 +91,30 @@ test("it should draw a line series over the bars", () => {
   expect(screen.getByRole("columnheader", { name: "Returns" })).toBeTruthy();
 });
 
+test("it should keep a line out of the bar stack", () => {
+  stubPlotSize({ width: 320, height: 180 });
+
+  render(
+    <ChartBar stack="total" animation={false} categories={categories}>
+      <ChartBarSeries name="Online" data={[30, 20, 10]} />
+      <ChartBarSeries name="Retail" data={[10, 20, 30]} />
+      <ChartLineSeries name="Target" data={[35, 35, 35]} />
+      <ChartLineSeries stack="total" name="Stacked" data={[1, 1, 1]} />
+    </ChartBar>,
+  );
+
+  const option = getInstanceByDom(getEchartsHost())?.getOption() as {
+    series: Array<{ stack?: string }>;
+  };
+
+  expect(option.series.map((item) => item.stack)).toEqual([
+    "total",
+    "total",
+    undefined,
+    "total",
+  ]);
+});
+
 test("it should throw when a scatter series is placed inside", () => {
   vi.spyOn(console, "error").mockImplementation(() => {});
 

@@ -58,7 +58,8 @@ export interface ChartBarOwnProps extends ChartRootOwnProps {
   radius?: number;
 
   /**
-   * Stacks every series under this key (per-series `stack` wins).
+   * Stacks every bar series under this key (per-series `stack` wins). A
+   * `ChartLineSeries` inside stacks only with its own `stack`.
    *
    * @default undefined
    */

@@ -111,6 +111,41 @@ test("it should draw a line series over the bars", async () => {
   wrapper.unmount();
 });
 
+test("it should keep a line out of the bar stack", async () => {
+  stubPlotSize({ width: 320, height: 180 });
+
+  const wrapper = mount(ChartBar, {
+    props: { categories, stack: "total", animation: false },
+    slots: {
+      default: () => [
+        h(ChartBarSeries, { name: "Online", data: [30, 20, 10] }),
+        h(ChartBarSeries, { name: "Retail", data: [10, 20, 30] }),
+        h(ChartLineSeries, { name: "Target", data: [35, 35, 35] }),
+        h(ChartLineSeries, {
+          stack: "total",
+          name: "Stacked",
+          data: [1, 1, 1],
+        }),
+      ],
+    },
+  });
+
+  await flushPromises();
+
+  const option = getInstanceByDom(getEchartsHost(wrapper))?.getOption() as {
+    series: Array<{ stack?: string }>;
+  };
+
+  expect(option.series.map((item) => item.stack)).toEqual([
+    "total",
+    "total",
+    undefined,
+    "total",
+  ]);
+
+  wrapper.unmount();
+});
+
 test("it should throw when a scatter series is placed inside", () => {
   expect(() =>
     mount(ChartBar, {

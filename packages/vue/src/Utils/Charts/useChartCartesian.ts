@@ -110,11 +110,14 @@ type CartesianRegistration =
   ChartBarSeriesRegistration | ChartLineSeriesRegistration;
 
 /**
- * Resolves a registered series against the root defaults.
+ * Resolves a registered series against the root defaults. The root `stack`
+ * only applies to series of the root family: a line inside `ChartBar` stacks
+ * only with its own `stack`, so it is not piled on top of the bars.
  */
 function resolveSeries(
   entry: CartesianRegistration,
   merged: ChartCartesianMerged & { stack?: string },
+  kind: "bar" | "line",
 ): ChartCartesianSeriesEntry {
   if (entry.kind === "bar") {
     return {
@@ -137,12 +140,12 @@ function resolveSeries(
     color: entry.color,
     dashed: entry.dashed ?? false,
     reference: entry.reference ?? [],
-    stack: entry.stack ?? merged.stack,
     area: entry.area ?? merged.area ?? false,
     step: entry.step ?? merged.step ?? false,
     labels: entry.labels ?? merged.labels ?? false,
     curve: entry.curve ?? merged.curve ?? "linear",
     showPoints: entry.showPoints ?? merged.showPoints ?? false,
+    stack: entry.stack ?? (kind === "line" ? merged.stack : undefined),
   };
 }
 
@@ -226,7 +229,11 @@ export function useChartCartesian(
 
   const series = computed(() => {
     return registry.entries.value.map((entry) => {
-      return resolveSeries(entry, { ...merged.value, stack: props.stack });
+      return resolveSeries(
+        entry,
+        { ...merged.value, stack: props.stack },
+        kind,
+      );
     });
   });
 
