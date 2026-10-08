@@ -4,9 +4,9 @@ import type { ReactNode } from "react";
 import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
-import { Chart } from "@/Components/Chart";
 import { useChartLegend } from "@/Components/ChartLegend";
-import { ChartSeries } from "@/Components/ChartSeries";
+import { ChartLine } from "@/Components/ChartLine";
+import { ChartLineSeries } from "@/Components/ChartLineSeries";
 
 afterEach(() => {
   cleanup();
@@ -14,10 +14,10 @@ afterEach(() => {
 
 function Wrapper({ children }: { children: ReactNode }) {
   return (
-    <Chart categories={["Jan", "Feb"]}>
-      <ChartSeries data={[1, 2]} name="Revenue" />
+    <ChartLine categories={["Jan", "Feb"]}>
+      <ChartLineSeries data={[1, 2]} name="Revenue" />
       {children}
-    </Chart>
+    </ChartLine>
   );
 }
 

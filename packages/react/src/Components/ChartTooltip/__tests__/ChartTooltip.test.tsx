@@ -9,9 +9,10 @@ import {
 import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
-import { Chart } from "@/Components/Chart";
 import { ChartLegend } from "@/Components/ChartLegend";
-import { ChartSeries } from "@/Components/ChartSeries";
+import { ChartLine } from "@/Components/ChartLine";
+import { ChartLineSeries } from "@/Components/ChartLineSeries";
+import { ChartPie } from "@/Components/ChartPie";
 import { ChartTooltip } from "@/Components/ChartTooltip";
 
 const categories = ["Jan", "Feb", "Mar"];
@@ -22,12 +23,12 @@ afterEach(() => {
 
 function renderTooltip(props: Parameters<typeof ChartTooltip>[0] = {}) {
   return render(
-    <Chart categories={categories}>
-      <ChartSeries name="Revenue" data={[1200, 2000, 3000]} />
-      <ChartSeries name="Costs" data={[500, null, 800]} />
+    <ChartLine categories={categories}>
+      <ChartLineSeries name="Revenue" data={[1200, 2000, 3000]} />
+      <ChartLineSeries name="Costs" data={[500, null, 800]} />
       <ChartLegend />
       <ChartTooltip data-testid="tooltip" {...props} />
-    </Chart>,
+    </ChartLine>,
   );
 }
 
@@ -43,7 +44,7 @@ function getTooltip() {
   return within(screen.getByTestId("tooltip"));
 }
 
-test("it should stay closed until a category is active", () => {
+test("it should stay closed until an item is active", () => {
   renderTooltip();
 
   expect(screen.queryByTestId("tooltip")).toBeNull();
@@ -98,9 +99,7 @@ test("it should format values with formatValue", () => {
 test("it should render the content slot", () => {
   renderTooltip({
     slots: {
-      content: ({ items, category }) => (
-        <span>{`${category}: ${items.length}`}</span>
-      ),
+      content: ({ items, title }) => <span>{`${title}: ${items.length}`}</span>,
     },
   });
 
@@ -115,4 +114,25 @@ test("it should open for keyboard navigation", () => {
   fireEvent.keyDown(screen.getByRole("img"), { key: "ArrowRight" });
 
   expect(getTooltip().getByText("Jan")).toBeTruthy();
+});
+
+test("it should show a slice with its percent and no title", () => {
+  render(
+    <ChartPie
+      data={[
+        { value: 3, label: "Housing" },
+        { value: 1, label: "Kids" },
+      ]}
+    >
+      <ChartTooltip
+        data-testid="tooltip"
+        formatPercent={(percent) => `${percent} pct`}
+      />
+    </ChartPie>,
+  );
+
+  fireEvent.keyDown(screen.getByRole("img"), { key: "ArrowRight" });
+
+  expect(getTooltip().getByText("Housing")).toBeTruthy();
+  expect(getTooltip().getByText("75 pct")).toBeTruthy();
 });

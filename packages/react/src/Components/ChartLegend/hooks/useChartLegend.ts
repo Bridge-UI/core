@@ -1,12 +1,14 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
+import { get, isNil } from "es-toolkit/compat";
 import {
   useCallback,
+  useLayoutEffect,
   type ButtonHTMLAttributes,
   type HTMLAttributes,
 } from "react";
 
 // ** Core Imports
+import { formatChartPercent, formatChartValue } from "@bridge-ui/core/Domain";
 import {
   cn,
   splitComponentProps,
@@ -16,10 +18,6 @@ import {
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
-import {
-  useChartContext,
-  type ChartResolvedSeries,
-} from "@/Components/Chart/ChartContext";
 import type {
   ChartLegendClasses,
   ChartLegendOwnProps,
@@ -31,18 +29,23 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { useChartContext, type ChartLegendItem } from "@/Utils/Chart";
 
 const chartLegendBridgeKeys = [
   "align",
   "classes",
   "position",
+  "showValue",
   "customProps",
+  "formatValue",
   "interactive",
+  "showPercent",
+  "formatPercent",
 ] as const satisfies readonly (keyof ChartLegendOwnProps)[];
 
 type ChartLegendLibDefaults = LibDefaultsShape<
   ChartLegendOwnProps,
-  "align" | "position" | "interactive"
+  "align" | "position" | "showValue" | "interactive" | "showPercent"
 >;
 
 type ChartLegendMerged = MergeLibDefaults<
@@ -93,18 +96,66 @@ export function useChartLegend(
     return merged.interactive !== false;
   });
 
+  const isColumn = merged.position === "left" || merged.position === "right";
+
   const items = derived(() => {
-    return chart.series;
+    return chart.legendItems;
   });
 
-  const { toggleSeries, highlightSeries } = chart;
+  const { locale, toggleItem, highlightItem, setLegendPosition } = chart;
+
+  const position = merged.position;
+
+  useLayoutEffect(() => {
+    setLegendPosition(position);
+
+    return () => {
+      setLegendPosition(null);
+    };
+  }, [position, setLegendPosition]);
+
+  const formatValueProp = merged.formatValue;
+  const formatPercentProp = merged.formatPercent;
+
+  const getValue = useCallback(
+    (item: ChartLegendItem): null | string => {
+      if (merged.showValue !== true || isNil(item.value)) {
+        return null;
+      }
+
+      return (
+        formatValueProp?.(item.value) ?? formatChartValue(item.value, locale)
+      );
+    },
+    [locale, formatValueProp, merged.showValue],
+  );
+
+  const getPercent = useCallback(
+    (item: ChartLegendItem): null | string => {
+      if (merged.showPercent !== true || isNil(item.value)) {
+        return null;
+      }
+
+      if (isNil(item.percent)) {
+        return "—";
+      }
+
+      return (
+        formatPercentProp?.(item.percent) ??
+        formatChartPercent(item.percent, locale)
+      );
+    },
+    [locale, formatPercentProp, merged.showPercent],
+  );
 
   const rootBind = derived((): HTMLAttributes<HTMLUListElement> => {
     return mergePartBind(customProps?.root, inheritedAttrs, {
       "aria-label": resolveMessage("Legend"),
       className: cn({
-        "m-0 flex list-none flex-wrap items-center p-0": true,
-        "order-first": merged.position === "top",
+        "m-0 flex list-none p-0": true,
+        "flex-wrap items-center": !isColumn,
+        "w-56 max-w-[50%] shrink-0 flex-col": isColumn,
+        "order-first": position === "top" || position === "left",
         [get(alignClasses, merged.align) ?? ""]: true,
         [chart.tokenClasses.legend ?? ""]: true,
         [get(mergedClasses, "root") ?? ""]: true,
@@ -113,9 +164,10 @@ export function useChartLegend(
   });
 
   const getItemBind = useCallback(
-    (item: ChartResolvedSeries): ButtonHTMLAttributes<HTMLButtonElement> => {
+    (item: ChartLegendItem): ButtonHTMLAttributes<HTMLButtonElement> => {
       const className = cn({
         "inline-flex items-center rounded-md text-dark-700 dark:text-dark-200": true,
+        "w-full text-start": isColumn,
         "transition-opacity": true,
         "opacity-50": item.hidden,
         "cursor-pointer outline-none hover:bg-dark-100 focus-visible:ring-2 focus-visible:ring-primary-500/50 dark:hover:bg-dark-800":
@@ -133,37 +185,38 @@ export function useChartLegend(
         type: "button",
         "aria-pressed": !item.hidden,
         onBlur: () => {
-          highlightSeries(null);
+          highlightItem(null);
         },
         onClick: () => {
-          toggleSeries(item.id);
+          toggleItem(item.id);
         },
         onFocus: () => {
-          highlightSeries(item.id);
+          highlightItem(item.id);
         },
         onMouseLeave: () => {
-          highlightSeries(null);
+          highlightItem(null);
         },
         onMouseEnter: () => {
-          highlightSeries(item.id);
+          highlightItem(item.id);
         },
       });
     },
     [
+      isColumn,
       interactive,
-      toggleSeries,
+      toggleItem,
       mergedClasses,
-      highlightSeries,
+      highlightItem,
       customProps?.item,
       chart.tokenClasses.legendItem,
     ],
   );
 
   const getSwatchBind = useCallback(
-    (item: ChartResolvedSeries): HTMLAttributes<HTMLSpanElement> => {
+    (item: ChartLegendItem): HTMLAttributes<HTMLSpanElement> => {
       return {
         "aria-hidden": true,
-        style: { backgroundColor: item.resolvedColor },
+        style: { backgroundColor: item.color },
         className: cn({
           "shrink-0 rounded-full": true,
           [chart.tokenClasses.swatch ?? ""]: true,
@@ -178,7 +231,26 @@ export function useChartLegend(
     return {
       className: cn({
         truncate: true,
+        "min-w-0 flex-1": isColumn,
         [get(mergedClasses, "label") ?? ""]: true,
+      }),
+    };
+  });
+
+  const valueBind = derived((): HTMLAttributes<HTMLSpanElement> => {
+    return {
+      className: cn({
+        "shrink-0 font-medium tabular-nums": true,
+        [get(mergedClasses, "value") ?? ""]: true,
+      }),
+    };
+  });
+
+  const percentBind = derived((): HTMLAttributes<HTMLSpanElement> => {
+    return {
+      className: cn({
+        "shrink-0 text-dark-500 tabular-nums dark:text-dark-400": true,
+        [get(mergedClasses, "percent") ?? ""]: true,
       }),
     };
   });
@@ -187,8 +259,12 @@ export function useChartLegend(
     items,
     merged,
     rootBind,
+    getValue,
     labelBind,
+    valueBind,
+    getPercent,
     interactive,
+    percentBind,
     getItemBind,
     getSwatchBind,
   };

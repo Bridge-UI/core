@@ -3,14 +3,20 @@ import { isNil, isUndefined, omitBy } from "es-toolkit/compat";
 import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
 
 // ** Core Imports
-import type { ChartRenderAxis } from "@bridge-ui/core/Domain";
+import type { ChartAxisOptions } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
-import { useChartContext } from "@/Components/Chart/ChartContext";
 import type { ChartAxisProps } from "@/Components/ChartAxis/chartAxis.types";
+import { useChartContext } from "@/Utils/Chart";
 
 export function useChartAxis(props: ChartAxisProps) {
   const { setAxis, removeAxis } = useChartContext();
+
+  if (isNil(setAxis) || isNil(removeAxis)) {
+    throw new Error(
+      "ChartAxis must be used within ChartLine, ChartBar, or ChartScatter",
+    );
+  }
 
   const formatTickRef = useRef(props.formatTick);
 
@@ -25,7 +31,7 @@ export function useChartAxis(props: ChartAxisProps) {
 
   const hasFormatTick = !isNil(props.formatTick);
 
-  const options = useMemo((): Partial<ChartRenderAxis> => {
+  const options = useMemo((): ChartAxisOptions => {
     return omitBy(
       {
         max: props.max,

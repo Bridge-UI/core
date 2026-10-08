@@ -4,8 +4,8 @@ import type { ReactNode } from "react";
 import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
-import { Chart } from "@/Components/Chart";
-import { ChartSeries } from "@/Components/ChartSeries";
+import { ChartLine } from "@/Components/ChartLine";
+import { ChartLineSeries } from "@/Components/ChartLineSeries";
 import { useChartTooltip } from "@/Components/ChartTooltip";
 
 afterEach(() => {
@@ -14,10 +14,10 @@ afterEach(() => {
 
 function Wrapper({ children }: { children: ReactNode }) {
   return (
-    <Chart categories={["Jan", "Feb"]}>
-      <ChartSeries name="Revenue" data={[1500, 2]} />
+    <ChartLine categories={["Jan", "Feb"]}>
+      <ChartLineSeries name="Revenue" data={[1500, 2]} />
       {children}
-    </Chart>
+    </ChartLine>
   );
 }
 
@@ -71,6 +71,6 @@ test("it should open when the plot reports an active index", () => {
   });
 
   expect(result.current.isOpen).toBe(true);
-  expect(result.current.context?.category).toBe("Jan");
+  expect(result.current.context?.title).toBe("Jan");
   expect(result.current.rootBind["aria-hidden"]).toBe(true);
 });

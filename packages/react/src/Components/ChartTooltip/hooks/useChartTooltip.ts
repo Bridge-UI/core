@@ -9,6 +9,7 @@ import {
 
 // ** Core Imports
 import {
+  formatChartPercent,
   formatChartValue,
   resolveChartTooltipPosition,
   type ChartTooltipItem,
@@ -17,7 +18,6 @@ import {
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useChartContext } from "@/Components/Chart/ChartContext";
 import type {
   ChartTooltipClasses,
   ChartTooltipContentContext,
@@ -30,12 +30,14 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { useChartContext } from "@/Utils/Chart";
 
 const chartTooltipBridgeKeys = [
   "slots",
   "classes",
   "customProps",
   "formatValue",
+  "formatPercent",
 ] as const satisfies readonly (keyof ChartTooltipOwnProps)[];
 
 export function useChartTooltip(props: ChartTooltipProps) {
@@ -74,10 +76,10 @@ export function useChartTooltip(props: ChartTooltipProps) {
     return componentProps.slots;
   });
 
-  const { getBounds, activeIndex, tooltipItems, getTooltipAnchor } = chart;
+  const { tooltip, getBounds, activeIndex, getTooltipAnchor } = chart;
 
   const isOpen = derived(() => {
-    return !isNil(activeIndex) && tooltipItems.length > 0;
+    return !isNil(activeIndex) && !isNil(tooltip) && tooltip.items.length > 0;
   });
 
   useLayoutEffect(() => {
@@ -101,24 +103,18 @@ export function useChartTooltip(props: ChartTooltipProps) {
     setPosition((previous) => {
       return isEqual(previous, next) ? previous : next;
     });
-  }, [
-    isOpen,
-    tooltipEl,
-    getBounds,
-    activeIndex,
-    tooltipItems,
-    getTooltipAnchor,
-  ]);
+  }, [isOpen, tooltip, tooltipEl, getBounds, activeIndex, getTooltipAnchor]);
 
   const context = derived((): null | ChartTooltipContentContext => {
-    if (isNil(activeIndex)) {
+    if (isNil(activeIndex) || isNil(tooltip)) {
       return null;
     }
 
     return {
       index: activeIndex,
-      items: tooltipItems,
-      category: chart.categories[activeIndex] ?? "",
+      color: tooltip.color,
+      title: tooltip.title,
+      items: tooltip.items,
     };
   });
 
@@ -130,6 +126,20 @@ export function useChartTooltip(props: ChartTooltipProps) {
       );
     },
     [chart.locale, merged.formatValue],
+  );
+
+  const formatPercent = useCallback(
+    (item: ChartTooltipItem) => {
+      if (isNil(item.percent)) {
+        return null;
+      }
+
+      return (
+        merged.formatPercent?.(item.percent, item) ??
+        formatChartPercent(item.percent, chart.locale)
+      );
+    },
+    [chart.locale, merged.formatPercent],
   );
 
   const rootBind = derived((): HTMLAttributes<HTMLDivElement> => {
@@ -154,7 +164,7 @@ export function useChartTooltip(props: ChartTooltipProps) {
   const titleBind = derived((): HTMLAttributes<HTMLDivElement> => {
     return {
       className: cn({
-        "font-semibold": true,
+        "flex items-center gap-2 font-semibold": true,
         [get(mergedClasses, "title") ?? ""]: true,
       }),
     };
@@ -170,9 +180,9 @@ export function useChartTooltip(props: ChartTooltipProps) {
   });
 
   const getSwatchBind = useCallback(
-    (item: ChartTooltipItem): HTMLAttributes<HTMLSpanElement> => {
+    (color: string): HTMLAttributes<HTMLSpanElement> => {
       return {
-        style: { backgroundColor: item.color },
+        style: { backgroundColor: color },
         className: cn({
           "shrink-0 rounded-full": true,
           [chart.tokenClasses.swatch ?? ""]: true,
@@ -188,6 +198,15 @@ export function useChartTooltip(props: ChartTooltipProps) {
       className: cn({
         "flex-1 text-dark-500 dark:text-dark-400": true,
         [get(mergedClasses, "label") ?? ""]: true,
+      }),
+    };
+  });
+
+  const percentBind = derived((): HTMLAttributes<HTMLSpanElement> => {
+    return {
+      className: cn({
+        "text-dark-500 tabular-nums dark:text-dark-400": true,
+        [get(mergedClasses, "percent") ?? ""]: true,
       }),
     };
   });
@@ -211,7 +230,9 @@ export function useChartTooltip(props: ChartTooltipProps) {
     labelBind,
     titleBind,
     valueBind,
+    percentBind,
     formatValue,
+    formatPercent,
     getSwatchBind,
   };
 }
