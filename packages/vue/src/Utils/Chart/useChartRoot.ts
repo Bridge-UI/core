@@ -162,8 +162,8 @@ export function useChartRoot<Merged extends ChartRootMerged>({
   });
 
   const split = computed(() => {
-    return splitComponentProps({
-      bridgeKeys: bridgeKeys as readonly string[],
+    return splitComponentProps<Record<string, unknown>, readonly string[]>({
+      bridgeKeys,
       props: {
         ...fallbackProps?.(),
         ...omitBy({ ...attrs, ...props }, isUndefined),
