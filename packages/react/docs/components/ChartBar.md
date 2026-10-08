@@ -61,6 +61,8 @@ Inside labels that do not fit their segment are hidden.
 </ChartBar>
 ```
 
+The `ChartBar` `stack` applies to bars only: a line stays on its own values (a target, an average) unless you give it a `stack`.
+
 `ChartBar` loads the ECharts line series too, so bar + line charts need no extra import.
 
 ### Negative values
@@ -115,7 +117,7 @@ Shared root props (`height`, `palette`, `loading`, `summary`, …) are listed in
 | ------------- | ---------------------------- | ------------ | ----------------------------------------------- |
 | `categories`  | `string[] \| Date[]`         | required     | Category labels, or dates for a time axis.      |
 | `orientation` | `"vertical" \| "horizontal"` | `"vertical"` | `horizontal` puts categories on `y`.            |
-| `stack`       | `string`                     | —            | Stack every series under this key.              |
+| `stack`       | `string`                     | —            | Stack every bar series under this key.          |
 | `labels`      | `boolean`                    | `false`      | Value labels on every series.                   |
 | `radius`      | `number`                     | `4`          | Corner radius (px) on the value end.            |
 | `formatDate`  | `(date: Date) => string`     | —            | Date labels in the tooltip, table, and summary. |
