@@ -8,6 +8,7 @@ import { afterEach, expect, test, vi } from "vitest";
 import { ChartBarSeries } from "@/Components/ChartBarSeries";
 import { ChartLine } from "@/Components/ChartLine";
 import { ChartLineSeries } from "@/Components/ChartLineSeries";
+import { BridgeUIProvider } from "@/Provider";
 import {
   getEchartsHost,
   stubPlotSize,
@@ -145,6 +146,26 @@ test("it should default sparklines to a 48px plot", () => {
   renderChart({ sparkline: true });
 
   expect(screen.getByRole("img").style.height).toBe("48px");
+});
+
+test("it should keep sparklines at 48px over a registry height", () => {
+  render(
+    <BridgeUIProvider
+      components={{ ChartLine: { defaultProps: { height: 320 } } }}
+    >
+      <ChartLine sparkline categories={categories}>
+        <ChartLineSeries name="Trend" data={[1, 2, 3]} />
+      </ChartLine>
+      <ChartLine categories={categories}>
+        <ChartLineSeries name="Revenue" data={[1, 2, 3]} />
+      </ChartLine>
+    </BridgeUIProvider>,
+  );
+
+  const [sparkline, chart] = screen.getAllByRole("img");
+
+  expect(chart.style.height).toBe("320px");
+  expect(sparkline.style.height).toBe("48px");
 });
 
 test("it should throw when a bar series is placed inside", () => {

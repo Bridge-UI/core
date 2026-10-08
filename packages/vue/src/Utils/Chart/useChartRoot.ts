@@ -1,5 +1,13 @@
 // ** External Imports
-import { get, isEqual, isNil, omit, pick } from "es-toolkit/compat";
+import {
+  get,
+  isEqual,
+  isNil,
+  isUndefined,
+  omit,
+  omitBy,
+  pick,
+} from "es-toolkit/compat";
 import {
   computed,
   onBeforeUnmount,
@@ -115,9 +123,15 @@ export function useChartRoot<Merged extends ChartRootMerged>({
   libDefaults,
   registryKeys,
   componentName,
+  fallbackProps,
 }: {
   bridgeKeys: readonly string[];
   componentName: ChartRootName;
+  /**
+   * Props that win over registry defaults but lose to explicit props
+   * (e.g. the sparkline height).
+   */
+  fallbackProps?: () => Partial<ChartRootOwnProps>;
   libDefaults: Partial<Merged>;
   props: ChartRootOwnProps;
   registryKeys: readonly string[];
@@ -150,7 +164,10 @@ export function useChartRoot<Merged extends ChartRootMerged>({
   const split = computed(() => {
     return splitComponentProps({
       bridgeKeys: bridgeKeys as readonly string[],
-      props: { ...attrs, ...props } as Record<string, unknown>,
+      props: {
+        ...fallbackProps?.(),
+        ...omitBy({ ...attrs, ...props }, isUndefined),
+      },
     }) as {
       componentProps: Record<string, unknown> & ChartRootOwnProps;
       inheritedAttrs: HTMLAttributes & Record<string, unknown>;

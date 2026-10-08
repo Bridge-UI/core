@@ -8,6 +8,7 @@ import { h } from "vue";
 import { ChartBarSeries } from "@/Components/ChartBarSeries";
 import { ChartLine } from "@/Components/ChartLine";
 import { ChartLineSeries } from "@/Components/ChartLineSeries";
+import { BridgeUIProvider } from "@/Provider";
 import {
   getEchartsHost,
   pressChartKey,
@@ -179,6 +180,39 @@ test("it should apply width, height, and class", async () => {
 
 test("it should default sparklines to a 48px plot", async () => {
   const wrapper = await mountChart({ sparkline: true });
+
+  expect(wrapper.find("[role='img']").attributes("style")).toContain(
+    "height: 48px",
+  );
+
+  wrapper.unmount();
+});
+
+test("it should keep sparklines at 48px over a registry height", async () => {
+  const series = () => h(ChartLineSeries, { name: "Trend", data: [1, 2, 3] });
+
+  const wrapper = mount(BridgeUIProvider, {
+    props: { components: { ChartLine: { defaultProps: { height: 320 } } } },
+    slots: {
+      default: () => [
+        h(ChartLine, { categories, sparkline: true }, series),
+        h(ChartLine, { categories }, series),
+      ],
+    },
+  });
+
+  await flushPromises();
+
+  const [sparkline, chart] = wrapper.findAll("[role='img']");
+
+  expect(chart.attributes("style")).toContain("height: 320px");
+  expect(sparkline.attributes("style")).toContain("height: 48px");
+});
+
+test("it should follow the sparkline prop at runtime", async () => {
+  const wrapper = await mountChart();
+
+  await wrapper.setProps({ sparkline: true });
 
   expect(wrapper.find("[role='img']").attributes("style")).toContain(
     "height: 48px",

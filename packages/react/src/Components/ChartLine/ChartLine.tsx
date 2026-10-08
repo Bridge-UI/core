@@ -8,11 +8,11 @@ function ChartLine(props: ChartLineProps) {
     size: "md",
     area: false,
     step: false,
+    height: 280,
     labels: false,
     animation: true,
     curve: "linear",
     showPoints: false,
-    height: props.sparkline ? 48 : 280,
   });
 
   return (

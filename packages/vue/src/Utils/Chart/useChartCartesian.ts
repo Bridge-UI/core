@@ -172,6 +172,7 @@ export function useChartCartesian(
     componentName,
     bridgeKeys: cartesianBridgeKeys,
     registryKeys: cartesianRegistryKeys,
+    fallbackProps: () => (props.sparkline ? { height: 48 } : {}),
   });
 
   const registry = useChartRegistry<CartesianRegistration>();

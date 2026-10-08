@@ -1,5 +1,13 @@
 // ** External Imports
-import { get, isEqual, isNil, omit, pick } from "es-toolkit/compat";
+import {
+  get,
+  isEqual,
+  isNil,
+  isUndefined,
+  omit,
+  omitBy,
+  pick,
+} from "es-toolkit/compat";
 import {
   useCallback,
   useEffect,
@@ -120,9 +128,15 @@ export function useChartRoot<Merged extends ChartRootMerged>({
   libDefaults,
   registryKeys,
   componentName,
+  fallbackProps,
 }: {
   bridgeKeys: readonly string[];
   componentName: ChartRootName;
+  /**
+   * Props that win over registry defaults but lose to explicit props
+   * (e.g. the sparkline height).
+   */
+  fallbackProps?: Partial<ChartRootOwnProps>;
   libDefaults: Partial<Merged>;
   props: ChartRootProps;
   registryKeys: readonly string[];
@@ -150,9 +164,12 @@ export function useChartRoot<Merged extends ChartRootMerged>({
     source: "pointer",
   });
 
-  const { componentProps, inheritedAttrs } = splitComponentProps({
-    props: props as Record<string, unknown>,
-    bridgeKeys: bridgeKeys as readonly string[],
+  const { componentProps, inheritedAttrs } = splitComponentProps<
+    Record<string, unknown>,
+    readonly string[]
+  >({
+    bridgeKeys,
+    props: { ...fallbackProps, ...omitBy(props, isUndefined) },
   }) as {
     componentProps: Record<string, unknown> & ChartRootOwnProps;
     inheritedAttrs: HTMLAttributes<HTMLDivElement>;

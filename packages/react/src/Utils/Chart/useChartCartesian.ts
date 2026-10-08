@@ -197,6 +197,7 @@ export function useChartCartesian(
     componentName,
     bridgeKeys: cartesianBridgeKeys,
     registryKeys: cartesianRegistryKeys,
+    fallbackProps: props.sparkline ? { height: 48 } : undefined,
   });
 
   const registry = useChartRegistry<CartesianRegistration>();
@@ -235,7 +236,7 @@ export function useChartCartesian(
     return registry.entries.map((entry) => {
       return resolveSeries(entry, { ...merged, stack });
     });
-  }, [registry.entries, merged, stack]);
+  }, [stack, merged, registry.entries]);
 
   const colors = useChartColors(root, registry.entries);
 
@@ -243,7 +244,7 @@ export function useChartCartesian(
     return series
       .filter((item) => !hidden.includes(item.id))
       .map((item) => ({ ...item, color: colors[item.id] ?? "" }));
-  }, [series, hidden, colors]);
+  }, [colors, hidden, series]);
 
   const axes = useMemo(() => {
     const xAxis: ChartAxisOptions = { ...registry.axes.x };
@@ -259,7 +260,7 @@ export function useChartCartesian(
     }
 
     return { xAxis, yAxis };
-  }, [registry.axes, timestamps, orientation, locale]);
+  }, [locale, timestamps, orientation, registry.axes]);
 
   const options = useMemo((): null | ChartCartesianRenderOptions => {
     if (isNil(theme)) {
@@ -285,13 +286,13 @@ export function useChartCartesian(
     axes,
     theme,
     labels,
-    sparkline,
     animation,
+    sparkline,
     timestamps,
     formatLabel,
     orientation,
-    visibleSeries,
     merged.radius,
+    visibleSeries,
     plotSize.width,
     plotSize.height,
   ]);
@@ -308,7 +309,7 @@ export function useChartCartesian(
       series: visibleSeries,
       title: labels[active.index] ?? "",
     });
-  }, [active.index, visibleSeries, labels]);
+  }, [labels, active.index, visibleSeries]);
 
   const table = useMemo(() => {
     return getChartCartesianTable({
@@ -317,7 +318,7 @@ export function useChartCartesian(
       categories: labels,
       categoryHeader: resolveMessage(isNil(timestamps) ? "Category" : "Date"),
     });
-  }, [locale, series, labels, timestamps, resolveMessage]);
+  }, [labels, locale, series, timestamps, resolveMessage]);
 
   const summary = resolveMessage(
     "Chart with {{count}} series ({{names}}) across {{categories}} categories, from {{first}} to {{last}}.",
@@ -334,7 +335,7 @@ export function useChartCartesian(
 
   const legendItems = useMemo(() => {
     return toChartLegendItems(series, colors, hidden);
-  }, [series, colors, hidden]);
+  }, [colors, hidden, series]);
 
   const context = useChartContextValue(root, {
     tooltip,
