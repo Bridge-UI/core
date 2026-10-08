@@ -1,5 +1,5 @@
 // ** External Imports
-import { isNil } from "es-toolkit/compat";
+import { isNil, upperFirst } from "es-toolkit/compat";
 import { useId, useLayoutEffect } from "react";
 
 // ** Local Imports
@@ -10,25 +10,36 @@ import {
 } from "@/Utils/Chart/ChartContext";
 
 /**
+ * Root component name for a family (`bar` → `ChartBar`).
+ */
+function toRootName(family: ChartFamily) {
+  return `Chart${upperFirst(family)}`;
+}
+
+/**
  * Registers a series on the nearest chart root while mounted. Throws when
- * the root is another family (`ChartBarSeries` inside `ChartLine`).
+ * the root is not one of `families` (`ChartBarSeries` inside `ChartLine`).
  */
 export function useChartSeries<Entry extends ChartSeriesRegistration>({
   entry,
-  family,
+  families,
   componentName,
 }: {
   componentName: string;
   entry: Omit<Entry, "id">;
-  family: ChartFamily;
+  families: readonly ChartFamily[];
 }): Entry {
   const reactId = useId();
   const chart = useChartContext();
   const { upsertSeries, removeSeries } = chart;
 
-  if (chart.family !== family || isNil(upsertSeries) || isNil(removeSeries)) {
+  if (
+    !families.includes(chart.family) ||
+    isNil(upsertSeries) ||
+    isNil(removeSeries)
+  ) {
     throw new Error(
-      `${componentName} must be used within Chart${family[0].toUpperCase()}${family.slice(1)}`,
+      `${componentName} must be used within ${families.map(toRootName).join(" or ")}`,
     );
   }
 

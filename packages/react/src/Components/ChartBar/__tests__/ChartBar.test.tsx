@@ -8,6 +8,7 @@ import { afterEach, expect, test, vi } from "vitest";
 import { ChartBar } from "@/Components/ChartBar";
 import { ChartBarSeries } from "@/Components/ChartBarSeries";
 import { ChartLineSeries } from "@/Components/ChartLineSeries";
+import { ChartScatterSeries } from "@/Components/ChartScatterSeries";
 import {
   getEchartsHost,
   stubPlotSize,
@@ -70,16 +71,36 @@ test("it should mount ECharts with horizontal bars", () => {
   expect(option.yAxis[0].data).toEqual(categories);
 });
 
-test("it should throw when a line series is placed inside", () => {
+test("it should draw a line series over the bars", () => {
+  stubPlotSize({ width: 320, height: 180 });
+
+  render(
+    <ChartBar animation={false} categories={categories}>
+      <ChartBarSeries name="Orders" data={[30, 20, 10]} />
+      <ChartLineSeries dashed name="Returns" data={[3, 4, 2]} />
+    </ChartBar>,
+  );
+
+  const option = getInstanceByDom(getEchartsHost())?.getOption() as {
+    series: Array<{ name: string; type: string }>;
+    xAxis: Array<{ boundaryGap: boolean }>;
+  };
+
+  expect(option.xAxis[0].boundaryGap).toBe(true);
+  expect(option.series.map((item) => item.type)).toEqual(["bar", "line"]);
+  expect(screen.getByRole("columnheader", { name: "Returns" })).toBeTruthy();
+});
+
+test("it should throw when a scatter series is placed inside", () => {
   vi.spyOn(console, "error").mockImplementation(() => {});
 
   expect(() =>
     render(
       <ChartBar categories={categories}>
-        <ChartLineSeries name="Goal" data={[1, 2, 3]} />
+        <ChartScatterSeries name="Leads" data={[[1, 2]]} />
       </ChartBar>,
     ),
-  ).toThrow("ChartLineSeries must be used within ChartLine");
+  ).toThrow("ChartScatterSeries must be used within ChartScatter");
 });
 
 test("it should show the empty message", () => {

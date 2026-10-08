@@ -10,8 +10,8 @@ import type {
 import type { ChartColorValue } from "@/Utils/Chart";
 
 /**
- * One line registered on the nearest `ChartLine`. Renders nothing.
- * Unset options fall back to the `ChartLine` props.
+ * One line registered on the nearest `ChartLine`, or drawn over the bars of
+ * a `ChartBar`. Renders nothing. Unset options fall back to the root props.
  */
 export interface ChartLineSeriesOwnProps {
   /**

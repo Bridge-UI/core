@@ -7,7 +7,7 @@ import { useChartSeries, type ChartBarSeriesRegistration } from "@/Utils/Chart";
 
 export function useChartBarSeries(props: ChartBarSeriesProps) {
   const entry = useChartSeries<ChartBarSeriesRegistration>({
-    family: "bar",
+    families: ["bar"],
     componentName: "ChartBarSeries",
     entry: {
       kind: "bar",

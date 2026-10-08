@@ -10,7 +10,7 @@ import {
 
 export function useChartLineSeries(props: ChartLineSeriesProps) {
   const entry = useChartSeries<ChartLineSeriesRegistration>({
-    family: "line",
+    families: ["line", "bar"],
     componentName: "ChartLineSeries",
     entry: {
       kind: "line",
