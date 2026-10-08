@@ -1,5 +1,5 @@
 // ** External Imports
-import { isNil } from "es-toolkit/compat";
+import { isNil, upperFirst } from "es-toolkit/compat";
 import { computed, onBeforeUnmount, useId, watch } from "vue";
 
 // ** Local Imports
@@ -10,29 +10,36 @@ import {
 } from "@/Utils/Chart/chartInjectionKey";
 
 /**
+ * Root component name for a family (`bar` → `ChartBar`).
+ */
+function toRootName(family: ChartFamily) {
+  return `Chart${upperFirst(family)}`;
+}
+
+/**
  * Registers a series on the nearest chart root while mounted. Throws when
- * the root is another family (`ChartBarSeries` inside `ChartLine`).
+ * the root is not one of `families` (`ChartBarSeries` inside `ChartLine`).
  */
 export function useChartSeries<Entry extends ChartSeriesRegistration>({
   entry,
-  family,
+  families,
   componentName,
 }: {
   componentName: string;
   entry: () => Omit<Entry, "id">;
-  family: ChartFamily;
+  families: readonly ChartFamily[];
 }) {
   const vueId = useId();
   const chart = useChartContext();
   const { upsertSeries, removeSeries } = chart.value;
 
   if (
-    chart.value.family !== family ||
+    !families.includes(chart.value.family) ||
     isNil(upsertSeries) ||
     isNil(removeSeries)
   ) {
     throw new Error(
-      `${componentName} must be used within Chart${family[0].toUpperCase()}${family.slice(1)}`,
+      `${componentName} must be used within ${families.map(toRootName).join(" or ")}`,
     );
   }
 

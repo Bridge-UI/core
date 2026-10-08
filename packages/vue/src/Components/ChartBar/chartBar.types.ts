@@ -9,8 +9,9 @@ import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 import type { ChartRootOwnProps } from "@/Utils/Chart";
 
 /**
- * Bar chart root. Compose with `ChartBarSeries`, `ChartAxis`, `ChartLegend`,
- * and `ChartTooltip`. The plot is drawn by ECharts.
+ * Bar chart root. Compose with `ChartBarSeries` (and `ChartLineSeries` for
+ * bar + line charts), `ChartAxis`, `ChartLegend`, and `ChartTooltip`. The
+ * plot is drawn by ECharts.
  */
 export interface ChartBarOwnProps extends ChartRootOwnProps {
   /**

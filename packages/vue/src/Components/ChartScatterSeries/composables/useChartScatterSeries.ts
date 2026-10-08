@@ -7,7 +7,7 @@ import {
 
 export function useChartScatterSeries(props: ChartScatterSeriesOwnProps) {
   const entry = useChartSeries<ChartScatterSeriesRegistration>({
-    family: "scatter",
+    families: ["scatter"],
     componentName: "ChartScatterSeries",
     entry: () => {
       return {

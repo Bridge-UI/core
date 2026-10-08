@@ -1,5 +1,5 @@
 // ** External Imports
-import { BarChart } from "echarts/charts";
+import { BarChart, LineChart } from "echarts/charts";
 import {
   GridComponent,
   MarkLineComponent,
@@ -20,8 +20,10 @@ import type {
 import { echartsCartesianFamily } from "@/Utils/Chart/echarts/cartesian";
 import { mountEchartsPlot } from "@/Utils/Chart/echarts/plot";
 
+// `LineChart` draws `ChartLineSeries` placed inside `ChartBar`.
 use([
   BarChart,
+  LineChart,
   LabelLayout,
   GridComponent,
   SVGRenderer,
@@ -30,7 +32,8 @@ use([
 ]);
 
 /**
- * Mounts a bar plot (tree-shaken: bar series only).
+ * Mounts a bar plot (tree-shaken: bar and line series, for bar + line
+ * charts).
  */
 export function mountEchartsBar(
   options: ChartMountOptions<ChartCartesianRenderOptions>,

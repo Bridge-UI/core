@@ -8,6 +8,7 @@ import { h } from "vue";
 import { ChartBar } from "@/Components/ChartBar";
 import { ChartBarSeries } from "@/Components/ChartBarSeries";
 import { ChartLineSeries } from "@/Components/ChartLineSeries";
+import { ChartScatterSeries } from "@/Components/ChartScatterSeries";
 import {
   getEchartsHost,
   pressChartKey,
@@ -81,12 +82,43 @@ test("it should mount ECharts with horizontal bars", async () => {
   wrapper.unmount();
 });
 
-test("it should throw when a line series is placed inside", () => {
+test("it should draw a line series over the bars", async () => {
+  stubPlotSize({ width: 320, height: 180 });
+
+  const wrapper = mount(ChartBar, {
+    props: { categories, animation: false },
+    slots: {
+      default: () => [
+        h(ChartBarSeries, { name: "Orders", data: [30, 20, 10] }),
+        h(ChartLineSeries, { dashed: true, name: "Returns", data: [3, 4, 2] }),
+      ],
+    },
+  });
+
+  await flushPromises();
+
+  const option = getInstanceByDom(getEchartsHost(wrapper))?.getOption() as {
+    series: Array<{ name: string; type: string }>;
+    xAxis: Array<{ boundaryGap: boolean }>;
+  };
+
+  expect(option.xAxis[0].boundaryGap).toBe(true);
+  expect(option.series.map((item) => item.type)).toEqual(["bar", "line"]);
+  expect(wrapper.findAll("thead th").map((cell) => cell.text())).toContain(
+    "Returns",
+  );
+
+  wrapper.unmount();
+});
+
+test("it should throw when a scatter series is placed inside", () => {
   expect(() =>
     mount(ChartBar, {
       props: { categories },
       global: { config: { warnHandler: () => undefined } },
-      slots: { default: () => h(ChartLineSeries, { data: [1], name: "Goal" }) },
+      slots: {
+        default: () => h(ChartScatterSeries, { name: "Leads", data: [[1, 2]] }),
+      },
     }),
-  ).toThrow("ChartLineSeries must be used within ChartLine");
+  ).toThrow("ChartScatterSeries must be used within ChartScatter");
 });
