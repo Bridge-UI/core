@@ -31,6 +31,7 @@ const chartPieBridgeKeys = [
   "maxSlices",
   "thickness",
   "labelContent",
+  "labelPosition",
 ] as const satisfies readonly (keyof ChartPieOwnProps)[];
 
 const chartPieRegistryKeys = [
@@ -43,10 +44,14 @@ const chartPieRegistryKeys = [
   "animation",
   "thickness",
   "customProps",
+  "labelPosition",
 ] as const satisfies readonly (keyof ChartPieOwnProps)[];
 
 type ChartPieMerged = ChartRootMerged &
-  Pick<ChartPieOwnProps, "labels" | "variant" | "minAngle" | "thickness">;
+  Pick<
+    ChartPieOwnProps,
+    "labels" | "variant" | "minAngle" | "thickness" | "labelPosition"
+  >;
 
 export function useChartPie(
   props: ChartPieOwnProps,
@@ -77,6 +82,7 @@ export function useChartPie(
       ...base,
       labels: labels.value,
       variant: variant.value,
+      labelPosition: merged.value.labelPosition ?? "outside",
       minAngle: merged.value.minAngle ?? DEFAULT_CHART_MIN_ANGLE,
       thickness: merged.value.thickness ?? DEFAULT_CHART_DONUT_THICKNESS,
     };

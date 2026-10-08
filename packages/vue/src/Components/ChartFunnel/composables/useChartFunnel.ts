@@ -29,6 +29,7 @@ const chartFunnelBridgeKeys = [
   "align",
   "labels",
   "labelContent",
+  "labelPosition",
 ] as const satisfies readonly (keyof ChartFunnelOwnProps)[];
 
 const chartFunnelRegistryKeys = [
@@ -40,10 +41,11 @@ const chartFunnelRegistryKeys = [
   "classes",
   "animation",
   "customProps",
+  "labelPosition",
 ] as const satisfies readonly (keyof ChartFunnelOwnProps)[];
 
 type ChartFunnelMerged = ChartRootMerged &
-  Pick<ChartFunnelOwnProps, "sort" | "align" | "labels">;
+  Pick<ChartFunnelOwnProps, "sort" | "align" | "labels" | "labelPosition">;
 
 export function useChartFunnel(
   props: ChartFunnelOwnProps,
@@ -60,7 +62,7 @@ export function useChartFunnel(
   const { merged, locale, resolveMessage } = root;
 
   const labels = computed(() => {
-    return merged.value.labels ?? "inside";
+    return merged.value.labels ?? true;
   });
 
   function order(entries: ChartSliceEntry[]) {
@@ -74,6 +76,7 @@ export function useChartFunnel(
       ...base,
       labels: labels.value,
       align: merged.value.align ?? "center",
+      labelPosition: merged.value.labelPosition ?? "inside",
     };
   }
 

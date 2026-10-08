@@ -43,9 +43,10 @@ export type ChartSliceEntry = ChartSlice & {
 };
 
 /**
- * Plot label placement. `false` hides plot labels.
+ * Where plot labels sit: on the slice / stage, or next to it with a leader
+ * line.
  */
-export type ChartLabels = false | "inside" | "outside";
+export type ChartLabelPosition = "inside" | "outside";
 
 /**
  * Slice / stage passed to a custom label formatter.
@@ -128,9 +129,14 @@ export type ChartPartRenderSlice = {
  */
 export type ChartPieRenderOptions = ChartBaseRenderOptions & {
   /**
-   * Plot label placement.
+   * Where plot labels sit.
    */
-  labels: ChartLabels;
+  labelPosition: ChartLabelPosition;
+
+  /**
+   * Whether plot labels are drawn.
+   */
+  labels: boolean;
 
   /**
    * Minimum slice angle (deg) so tiny slices stay visible.
@@ -163,9 +169,14 @@ export type ChartFunnelRenderOptions = ChartBaseRenderOptions & {
   align: ChartFunnelAlign;
 
   /**
-   * Plot label placement.
+   * Where plot labels sit.
    */
-  labels: ChartLabels;
+  labelPosition: ChartLabelPosition;
+
+  /**
+   * Whether plot labels are drawn.
+   */
+  labels: boolean;
 
   /**
    * Visible stages in render (top-to-bottom) order.

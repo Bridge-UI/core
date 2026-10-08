@@ -4,7 +4,7 @@ import type { HTMLAttributes, ReactNode } from "react";
 // ** Core Imports
 import type {
   ChartLabelContent,
-  ChartLabels,
+  ChartLabelPosition,
   ChartPieVariant,
   ChartSlice,
 } from "@bridge-ui/core/Domain";
@@ -35,11 +35,18 @@ export interface ChartPieOwnProps extends ChartRootOwnProps {
   labelContent?: ChartLabelContent;
 
   /**
-   * Slice labels on the plot. Legend labels come from `ChartLegend`.
+   * Where plot labels sit when `labels` is on.
+   *
+   * @default "outside"
+   */
+  labelPosition?: ChartLabelPosition;
+
+  /**
+   * Shows slice labels on the plot. Legend labels come from `ChartLegend`.
    *
    * @default false
    */
-  labels?: ChartLabels;
+  labels?: boolean;
 
   /**
    * Keeps the largest `maxSlices - 1` slices and groups the rest into an

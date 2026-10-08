@@ -12,6 +12,7 @@ function ChartPie(props: ChartPieProps) {
     thickness: 0.3,
     variant: "pie",
     animation: true,
+    labelPosition: "outside",
   });
 
   return (

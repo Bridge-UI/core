@@ -12,7 +12,6 @@ import {
   type ChartBaseRenderOptions,
   type ChartHandle,
   type ChartLabelContent,
-  type ChartLabels,
   type ChartMountOptions,
   type ChartPartRenderSlice,
   type ChartSlice,
@@ -56,7 +55,7 @@ export function useChartPart<
     data: () => readonly ChartSlice[];
     family: "pie" | "funnel";
     labelContent: () => undefined | ChartLabelContent;
-    labels: () => ChartLabels;
+    labels: () => boolean;
     maxSlices?: () => number | undefined;
     mount: (options: ChartMountOptions<Options>) => ChartHandle<Options>;
     order?: (entries: ChartSliceEntry[]) => ChartSliceEntry[];
@@ -119,14 +118,13 @@ export function useChartPart<
         label: entry.label,
         value: entry.value,
         color: colors.value[entry.id] ?? "",
-        labelText:
-          placement === false
-            ? ""
-            : resolveChartSliceLabel({
-                content,
-                locale: locale.value,
-                slice: { percent, label: entry.label, value: entry.value },
-              }),
+        labelText: !placement
+          ? ""
+          : resolveChartSliceLabel({
+              content,
+              locale: locale.value,
+              slice: { percent, label: entry.label, value: entry.value },
+            }),
       };
     });
   });

@@ -16,15 +16,17 @@ test("it should merge the funnel defaults", () => {
       {
         size: "md",
         height: 280,
+        labels: true,
         align: "center",
         animation: true,
-        labels: "inside",
         sort: "descending",
+        labelPosition: "inside",
       },
     ),
   );
 
-  expect(result.current.merged.labels).toBe("inside");
+  expect(result.current.merged.labels).toBe(true);
+  expect(result.current.merged.labelPosition).toBe("inside");
   expect(result.current.context.family).toBe("funnel");
   expect(result.current.merged.sort).toBe("descending");
 });

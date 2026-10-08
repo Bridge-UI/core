@@ -17,10 +17,11 @@ const props = withDefaults(defineProps<ChartFunnelOwnProps>(), {
 const { frame } = useChartFunnel(props, {
   size: "md",
   height: 280,
+  labels: true,
   align: "center",
   animation: true,
-  labels: "inside",
   sort: "descending",
+  labelPosition: "inside",
 });
 </script>
 

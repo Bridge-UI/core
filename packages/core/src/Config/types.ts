@@ -10,7 +10,7 @@ import type {
 import type {
   ChartFunnelAlign,
   ChartFunnelSort,
-  ChartLabels,
+  ChartLabelPosition,
   ChartPieVariant,
 } from "@/Domain/chartPart";
 import type { RichTextTool } from "@/Domain/richText";
@@ -766,7 +766,8 @@ export interface ChartFunnelConfigBase {
   defaultProps: Partial<
     ChartRootDefaultProps & {
       align: ChartFunnelAlign;
-      labels: ChartLabels;
+      labelPosition: ChartLabelPosition;
+      labels: boolean;
       sort: ChartFunnelSort;
     }
   >;
@@ -802,7 +803,8 @@ export interface ChartPieConfigBase {
   classes: object;
   defaultProps: Partial<
     ChartRootDefaultProps & {
-      labels: ChartLabels;
+      labelPosition: ChartLabelPosition;
+      labels: boolean;
       minAngle: number;
       thickness: number;
       variant: ChartPieVariant;

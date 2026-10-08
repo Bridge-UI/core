@@ -18,7 +18,7 @@ test("it should merge the funnel defaults and keep zero stages", () => {
             { value: 0, label: "B" },
           ],
         },
-        { size: "md", height: 280, labels: "inside", sort: "descending" },
+        { size: "md", height: 280, labels: true, sort: "descending" },
       );
 
       return () => h("div");

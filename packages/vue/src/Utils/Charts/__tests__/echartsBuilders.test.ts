@@ -106,6 +106,40 @@ describe("buildEchartsCartesianOption", () => {
     ]);
   });
 
+  test("it should format categories and numeric ticks separately", () => {
+    const formatTick = (value: number) => `n${value + 1}`;
+    const formatCategory = (category: string) => `c${category}`;
+
+    const option = buildEchartsCartesianOption(
+      cartesian({ yAxis: { formatTick }, xAxis: { formatCategory } }),
+    );
+
+    const formatX = get(option, "xAxis.axisLabel.formatter") as (
+      value: number | string,
+    ) => string;
+
+    const formatY = get(option, "yAxis.axisLabel.formatter") as (
+      value: number | string,
+    ) => string;
+
+    expect(formatY(1)).toBe("n2");
+    expect(formatX("Jan")).toBe("cJan");
+  });
+
+  test("it should pass timestamps to formatTick on a time axis", () => {
+    const formatTick = (value: number) => `t${value + 1}`;
+
+    const option = buildEchartsCartesianOption(
+      cartesian({ xAxis: { formatTick }, timestamps: [100, 200] }),
+    );
+
+    const formatX = get(option, "xAxis.axisLabel.formatter") as (
+      value: number | string,
+    ) => string;
+
+    expect(formatX(100)).toBe("t101");
+  });
+
   test("it should hide axes and padding for sparklines", () => {
     const option = buildEchartsCartesianOption(cartesian({ sparkline: true }));
 
@@ -149,6 +183,7 @@ describe("buildEchartsPieOption", () => {
     labels: false,
     thickness: 0.3,
     animation: false,
+    labelPosition: "outside",
   } as const;
 
   test("it should draw a full pie without labels", () => {
@@ -161,13 +196,26 @@ describe("buildEchartsPieOption", () => {
   test("it should leave a hole for donuts and room for outside labels", () => {
     const option = buildEchartsPieOption({
       ...base,
+      labels: true,
       variant: "donut",
-      labels: "outside",
     });
 
     expect(get(option, "series[0].padAngle")).toBe(1);
     expect(get(option, "series[0].labelLine.show")).toBe(true);
     expect(get(option, "series[0].radius")).toEqual(["49%", "70%"]);
+  });
+
+  test("it should draw inside labels in white on a full pie", () => {
+    const option = buildEchartsPieOption({
+      ...base,
+      labels: true,
+      variant: "pie",
+      labelPosition: "inside",
+    });
+
+    expect(get(option, "series[0].label.color")).toBe("#fff");
+    expect(get(option, "series[0].label.position")).toBe("inside");
+    expect(get(option, "series[0].radius")).toEqual(["0%", "92%"]);
   });
 });
 
@@ -178,14 +226,31 @@ describe("buildEchartsFunnelOption", () => {
       slices,
       width: 320,
       height: 240,
+      labels: true,
       align: "right",
       animation: false,
-      labels: "outside",
+      labelPosition: "outside",
     });
 
     expect(get(option, "series[0].left")).toBe("36%");
     expect(get(option, "series[0].sort")).toBe("none");
     expect(get(option, "series[0].width")).toBe("60%");
     expect(get(option, "series[0].label.position")).toBe("left");
+  });
+
+  test("it should use the full width when labels are off", () => {
+    const option = buildEchartsFunnelOption({
+      theme,
+      slices,
+      width: 320,
+      height: 240,
+      labels: false,
+      align: "center",
+      animation: false,
+      labelPosition: "outside",
+    });
+
+    expect(get(option, "series[0].width")).toBe("92%");
+    expect(get(option, "series[0].label.show")).toBe(false);
   });
 });

@@ -42,18 +42,19 @@ const FULL_RADIUS = 92;
 export function buildEchartsPieOption(
   options: ChartPieRenderOptions,
 ): EChartsPieOption {
-  const { theme, labels, slices } = options;
-  const outer = labels === "outside" ? OUTSIDE_RADIUS : FULL_RADIUS;
+  const { theme, labels, slices, labelPosition } = options;
+  const outside = labels && labelPosition === "outside";
+  const outer = outside ? OUTSIDE_RADIUS : FULL_RADIUS;
   const donut = options.variant === "donut";
   const thickness = Math.min(1, Math.max(0, options.thickness));
   const inner = donut ? Math.round(outer * (1 - thickness)) : 0;
 
   const label = {
-    show: labels !== false,
+    show: labels,
     ...labelStyle(theme),
     formatter: formatSliceLabel(slices),
-    color: labels === "inside" ? "#fff" : theme.textColor,
-    position: labels === "inside" ? ("inside" as const) : ("outside" as const),
+    color: outside ? theme.textColor : "#fff",
+    position: outside ? ("outside" as const) : ("inside" as const),
   };
 
   return {
@@ -72,7 +73,7 @@ export function buildEchartsPieOption(
         padAngle: donut && slices.length > 1 ? 1 : 0,
         emphasis: { label, scale: true, scaleSize: 4 },
         labelLine: {
-          show: labels === "outside",
+          show: outside,
           lineStyle: { color: theme.axisColor },
         },
         data: slices.map((slice) => {

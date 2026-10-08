@@ -34,6 +34,7 @@ const chartPieBridgeKeys = [
   "maxSlices",
   "thickness",
   "labelContent",
+  "labelPosition",
 ] as const satisfies readonly (keyof ChartPieOwnProps)[];
 
 const chartPieRegistryKeys = [
@@ -46,10 +47,14 @@ const chartPieRegistryKeys = [
   "animation",
   "thickness",
   "customProps",
+  "labelPosition",
 ] as const satisfies readonly (keyof ChartPieOwnProps)[];
 
 type ChartPieMerged = ChartRootMerged &
-  Pick<ChartPieOwnProps, "labels" | "variant" | "minAngle" | "thickness">;
+  Pick<
+    ChartPieOwnProps,
+    "labels" | "variant" | "minAngle" | "thickness" | "labelPosition"
+  >;
 
 export function useChartPie(
   props: ChartPieProps,
@@ -66,6 +71,7 @@ export function useChartPie(
   const { merged, locale, resolveMessage } = root;
 
   const labels = merged.labels ?? false;
+  const labelPosition = merged.labelPosition ?? "outside";
   const variant = merged.variant ?? "pie";
   const minAngle = merged.minAngle ?? DEFAULT_CHART_MIN_ANGLE;
   const thickness = merged.thickness ?? DEFAULT_CHART_DONUT_THICKNESS;
@@ -74,9 +80,9 @@ export function useChartPie(
     (
       base: ChartBaseRenderOptions & { slices: ChartPartRenderSlice[] },
     ): ChartPieRenderOptions => {
-      return { ...base, labels, variant, minAngle, thickness };
+      return { ...base, labels, variant, minAngle, thickness, labelPosition };
     },
-    [labels, variant, minAngle, thickness],
+    [labels, variant, minAngle, thickness, labelPosition],
   );
 
   const summary = (slices: ChartPartRenderSlice[]) => {

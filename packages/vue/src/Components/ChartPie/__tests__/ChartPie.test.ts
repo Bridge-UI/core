@@ -124,9 +124,9 @@ test("it should mount a donut ring with plot labels", async () => {
   stubPlotSize({ width: 320, height: 240 });
 
   const wrapper = await mountChart({
+    labels: true,
     animation: false,
     variant: "donut",
-    labels: "outside",
   });
 
   const option = getInstanceByDom(getEchartsHost(wrapper))?.getOption() as {

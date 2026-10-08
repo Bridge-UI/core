@@ -441,7 +441,7 @@ export type {
   ChartFunnelSort,
   ChartHandle,
   ChartLabelContent,
-  ChartLabels,
+  ChartLabelPosition,
   ChartLineSeriesEntry,
   ChartMountOptions,
   ChartOrientation,

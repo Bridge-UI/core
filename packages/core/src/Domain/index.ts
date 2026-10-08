@@ -116,7 +116,7 @@ export type {
   ChartFunnelRenderOptions,
   ChartFunnelSort,
   ChartLabelContent,
-  ChartLabels,
+  ChartLabelPosition,
   ChartPartRenderSlice,
   ChartPieRenderOptions,
   ChartPieVariant,

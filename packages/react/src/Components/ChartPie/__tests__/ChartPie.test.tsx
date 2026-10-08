@@ -123,9 +123,9 @@ test("it should mount a donut ring with plot labels", () => {
   stubPlotSize({ width: 320, height: 240 });
 
   renderChart({
+    labels: true,
     animation: false,
     variant: "donut",
-    labels: "outside",
     labelContent: "percent",
   });
 

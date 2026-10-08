@@ -37,7 +37,7 @@ type EChartsFunnelOption = ComposeOption<
  * away from the side the labels sit on.
  */
 function getFunnelBox(options: ChartFunnelRenderOptions) {
-  if (options.labels !== "outside") {
+  if (!options.labels || options.labelPosition !== "outside") {
     return { left: "4%", width: "92%" };
   }
 
@@ -51,17 +51,18 @@ function getFunnelBox(options: ChartFunnelRenderOptions) {
 export function buildEchartsFunnelOption(
   options: ChartFunnelRenderOptions,
 ): EChartsFunnelOption {
-  const { theme, labels, slices } = options;
+  const { theme, labels, slices, labelPosition } = options;
+  const outside = labels && labelPosition === "outside";
 
   const outsidePosition =
     options.align === "right" ? ("left" as const) : ("right" as const);
 
   const label = {
-    show: labels !== false,
+    show: labels,
     ...labelStyle(theme),
     formatter: formatSliceLabel(slices),
-    color: labels === "inside" ? "#fff" : theme.textColor,
-    position: labels === "inside" ? ("inside" as const) : outsidePosition,
+    color: outside ? theme.textColor : "#fff",
+    position: outside ? outsidePosition : ("inside" as const),
   };
 
   return {
@@ -80,7 +81,7 @@ export function buildEchartsFunnelOption(
         emphasis: { label },
         funnelAlign: options.align,
         labelLine: {
-          show: labels === "outside",
+          show: outside,
           lineStyle: { color: theme.axisColor },
         },
         data: slices.map((slice) => {

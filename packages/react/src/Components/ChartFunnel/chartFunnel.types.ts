@@ -6,7 +6,7 @@ import type {
   ChartFunnelAlign,
   ChartFunnelSort,
   ChartLabelContent,
-  ChartLabels,
+  ChartLabelPosition,
   ChartSlice,
 } from "@bridge-ui/core/Domain";
 import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
@@ -39,11 +39,18 @@ export interface ChartFunnelOwnProps extends ChartRootOwnProps {
   labelContent?: ChartLabelContent;
 
   /**
-   * Stage labels on the plot. Legend labels come from `ChartLegend`.
+   * Where plot labels sit when `labels` is on.
    *
    * @default "inside"
    */
-  labels?: ChartLabels;
+  labelPosition?: ChartLabelPosition;
+
+  /**
+   * Shows stage labels on the plot. Legend labels come from `ChartLegend`.
+   *
+   * @default true
+   */
+  labels?: boolean;
 
   /**
    * Stage order, top to bottom. `"none"` keeps the `data` order.

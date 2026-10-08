@@ -25,6 +25,7 @@ const { frame, variant } = useChartPie(props, {
   thickness: 0.3,
   variant: "pie",
   animation: true,
+  labelPosition: "outside",
 });
 </script>
 

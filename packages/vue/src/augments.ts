@@ -214,6 +214,7 @@ declare module "@bridge-ui/core/Config" {
         | "labels"
         | "palette"
         | "animation"
+        | "labelPosition"
       >
     >;
   }
@@ -259,6 +260,7 @@ declare module "@bridge-ui/core/Config" {
         | "minAngle"
         | "animation"
         | "thickness"
+        | "labelPosition"
       >
     >;
   }
