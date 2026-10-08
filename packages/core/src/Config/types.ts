@@ -2,7 +2,17 @@
 import type { DateAdapter } from "@/Adapters/date";
 import type { I18nAdapter } from "@/Adapters/i18n";
 import type { IconAdapter, SemanticIconName } from "@/Adapters/icon";
-import type { ChartCurve, ChartType } from "@/Domain/chart";
+import type {
+  ChartCurve,
+  ChartOrientation,
+  ChartStep,
+} from "@/Domain/chartCartesian";
+import type {
+  ChartFunnelAlign,
+  ChartFunnelSort,
+  ChartLabels,
+  ChartPieVariant,
+} from "@/Domain/chartPart";
 import type { RichTextTool } from "@/Domain/richText";
 import type {
   AccordionColor,
@@ -433,9 +443,12 @@ export interface CalendarConfigOverrides {}
 export interface CardConfigOverrides {}
 export interface CarouselConfigOverrides {}
 export interface CarouselSlideConfigOverrides {}
-export interface ChartConfigOverrides {}
+export interface ChartBarConfigOverrides {}
+export interface ChartFunnelConfigOverrides {}
 export interface ChartLegendConfigOverrides {}
-export interface ChartSeriesConfigOverrides {}
+export interface ChartLineConfigOverrides {}
+export interface ChartPieConfigOverrides {}
+export interface ChartScatterConfigOverrides {}
 export interface ChartTooltipConfigOverrides {}
 export interface CheckboxConfigOverrides {}
 export interface ChipConfigOverrides {}
@@ -717,19 +730,47 @@ export interface CarouselSlideConfigBase {
   defaultProps: Partial<object>;
 }
 
-export interface ChartConfigBase {
+/**
+ * Registry defaults shared by every chart root.
+ */
+type ChartRootDefaultProps = {
+  animation: boolean;
+  height: number | string;
+  palette: string[];
+  size: keyof ChartSize;
+};
+
+/**
+ * Token overrides shared by every chart root.
+ */
+type ChartRootTokens = Partial<{
+  color: Record<string, ChartColorItem>;
+  size: Record<string, ChartSizeItem>;
+  theme: Partial<ChartTheme>;
+}>;
+
+export interface ChartBarConfigBase {
   classes: object;
-  defaultProps: Partial<{
-    animation: boolean;
-    height: number | string;
-    palette: string[];
-    size: keyof ChartSize;
-  }>;
-  tokens: Partial<{
-    color: Record<string, ChartColorItem>;
-    size: Record<string, ChartSizeItem>;
-    theme: Partial<ChartTheme>;
-  }>;
+  defaultProps: Partial<
+    ChartRootDefaultProps & {
+      labels: boolean;
+      orientation: ChartOrientation;
+      radius: number;
+    }
+  >;
+  tokens: ChartRootTokens;
+}
+
+export interface ChartFunnelConfigBase {
+  classes: object;
+  defaultProps: Partial<
+    ChartRootDefaultProps & {
+      align: ChartFunnelAlign;
+      labels: ChartLabels;
+      sort: ChartFunnelSort;
+    }
+  >;
+  tokens: ChartRootTokens;
 }
 
 export interface ChartLegendConfigBase {
@@ -737,15 +778,48 @@ export interface ChartLegendConfigBase {
   defaultProps: Partial<{
     align: "end" | "start" | "center";
     interactive: boolean;
-    position: "top" | "bottom";
+    position: "top" | "left" | "right" | "bottom";
+    showPercent: boolean;
+    showValue: boolean;
   }>;
 }
 
-export interface ChartSeriesConfigBase {
-  defaultProps: Partial<{
-    curve: ChartCurve;
-    type: ChartType;
-  }>;
+export interface ChartLineConfigBase {
+  classes: object;
+  defaultProps: Partial<
+    ChartRootDefaultProps & {
+      area: boolean;
+      curve: ChartCurve;
+      labels: boolean;
+      showPoints: boolean;
+      step: ChartStep;
+    }
+  >;
+  tokens: ChartRootTokens;
+}
+
+export interface ChartPieConfigBase {
+  classes: object;
+  defaultProps: Partial<
+    ChartRootDefaultProps & {
+      labels: ChartLabels;
+      minAngle: number;
+      thickness: number;
+      variant: ChartPieVariant;
+    }
+  >;
+  tokens: ChartRootTokens;
+}
+
+export interface ChartScatterConfigBase {
+  classes: object;
+  defaultProps: Partial<
+    ChartRootDefaultProps & {
+      bubbleSize: [number, number];
+      symbolSize: number;
+    }
+  >;
+  tokens: ChartRootTokens;
 }
 
 export interface ChartTooltipConfigBase {
@@ -1758,12 +1832,17 @@ export interface BridgeUIComponentsRegistry {
   CarouselSlide: Partial<
     Overwrite<CarouselSlideConfigBase, CarouselSlideConfigOverrides>
   >;
-  Chart: Partial<Overwrite<ChartConfigBase, ChartConfigOverrides>>;
+  ChartBar: Partial<Overwrite<ChartBarConfigBase, ChartBarConfigOverrides>>;
+  ChartFunnel: Partial<
+    Overwrite<ChartFunnelConfigBase, ChartFunnelConfigOverrides>
+  >;
   ChartLegend: Partial<
     Overwrite<ChartLegendConfigBase, ChartLegendConfigOverrides>
   >;
-  ChartSeries: Partial<
-    Overwrite<ChartSeriesConfigBase, ChartSeriesConfigOverrides>
+  ChartLine: Partial<Overwrite<ChartLineConfigBase, ChartLineConfigOverrides>>;
+  ChartPie: Partial<Overwrite<ChartPieConfigBase, ChartPieConfigOverrides>>;
+  ChartScatter: Partial<
+    Overwrite<ChartScatterConfigBase, ChartScatterConfigOverrides>
   >;
   ChartTooltip: Partial<
     Overwrite<ChartTooltipConfigBase, ChartTooltipConfigOverrides>
