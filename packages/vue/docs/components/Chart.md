@@ -2,13 +2,13 @@
 
 Charts for dashboards and reports. Pick the root for the shape of your data; every root shares the same legend, tooltip, tokens, dark mode, and a11y (summary, keyboard navigation, data table). The plot engine is ECharts.
 
-| Root                                | Use for                                            | Data                                      |
-| ----------------------------------- | -------------------------------------------------- | ----------------------------------------- |
-| [`ChartLine`](./ChartLine.md)       | Trends, areas, stacked areas, steps, sparklines    | `ChartLineSeries`, one value per category |
-| [`ChartBar`](./ChartBar.md)         | Comparisons, rankings (horizontal), stacked totals | `ChartBarSeries`, one value per category  |
-| [`ChartScatter`](./ChartScatter.md) | Correlation between two numbers, bubbles           | `ChartScatterSeries`, `[x, y]` points     |
-| [`ChartPie`](./ChartPie.md)         | Share of a whole (pie, donut)                      | `data` on the root                        |
-| [`ChartFunnel`](./ChartFunnel.md)   | Conversion through ordered stages                  | `data` on the root                        |
+| Root                                | Use for                                                        | Data                                      |
+| ----------------------------------- | -------------------------------------------------------------- | ----------------------------------------- |
+| [`ChartLine`](./ChartLine.md)       | Trends, areas, stacked areas, steps, sparklines                | `ChartLineSeries`, one value per category |
+| [`ChartBar`](./ChartBar.md)         | Comparisons, rankings (horizontal), stacked totals, bar + line | `ChartBarSeries` (+ `ChartLineSeries`)    |
+| [`ChartScatter`](./ChartScatter.md) | Correlation between two numbers, bubbles                       | `ChartScatterSeries`, `[x, y]` points     |
+| [`ChartPie`](./ChartPie.md)         | Share of a whole (pie, donut)                                  | `data` on the root                        |
+| [`ChartFunnel`](./ChartFunnel.md)   | Conversion through ordered stages                              | `data` on the root                        |
 
 Shared parts:
 

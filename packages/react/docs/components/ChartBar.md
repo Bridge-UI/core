@@ -7,6 +7,7 @@ Bar charts: comparisons, rankings, stacked totals, negative values, and time axe
 ```ts
 import { ChartBar } from "@bridge-ui/react/Components/ChartBar";
 import { ChartBarSeries } from "@bridge-ui/react/Components/ChartBarSeries";
+import { ChartLineSeries } from "@bridge-ui/react/Components/ChartLineSeries";
 ```
 
 ## Examples
@@ -46,6 +47,21 @@ Series with the same `stack` key stack. Only the outermost bar of each stack is 
 ```
 
 Inside labels that do not fit their segment are hidden.
+
+### Bar + line
+
+`ChartLineSeries` inside `ChartBar` draws a line over the bars on the same value axis, with the points centered on each category. Line options (`dashed`, `showPoints`, `curve`, `area`, `reference`) work as in `ChartLine`.
+
+```tsx
+<ChartBar categories={months}>
+  <ChartBarSeries name="Orders" data={orders} />
+  <ChartLineSeries dashed name="Returns" data={returns} />
+  <ChartLegend />
+  <ChartTooltip />
+</ChartBar>
+```
+
+`ChartBar` loads the ECharts line series too, so bar + line charts need no extra import.
 
 ### Negative values
 
