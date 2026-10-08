@@ -103,7 +103,7 @@ export function useChartTooltip(props: ChartTooltipProps) {
     setPosition((previous) => {
       return isEqual(previous, next) ? previous : next;
     });
-  }, [isOpen, tooltip, tooltipEl, getBounds, activeIndex, getTooltipAnchor]);
+  }, [isOpen, tooltip, getBounds, tooltipEl, activeIndex, getTooltipAnchor]);
 
   const context = derived((): null | ChartTooltipContentContext => {
     if (isNil(activeIndex) || isNil(tooltip)) {

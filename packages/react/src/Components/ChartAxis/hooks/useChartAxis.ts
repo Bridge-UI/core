@@ -47,8 +47,8 @@ export function useChartAxis(props: ChartAxisProps) {
   }, [
     props.max,
     props.min,
-    props.grid,
     formatTick,
+    props.grid,
     props.label,
     props.hidden,
     hasFormatTick,
@@ -65,7 +65,7 @@ export function useChartAxis(props: ChartAxisProps) {
 
   useLayoutEffect(() => {
     setAxis(position, options);
-  }, [options, position, setAxis]);
+  }, [options, setAxis, position]);
 
   return {
     options,

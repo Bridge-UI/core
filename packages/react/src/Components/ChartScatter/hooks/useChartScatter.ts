@@ -83,7 +83,7 @@ export function useChartScatter(
     return registry.entries
       .filter((item) => !hidden.includes(item.id))
       .map((item) => ({ ...item, color: colors[item.id] ?? "" }));
-  }, [registry.entries, hidden, colors]);
+  }, [colors, hidden, registry.entries]);
 
   const points = useMemo(() => {
     return getChartScatterPoints(visibleSeries);
@@ -112,8 +112,8 @@ export function useChartScatter(
     points,
     animation,
     bubbleSize,
-    visibleSeries,
     registry.axes,
+    visibleSeries,
     plotSize.width,
     plotSize.height,
     merged.symbolSize,
@@ -138,7 +138,7 @@ export function useChartScatter(
       series,
       labels: { x: xLabel, y: yLabel, size: series.sizeName ?? sizeLabel },
     });
-  }, [active.index, points, visibleSeries, xLabel, yLabel, sizeLabel]);
+  }, [points, xLabel, yLabel, sizeLabel, active.index, visibleSeries]);
 
   const table = getChartScatterTable({
     locale,
@@ -172,7 +172,7 @@ export function useChartScatter(
 
   const legendItems = useMemo(() => {
     return toChartLegendItems(registry.entries, colors, hidden);
-  }, [registry.entries, colors, hidden]);
+  }, [colors, hidden, registry.entries]);
 
   const context = useChartContextValue(root, {
     tooltip,
