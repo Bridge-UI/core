@@ -50,12 +50,12 @@ Non-positive values are skipped. Shares are whole percents that always sum to 10
 
 ### Labels: plot, legend, or both
 
-`labels` puts slice labels on the plot; the legend comes from `ChartLegend`.
+`labels` turns slice labels on the plot on, and `labelPosition` places them (`"outside"` by default, or `"inside"`). The legend comes from `ChartLegend`.
 
 Plot only:
 
 ```tsx
-<ChartPie data={tags} labels="outside" />
+<ChartPie labels data={tags} />
 ```
 
 Legend only:
@@ -69,7 +69,7 @@ Legend only:
 Both:
 
 ```tsx
-<ChartPie data={tags} labels="inside" labelContent="percent">
+<ChartPie labels data={tags} labelPosition="inside" labelContent="percent">
   <ChartLegend />
 </ChartPie>
 ```
@@ -103,13 +103,14 @@ Legend entries hide and show slices; shares are recomputed for the visible slice
 
 Shared root props (`height`, `palette`, `loading`, `summary`, …) are listed in [Chart](./Chart.md#props-every-root).
 
-| Prop           | Type                                                   | Default   | Description                                    |
-| -------------- | ------------------------------------------------------ | --------- | ---------------------------------------------- |
-| `data`         | `{ label, value, color? }[]`                           | required  | Slices in order.                               |
-| `variant`      | `"pie" \| "donut"`                                     | `"pie"`   | `donut` leaves a hole for the `center` slot.   |
-| `thickness`    | `number`                                               | `0.3`     | Donut ring thickness (fraction of the radius). |
-| `labels`       | `false \| "inside" \| "outside"`                       | `false`   | Slice labels on the plot.                      |
-| `labelContent` | `"label" \| "value" \| "percent" \| (slice) => string` | `"label"` | What plot labels show.                         |
-| `minAngle`     | `number`                                               | `2`       | Minimum slice angle (deg).                     |
-| `maxSlices`    | `number`                                               | —         | Group the rest into "Other".                   |
-| `slots`        | `{ center?, empty?, loading? }`                        | —         | `center` renders inside the donut hole.        |
+| Prop            | Type                                                   | Default     | Description                                    |
+| --------------- | ------------------------------------------------------ | ----------- | ---------------------------------------------- |
+| `data`          | `{ label, value, color? }[]`                           | required    | Slices in order.                               |
+| `variant`       | `"pie" \| "donut"`                                     | `"pie"`     | `donut` leaves a hole for the `center` slot.   |
+| `thickness`     | `number`                                               | `0.3`       | Donut ring thickness (fraction of the radius). |
+| `labels`        | `boolean`                                              | `false`     | Slice labels on the plot.                      |
+| `labelPosition` | `"inside" \| "outside"`                                | `"outside"` | Where plot labels sit.                         |
+| `labelContent`  | `"label" \| "value" \| "percent" \| (slice) => string` | `"label"`   | What plot labels show.                         |
+| `minAngle`      | `number`                                               | `2`         | Minimum slice angle (deg).                     |
+| `maxSlices`     | `number`                                               | —           | Group the rest into "Other".                   |
+| `slots`         | `{ center?, empty?, loading? }`                        | —           | `center` renders inside the donut hole.        |

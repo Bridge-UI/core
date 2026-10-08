@@ -34,10 +34,10 @@ Stages are sorted from the largest by default. Shares compare each stage to the 
 
 ### Labels and legend
 
-Stage labels sit inside the shape by default. `outside` moves them next to it; `labelContent` picks the text.
+Stage labels are on and sit inside the shape by default. `labelPosition="outside"` moves them next to it, `labels={false}` hides them, and `labelContent` picks the text.
 
 ```tsx
-<ChartFunnel data={steps} labels="outside" labelContent="percent">
+<ChartFunnel data={steps} labelContent="percent" labelPosition="outside">
   <ChartLegend showValue showPercent />
 </ChartFunnel>
 ```
@@ -52,10 +52,11 @@ Stage labels sit inside the shape by default. `outside` moves them next to it; `
 
 Shared root props (`height`, `palette`, `loading`, `summary`, …) are listed in [Chart](./Chart.md#props-every-root).
 
-| Prop           | Type                                                   | Default        | Description                 |
-| -------------- | ------------------------------------------------------ | -------------- | --------------------------- |
-| `data`         | `{ label, value, color? }[]`                           | required       | Stages.                     |
-| `sort`         | `"descending" \| "ascending" \| "none"`                | `"descending"` | Stage order, top to bottom. |
-| `align`        | `"center" \| "left" \| "right"`                        | `"center"`     | Shape alignment.            |
-| `labels`       | `false \| "inside" \| "outside"`                       | `"inside"`     | Stage labels on the plot.   |
-| `labelContent` | `"label" \| "value" \| "percent" \| (stage) => string` | `"label"`      | What plot labels show.      |
+| Prop            | Type                                                   | Default        | Description                 |
+| --------------- | ------------------------------------------------------ | -------------- | --------------------------- |
+| `data`          | `{ label, value, color? }[]`                           | required       | Stages.                     |
+| `sort`          | `"descending" \| "ascending" \| "none"`                | `"descending"` | Stage order, top to bottom. |
+| `align`         | `"center" \| "left" \| "right"`                        | `"center"`     | Shape alignment.            |
+| `labels`        | `boolean`                                              | `true`         | Stage labels on the plot.   |
+| `labelPosition` | `"inside" \| "outside"`                                | `"inside"`     | Where plot labels sit.      |
+| `labelContent`  | `"label" \| "value" \| "percent" \| (stage) => string` | `"label"`      | What plot labels show.      |

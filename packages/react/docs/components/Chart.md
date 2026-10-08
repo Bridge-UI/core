@@ -37,12 +37,16 @@ Install `echarts` next to `@bridge-ui/react` when you use a chart. Each root imp
 ```tsx
 <ChartLine categories={months}>
   <ChartLineSeries name="Revenue" data={revenue} />
-  <ChartAxis position="x" label="Month" />
+  <ChartAxis
+    position="x"
+    label="Month"
+    formatCategory={(month) => month.toUpperCase()}
+  />
   <ChartAxis min={0} position="y" formatTick={(value) => `$${value}`} />
 </ChartLine>
 ```
 
-`formatTick` receives the category label, the timestamp (time axis), or the value. Grid lines are on for the value axis and off for the category axis by default.
+`formatCategory` formats category labels (`string`). `formatTick` formats numbers: the value on a value axis, or the timestamp (ms) on a time axis. Grid lines are on for the value axis and off for the category axis by default.
 
 ### Legend
 
@@ -174,16 +178,17 @@ Theme tokens (`tokens.theme`) set the grid, axis, and label colors as Tailwind t
 
 ## Props (`ChartAxis`)
 
-| Prop         | Type                                  | Default                     | Description                         |
-| ------------ | ------------------------------------- | --------------------------- | ----------------------------------- |
-| `position`   | `"x" \| "y"`                          | required                    | Horizontal (`x`) or vertical (`y`). |
-| `label`      | `string`                              | —                           | Axis title.                         |
-| `grid`       | `boolean`                             | value axis on, category off | Grid lines.                         |
-| `hidden`     | `boolean`                             | `false`                     | Hides the axis line and labels.     |
-| `min`        | `number`                              | —                           | Lower bound (value or time axis).   |
-| `max`        | `number`                              | —                           | Upper bound (value or time axis).   |
-| `tickCount`  | `number`                              | —                           | Preferred number of ticks.          |
-| `formatTick` | `(value: number \| string) => string` | —                           | Tick label formatter.               |
+| Prop             | Type                           | Default                     | Description                         |
+| ---------------- | ------------------------------ | --------------------------- | ----------------------------------- |
+| `position`       | `"x" \| "y"`                   | required                    | Horizontal (`x`) or vertical (`y`). |
+| `label`          | `string`                       | —                           | Axis title.                         |
+| `grid`           | `boolean`                      | value axis on, category off | Grid lines.                         |
+| `hidden`         | `boolean`                      | `false`                     | Hides the axis line and labels.     |
+| `min`            | `number`                       | —                           | Lower bound (value or time axis).   |
+| `max`            | `number`                       | —                           | Upper bound (value or time axis).   |
+| `tickCount`      | `number`                       | —                           | Preferred number of ticks.          |
+| `formatTick`     | `(value: number) => string`    | —                           | Value or time (ms) tick formatter.  |
+| `formatCategory` | `(category: string) => string` | —                           | Category tick formatter.            |
 
 ## Props (`ChartLegend`)
 
