@@ -4,8 +4,9 @@ import { expect, test } from "vitest";
 import { defineComponent, h, nextTick, reactive } from "vue";
 
 // ** Local Imports
-import { Chart } from "@/Components/Chart";
 import { useChartAxis, type ChartAxisOwnProps } from "@/Components/ChartAxis";
+import { ChartLine } from "@/Components/ChartLine";
+import { ChartPie } from "@/Components/ChartPie";
 
 function mountUseChartAxis(props: ChartAxisOwnProps) {
   let result!: ReturnType<typeof useChartAxis>;
@@ -18,7 +19,7 @@ function mountUseChartAxis(props: ChartAxisOwnProps) {
     },
   });
 
-  mount(Chart, {
+  mount(ChartLine, {
     slots: { default: () => h(Probe) },
     props: { categories: ["Jan", "Feb"] },
   });
@@ -48,7 +49,17 @@ test("it should keep options stable when the formatter changes", async () => {
   expect(result.options.value.formatTick?.(5)).toBe("5-b");
 });
 
-test("it should throw outside a Chart", () => {
+test("it should register a category formatter", () => {
+  const result = mountUseChartAxis({
+    position: "x",
+    formatCategory: (category) => category.toUpperCase(),
+  });
+
+  expect(result.options.value.formatTick).toBeUndefined();
+  expect(result.options.value.formatCategory?.("jan")).toBe("JAN");
+});
+
+test("it should throw outside a chart", () => {
   const Standalone = defineComponent({
     setup() {
       useChartAxis({ position: "x" });
@@ -61,5 +72,25 @@ test("it should throw outside a Chart", () => {
     mount(Standalone, {
       global: { config: { warnHandler: () => undefined } },
     }),
-  ).toThrow("Chart components must be used within a Chart");
+  ).toThrow("Chart components must be used within");
+});
+
+test("it should throw inside a chart without axes", () => {
+  const Probe = defineComponent({
+    setup() {
+      useChartAxis({ position: "x" });
+
+      return () => h("div");
+    },
+  });
+
+  expect(() =>
+    mount(ChartPie, {
+      slots: { default: () => h(Probe) },
+      props: { data: [{ value: 1, label: "A" }] },
+      global: { config: { warnHandler: () => undefined } },
+    }),
+  ).toThrow(
+    "ChartAxis must be used within ChartLine, ChartBar, or ChartScatter",
+  );
 });

@@ -4,9 +4,9 @@ import type { ReactNode } from "react";
 import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
-import { Chart } from "@/Components/Chart";
 import { useChartLegend } from "@/Components/ChartLegend";
-import { ChartSeries } from "@/Components/ChartSeries";
+import { ChartLine } from "@/Components/ChartLine";
+import { ChartLineSeries } from "@/Components/ChartLineSeries";
 
 afterEach(() => {
   cleanup();
@@ -14,10 +14,10 @@ afterEach(() => {
 
 function Wrapper({ children }: { children: ReactNode }) {
   return (
-    <Chart categories={["Jan", "Feb"]}>
-      <ChartSeries data={[1, 2]} name="Revenue" />
+    <ChartLine categories={["Jan", "Feb"]}>
+      <ChartLineSeries data={[1, 2]} name="Revenue" />
       {children}
-    </Chart>
+    </ChartLine>
   );
 }
 
@@ -32,9 +32,9 @@ test("it should merge default align, position, and interactive", () => {
     wrapper: Wrapper,
   });
 
+  expect(result.current.interactive).toBe(true);
   expect(result.current.merged.align).toBe("center");
   expect(result.current.merged.position).toBe("bottom");
-  expect(result.current.interactive).toBe(true);
 });
 
 test("it should expose chart series as items", () => {

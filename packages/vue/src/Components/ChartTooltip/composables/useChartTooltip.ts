@@ -11,6 +11,7 @@ import {
 
 // ** Core Imports
 import {
+  formatChartPercent,
   formatChartValue,
   resolveChartTooltipPosition,
   type ChartTooltipItem,
@@ -19,7 +20,6 @@ import {
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useChartContext } from "@/Components/Chart/chartInjectionKey";
 import type {
   ChartTooltipClasses,
   ChartTooltipContentContext,
@@ -31,11 +31,13 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { useChartContext } from "@/Utils/Charts";
 
 const chartTooltipBridgeKeys = [
   "classes",
   "customProps",
   "formatValue",
+  "formatPercent",
 ] as const satisfies readonly (keyof ChartTooltipOwnProps)[];
 
 export function useChartTooltip(
@@ -75,8 +77,12 @@ export function useChartTooltip(
   });
 
   const isOpen = computed(() => {
+    const tooltip = chart.value.tooltip;
+
     return (
-      !isNil(chart.value.activeIndex) && chart.value.tooltipItems.length > 0
+      !isNil(chart.value.activeIndex) &&
+      !isNil(tooltip) &&
+      tooltip.items.length > 0
     );
   });
 
@@ -85,7 +91,7 @@ export function useChartTooltip(
       isOpen,
       tooltipRef,
       () => chart.value.activeIndex,
-      () => chart.value.tooltipItems,
+      () => chart.value.tooltip,
     ],
     () => {
       const tooltipEl = tooltipRef.value;
@@ -117,15 +123,17 @@ export function useChartTooltip(
 
   const context = computed((): null | ChartTooltipContentContext => {
     const index = chart.value.activeIndex;
+    const tooltip = chart.value.tooltip;
 
-    if (isNil(index)) {
+    if (isNil(index) || isNil(tooltip)) {
       return null;
     }
 
     return {
       index,
-      items: chart.value.tooltipItems,
-      category: chart.value.categories[index] ?? "",
+      color: tooltip.color,
+      title: tooltip.title,
+      items: tooltip.items,
     };
   });
 
@@ -133,6 +141,17 @@ export function useChartTooltip(
     return (
       merged.value.formatValue?.(item.value, item) ??
       formatChartValue(item.value, chart.value.locale)
+    );
+  }
+
+  function formatPercent(item: ChartTooltipItem) {
+    if (isNil(item.percent)) {
+      return null;
+    }
+
+    return (
+      merged.value.formatPercent?.(item.percent, item) ??
+      formatChartPercent(item.percent, chart.value.locale)
     );
   }
 
@@ -157,7 +176,7 @@ export function useChartTooltip(
   const titleBind = computed((): HTMLAttributes => {
     return {
       class: cn({
-        "font-semibold": true,
+        "flex items-center gap-2 font-semibold": true,
         [get(mergedClasses.value, "title") ?? ""]: true,
       }),
     };
@@ -172,9 +191,9 @@ export function useChartTooltip(
     };
   });
 
-  function getSwatchBind(item: ChartTooltipItem): HTMLAttributes {
+  function getSwatchBind(color: string): HTMLAttributes {
     return {
-      style: { backgroundColor: item.color },
+      style: { backgroundColor: color },
       class: cn({
         "shrink-0 rounded-full": true,
         [chart.value.tokenClasses.swatch ?? ""]: true,
@@ -188,6 +207,15 @@ export function useChartTooltip(
       class: cn({
         "flex-1 text-dark-500 dark:text-dark-400": true,
         [get(mergedClasses.value, "label") ?? ""]: true,
+      }),
+    };
+  });
+
+  const percentBind = computed((): HTMLAttributes => {
+    return {
+      class: cn({
+        "text-dark-500 tabular-nums dark:text-dark-400": true,
+        [get(mergedClasses.value, "percent") ?? ""]: true,
       }),
     };
   });
@@ -210,7 +238,9 @@ export function useChartTooltip(
     labelBind,
     titleBind,
     valueBind,
+    percentBind,
     formatValue,
+    formatPercent,
     getSwatchBind,
   };
 }

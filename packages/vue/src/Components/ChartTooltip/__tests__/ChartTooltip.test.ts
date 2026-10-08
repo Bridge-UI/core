@@ -4,9 +4,10 @@ import { expect, test } from "vitest";
 import { h } from "vue";
 
 // ** Local Imports
-import { Chart } from "@/Components/Chart";
 import { ChartLegend } from "@/Components/ChartLegend";
-import { ChartSeries } from "@/Components/ChartSeries";
+import { ChartLine } from "@/Components/ChartLine";
+import { ChartLineSeries } from "@/Components/ChartLineSeries";
+import { ChartPie } from "@/Components/ChartPie";
 import {
   ChartTooltip,
   type ChartTooltipContentContext,
@@ -18,12 +19,12 @@ async function mountTooltip(
   props: Record<string, unknown> = {},
   slots: Record<string, unknown> = {},
 ) {
-  const wrapper = mount(Chart, {
+  const wrapper = mount(ChartLine, {
     props: { categories },
     slots: {
       default: () => [
-        h(ChartSeries, { name: "Revenue", data: [1200, 2000, 3000] }),
-        h(ChartSeries, { name: "Costs", data: [500, null, 800] }),
+        h(ChartLineSeries, { name: "Revenue", data: [1200, 2000, 3000] }),
+        h(ChartLineSeries, { name: "Costs", data: [500, null, 800] }),
         h(ChartLegend),
         h(ChartTooltip, { "data-testid": "tooltip", ...props }, slots),
       ],
@@ -51,7 +52,7 @@ function tooltip(wrapper: Wrapper) {
   return wrapper.find("[data-testid='tooltip']");
 }
 
-test("it should stay closed until a category is active", async () => {
+test("it should stay closed until an item is active", async () => {
   const wrapper = await mountTooltip();
 
   expect(tooltip(wrapper).exists()).toBe(false);
@@ -62,10 +63,10 @@ test("it should show the category and series values on hover", async () => {
 
   await activate(wrapper, 0);
 
-  expect(tooltip(wrapper).attributes("aria-hidden")).toBe("true");
   expect(tooltip(wrapper).text()).toContain("Jan");
-  expect(tooltip(wrapper).text()).toContain("1,200");
   expect(tooltip(wrapper).text()).toContain("500");
+  expect(tooltip(wrapper).text()).toContain("1,200");
+  expect(tooltip(wrapper).attributes("aria-hidden")).toBe("true");
 });
 
 test("it should skip null values and close on leave", async () => {
@@ -110,8 +111,8 @@ test("it should render the content slot", async () => {
   const wrapper = await mountTooltip(
     {},
     {
-      content: ({ items, category }: ChartTooltipContentContext) =>
-        h("span", `${category}: ${items.length}`),
+      content: ({ items, title }: ChartTooltipContentContext) =>
+        h("span", `${title}: ${items.length}`),
     },
   );
 
@@ -127,4 +128,29 @@ test("it should open for keyboard navigation", async () => {
   await flushPromises();
 
   expect(tooltip(wrapper).text()).toContain("Jan");
+});
+
+test("it should show a slice with its percent and no title", async () => {
+  const wrapper = mount(ChartPie, {
+    props: {
+      data: [
+        { value: 3, label: "Housing" },
+        { value: 1, label: "Kids" },
+      ],
+    },
+    slots: {
+      default: () =>
+        h(ChartTooltip, {
+          "data-testid": "tooltip",
+          formatPercent: (percent: number) => `${percent} pct`,
+        }),
+    },
+  });
+
+  await flushPromises();
+  await wrapper.find("[role='img']").trigger("keydown", { key: "ArrowRight" });
+  await flushPromises();
+
+  expect(tooltip(wrapper).text()).toContain("75 pct");
+  expect(tooltip(wrapper).text()).toContain("Housing");
 });

@@ -9,9 +9,10 @@ import {
 import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
-import { Chart } from "@/Components/Chart";
 import { ChartLegend } from "@/Components/ChartLegend";
-import { ChartSeries } from "@/Components/ChartSeries";
+import { ChartLine } from "@/Components/ChartLine";
+import { ChartLineSeries } from "@/Components/ChartLineSeries";
+import { ChartPie } from "@/Components/ChartPie";
 
 const categories = ["Jan", "Feb", "Mar"];
 
@@ -21,11 +22,11 @@ afterEach(() => {
 
 function renderLegend(props: Parameters<typeof ChartLegend>[0] = {}) {
   return render(
-    <Chart categories={categories}>
-      <ChartSeries name="Revenue" data={[1, 2, 3]} />
-      <ChartSeries name="Costs" data={[3, 2, 1]} />
+    <ChartLine categories={categories}>
+      <ChartLineSeries name="Revenue" data={[1, 2, 3]} />
+      <ChartLineSeries name="Costs" data={[3, 2, 1]} />
       <ChartLegend {...props} />
-    </Chart>,
+    </ChartLine>,
   );
 }
 
@@ -33,8 +34,8 @@ test("it should render a labelled list with one button per series", () => {
   renderLegend();
 
   expect(screen.getByRole("list", { name: "Legend" })).toBeTruthy();
-  expect(screen.getByRole("button", { name: "Revenue" })).toBeTruthy();
   expect(screen.getByRole("button", { name: "Costs" })).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Revenue" })).toBeTruthy();
 });
 
 test("it should toggle series visibility on click", () => {
@@ -69,4 +70,39 @@ test("it should move to the top and align items", () => {
 
   expect(list.className).toContain("order-first");
   expect(list.className).toContain("justify-end");
+});
+
+test("it should stack entries beside the plot on the left", () => {
+  renderLegend({ position: "left" });
+
+  const legend = screen.getByRole("list", { name: "Legend" });
+
+  expect(legend.className).toContain("flex-col");
+  expect(legend.className).toContain("order-first");
+  expect(screen.getByRole("figure").className).toContain("flex-row");
+});
+
+test("it should show formatted values and percents for slices", () => {
+  render(
+    <ChartPie
+      data={[
+        { value: 3000, label: "Housing" },
+        { value: 1000, label: "Kids" },
+      ]}
+    >
+      <ChartLegend showValue showPercent formatValue={(value) => `$${value}`} />
+    </ChartPie>,
+  );
+
+  expect(screen.getByRole("button", { name: /Housing/ }).textContent).toBe(
+    "Housing$300075%",
+  );
+});
+
+test("it should not show value columns for series", () => {
+  renderLegend({ showValue: true, showPercent: true });
+
+  expect(screen.getByRole("button", { name: "Revenue" }).textContent).toBe(
+    "Revenue",
+  );
 });

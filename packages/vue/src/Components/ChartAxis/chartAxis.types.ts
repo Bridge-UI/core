@@ -2,20 +2,30 @@
 import type { ChartAxisPosition } from "@bridge-ui/core/Domain";
 
 /**
- * Axis options for the nearest `Chart`. Renders nothing.
+ * Axis options for the nearest `ChartLine`, `ChartBar`, or `ChartScatter`.
+ * Renders nothing.
  */
 export interface ChartAxisOwnProps {
   /**
-   * Formats tick labels. Receives the category (`x`) or value (`y`).
+   * Formats category tick labels (the category axis of `ChartLine` and
+   * `ChartBar`).
    *
    * @default undefined
    */
-  formatTick?: (value: number | string) => string;
+  formatCategory?: (category: string) => string;
+
+  /**
+   * Formats numeric tick labels: the value on a value axis, or the timestamp
+   * (ms) on a time axis.
+   *
+   * @default undefined
+   */
+  formatTick?: (value: number) => string;
 
   /**
    * Draws grid lines for this axis.
    *
-   * @default true for `y`, false for `x`
+   * @default true for the value axis, false for the category axis
    */
   grid?: boolean;
 
@@ -34,21 +44,22 @@ export interface ChartAxisOwnProps {
   label?: string;
 
   /**
-   * Upper bound for the value axis (`y`). The plot picks one when omitted.
+   * Upper bound (value or time axis). The plot picks one when omitted.
    *
    * @default undefined
    */
   max?: number;
 
   /**
-   * Lower bound for the value axis (`y`). The plot picks one when omitted.
+   * Lower bound (value or time axis). The plot picks one when omitted.
    *
    * @default undefined
    */
   min?: number;
 
   /**
-   * Which axis to configure (`x` = categories, `y` = values).
+   * Which axis to configure: `x` is horizontal, `y` is vertical. On a
+   * horizontal `ChartBar`, categories sit on `y` and values on `x`.
    */
   position: ChartAxisPosition;
 

@@ -2,16 +2,16 @@
 import { h } from "vue";
 
 // ** Local Imports
-import { Chart } from "@/Components/Chart";
 import { ChartAxis } from "@/Components/ChartAxis";
-import { ChartSeries } from "@/Components/ChartSeries";
+import { ChartLine } from "@/Components/ChartLine";
+import { ChartLineSeries } from "@/Components/ChartLineSeries";
 
 test("it should draw the axis title", () => {
-  cy.mount(Chart, {
+  cy.mount(ChartLine, {
     props: { categories: ["Jan", "Feb"] },
     slots: {
       default: () => [
-        h(ChartSeries, { name: "A", data: [1, 2] }),
+        h(ChartLineSeries, { name: "A", data: [1, 2] }),
         h(ChartAxis, { position: "x", label: "Month" }),
       ],
     },

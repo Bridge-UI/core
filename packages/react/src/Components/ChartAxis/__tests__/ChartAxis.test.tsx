@@ -3,9 +3,9 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
-import { Chart } from "@/Components/Chart";
 import { ChartAxis } from "@/Components/ChartAxis";
-import { ChartSeries } from "@/Components/ChartSeries";
+import { ChartLine } from "@/Components/ChartLine";
+import { ChartLineSeries } from "@/Components/ChartLineSeries";
 
 const categories = ["Jan", "Feb", "Mar"];
 
@@ -15,14 +15,14 @@ afterEach(() => {
 
 test("it should render nothing of its own", () => {
   const { container } = render(
-    <Chart categories={categories}>
-      <ChartSeries name="A" data={[1, 2, 3]} />
+    <ChartLine categories={categories}>
+      <ChartLineSeries name="A" data={[1, 2, 3]} />
       <ChartAxis grid position="x" label="Month" />
       <ChartAxis hidden position="y" grid={false} />
-    </Chart>,
+    </ChartLine>,
   );
 
+  expect(screen.getByRole("figure")).toBeTruthy();
   expect(container.querySelector("[data-chart-mock]")).toBeNull();
   expect(screen.getByRole("columnheader", { name: "A" })).toBeTruthy();
-  expect(screen.getByRole("figure")).toBeTruthy();
 });

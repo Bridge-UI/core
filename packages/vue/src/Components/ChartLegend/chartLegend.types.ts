@@ -16,6 +16,11 @@ export interface ChartLegendClasses {
   label?: string;
 
   /**
+   * Classes merged onto each percent column.
+   */
+  percent?: string;
+
+  /**
    * Classes merged onto the legend list.
    */
   root?: string;
@@ -24,6 +29,11 @@ export interface ChartLegendClasses {
    * Classes merged onto each color swatch.
    */
   swatch?: string;
+
+  /**
+   * Classes merged onto each value column.
+   */
+  value?: string;
 }
 
 export interface ChartLegendCustomProps {
@@ -43,11 +53,12 @@ export interface ChartLegendCustomProps {
 }
 
 /**
- * Series legend for the nearest `Chart`. Entries toggle series visibility.
+ * Legend for the nearest chart: series (line, bar, scatter) or slices
+ * (pie, funnel). Entries toggle visibility.
  */
 export interface ChartLegendOwnProps {
   /**
-   * Horizontal alignment of the entries.
+   * Alignment of the entries along the legend.
    *
    * @default "center"
    */
@@ -68,7 +79,23 @@ export interface ChartLegendOwnProps {
   customProps?: ChartLegendCustomProps;
 
   /**
-   * When true, entries are buttons that show / hide their series and
+   * Formats the percent column. Defaults to `Intl.NumberFormat` with the
+   * Bridge locale.
+   *
+   * @default undefined
+   */
+  formatPercent?: (percent: number) => string;
+
+  /**
+   * Formats the value column. Defaults to `Intl.NumberFormat` with the
+   * Bridge locale.
+   *
+   * @default undefined
+   */
+  formatValue?: (value: number) => string;
+
+  /**
+   * When true, entries are buttons that show / hide their item and
    * emphasize it on hover or focus.
    *
    * @default true
@@ -76,11 +103,26 @@ export interface ChartLegendOwnProps {
   interactive?: boolean;
 
   /**
-   * Places the legend above or below the plot.
+   * Places the legend around the plot. `left` / `right` stack the entries
+   * in a column beside the plot.
    *
    * @default "bottom"
    */
-  position?: "top" | "bottom";
+  position?: "top" | "left" | "right" | "bottom";
+
+  /**
+   * Shows each slice's share (pie, funnel).
+   *
+   * @default false
+   */
+  showPercent?: boolean;
+
+  /**
+   * Shows each slice's value (pie, funnel).
+   *
+   * @default false
+   */
+  showValue?: boolean;
 }
 
 export type ChartLegendProps = MergeHtmlProps<

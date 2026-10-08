@@ -1,14 +1,14 @@
 // ** Local Imports
-import { Chart } from "@/Components/Chart";
-import { ChartSeries } from "@/Components/ChartSeries";
+import { ChartLine } from "@/Components/ChartLine";
+import { ChartLineSeries } from "@/Components/ChartLineSeries";
 import { ChartTooltip } from "@/Components/ChartTooltip";
 
 test("it should open from keyboard focus", () => {
   cy.mount(
-    <Chart categories={["Jan", "Feb", "Mar"]}>
-      <ChartSeries name="Revenue" data={[10, 20, 30]} />
+    <ChartLine categories={["Jan", "Feb", "Mar"]}>
+      <ChartLineSeries name="Revenue" data={[10, 20, 30]} />
       <ChartTooltip data-testid="tooltip" />
-    </Chart>,
+    </ChartLine>,
   );
 
   cy.get("[role='img']").focus().type("{rightarrow}");

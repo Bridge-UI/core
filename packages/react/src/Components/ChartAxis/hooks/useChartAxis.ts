@@ -1,51 +1,49 @@
 // ** External Imports
 import { isNil, isUndefined, omitBy } from "es-toolkit/compat";
-import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
+import { useLayoutEffect, useMemo } from "react";
 
 // ** Core Imports
-import type { ChartRenderAxis } from "@bridge-ui/core/Domain";
+import type { ChartAxisOptions } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
-import { useChartContext } from "@/Components/Chart/ChartContext";
 import type { ChartAxisProps } from "@/Components/ChartAxis/chartAxis.types";
+import { useChartContext, useLatestCallback } from "@/Utils/Charts";
 
 export function useChartAxis(props: ChartAxisProps) {
   const { setAxis, removeAxis } = useChartContext();
 
-  const formatTickRef = useRef(props.formatTick);
+  if (isNil(setAxis) || isNil(removeAxis)) {
+    throw new Error(
+      "ChartAxis must be used within ChartLine, ChartBar, or ChartScatter",
+    );
+  }
 
-  useLayoutEffect(() => {
-    formatTickRef.current = props.formatTick;
-  });
+  // Stable wrappers so inline formatters do not re-register the axis.
+  const formatTick = useLatestCallback(props.formatTick);
+  const formatCategory = useLatestCallback(props.formatCategory);
 
-  // Stable wrapper so inline formatters do not re-register the axis each render.
-  const formatTick = useCallback((value: number | string) => {
-    return formatTickRef.current?.(value) ?? String(value);
-  }, []);
-
-  const hasFormatTick = !isNil(props.formatTick);
-
-  const options = useMemo((): Partial<ChartRenderAxis> => {
+  const options = useMemo((): ChartAxisOptions => {
     return omitBy(
       {
+        formatTick,
         max: props.max,
         min: props.min,
+        formatCategory,
         grid: props.grid,
         label: props.label,
         hidden: props.hidden,
         tickCount: props.tickCount,
-        formatTick: hasFormatTick ? formatTick : undefined,
       },
       isUndefined,
     );
   }, [
     props.max,
     props.min,
-    props.grid,
     formatTick,
+    props.grid,
     props.label,
     props.hidden,
-    hasFormatTick,
+    formatCategory,
     props.tickCount,
   ]);
 
@@ -59,7 +57,7 @@ export function useChartAxis(props: ChartAxisProps) {
 
   useLayoutEffect(() => {
     setAxis(position, options);
-  }, [options, position, setAxis]);
+  }, [options, setAxis, position]);
 
   return {
     options,

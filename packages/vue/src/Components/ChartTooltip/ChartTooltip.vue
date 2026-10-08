@@ -25,7 +25,9 @@ const {
   labelBind,
   titleBind,
   valueBind,
+  percentBind,
   formatValue,
+  formatPercent,
   getSwatchBind,
 } = useChartTooltip(props, tooltipRef);
 </script>
@@ -33,12 +35,18 @@ const {
 <template>
   <div ref="tooltip" v-bind="rootBind" v-if="isOpen && context">
     <slot name="content" v-bind="context">
-      <div v-bind="titleBind">{{ context.category }}</div>
+      <div v-bind="titleBind" v-if="context.title">
+        <span v-if="context.color" v-bind="getSwatchBind(context.color)" />
+        {{ context.title }}
+      </div>
 
       <div :key="item.id" v-bind="itemBind" v-for="item in context.items">
-        <span v-bind="getSwatchBind(item)" />
+        <span v-if="item.color" v-bind="getSwatchBind(item.color)" />
         <span v-bind="labelBind">{{ item.name }}</span>
         <span v-bind="valueBind">{{ formatValue(item) }}</span>
+        <span v-bind="percentBind" v-if="formatPercent(item) !== null">
+          {{ formatPercent(item) }}
+        </span>
       </div>
     </slot>
   </div>

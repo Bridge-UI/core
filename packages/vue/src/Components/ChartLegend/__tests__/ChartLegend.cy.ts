@@ -2,17 +2,17 @@
 import { h } from "vue";
 
 // ** Local Imports
-import { Chart } from "@/Components/Chart";
 import { ChartLegend } from "@/Components/ChartLegend";
-import { ChartSeries } from "@/Components/ChartSeries";
+import { ChartLine } from "@/Components/ChartLine";
+import { ChartLineSeries } from "@/Components/ChartLineSeries";
 
 test("it should toggle a series from the legend", () => {
-  cy.mount(Chart, {
+  cy.mount(ChartLine, {
     props: { categories: ["Jan", "Feb"] },
     slots: {
       default: () => [
-        h(ChartSeries, { data: [1, 2], name: "Revenue" }),
-        h(ChartSeries, { data: [2, 1], name: "Costs" }),
+        h(ChartLineSeries, { data: [1, 2], name: "Revenue" }),
+        h(ChartLineSeries, { data: [2, 1], name: "Costs" }),
         h(ChartLegend),
       ],
     },
@@ -24,11 +24,11 @@ test("it should toggle a series from the legend", () => {
 });
 
 test("it should paint swatches with the series color", () => {
-  cy.mount(Chart, {
+  cy.mount(ChartLine, {
     props: { categories: ["Jan", "Feb"] },
     slots: {
       default: () => [
-        h(ChartSeries, { data: [1, 2], name: "Revenue" }),
+        h(ChartLineSeries, { data: [1, 2], name: "Revenue" }),
         h(ChartLegend),
       ],
     },
