@@ -4,12 +4,12 @@ import { expect, test } from "vitest";
 import { defineComponent, h } from "vue";
 
 // ** Local Imports
-import { Chart } from "@/Components/Chart";
 import {
   useChartLegend,
   type ChartLegendOwnProps,
 } from "@/Components/ChartLegend";
-import { ChartSeries } from "@/Components/ChartSeries";
+import { ChartLine } from "@/Components/ChartLine";
+import { ChartLineSeries } from "@/Components/ChartLineSeries";
 
 const libDefaults = {
   align: "center",
@@ -28,11 +28,11 @@ async function mountUseChartLegend(props: ChartLegendOwnProps = {}) {
     },
   });
 
-  mount(Chart, {
+  mount(ChartLine, {
     props: { categories: ["Jan", "Feb"] },
     slots: {
       default: () => [
-        h(ChartSeries, { data: [1, 2], name: "Revenue" }),
+        h(ChartLineSeries, { data: [1, 2], name: "Revenue" }),
         h(Probe),
       ],
     },

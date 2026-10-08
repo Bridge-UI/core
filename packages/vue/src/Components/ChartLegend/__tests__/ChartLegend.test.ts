@@ -4,19 +4,20 @@ import { expect, test } from "vitest";
 import { h } from "vue";
 
 // ** Local Imports
-import { Chart } from "@/Components/Chart";
 import { ChartLegend } from "@/Components/ChartLegend";
-import { ChartSeries } from "@/Components/ChartSeries";
+import { ChartLine } from "@/Components/ChartLine";
+import { ChartLineSeries } from "@/Components/ChartLineSeries";
+import { ChartPie } from "@/Components/ChartPie";
 
 const categories = ["Jan", "Feb", "Mar"];
 
 async function mountLegend(props: Record<string, unknown> = {}) {
-  const wrapper = mount(Chart, {
+  const wrapper = mount(ChartLine, {
     props: { categories },
     slots: {
       default: () => [
-        h(ChartSeries, { name: "Revenue", data: [1, 2, 3] }),
-        h(ChartSeries, { name: "Costs", data: [3, 2, 1] }),
+        h(ChartLineSeries, { name: "Revenue", data: [1, 2, 3] }),
+        h(ChartLineSeries, { name: "Costs", data: [3, 2, 1] }),
         h(ChartLegend, props),
       ],
     },
@@ -82,4 +83,43 @@ test("it should move to the top and align items", async () => {
 
   expect(list.classes()).toContain("order-first");
   expect(list.classes()).toContain("justify-end");
+});
+
+test("it should stack entries beside the plot on the left", async () => {
+  const wrapper = await mountLegend({ position: "left" });
+
+  expect(wrapper.find("ul").classes()).toContain("flex-col");
+  expect(wrapper.find("ul").classes()).toContain("order-first");
+  expect(wrapper.find("[role='figure']").classes()).toContain("flex-row");
+});
+
+test("it should show formatted values and percents for slices", async () => {
+  const wrapper = mount(ChartPie, {
+    props: {
+      data: [
+        { value: 3000, label: "Housing" },
+        { value: 1000, label: "Kids" },
+      ],
+    },
+    slots: {
+      default: () =>
+        h(ChartLegend, {
+          showValue: true,
+          showPercent: true,
+          formatValue: (value: number) => `$${value}`,
+        }),
+    },
+  });
+
+  await flushPromises();
+
+  expect(wrapper.findAll("button")[0].text().replace(/\s+/g, "")).toBe(
+    "Housing$300075%",
+  );
+});
+
+test("it should not show value columns for series", async () => {
+  const wrapper = await mountLegend({ showValue: true, showPercent: true });
+
+  expect(findButton(wrapper, "Revenue").text()).toBe("Revenue");
 });

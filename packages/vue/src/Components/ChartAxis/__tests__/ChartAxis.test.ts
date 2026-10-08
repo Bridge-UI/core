@@ -4,18 +4,18 @@ import { expect, test } from "vitest";
 import { h } from "vue";
 
 // ** Local Imports
-import { Chart } from "@/Components/Chart";
 import { ChartAxis } from "@/Components/ChartAxis";
-import { ChartSeries } from "@/Components/ChartSeries";
+import { ChartLine } from "@/Components/ChartLine";
+import { ChartLineSeries } from "@/Components/ChartLineSeries";
 
 const categories = ["Jan", "Feb", "Mar"];
 
 test("it should render nothing of its own", async () => {
-  const wrapper = mount(Chart, {
+  const wrapper = mount(ChartLine, {
     props: { categories },
     slots: {
       default: () => [
-        h(ChartSeries, { name: "A", data: [1, 2, 3] }),
+        h(ChartLineSeries, { name: "A", data: [1, 2, 3] }),
         h(ChartAxis, { grid: true, position: "x", label: "Month" }),
         h(ChartAxis, { grid: false, hidden: true, position: "y" }),
       ],

@@ -2,16 +2,16 @@
 import { h } from "vue";
 
 // ** Local Imports
-import { Chart } from "@/Components/Chart";
-import { ChartSeries } from "@/Components/ChartSeries";
+import { ChartLine } from "@/Components/ChartLine";
+import { ChartLineSeries } from "@/Components/ChartLineSeries";
 import { ChartTooltip } from "@/Components/ChartTooltip";
 
 function mountChart() {
-  cy.mount(Chart, {
+  cy.mount(ChartLine, {
     props: { categories: ["Jan", "Feb", "Mar"] },
     slots: {
       default: () => [
-        h(ChartSeries, { name: "Revenue", data: [10, 20, 30] }),
+        h(ChartLineSeries, { name: "Revenue", data: [10, 20, 30] }),
         h(ChartTooltip, { "data-testid": "tooltip" }),
       ],
     },

@@ -4,16 +4,23 @@ import { computed, onBeforeUnmount, watch } from "vue";
 
 // ** Core Imports
 import type {
+  ChartAxisOptions,
   ChartAxisPosition,
-  ChartRenderAxis,
 } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
-import { useChartContext } from "@/Components/Chart/chartInjectionKey";
 import type { ChartAxisProps } from "@/Components/ChartAxis/chartAxis.types";
+import { useChartContext } from "@/Utils/Chart";
 
 export function useChartAxis(props: ChartAxisProps) {
   const chart = useChartContext();
+  const { setAxis, removeAxis } = chart.value;
+
+  if (isNil(setAxis) || isNil(removeAxis)) {
+    throw new Error(
+      "ChartAxis must be used within ChartLine, ChartBar, or ChartScatter",
+    );
+  }
 
   // Stable wrapper so inline formatters do not re-register the axis each render.
   function formatTick(value: number | string) {
@@ -24,7 +31,7 @@ export function useChartAxis(props: ChartAxisProps) {
     return !isNil(props.formatTick);
   });
 
-  const options = computed((): Partial<ChartRenderAxis> => {
+  const options = computed((): ChartAxisOptions => {
     return omitBy(
       {
         max: props.max,
@@ -43,7 +50,7 @@ export function useChartAxis(props: ChartAxisProps) {
     () => props.position,
     (_, previous?: ChartAxisPosition) => {
       if (!isNil(previous)) {
-        chart.value.removeAxis(previous);
+        removeAxis(previous);
       }
     },
   );
@@ -51,13 +58,13 @@ export function useChartAxis(props: ChartAxisProps) {
   watch(
     [options, () => props.position],
     ([next, position]) => {
-      chart.value.setAxis(position, next);
+      setAxis(position, next);
     },
     { immediate: true },
   );
 
   onBeforeUnmount(() => {
-    chart.value.removeAxis(props.position);
+    removeAxis(props.position);
   });
 
   return {

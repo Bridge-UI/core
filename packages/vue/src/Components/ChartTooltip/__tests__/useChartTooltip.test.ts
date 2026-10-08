@@ -4,8 +4,8 @@ import { expect, test } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
 // ** Local Imports
-import { Chart } from "@/Components/Chart";
-import { ChartSeries } from "@/Components/ChartSeries";
+import { ChartLine } from "@/Components/ChartLine";
+import { ChartLineSeries } from "@/Components/ChartLineSeries";
 import {
   useChartTooltip,
   type ChartTooltipOwnProps,
@@ -22,11 +22,11 @@ async function mountUseChartTooltip(props: ChartTooltipOwnProps = {}) {
     },
   });
 
-  const wrapper = mount(Chart, {
+  const wrapper = mount(ChartLine, {
     props: { categories: ["Jan", "Feb"] },
     slots: {
       default: () => [
-        h(ChartSeries, { name: "Revenue", data: [1500, 2] }),
+        h(ChartLineSeries, { name: "Revenue", data: [1500, 2] }),
         h(Probe),
       ],
     },
@@ -67,6 +67,6 @@ test("it should open when the plot reports an active index", async () => {
   await flushPromises();
 
   expect(result.isOpen.value).toBe(true);
-  expect(result.context.value?.category).toBe("Jan");
+  expect(result.context.value?.title).toBe("Jan");
   expect(result.rootBind.value["aria-hidden"]).toBe(true);
 });
