@@ -8,7 +8,6 @@ export type {
 export { default as ChartPie } from "@/Components/ChartPie/ChartPie.vue";
 export { useChartPie } from "@/Components/ChartPie/composables/useChartPie";
 export {
-  CHART_INJECTION_KEY,
   useChartContext,
   type ChartClasses,
   type ChartColorOverrides,

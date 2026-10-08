@@ -7,7 +7,6 @@ export type {
 export { default as ChartFunnel } from "@/Components/ChartFunnel/ChartFunnel.vue";
 export { useChartFunnel } from "@/Components/ChartFunnel/composables/useChartFunnel";
 export {
-  CHART_INJECTION_KEY,
   useChartContext,
   type ChartClasses,
   type ChartColorOverrides,

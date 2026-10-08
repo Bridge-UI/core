@@ -6,7 +6,6 @@ export type {
 export { default as ChartLine } from "@/Components/ChartLine/ChartLine.vue";
 export { useChartLine } from "@/Components/ChartLine/composables/useChartLine";
 export {
-  CHART_INJECTION_KEY,
   useChartContext,
   type ChartClasses,
   type ChartColorOverrides,

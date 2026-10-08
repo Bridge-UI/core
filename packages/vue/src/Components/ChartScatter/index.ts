@@ -6,7 +6,6 @@ export type {
 export { default as ChartScatter } from "@/Components/ChartScatter/ChartScatter.vue";
 export { useChartScatter } from "@/Components/ChartScatter/composables/useChartScatter";
 export {
-  CHART_INJECTION_KEY,
   useChartContext,
   type ChartClasses,
   type ChartColorOverrides,
