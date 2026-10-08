@@ -13,7 +13,7 @@ import {
   getEchartsHost,
   pressChartKey,
   stubPlotSize,
-} from "@/Utils/Chart/__tests__/chartTestUtils";
+} from "@/Utils/Charts/__tests__/chartTestUtils";
 
 afterEach(() => {
   vi.restoreAllMocks();

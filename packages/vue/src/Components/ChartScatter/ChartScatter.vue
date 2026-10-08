@@ -2,7 +2,7 @@
 // ** Local Imports
 import type { ChartScatterOwnProps } from "@/Components/ChartScatter/chartScatter.types";
 import { useChartScatter } from "@/Components/ChartScatter/composables/useChartScatter";
-import { ChartFrame, type ChartSlots } from "@/Utils/Chart";
+import { ChartFrame, type ChartSlots } from "@/Utils/Charts";
 
 defineSlots<ChartSlots>();
 

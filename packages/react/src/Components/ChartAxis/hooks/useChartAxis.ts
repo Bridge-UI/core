@@ -7,7 +7,7 @@ import type { ChartAxisOptions } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import type { ChartAxisProps } from "@/Components/ChartAxis/chartAxis.types";
-import { useChartContext } from "@/Utils/Chart";
+import { useChartContext } from "@/Utils/Charts";
 
 export function useChartAxis(props: ChartAxisProps) {
   const { setAxis, removeAxis } = useChartContext();

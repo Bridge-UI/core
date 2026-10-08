@@ -2,7 +2,7 @@
 // ** Local Imports
 import type { ChartBarOwnProps } from "@/Components/ChartBar/chartBar.types";
 import { useChartBar } from "@/Components/ChartBar/composables/useChartBar";
-import { ChartFrame, type ChartSlots } from "@/Utils/Chart";
+import { ChartFrame, type ChartSlots } from "@/Utils/Charts";
 
 defineSlots<ChartSlots>();
 

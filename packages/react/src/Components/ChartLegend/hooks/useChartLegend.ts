@@ -29,7 +29,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
-import { useChartContext, type ChartLegendItem } from "@/Utils/Chart";
+import { useChartContext, type ChartLegendItem } from "@/Utils/Charts";
 
 const chartLegendBridgeKeys = [
   "align",

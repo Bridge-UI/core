@@ -4,7 +4,7 @@ import { isNil } from "es-toolkit/compat";
 // ** Local Imports
 import type { ChartLegendProps } from "@/Components/ChartLegend/chartLegend.types";
 import { useChartLegend } from "@/Components/ChartLegend/hooks/useChartLegend";
-import type { ChartLegendItem } from "@/Utils/Chart";
+import type { ChartLegendItem } from "@/Utils/Charts";
 
 function ChartLegend(props: ChartLegendProps) {
   const {

@@ -3,7 +3,7 @@ import type { ChartScatterSeriesProps } from "@/Components/ChartScatterSeries/ch
 import {
   useChartSeries,
   type ChartScatterSeriesRegistration,
-} from "@/Utils/Chart";
+} from "@/Utils/Charts";
 
 export function useChartScatterSeries(props: ChartScatterSeriesProps) {
   const entry = useChartSeries<ChartScatterSeriesRegistration>({

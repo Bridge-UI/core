@@ -11,7 +11,7 @@ import {
   getEchartsHost,
   pressChartKey,
   stubPlotSize,
-} from "@/Utils/Chart/__tests__/chartTestUtils";
+} from "@/Utils/Charts/__tests__/chartTestUtils";
 
 const data = [
   { value: 420, label: "Signed up" },

@@ -2,7 +2,7 @@
 import type { ChartScatterPoint } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
-import type { ChartColorValue } from "@/Utils/Chart";
+import type { ChartColorValue } from "@/Utils/Charts";
 
 /**
  * One group of points registered on the nearest `ChartScatter`.

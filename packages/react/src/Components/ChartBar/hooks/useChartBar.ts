@@ -1,10 +1,10 @@
 // ** Local Imports
 import type { ChartBarProps } from "@/Components/ChartBar/chartBar.types";
-import { mountEchartsBar } from "@/Utils/Chart/echarts/bar";
+import { mountEchartsBar } from "@/Utils/Charts/echarts/bar";
 import {
   useChartCartesian,
   type ChartCartesianMerged,
-} from "@/Utils/Chart/useChartCartesian";
+} from "@/Utils/Charts/useChartCartesian";
 
 export function useChartBar(
   props: ChartBarProps,

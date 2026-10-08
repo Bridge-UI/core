@@ -1,7 +1,7 @@
 // ** Local Imports
 import type { ChartLineProps } from "@/Components/ChartLine/chartLine.types";
 import { useChartLine } from "@/Components/ChartLine/hooks/useChartLine";
-import { ChartFrame } from "@/Utils/Chart";
+import { ChartFrame } from "@/Utils/Charts";
 
 function ChartLine(props: ChartLineProps) {
   const { frame, context } = useChartLine(props, {

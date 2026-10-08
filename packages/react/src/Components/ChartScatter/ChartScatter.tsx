@@ -1,7 +1,7 @@
 // ** Local Imports
 import type { ChartScatterProps } from "@/Components/ChartScatter/chartScatter.types";
 import { useChartScatter } from "@/Components/ChartScatter/hooks/useChartScatter";
-import { ChartFrame } from "@/Utils/Chart";
+import { ChartFrame } from "@/Utils/Charts";
 
 function ChartScatter(props: ChartScatterProps) {
   const { frame, context } = useChartScatter(props, {

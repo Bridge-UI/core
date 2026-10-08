@@ -2,7 +2,7 @@
 // ** Local Imports
 import type { ChartFunnelOwnProps } from "@/Components/ChartFunnel/chartFunnel.types";
 import { useChartFunnel } from "@/Components/ChartFunnel/composables/useChartFunnel";
-import { ChartFrame, type ChartSlots } from "@/Utils/Chart";
+import { ChartFrame, type ChartSlots } from "@/Utils/Charts";
 
 defineSlots<ChartSlots>();
 

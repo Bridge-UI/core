@@ -18,9 +18,9 @@ import {
   chartRootBridgeKeys,
   useChartRoot,
   type ChartRootMerged,
-} from "@/Utils/Chart";
-import { mountEchartsPie } from "@/Utils/Chart/echarts/pie";
-import { useChartPart } from "@/Utils/Chart/useChartPart";
+} from "@/Utils/Charts";
+import { mountEchartsPie } from "@/Utils/Charts/echarts/pie";
+import { useChartPart } from "@/Utils/Charts/useChartPart";
 
 const chartPieBridgeKeys = [
   ...chartRootBridgeKeys,

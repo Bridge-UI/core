@@ -15,4 +15,4 @@ export {
   type ChartCustomProps,
   type ChartSizeOverrides,
   type ChartSlots,
-} from "@/Utils/Chart";
+} from "@/Utils/Charts";

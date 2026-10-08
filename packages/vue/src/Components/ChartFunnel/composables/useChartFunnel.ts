@@ -18,9 +18,9 @@ import {
   chartRootBridgeKeys,
   useChartRoot,
   type ChartRootMerged,
-} from "@/Utils/Chart";
-import { mountEchartsFunnel } from "@/Utils/Chart/echarts/funnel";
-import { useChartPart } from "@/Utils/Chart/useChartPart";
+} from "@/Utils/Charts";
+import { mountEchartsFunnel } from "@/Utils/Charts/echarts/funnel";
+import { useChartPart } from "@/Utils/Charts/useChartPart";
 
 const chartFunnelBridgeKeys = [
   ...chartRootBridgeKeys,

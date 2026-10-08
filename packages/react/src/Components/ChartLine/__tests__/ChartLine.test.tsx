@@ -12,7 +12,7 @@ import { BridgeUIProvider } from "@/Provider";
 import {
   getEchartsHost,
   stubPlotSize,
-} from "@/Utils/Chart/__tests__/chartTestUtils";
+} from "@/Utils/Charts/__tests__/chartTestUtils";
 
 const categories = ["Jan", "Feb", "Mar"];
 

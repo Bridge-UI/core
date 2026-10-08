@@ -2,7 +2,7 @@
 import type { ChartDatum, ChartReference } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
-import type { ChartColorValue } from "@/Utils/Chart";
+import type { ChartColorValue } from "@/Utils/Charts";
 
 /**
  * One bar series registered on the nearest `ChartBar`. Renders nothing.

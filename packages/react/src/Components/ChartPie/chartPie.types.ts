@@ -15,7 +15,7 @@ import type {
   ChartColorValue,
   ChartRootOwnProps,
   ChartSlots,
-} from "@/Utils/Chart";
+} from "@/Utils/Charts";
 
 /**
  * Pie / donut chart root. Takes its slices from `data`; compose with

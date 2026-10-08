@@ -1,7 +1,7 @@
 // ** Local Imports
 import type { ChartBarProps } from "@/Components/ChartBar/chartBar.types";
 import { useChartBar } from "@/Components/ChartBar/hooks/useChartBar";
-import { ChartFrame } from "@/Utils/Chart";
+import { ChartFrame } from "@/Utils/Charts";
 
 function ChartBar(props: ChartBarProps) {
   const { frame, context } = useChartBar(props, {

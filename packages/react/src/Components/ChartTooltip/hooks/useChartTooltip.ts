@@ -30,7 +30,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
-import { useChartContext } from "@/Utils/Chart";
+import { useChartContext } from "@/Utils/Charts";
 
 const chartTooltipBridgeKeys = [
   "slots",

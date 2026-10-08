@@ -2,7 +2,7 @@
 // ** Local Imports
 import type { ChartLineOwnProps } from "@/Components/ChartLine/chartLine.types";
 import { useChartLine } from "@/Components/ChartLine/composables/useChartLine";
-import { ChartFrame, type ChartSlots } from "@/Utils/Chart";
+import { ChartFrame, type ChartSlots } from "@/Utils/Charts";
 
 defineSlots<ChartSlots>();
 

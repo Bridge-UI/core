@@ -6,7 +6,7 @@ import type { ChartCurve, ChartStep } from "@bridge-ui/core/Domain";
 import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import type { ChartRootOwnProps } from "@/Utils/Chart";
+import type { ChartRootOwnProps } from "@/Utils/Charts";
 
 /**
  * Line chart root. Compose with `ChartLineSeries`, `ChartAxis`,

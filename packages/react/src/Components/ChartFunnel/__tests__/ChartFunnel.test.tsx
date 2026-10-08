@@ -10,7 +10,7 @@ import { ChartLegend } from "@/Components/ChartLegend";
 import {
   getEchartsHost,
   stubPlotSize,
-} from "@/Utils/Chart/__tests__/chartTestUtils";
+} from "@/Utils/Charts/__tests__/chartTestUtils";
 
 const data = [
   { value: 420, label: "Signed up" },

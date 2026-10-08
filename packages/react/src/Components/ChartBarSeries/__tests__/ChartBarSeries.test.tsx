@@ -9,7 +9,7 @@ import { ChartBarSeries } from "@/Components/ChartBarSeries";
 import {
   getEchartsHost,
   stubPlotSize,
-} from "@/Utils/Chart/__tests__/chartTestUtils";
+} from "@/Utils/Charts/__tests__/chartTestUtils";
 
 type BarOption = {
   data: Array<null | { itemStyle: { borderRadius: number | number[] } }>;

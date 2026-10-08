@@ -28,8 +28,8 @@ import {
   useChartRoot,
   type ChartRootMerged,
   type ChartScatterSeriesRegistration,
-} from "@/Utils/Chart";
-import { mountEchartsScatter } from "@/Utils/Chart/echarts/scatter";
+} from "@/Utils/Charts";
+import { mountEchartsScatter } from "@/Utils/Charts/echarts/scatter";
 
 const chartScatterBridgeKeys = [
   ...chartRootBridgeKeys,

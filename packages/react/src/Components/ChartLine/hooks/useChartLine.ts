@@ -1,10 +1,10 @@
 // ** Local Imports
 import type { ChartLineProps } from "@/Components/ChartLine/chartLine.types";
-import { mountEchartsLine } from "@/Utils/Chart/echarts/line";
+import { mountEchartsLine } from "@/Utils/Charts/echarts/line";
 import {
   useChartCartesian,
   type ChartCartesianMerged,
-} from "@/Utils/Chart/useChartCartesian";
+} from "@/Utils/Charts/useChartCartesian";
 
 export function useChartLine(
   props: ChartLineProps,

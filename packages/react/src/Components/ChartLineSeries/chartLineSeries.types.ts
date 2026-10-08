@@ -7,7 +7,7 @@ import type {
 } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
-import type { ChartColorValue } from "@/Utils/Chart";
+import type { ChartColorValue } from "@/Utils/Charts";
 
 /**
  * One line registered on the nearest `ChartLine`, or drawn over the bars of

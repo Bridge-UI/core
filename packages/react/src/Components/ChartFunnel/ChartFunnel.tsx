@@ -1,7 +1,7 @@
 // ** Local Imports
 import type { ChartFunnelProps } from "@/Components/ChartFunnel/chartFunnel.types";
 import { useChartFunnel } from "@/Components/ChartFunnel/hooks/useChartFunnel";
-import { ChartFrame } from "@/Utils/Chart";
+import { ChartFrame } from "@/Utils/Charts";
 
 function ChartFunnel(props: ChartFunnelProps) {
   const { frame, context } = useChartFunnel(props, {

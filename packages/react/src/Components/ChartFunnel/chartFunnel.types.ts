@@ -12,7 +12,7 @@ import type {
 import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import type { ChartColorValue, ChartRootOwnProps } from "@/Utils/Chart";
+import type { ChartColorValue, ChartRootOwnProps } from "@/Utils/Charts";
 
 /**
  * Funnel chart root. Takes its stages from `data`; compose with

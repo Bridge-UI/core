@@ -6,7 +6,7 @@ import type { ChartLineSeriesOwnProps } from "@/Components/ChartLineSeries/chart
 import {
   useChartSeries,
   type ChartLineSeriesRegistration,
-} from "@/Utils/Chart";
+} from "@/Utils/Charts";
 
 export function useChartLineSeries(props: ChartLineSeriesOwnProps) {
   const entry = useChartSeries<ChartLineSeriesRegistration>({

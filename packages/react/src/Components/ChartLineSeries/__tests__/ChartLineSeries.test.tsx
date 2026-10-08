@@ -9,7 +9,7 @@ import { ChartLineSeries } from "@/Components/ChartLineSeries";
 import {
   getEchartsHost,
   stubPlotSize,
-} from "@/Utils/Chart/__tests__/chartTestUtils";
+} from "@/Utils/Charts/__tests__/chartTestUtils";
 
 type LineOption = {
   areaStyle?: object;

@@ -10,7 +10,7 @@ import type {
 
 // ** Local Imports
 import type { ChartAxisProps } from "@/Components/ChartAxis/chartAxis.types";
-import { useChartContext } from "@/Utils/Chart";
+import { useChartContext } from "@/Utils/Charts";
 
 export function useChartAxis(props: ChartAxisProps) {
   const chart = useChartContext();

@@ -1,7 +1,7 @@
 // ** Local Imports
 import type { ChartPieProps } from "@/Components/ChartPie/chartPie.types";
 import { useChartPie } from "@/Components/ChartPie/hooks/useChartPie";
-import { ChartFrame } from "@/Utils/Chart";
+import { ChartFrame } from "@/Utils/Charts";
 
 function ChartPie(props: ChartPieProps) {
   const { frame, center, variant, context } = useChartPie(props, {

@@ -3,7 +3,10 @@ import { castArray, isNil } from "es-toolkit/compat";
 
 // ** Local Imports
 import type { ChartBarSeriesProps } from "@/Components/ChartBarSeries/chartBarSeries.types";
-import { useChartSeries, type ChartBarSeriesRegistration } from "@/Utils/Chart";
+import {
+  useChartSeries,
+  type ChartBarSeriesRegistration,
+} from "@/Utils/Charts";
 
 export function useChartBarSeries(props: ChartBarSeriesProps) {
   const entry = useChartSeries<ChartBarSeriesRegistration>({

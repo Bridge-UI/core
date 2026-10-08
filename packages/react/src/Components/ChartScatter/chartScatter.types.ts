@@ -5,7 +5,7 @@ import type { HTMLAttributes } from "react";
 import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import type { ChartRootOwnProps } from "@/Utils/Chart";
+import type { ChartRootOwnProps } from "@/Utils/Charts";
 
 /**
  * Scatter / bubble chart root. Compose with `ChartScatterSeries`,

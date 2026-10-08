@@ -5,7 +5,7 @@ import type {
   ChartPieSlots,
 } from "@/Components/ChartPie/chartPie.types";
 import { useChartPie } from "@/Components/ChartPie/composables/useChartPie";
-import { ChartFrame } from "@/Utils/Chart";
+import { ChartFrame } from "@/Utils/Charts";
 
 defineSlots<ChartPieSlots>();
 
