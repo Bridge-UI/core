@@ -24,9 +24,9 @@ test("it should merge the funnel defaults", () => {
     ),
   );
 
-  expect(result.current.merged.sort).toBe("descending");
   expect(result.current.merged.labels).toBe("inside");
   expect(result.current.context.family).toBe("funnel");
+  expect(result.current.merged.sort).toBe("descending");
 });
 
 test("it should keep zero stages", () => {

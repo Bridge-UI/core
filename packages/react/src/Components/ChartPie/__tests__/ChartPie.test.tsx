@@ -93,15 +93,15 @@ test("it should announce the active slice with its share", () => {
 
   fireEvent.keyDown(screen.getByRole("img"), { key: "ArrowRight" });
 
-  expect(screen.getByRole("status").textContent).toBe("Housing 3,450 (57%)");
   expect(screen.getByTestId("tooltip").textContent).toContain("57%");
+  expect(screen.getByRole("status").textContent).toBe("Housing 3,450 (57%)");
 });
 
 test("it should group small slices into Other", () => {
   renderChart({ maxSlices: 2 });
 
-  expect(screen.getByRole("button", { name: /Other/ })).toBeTruthy();
   expect(screen.queryByRole("button", { name: /Kids/ })).toBeNull();
+  expect(screen.getByRole("button", { name: /Other/ })).toBeTruthy();
 });
 
 test("it should render the center slot for donuts only", () => {
@@ -133,8 +133,8 @@ test("it should mount a donut ring with plot labels", () => {
     series: Array<{ label: { show: boolean }; radius: string[] }>;
   };
 
-  expect(option.series[0].radius).toEqual(["49%", "70%"]);
   expect(option.series[0].label.show).toBe(true);
+  expect(option.series[0].radius).toEqual(["49%", "70%"]);
 });
 
 test("it should show the empty message without positive slices", () => {

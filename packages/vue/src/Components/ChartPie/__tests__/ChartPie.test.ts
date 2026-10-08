@@ -96,15 +96,15 @@ test("it should announce the active slice with its share", async () => {
 
   await pressChartKey(wrapper, "ArrowRight");
 
-  expect(wrapper.find("[role='status']").text()).toBe("Housing 3,450 (57%)");
   expect(wrapper.find("[data-testid='tooltip']").text()).toContain("57%");
+  expect(wrapper.find("[role='status']").text()).toBe("Housing 3,450 (57%)");
 });
 
 test("it should group small slices into Other", async () => {
   const wrapper = await mountChart({ maxSlices: 2 });
 
-  expect(legendText(wrapper, "Other")).not.toBe("");
   expect(legendText(wrapper, "Kids")).toBe("");
+  expect(legendText(wrapper, "Other")).not.toBe("");
 });
 
 test("it should render the center slot for donuts only", async () => {
@@ -133,8 +133,8 @@ test("it should mount a donut ring with plot labels", async () => {
     series: Array<{ label: { show: boolean }; radius: string[] }>;
   };
 
-  expect(option.series[0].radius).toEqual(["49%", "70%"]);
   expect(option.series[0].label.show).toBe(true);
+  expect(option.series[0].radius).toEqual(["49%", "70%"]);
 
   wrapper.unmount();
 });

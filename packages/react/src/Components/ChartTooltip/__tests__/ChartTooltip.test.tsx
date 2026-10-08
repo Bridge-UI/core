@@ -59,8 +59,8 @@ test("it should show the category and series values on hover", () => {
     "true",
   );
   expect(getTooltip().getByText("Jan")).toBeTruthy();
-  expect(getTooltip().getByText("1,200")).toBeTruthy();
   expect(getTooltip().getByText("500")).toBeTruthy();
+  expect(getTooltip().getByText("1,200")).toBeTruthy();
 });
 
 test("it should skip null values and close on leave", () => {
@@ -82,8 +82,8 @@ test("it should exclude hidden series", () => {
   fireEvent.click(screen.getByRole("button", { name: "Costs" }));
   activate(0);
 
-  expect(getTooltip().getByText("1,200")).toBeTruthy();
   expect(getTooltip().queryByText("500")).toBeNull();
+  expect(getTooltip().getByText("1,200")).toBeTruthy();
 });
 
 test("it should format values with formatValue", () => {
@@ -133,6 +133,6 @@ test("it should show a slice with its percent and no title", () => {
 
   fireEvent.keyDown(screen.getByRole("img"), { key: "ArrowRight" });
 
-  expect(getTooltip().getByText("Housing")).toBeTruthy();
   expect(getTooltip().getByText("75 pct")).toBeTruthy();
+  expect(getTooltip().getByText("Housing")).toBeTruthy();
 });

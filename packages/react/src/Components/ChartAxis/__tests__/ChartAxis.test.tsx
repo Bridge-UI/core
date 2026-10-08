@@ -22,7 +22,7 @@ test("it should render nothing of its own", () => {
     </ChartLine>,
   );
 
+  expect(screen.getByRole("figure")).toBeTruthy();
   expect(container.querySelector("[data-chart-mock]")).toBeNull();
   expect(screen.getByRole("columnheader", { name: "A" })).toBeTruthy();
-  expect(screen.getByRole("figure")).toBeTruthy();
 });

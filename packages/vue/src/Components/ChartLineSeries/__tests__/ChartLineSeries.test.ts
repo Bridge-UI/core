@@ -78,14 +78,14 @@ test("it should inherit root defaults and override them per series", async () =>
 
   const [first, second] = option.series;
 
-  expect(first.areaStyle).toBeDefined();
-  expect(first.step).toBe("middle");
   expect(first.smooth).toBe(true);
+  expect(first.step).toBe("middle");
+  expect(first.areaStyle).toBeDefined();
 
-  expect(second.areaStyle).toBeUndefined();
   expect(second.step).toBe(false);
   expect(second.smooth).toBe(false);
   expect(second.showSymbol).toBe(true);
+  expect(second.areaStyle).toBeUndefined();
   expect(second.lineStyle.type).toBe("dashed");
   expect(second.markLine?.data).toHaveLength(1);
 

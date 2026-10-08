@@ -34,8 +34,8 @@ test("it should render a labelled list with one button per series", () => {
   renderLegend();
 
   expect(screen.getByRole("list", { name: "Legend" })).toBeTruthy();
-  expect(screen.getByRole("button", { name: "Revenue" })).toBeTruthy();
   expect(screen.getByRole("button", { name: "Costs" })).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Revenue" })).toBeTruthy();
 });
 
 test("it should toggle series visibility on click", () => {

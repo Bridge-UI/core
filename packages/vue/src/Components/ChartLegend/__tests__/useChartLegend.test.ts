@@ -46,9 +46,9 @@ async function mountUseChartLegend(props: ChartLegendOwnProps = {}) {
 test("it should merge default align, position, and interactive", async () => {
   const result = await mountUseChartLegend();
 
+  expect(result.interactive.value).toBe(true);
   expect(result.merged.value.align).toBe("center");
   expect(result.merged.value.position).toBe("bottom");
-  expect(result.interactive.value).toBe(true);
 });
 
 test("it should expose chart series as items", async () => {

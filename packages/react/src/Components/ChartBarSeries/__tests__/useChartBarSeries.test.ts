@@ -1,6 +1,6 @@
 // ** External Imports
 import { cleanup, renderHook } from "@testing-library/react";
-import type { ReactNode } from "react";
+import { createElement, type ReactNode } from "react";
 import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
@@ -12,7 +12,7 @@ afterEach(() => {
 });
 
 function Wrapper({ children }: { children: ReactNode }) {
-  return <ChartBar categories={["Q1", "Q2"]}>{children}</ChartBar>;
+  return createElement(ChartBar, { categories: ["Q1", "Q2"] }, children);
 }
 
 test("it should build a bar entry", () => {

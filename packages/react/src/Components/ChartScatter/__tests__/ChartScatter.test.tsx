@@ -86,9 +86,9 @@ test("it should mount ECharts with value axes and scaled bubbles", () => {
   };
 
   expect(option.xAxis[0].type).toBe("value");
+  expect(option.series[1].symbolSize([0, 0])).toBe(8);
   expect(option.series[0].symbolSize([0, 0, 4])).toBe(30);
   expect(option.series[0].symbolSize([0, 0, 2])).toBe(10);
-  expect(option.series[1].symbolSize([0, 0])).toBe(8);
 });
 
 test("it should show the empty message", () => {

@@ -88,8 +88,8 @@ describe("getChartPiePercents", () => {
 
 describe("getChartFunnelPercents", () => {
   test("it should compare each stage to the largest", () => {
-    expect(getChartFunnelPercents([1200, 420, 96])).toEqual([100, 35, 8]);
     expect(getChartFunnelPercents([0, 0])).toEqual([0, 0]);
+    expect(getChartFunnelPercents([1200, 420, 96])).toEqual([100, 35, 8]);
   });
 });
 
@@ -119,8 +119,8 @@ describe("resolveChartSliceLabel", () => {
 describe("isChartPartEmpty", () => {
   test("it should be empty without finite values", () => {
     expect(isChartPartEmpty([])).toBe(true);
-    expect(isChartPartEmpty([{ value: Number.NaN }])).toBe(true);
     expect(isChartPartEmpty([{ value: 0 }])).toBe(false);
+    expect(isChartPartEmpty([{ value: Number.NaN }])).toBe(true);
   });
 });
 

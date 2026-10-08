@@ -22,8 +22,8 @@ describe("isChartTimeCategories", () => {
   });
 
   test("it should reject labels, empty lists, and invalid dates", () => {
-    expect(isChartTimeCategories(["Jan"])).toBe(false);
     expect(isChartTimeCategories([])).toBe(false);
+    expect(isChartTimeCategories(["Jan"])).toBe(false);
     expect(isChartTimeCategories([new Date("nope")])).toBe(false);
   });
 });
@@ -94,9 +94,9 @@ describe("getChartTimeTickFormatter", () => {
 
 describe("getChartNearestIndex", () => {
   test("it should return the closest timestamp index", () => {
-    expect(getChartNearestIndex([0, 100, 400], 260)).toBe(2);
-    expect(getChartNearestIndex([0, 100, 400], 40)).toBe(0);
     expect(getChartNearestIndex([], 40)).toBeNull();
+    expect(getChartNearestIndex([0, 100, 400], 40)).toBe(0);
+    expect(getChartNearestIndex([0, 100, 400], 260)).toBe(2);
   });
 });
 

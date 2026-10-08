@@ -27,8 +27,8 @@ test("it should merge the funnel defaults and keep zero stages", () => {
 
   mount(Probe);
 
-  expect(result.merged.value.sort).toBe("descending");
   expect(result.context.value.family).toBe("funnel");
+  expect(result.merged.value.sort).toBe("descending");
   expect(result.context.value.legendItems).toMatchObject([
     { name: "A", percent: 100 },
     { name: "B", percent: 0 },

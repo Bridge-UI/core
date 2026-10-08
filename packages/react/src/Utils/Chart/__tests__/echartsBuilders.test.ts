@@ -68,10 +68,10 @@ describe("buildEchartsCartesianOption", () => {
   test("it should map label categories to a category x axis", () => {
     const option = buildEchartsCartesianOption(cartesian());
 
-    expect(get(option, "xAxis.type")).toBe("category");
-    expect(get(option, "xAxis.data")).toEqual(["Jan", "Feb"]);
     expect(get(option, "yAxis.type")).toBe("value");
+    expect(get(option, "xAxis.type")).toBe("category");
     expect(get(option, "series[0].data")).toEqual([1, null]);
+    expect(get(option, "xAxis.data")).toEqual(["Jan", "Feb"]);
   });
 
   test("it should pair values with timestamps on a time axis", () => {
@@ -96,10 +96,10 @@ describe("buildEchartsCartesianOption", () => {
       }),
     );
 
-    expect(get(option, "xAxis.type")).toBe("value");
-    expect(get(option, "yAxis.type")).toBe("category");
     expect(get(option, "yAxis.name")).toBe("Tag");
+    expect(get(option, "xAxis.type")).toBe("value");
     expect(get(option, "yAxis.inverse")).toBe(true);
+    expect(get(option, "yAxis.type")).toBe("category");
     expect(get(option, "series[0].label.position")).toBe("right");
     expect(get(option, "series[0].data[0].itemStyle.borderRadius")).toEqual([
       0, 4, 4, 0,
@@ -109,10 +109,10 @@ describe("buildEchartsCartesianOption", () => {
   test("it should hide axes and padding for sparklines", () => {
     const option = buildEchartsCartesianOption(cartesian({ sparkline: true }));
 
+    expect(get(option, "grid.left")).toBe(2);
     expect(get(option, "xAxis.show")).toBe(false);
     expect(get(option, "yAxis.show")).toBe(false);
     expect(get(option, "yAxis.splitLine.show")).toBe(false);
-    expect(get(option, "grid.left")).toBe(2);
     expect(get(option, "series[0].lineStyle.width")).toBe(1.5);
   });
 
@@ -132,10 +132,10 @@ describe("buildEchartsCartesianOption", () => {
       "series[0].markLine.data[0].label.formatter",
     ) as (params: unknown) => string;
 
-    expect(formatLabel({ dataIndex: 0 })).toBe("v1");
     expect(formatLabel({ dataIndex: 1 })).toBe("");
-    expect(get(option, "series[0].markLine.data[0].yAxis")).toBe(5);
+    expect(formatLabel({ dataIndex: 0 })).toBe("v1");
     expect(formatReference({ value: 5 })).toBe("v5");
+    expect(get(option, "series[0].markLine.data[0].yAxis")).toBe(5);
   });
 });
 
@@ -154,8 +154,8 @@ describe("buildEchartsPieOption", () => {
   test("it should draw a full pie without labels", () => {
     const option = buildEchartsPieOption({ ...base, variant: "pie" });
 
-    expect(get(option, "series[0].radius")).toEqual(["0%", "92%"]);
     expect(get(option, "series[0].label.show")).toBe(false);
+    expect(get(option, "series[0].radius")).toEqual(["0%", "92%"]);
   });
 
   test("it should leave a hole for donuts and room for outside labels", () => {
@@ -165,9 +165,9 @@ describe("buildEchartsPieOption", () => {
       labels: "outside",
     });
 
-    expect(get(option, "series[0].radius")).toEqual(["49%", "70%"]);
-    expect(get(option, "series[0].labelLine.show")).toBe(true);
     expect(get(option, "series[0].padAngle")).toBe(1);
+    expect(get(option, "series[0].labelLine.show")).toBe(true);
+    expect(get(option, "series[0].radius")).toEqual(["49%", "70%"]);
   });
 });
 
@@ -183,9 +183,9 @@ describe("buildEchartsFunnelOption", () => {
       labels: "outside",
     });
 
+    expect(get(option, "series[0].left")).toBe("36%");
     expect(get(option, "series[0].sort")).toBe("none");
     expect(get(option, "series[0].width")).toBe("60%");
-    expect(get(option, "series[0].left")).toBe("36%");
     expect(get(option, "series[0].label.position")).toBe("left");
   });
 });

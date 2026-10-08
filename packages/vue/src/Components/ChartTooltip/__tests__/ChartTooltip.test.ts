@@ -63,10 +63,10 @@ test("it should show the category and series values on hover", async () => {
 
   await activate(wrapper, 0);
 
-  expect(tooltip(wrapper).attributes("aria-hidden")).toBe("true");
   expect(tooltip(wrapper).text()).toContain("Jan");
-  expect(tooltip(wrapper).text()).toContain("1,200");
   expect(tooltip(wrapper).text()).toContain("500");
+  expect(tooltip(wrapper).text()).toContain("1,200");
+  expect(tooltip(wrapper).attributes("aria-hidden")).toBe("true");
 });
 
 test("it should skip null values and close on leave", async () => {
@@ -151,6 +151,6 @@ test("it should show a slice with its percent and no title", async () => {
   await wrapper.find("[role='img']").trigger("keydown", { key: "ArrowRight" });
   await flushPromises();
 
-  expect(tooltip(wrapper).text()).toContain("Housing");
   expect(tooltip(wrapper).text()).toContain("75 pct");
+  expect(tooltip(wrapper).text()).toContain("Housing");
 });

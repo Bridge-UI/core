@@ -35,8 +35,8 @@ test("it should merge the bar defaults", () => {
   const result = mountUseChartBar();
 
   expect(result.merged.value.radius).toBe(4);
-  expect(result.merged.value.orientation).toBe("vertical");
   expect(result.context.value.family).toBe("bar");
+  expect(result.merged.value.orientation).toBe("vertical");
 });
 
 test("it should let props override the defaults", () => {

@@ -30,8 +30,8 @@ test("it should merge the bar defaults", () => {
   const { result } = renderUseChartBar();
 
   expect(result.current.merged.radius).toBe(4);
-  expect(result.current.merged.orientation).toBe("vertical");
   expect(result.current.context.family).toBe("bar");
+  expect(result.current.merged.orientation).toBe("vertical");
 });
 
 test("it should let props override the defaults", () => {

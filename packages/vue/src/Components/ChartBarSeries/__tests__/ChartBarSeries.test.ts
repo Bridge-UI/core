@@ -45,10 +45,10 @@ test("it should round only the outermost bar of a stack", async () => {
   const [first, second] = option.series;
 
   expect(first.stack).toBe("total");
+  expect(second.label?.show).toBe(true);
   expect(first.data[0]?.itemStyle.borderRadius).toBe(0);
   expect(first.data[1]?.itemStyle.borderRadius).toEqual([0, 0, 4, 4]);
   expect(second.data[0]?.itemStyle.borderRadius).toEqual([4, 4, 0, 0]);
-  expect(second.label?.show).toBe(true);
 
   wrapper.unmount();
 });

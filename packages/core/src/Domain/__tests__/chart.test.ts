@@ -28,8 +28,8 @@ describe("resolveChartColor", () => {
     const palette = ["info", "success"];
 
     expect(resolveChartColor({ palette, index: 0 })).toBe("info");
-    expect(resolveChartColor({ palette, index: 1 })).toBe("success");
     expect(resolveChartColor({ palette, index: 2 })).toBe("info");
+    expect(resolveChartColor({ palette, index: 1 })).toBe("success");
   });
 
   test("it should fall back to the default palette when empty", () => {
@@ -49,8 +49,8 @@ describe("isSameChartAxisOptions", () => {
         { grid: true, formatTick },
       ),
     ).toBe(true);
-    expect(isSameChartAxisOptions({ grid: true }, { grid: false })).toBe(false);
     expect(isSameChartAxisOptions({ grid: true }, {})).toBe(false);
+    expect(isSameChartAxisOptions({ grid: true }, { grid: false })).toBe(false);
   });
 });
 
@@ -150,8 +150,8 @@ describe("roundChartPercents", () => {
   });
 
   test("it should give 0 to non-positive values and empty totals", () => {
-    expect(roundChartPercents([0, -2, 4])).toEqual([0, 0, 100]);
     expect(roundChartPercents([0, 0])).toEqual([0, 0]);
+    expect(roundChartPercents([0, -2, 4])).toEqual([0, 0, 100]);
   });
 });
 
@@ -219,8 +219,8 @@ describe("toChartCssSize", () => {
   });
 
   test("it should keep strings and fall back when empty", () => {
+    expect(toChartCssSize("", "100%")).toBe("100%");
     expect(toChartCssSize("50vh", "100%")).toBe("50vh");
     expect(toChartCssSize(undefined, "100%")).toBe("100%");
-    expect(toChartCssSize("", "100%")).toBe("100%");
   });
 });

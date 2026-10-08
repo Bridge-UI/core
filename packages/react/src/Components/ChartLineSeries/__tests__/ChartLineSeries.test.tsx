@@ -42,8 +42,8 @@ test("it should render nothing of its own and register a table column", () => {
     </ChartLine>,
   );
 
-  expect(container.querySelectorAll("figure, [role='figure']")).toHaveLength(1);
   expect(screen.getByRole("columnheader", { name: "Revenue" })).toBeTruthy();
+  expect(container.querySelectorAll("figure, [role='figure']")).toHaveLength(1);
 });
 
 test("it should inherit root defaults and override them per series", () => {
@@ -74,15 +74,15 @@ test("it should inherit root defaults and override them per series", () => {
 
   const [first, second] = getSeriesOptions();
 
-  expect(first.areaStyle).toBeDefined();
-  expect(first.step).toBe("middle");
   expect(first.smooth).toBe(true);
+  expect(first.step).toBe("middle");
   expect(first.stack).toBe("total");
+  expect(first.areaStyle).toBeDefined();
 
-  expect(second.areaStyle).toBeUndefined();
   expect(second.step).toBe(false);
   expect(second.smooth).toBe(false);
   expect(second.showSymbol).toBe(true);
+  expect(second.areaStyle).toBeUndefined();
   expect(second.lineStyle.type).toBe("dashed");
   expect(second.markLine?.data).toHaveLength(1);
 });

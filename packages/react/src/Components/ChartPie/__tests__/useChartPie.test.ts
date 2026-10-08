@@ -70,6 +70,6 @@ test("it should expose the center slot", () => {
     slots: { center: "Total" },
   });
 
-  expect(result.current.variant).toBe("donut");
   expect(result.current.center).toBe("Total");
+  expect(result.current.variant).toBe("donut");
 });

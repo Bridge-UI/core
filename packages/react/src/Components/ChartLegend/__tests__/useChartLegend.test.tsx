@@ -32,9 +32,9 @@ test("it should merge default align, position, and interactive", () => {
     wrapper: Wrapper,
   });
 
+  expect(result.current.interactive).toBe(true);
   expect(result.current.merged.align).toBe("center");
   expect(result.current.merged.position).toBe("bottom");
-  expect(result.current.interactive).toBe(true);
 });
 
 test("it should expose chart series as items", () => {

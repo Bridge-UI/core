@@ -24,7 +24,7 @@ test("it should render nothing of its own", async () => {
 
   await flushPromises();
 
-  expect(wrapper.find("[data-chart-mock]").exists()).toBe(false);
-  expect(wrapper.find("[role='figure']").exists()).toBe(true);
   expect(wrapper.find("thead").text()).toContain("A");
+  expect(wrapper.find("[role='figure']").exists()).toBe(true);
+  expect(wrapper.find("[data-chart-mock]").exists()).toBe(false);
 });

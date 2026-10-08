@@ -71,8 +71,8 @@ describe("scaleChartBubbleSize", () => {
   test("it should scale by area, not by diameter", () => {
     const half = scaleChartBubbleSize({ range, value: 50, domain: [0, 100] });
 
-    expect(half).toBeCloseTo(Math.sqrt((8 ** 2 + 40 ** 2) / 2));
     expect(half).toBeGreaterThan(24);
+    expect(half).toBeCloseTo(Math.sqrt((8 ** 2 + 40 ** 2) / 2));
   });
 
   test("it should use the max size for a flat domain", () => {
@@ -83,8 +83,8 @@ describe("scaleChartBubbleSize", () => {
 describe("isChartScatterEmpty", () => {
   test("it should be empty without drawable points", () => {
     expect(isChartScatterEmpty([])).toBe(true);
-    expect(isChartScatterEmpty([{ data: [[Number.NaN, 1]] }])).toBe(true);
     expect(isChartScatterEmpty([{ data: [[0, 0]] }])).toBe(false);
+    expect(isChartScatterEmpty([{ data: [[Number.NaN, 1]] }])).toBe(true);
   });
 });
 
