@@ -1,3 +1,6 @@
+// ** External Imports
+import { isNil } from "es-toolkit/compat";
+
 // ** Local Imports
 import type { ChartLegendProps } from "@/Components/ChartLegend/chartLegend.types";
 import { useChartLegend } from "@/Components/ChartLegend/hooks/useChartLegend";
@@ -31,8 +34,8 @@ function ChartLegend(props: ChartLegendProps) {
       <>
         <span {...getSwatchBind(item)} />
         <span {...labelBind}>{item.name}</span>
-        {value === null ? null : <span {...valueBind}>{value}</span>}
-        {percent === null ? null : <span {...percentBind}>{percent}</span>}
+        {isNil(value) ? null : <span {...valueBind}>{value}</span>}
+        {isNil(percent) ? null : <span {...percentBind}>{percent}</span>}
       </>
     );
   };

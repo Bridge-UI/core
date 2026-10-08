@@ -1,5 +1,5 @@
 // ** External Imports
-import { isFunction, isNil, last } from "es-toolkit/compat";
+import { isFunction, isNil, last, take } from "es-toolkit/compat";
 
 // ** Local Imports
 import {
@@ -212,10 +212,10 @@ export function toChartSliceEntries({
   }
 
   const kept = new Set(
-    [...entries]
-      .sort((left, right) => right.value - left.value)
-      .slice(0, maxSlices - 1)
-      .map((entry) => entry.id),
+    take(
+      [...entries].sort((left, right) => right.value - left.value),
+      maxSlices - 1,
+    ).map((entry) => entry.id),
   );
 
   const rest = entries.filter((entry) => !kept.has(entry.id));

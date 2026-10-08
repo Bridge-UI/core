@@ -1,5 +1,6 @@
 // ** External Imports
 import { act, fireEvent, screen } from "@testing-library/react";
+import { isNil } from "es-toolkit/compat";
 import { vi } from "vitest";
 
 type PlotSize = { height: number; width: number };
@@ -59,7 +60,7 @@ export function getEchartsHost() {
     .getByRole("img")
     .querySelector<HTMLElement>('[aria-hidden="true"] > div');
 
-  if (host === null) {
+  if (isNil(host)) {
     throw new Error("ECharts host not found");
   }
 

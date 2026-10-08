@@ -1,5 +1,5 @@
 // ** External Imports
-import { isNil } from "es-toolkit/compat";
+import { isFunction, isNil } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
@@ -73,10 +73,10 @@ export function useChartPart<
   const dataSignature = JSON.stringify(data ?? []);
 
   const content = useLatestCallback(
-    typeof labelContent === "function" ? labelContent : undefined,
+    isFunction(labelContent) ? labelContent : undefined,
   );
 
-  const contentKey = typeof labelContent === "function" ? null : labelContent;
+  const contentKey = isFunction(labelContent) ? null : labelContent;
 
   const entries = useMemo(() => {
     const parsed = toChartSliceEntries({
@@ -87,7 +87,7 @@ export function useChartPart<
     });
 
     return isNil(order) ? parsed : order(parsed);
-  }, [dataSignature, maxSlices, otherLabel, positiveOnly, order]);
+  }, [order, maxSlices, otherLabel, positiveOnly, dataSignature]);
 
   const colors = useChartColors(root, entries);
 
@@ -105,7 +105,7 @@ export function useChartPart<
         color: colors[entry.id] ?? "",
       };
     });
-  }, [entries, colors, percents]);
+  }, [colors, entries, percents]);
 
   /** Visible slices with shares of what is shown (plot, legend, tooltip). */
   const slices = useMemo((): ChartPartRenderSlice[] => {
@@ -132,7 +132,7 @@ export function useChartPart<
               }),
       };
     });
-  }, [entries, hidden, colors, percents, labels, locale, content, contentKey]);
+  }, [colors, hidden, labels, locale, content, entries, percents, contentKey]);
 
   const options = useMemo((): null | Options => {
     if (isNil(theme)) {
@@ -154,7 +154,7 @@ export function useChartPart<
     const slice = isNil(active.index) ? undefined : slices[active.index];
 
     return isNil(slice) ? null : getChartPartTooltip(slice);
-  }, [active.index, slices]);
+  }, [slices, active.index]);
 
   const table = getChartPartTable({
     locale,
@@ -189,7 +189,7 @@ export function useChartPart<
       colors,
       hidden,
     );
-  }, [entries, slices, colors, hidden]);
+  }, [colors, hidden, slices, entries]);
 
   const context = useChartContextValue(root, {
     family,

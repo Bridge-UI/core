@@ -1,4 +1,5 @@
 // ** External Imports
+import { isNil } from "es-toolkit/compat";
 import type { ReactNode } from "react";
 
 // ** Local Imports
@@ -33,7 +34,7 @@ export function ChartFrame({
         <div {...frame.plotBind}>
           <div {...frame.hostBind} />
 
-          {center !== undefined && center !== null && !frame.isEmpty ? (
+          {!isNil(center) && !frame.isEmpty ? (
             <div {...frame.centerBind}>{center}</div>
           ) : null}
 

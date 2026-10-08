@@ -1,3 +1,6 @@
+// ** External Imports
+import { isNil } from "es-toolkit/compat";
+
 // ** Local Imports
 import type { ChartTooltipProps } from "@/Components/ChartTooltip/chartTooltip.types";
 import { useChartTooltip } from "@/Components/ChartTooltip/hooks/useChartTooltip";
@@ -18,7 +21,7 @@ function ChartTooltip(props: ChartTooltipProps) {
     getSwatchBind,
   } = useChartTooltip(props);
 
-  if (!isOpen || context === null) {
+  if (!isOpen || isNil(context)) {
     return null;
   }
 
@@ -45,7 +48,7 @@ function ChartTooltip(props: ChartTooltipProps) {
                 {item.color ? <span {...getSwatchBind(item.color)} /> : null}
                 <span {...labelBind}>{item.name}</span>
                 <span {...valueBind}>{formatValue(item)}</span>
-                {percent === null ? null : (
+                {isNil(percent) ? null : (
                   <span {...percentBind}>{percent}</span>
                 )}
               </div>
