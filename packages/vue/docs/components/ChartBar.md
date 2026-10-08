@@ -28,7 +28,7 @@ import { ChartBarSeries } from "@bridge-ui/vue/Components/ChartBarSeries";
 
 ```vue
 <ChartBar :categories="tags" orientation="horizontal">
-  <ChartBarSeries name="October" :data="spent" />
+  <ChartBarSeries :data="spent" name="October" />
   <ChartAxis position="x" :format-tick="(value) => currency.format(value)" />
 </ChartBar>
 ```

@@ -28,7 +28,7 @@ import { ChartBarSeries } from "@bridge-ui/react/Components/ChartBarSeries";
 
 ```tsx
 <ChartBar categories={tags} orientation="horizontal">
-  <ChartBarSeries name="October" data={spent} />
+  <ChartBarSeries data={spent} name="October" />
   <ChartAxis position="x" formatTick={(value) => currency.format(value)} />
 </ChartBar>
 ```
