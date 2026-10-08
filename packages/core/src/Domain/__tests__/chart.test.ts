@@ -5,61 +5,36 @@ import { describe, expect, test } from "vitest";
 import {
   DEFAULT_CHART_PALETTE,
   formatChartAnnouncement,
+  formatChartPercent,
   formatChartValue,
   getAdjacentChartIndex,
-  getChartSummaryParams,
-  getChartTableRows,
-  getChartTooltipItems,
   isChartEmpty,
+  isChartValue,
   isSameChartAxisOptions,
-  isSameChartSeriesEntry,
-  resolveChartSeriesColor,
+  resolveChartColor,
   resolveChartTooltipPosition,
+  roundChartPercents,
   toChartCssSize,
 } from "@/Domain/chart";
 
-describe("resolveChartSeriesColor", () => {
+describe("resolveChartColor", () => {
   test("it should prefer the explicit color", () => {
     expect(
-      resolveChartSeriesColor({ index: 0, color: "#f00", palette: ["info"] }),
+      resolveChartColor({ index: 0, color: "#f00", palette: ["info"] }),
     ).toBe("#f00");
   });
 
   test("it should cycle through the palette", () => {
     const palette = ["info", "success"];
 
-    expect(resolveChartSeriesColor({ palette, index: 0 })).toBe("info");
-    expect(resolveChartSeriesColor({ palette, index: 1 })).toBe("success");
-    expect(resolveChartSeriesColor({ palette, index: 2 })).toBe("info");
+    expect(resolveChartColor({ palette, index: 0 })).toBe("info");
+    expect(resolveChartColor({ palette, index: 1 })).toBe("success");
+    expect(resolveChartColor({ palette, index: 2 })).toBe("info");
   });
 
   test("it should fall back to the default palette when empty", () => {
-    expect(resolveChartSeriesColor({ index: 1, palette: [] })).toBe(
+    expect(resolveChartColor({ index: 1, palette: [] })).toBe(
       DEFAULT_CHART_PALETTE[1],
-    );
-  });
-});
-
-describe("isSameChartSeriesEntry", () => {
-  const base = {
-    id: "a",
-    name: "A",
-    data: [1, null],
-    type: "line" as const,
-    curve: "linear" as const,
-  };
-
-  test("it should compare data by value", () => {
-    expect(isSameChartSeriesEntry(base, { ...base, data: [1, null] })).toBe(
-      true,
-    );
-  });
-
-  test("it should detect changed fields and data", () => {
-    expect(isSameChartSeriesEntry(base, { ...base, data: [1, 2] })).toBe(false);
-    expect(isSameChartSeriesEntry(base, { ...base, type: "bar" })).toBe(false);
-    expect(isSameChartSeriesEntry(base, { ...base, color: "info" })).toBe(
-      false,
     );
   });
 });
@@ -79,15 +54,25 @@ describe("isSameChartAxisOptions", () => {
   });
 });
 
+describe("isChartValue", () => {
+  test("it should accept finite numbers only", () => {
+    expect(isChartValue(0)).toBe(true);
+    expect(isChartValue(-2.5)).toBe(true);
+    expect(isChartValue(null)).toBe(false);
+    expect(isChartValue(Number.NaN)).toBe(false);
+    expect(isChartValue(Number.POSITIVE_INFINITY)).toBe(false);
+  });
+});
+
 describe("isChartEmpty", () => {
-  test("it should be empty without series or finite values", () => {
+  test("it should be empty without finite values", () => {
     expect(isChartEmpty([])).toBe(true);
-    expect(isChartEmpty([{ data: [null, null] }])).toBe(true);
-    expect(isChartEmpty([{ data: [Number.NaN] }])).toBe(true);
+    expect(isChartEmpty([null, null])).toBe(true);
+    expect(isChartEmpty([Number.NaN])).toBe(true);
   });
 
   test("it should not be empty with at least one value", () => {
-    expect(isChartEmpty([{ data: [null, 0] }])).toBe(false);
+    expect(isChartEmpty([null, 0])).toBe(false);
   });
 });
 
@@ -133,20 +118,6 @@ describe("getAdjacentChartIndex", () => {
   });
 });
 
-describe("getChartTooltipItems", () => {
-  test("it should return values at the index and skip nulls", () => {
-    const items = getChartTooltipItems({
-      index: 1,
-      series: [
-        { id: "a", name: "A", data: [1, 2], color: "red" },
-        { id: "b", name: "B", color: "blue", data: [3, null] },
-      ],
-    });
-
-    expect(items).toEqual([{ id: "a", value: 2, name: "A", color: "red" }]);
-  });
-});
-
 describe("formatChartValue", () => {
   test("it should format with the locale", () => {
     expect(formatChartValue(1234.5, "en-US")).toBe("1,234.5");
@@ -157,42 +128,38 @@ describe("formatChartValue", () => {
   });
 });
 
-describe("getChartTableRows", () => {
-  test("it should build one row per category", () => {
-    const rows = getChartTableRows({
-      categories: ["Q1", "Q2"],
-      series: [{ data: [1, 2] }, { data: [3] }],
-    });
-
-    expect(rows).toEqual([
-      { category: "Q1", values: [1, 3] },
-      { category: "Q2", values: [2, null] },
-    ]);
+describe("formatChartPercent", () => {
+  test("it should format a 0–100 share as a percent", () => {
+    expect(formatChartPercent(50, "en-US")).toBe("50%");
+    expect(formatChartPercent(12.5, "en-US")).toBe("12.5%");
   });
 });
 
-describe("getChartSummaryParams", () => {
-  test("it should describe series and category range", () => {
+describe("roundChartPercents", () => {
+  test("it should round shares so they sum to 100", () => {
+    const percents = roundChartPercents([1, 1, 1]);
+
+    expect(percents).toEqual([34, 33, 33]);
+    expect(percents.reduce((sum, value) => sum + value, 0)).toBe(100);
+  });
+
+  test("it should give the remainder to the largest fractions", () => {
     expect(
-      getChartSummaryParams({
-        categories: ["Q1", "Q2", "Q3"],
-        series: [{ name: "Revenue" }, { name: "Cost" }],
-      }),
-    ).toEqual({
-      count: 2,
-      last: "Q3",
-      first: "Q1",
-      categories: 3,
-      names: "Revenue, Cost",
-    });
+      roundChartPercents([3450, 1310, 1240, 270, 260, 200, 90, 80]),
+    ).toEqual([50, 19, 18, 4, 4, 3, 1, 1]);
+  });
+
+  test("it should give 0 to non-positive values and empty totals", () => {
+    expect(roundChartPercents([0, -2, 4])).toEqual([0, 0, 100]);
+    expect(roundChartPercents([0, 0])).toEqual([0, 0]);
   });
 });
 
 describe("formatChartAnnouncement", () => {
-  test("it should join category and series values", () => {
+  test("it should join the title and the values", () => {
     expect(
       formatChartAnnouncement({
-        category: "Q2",
+        title: "Q2",
         locale: "en-US",
         items: [
           { id: "a", value: 1800, color: "red", name: "Revenue" },
@@ -202,8 +169,18 @@ describe("formatChartAnnouncement", () => {
     ).toBe("Q2: Revenue 1,800, Cost 10");
   });
 
-  test("it should return the category alone without values", () => {
-    expect(formatChartAnnouncement({ items: [], category: "Q1" })).toBe("Q1");
+  test("it should add the percent when present", () => {
+    expect(
+      formatChartAnnouncement({
+        title: "",
+        locale: "en-US",
+        items: [{ id: "a", value: 3450, percent: 50, name: "Housing" }],
+      }),
+    ).toBe("Housing 3,450 (50%)");
+  });
+
+  test("it should return the title alone without values", () => {
+    expect(formatChartAnnouncement({ items: [], title: "Q1" })).toBe("Q1");
   });
 });
 
