@@ -7,12 +7,20 @@ import type { ChartAxisPosition } from "@bridge-ui/core/Domain";
  */
 export interface ChartAxisOwnProps {
   /**
-   * Formats tick labels. Receives the category label, the timestamp (time
-   * axis), or the value.
+   * Formats category tick labels (the category axis of `ChartLine` and
+   * `ChartBar`).
    *
    * @default undefined
    */
-  formatTick?: (value: number | string) => string;
+  formatCategory?: (category: string) => string;
+
+  /**
+   * Formats numeric tick labels: the value on a value axis, or the timestamp
+   * (ms) on a time axis.
+   *
+   * @default undefined
+   */
+  formatTick?: (value: number) => string;
 
   /**
    * Draws grid lines for this axis.

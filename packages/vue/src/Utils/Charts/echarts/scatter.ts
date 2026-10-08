@@ -83,7 +83,7 @@ function toAxis(options: ChartScatterRenderOptions, axis: ChartAxisOptions) {
       ...labelStyle(theme),
       formatter: isNil(axis.formatTick)
         ? undefined
-        : (value: number) => axis.formatTick?.(value) ?? String(value),
+        : (value: number) => axis.formatTick?.(Number(value)) ?? String(value),
     },
   };
 }

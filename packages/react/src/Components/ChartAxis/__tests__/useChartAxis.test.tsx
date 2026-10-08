@@ -48,6 +48,26 @@ test("it should keep options stable across inline formatters", () => {
   expect(result.current.options.formatTick?.(5)).toBe(`5-${calls}`);
 });
 
+test("it should register a stable category formatter", () => {
+  const { result, rerender } = renderHook(
+    () => {
+      return useChartAxis({
+        position: "x",
+        formatCategory: (category) => category.toUpperCase(),
+      });
+    },
+    { wrapper: Wrapper },
+  );
+
+  const first = result.current.options;
+
+  rerender();
+
+  expect(result.current.options).toBe(first);
+  expect(result.current.options.formatTick).toBeUndefined();
+  expect(result.current.options.formatCategory?.("jan")).toBe("JAN");
+});
+
 test("it should throw outside a chart", () => {
   expect(() => renderHook(() => useChartAxis({ position: "x" }))).toThrow(
     "Chart components must be used within",

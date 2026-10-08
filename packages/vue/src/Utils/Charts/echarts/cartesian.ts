@@ -43,18 +43,25 @@ const AREA_OPACITY = 0.15;
 const BAR_MAX_WIDTH = 32;
 
 /**
- * Wraps `formatTick` for ECharts `axisLabel.formatter`.
+ * ECharts `axisLabel.formatter` for an axis: `formatCategory` on a category
+ * axis, `formatTick` on value and time axes (ECharts passes the raw tick).
  */
-function tickFormatter(axis: ChartAxisOptions) {
-  const format = axis.formatTick;
+function tickFormatter(
+  axis: ChartAxisOptions,
+  type: "time" | "value" | "category",
+) {
+  const formatTick = axis.formatTick;
+  const formatCategory = axis.formatCategory;
 
-  if (isNil(format)) {
-    return undefined;
+  if (type === "category") {
+    return isNil(formatCategory)
+      ? undefined
+      : (value: number | string) => formatCategory(String(value));
   }
 
-  return (value: number | string) => {
-    return format(value);
-  };
+  return isNil(formatTick)
+    ? undefined
+    : (value: number | string) => formatTick(Number(value));
 }
 
 /**
@@ -266,10 +273,13 @@ export function buildEchartsCartesianOption(
     nameGap: horizontal ? undefined : nameGap,
     axisLine: { lineStyle: { color: theme.axisColor } },
     nameLocation: horizontal ? ("end" as const) : ("middle" as const),
-    axisLabel: { ...labelStyle(theme), formatter: tickFormatter(category) },
     splitLine: {
       show: category.grid && !sparkline,
       lineStyle: { color: theme.gridColor },
+    },
+    axisLabel: {
+      ...labelStyle(theme),
+      formatter: tickFormatter(category, isTime ? "time" : "category"),
     },
   };
 
@@ -295,7 +305,10 @@ export function buildEchartsCartesianOption(
     show: !value.hidden && !sparkline,
     nameGap: horizontal ? nameGap : undefined,
     nameLocation: horizontal ? ("middle" as const) : ("end" as const),
-    axisLabel: { ...labelStyle(theme), formatter: tickFormatter(value) },
+    axisLabel: {
+      ...labelStyle(theme),
+      formatter: tickFormatter(value, "value"),
+    },
     splitLine: {
       show: value.grid && !sparkline,
       lineStyle: { color: theme.gridColor },

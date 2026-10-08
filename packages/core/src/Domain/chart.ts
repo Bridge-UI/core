@@ -17,10 +17,15 @@ export type ChartAxisPosition = "x" | "y";
  */
 export type ChartAxisOptions = {
   /**
-   * Formats tick labels. Receives the category label, the timestamp (time
-   * axis), or the value.
+   * Formats category tick labels (category axis).
    */
-  formatTick?: (value: number | string) => string;
+  formatCategory?: (category: string) => string;
+
+  /**
+   * Formats numeric tick labels: the value (value axis) or the timestamp in
+   * ms (time axis).
+   */
+  formatTick?: (value: number) => string;
 
   /**
    * Whether grid lines are drawn for this axis.

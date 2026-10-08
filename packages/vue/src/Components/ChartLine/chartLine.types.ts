@@ -35,7 +35,7 @@ export interface ChartLineOwnProps extends ChartRootOwnProps {
 
   /**
    * Formats date categories in the tooltip, data table, and summary.
-   * Tick labels use `ChartAxis` `formatTick`.
+   * Time axis ticks use `ChartAxis` `formatTick` (it receives the timestamp).
    *
    * @default undefined
    */

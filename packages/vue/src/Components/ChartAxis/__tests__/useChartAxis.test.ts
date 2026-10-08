@@ -49,6 +49,16 @@ test("it should keep options stable when the formatter changes", async () => {
   expect(result.options.value.formatTick?.(5)).toBe("5-b");
 });
 
+test("it should register a category formatter", () => {
+  const result = mountUseChartAxis({
+    position: "x",
+    formatCategory: (category) => category.toUpperCase(),
+  });
+
+  expect(result.options.value.formatTick).toBeUndefined();
+  expect(result.options.value.formatCategory?.("jan")).toBe("JAN");
+});
+
 test("it should throw outside a chart", () => {
   const Standalone = defineComponent({
     setup() {

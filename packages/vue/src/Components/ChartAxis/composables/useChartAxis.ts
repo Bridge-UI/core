@@ -22,13 +22,21 @@ export function useChartAxis(props: ChartAxisProps) {
     );
   }
 
-  // Stable wrapper so inline formatters do not re-register the axis each render.
-  function formatTick(value: number | string) {
+  // Stable wrappers so new formatter functions do not re-register the axis.
+  function formatTick(value: number) {
     return props.formatTick?.(value) ?? String(value);
+  }
+
+  function formatCategory(category: string) {
+    return props.formatCategory?.(category) ?? category;
   }
 
   const hasFormatTick = computed(() => {
     return !isNil(props.formatTick);
+  });
+
+  const hasFormatCategory = computed(() => {
+    return !isNil(props.formatCategory);
   });
 
   const options = computed((): ChartAxisOptions => {
@@ -41,6 +49,7 @@ export function useChartAxis(props: ChartAxisProps) {
         hidden: props.hidden,
         tickCount: props.tickCount,
         formatTick: hasFormatTick.value ? formatTick : undefined,
+        formatCategory: hasFormatCategory.value ? formatCategory : undefined,
       },
       isUndefined,
     );

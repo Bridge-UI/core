@@ -329,7 +329,7 @@ export function getChartTimeTickFormatter({
 }: {
   locale?: string;
   timestamps: readonly number[];
-}): (value: number | string) => string {
+}): (value: number) => string {
   const day = 24 * 60 * 60 * 1000;
   const min = Math.min(...timestamps);
   const max = Math.max(...timestamps);
@@ -360,7 +360,7 @@ export function getChartTimeTickFormatter({
     format = (date) => date.toISOString();
   }
 
-  return (value) => format(new Date(Number(value)));
+  return (value) => format(new Date(value));
 }
 
 /**
