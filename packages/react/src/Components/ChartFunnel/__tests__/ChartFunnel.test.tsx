@@ -49,6 +49,17 @@ test("it should keep the data order with sort none", () => {
   expect(screen.getAllByRole("rowheader")[0].textContent).toBe("Signed up");
 });
 
+test("it should compare shares to the largest stage with sort none", () => {
+  renderChart({ sort: "none" });
+
+  expect(screen.getByRole("button", { name: /Visited/ }).textContent).toBe(
+    "Visited100%",
+  );
+  expect(screen.getByRole("button", { name: /Signed up/ }).textContent).toBe(
+    "Signed up35%",
+  );
+});
+
 test("it should compare each stage to the largest", () => {
   renderChart();
 

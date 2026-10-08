@@ -54,6 +54,16 @@ test("it should keep the data order with sort none", async () => {
   expect(wrapper.find("tbody th").text()).toBe("Signed up");
 });
 
+test("it should compare shares to the largest stage with sort none", async () => {
+  const wrapper = await mountChart({ sort: "none" });
+
+  const legend = wrapper.findAll("button").map((button) => {
+    return button.text().replace(/\s+/g, "");
+  });
+
+  expect(legend).toEqual(["Signedup35%", "Visited100%", "Paid8%"]);
+});
+
 test("it should announce stages in visual order", async () => {
   const wrapper = await mountChart();
 

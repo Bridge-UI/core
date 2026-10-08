@@ -193,7 +193,7 @@ export type ChartTooltipItem = {
   name: string;
 
   /**
-   * Share of the total (pie) or of the first stage (funnel), `0`–`100`.
+   * Share of the total (pie) or of the largest stage (funnel), `0`–`100`.
    */
   percent?: number;
 

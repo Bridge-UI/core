@@ -24,7 +24,7 @@ import { ChartFunnel } from "@bridge-ui/react/Components/ChartFunnel";
 </ChartFunnel>
 ```
 
-Stages are sorted from the largest by default. Shares compare each stage to the largest one.
+Stages are sorted from the largest by default. Shares compare each stage to the largest one, whatever the order: with `sort="none"`, a stage after a smaller one can show a higher share.
 
 ### Order
 
