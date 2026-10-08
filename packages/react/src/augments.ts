@@ -18,12 +18,15 @@ import type {
 import type { CardClasses, CardProps } from "@/Components/Card";
 import type { CarouselClasses, CarouselProps } from "@/Components/Carousel";
 import type { CarouselSlideClasses } from "@/Components/CarouselSlide";
-import type { ChartClasses, ChartProps } from "@/Components/Chart";
+import type { ChartBarProps } from "@/Components/ChartBar";
+import type { ChartFunnelProps } from "@/Components/ChartFunnel";
 import type {
   ChartLegendClasses,
   ChartLegendProps,
 } from "@/Components/ChartLegend";
-import type { ChartSeriesProps } from "@/Components/ChartSeries";
+import type { ChartClasses, ChartLineProps } from "@/Components/ChartLine";
+import type { ChartPieProps } from "@/Components/ChartPie";
+import type { ChartScatterProps } from "@/Components/ChartScatter";
 import type { ChartTooltipClasses } from "@/Components/ChartTooltip";
 import type { CheckboxClasses, CheckboxProps } from "@/Components/Checkbox";
 import type { ChipClasses, ChipProps } from "@/Components/Chip";
@@ -183,22 +186,96 @@ declare module "@bridge-ui/core/Config" {
     classes: CarouselSlideClasses;
   }
 
-  interface ChartConfigOverrides {
+  interface ChartBarConfigOverrides {
     classes: ChartClasses;
     defaultProps: Partial<
-      Pick<ChartProps, "size" | "height" | "palette" | "animation">
+      Pick<
+        ChartBarProps,
+        | "size"
+        | "height"
+        | "labels"
+        | "radius"
+        | "palette"
+        | "animation"
+        | "orientation"
+      >
+    >;
+  }
+
+  interface ChartFunnelConfigOverrides {
+    classes: ChartClasses;
+    defaultProps: Partial<
+      Pick<
+        ChartFunnelProps,
+        | "size"
+        | "sort"
+        | "align"
+        | "height"
+        | "labels"
+        | "palette"
+        | "animation"
+      >
     >;
   }
 
   interface ChartLegendConfigOverrides {
     classes: ChartLegendClasses;
     defaultProps: Partial<
-      Pick<ChartLegendProps, "align" | "position" | "interactive">
+      Pick<
+        ChartLegendProps,
+        "align" | "position" | "showValue" | "interactive" | "showPercent"
+      >
     >;
   }
 
-  interface ChartSeriesConfigOverrides {
-    defaultProps: Partial<Pick<ChartSeriesProps, "type" | "curve">>;
+  interface ChartLineConfigOverrides {
+    classes: ChartClasses;
+    defaultProps: Partial<
+      Pick<
+        ChartLineProps,
+        | "area"
+        | "size"
+        | "step"
+        | "curve"
+        | "height"
+        | "labels"
+        | "palette"
+        | "animation"
+        | "showPoints"
+      >
+    >;
+  }
+
+  interface ChartPieConfigOverrides {
+    classes: ChartClasses;
+    defaultProps: Partial<
+      Pick<
+        ChartPieProps,
+        | "size"
+        | "height"
+        | "labels"
+        | "palette"
+        | "variant"
+        | "minAngle"
+        | "animation"
+        | "thickness"
+      >
+    >;
+  }
+
+  interface ChartScatterConfigOverrides {
+    classes: ChartClasses;
+    defaultProps: Partial<
+      Pick<
+        ChartScatterProps,
+        | "size"
+        | "height"
+        | "palette"
+        | "animation"
+        | "bubbleSize"
+        | "symbolSize"
+      >
+    >;
   }
 
   interface ChartTooltipConfigOverrides {
