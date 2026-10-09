@@ -13,10 +13,10 @@ Charts for dashboards and reports. Pick the root for the shape of your data; eve
 Shared parts:
 
 | Part           | Line | Bar | Scatter | Pie | Funnel |
-| -------------- | :--: | :-: | :-----: | :-: | :----: |
-| `ChartLegend`  |  ✅  | ✅  |   ✅    | ✅  |   ✅   |
-| `ChartTooltip` |  ✅  | ✅  |   ✅    | ✅  |   ✅   |
-| `ChartAxis`    |  ✅  | ✅  |   ✅    |  —  |   —    |
+| -------------- | ---- | --- | ------- | --- | ------ |
+| `ChartLegend`  | ✅   | ✅  | ✅      | ✅  | ✅     |
+| `ChartTooltip` | ✅   | ✅  | ✅      | ✅  | ✅     |
+| `ChartAxis`    | ✅   | ✅  | ✅      | —   | —      |
 
 ## Import
 
