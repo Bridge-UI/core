@@ -452,6 +452,13 @@ export type {
   FormFieldVariantOverrides,
   UseFormFieldReturn,
 } from "@/Components/FormField";
+export { Heading, useHeading } from "@/Components/Heading";
+export type {
+  HeadingClasses,
+  HeadingOwnProps,
+  HeadingProps,
+  HeadingSlots,
+} from "@/Components/Heading";
 export { Icon, type IconOwnProps, type IconProps } from "@/Components/Icon";
 export type { IconSizeOverrides } from "@/Components/Icon";
 export { Label, useLabel } from "@/Components/Label";
@@ -830,6 +837,17 @@ export type {
   TabsTokenClasses,
   TabsVariantOverrides,
 } from "@/Components/Tabs";
+export { Text, useText } from "@/Components/Text";
+export type {
+  TextClasses,
+  TextColorOverrides,
+  TextOwnProps,
+  TextProps,
+  TextSizeOverrides,
+  TextSlots,
+  TextVariantOverrides,
+  TextWeightOverrides,
+} from "@/Components/Text";
 export { Textarea, useTextarea } from "@/Components/Textarea";
 export type {
   TextareaClasses,

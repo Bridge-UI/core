@@ -1,9 +1,20 @@
 /**
- * Scroll utilities (`bridge-scroll-fade-*`, `bridge-scroll-fade-none`,
- * `bridge-soft-scrollbar`, `bridge-hide-scrollbar`). Imported by
- * `@bridge-ui/react/theme.css` and
+ * Base text color and scroll utilities (`bridge-scroll-fade-*`,
+ * `bridge-scroll-fade-none`, `bridge-soft-scrollbar`, `bridge-hide-scrollbar`).
+ * Imported by `@bridge-ui/react/theme.css` and
  * `@bridge-ui/vue/theme.css`.
  */
+
+/*
+ * Base text color, so text without a color class stays readable in both
+ * themes. Set on `body` so portals (Modal, Drawer, Menu, …) inherit it too.
+ * Any `body` color set by the app wins over this base layer.
+ */
+@layer base {
+  body {
+    @apply text-dark-950 dark:text-dark-50;
+  }
+}
 
 @property --bridge-scroll-fade-t {
   inherits: false;

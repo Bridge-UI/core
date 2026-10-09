@@ -90,7 +90,7 @@ Both:
 `pad-angle` sets the gap between slices (deg) and `corner-radius` rounds the slice corners (px). A pie is solid by default; a donut gets `:pad-angle="1"` and `:corner-radius="2"`.
 
 ```vue
-<ChartPie :data="tags" variant="donut" :pad-angle="3" :corner-radius="8" />
+<ChartPie :data="tags" :pad-angle="3" variant="donut" :corner-radius="8" />
 ```
 
 ### Nightingale (rose)

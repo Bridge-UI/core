@@ -7,7 +7,14 @@ import type {
   VisualMapComponentOption,
 } from "echarts/components";
 import type { ComposeOption, ECharts } from "echarts/core";
-import { get, isArray, isNil, isNumber } from "es-toolkit/compat";
+import {
+  clamp,
+  get,
+  isArray,
+  isEmpty,
+  isNil,
+  isNumber,
+} from "es-toolkit/compat";
 
 // ** Core Imports
 import {
@@ -138,13 +145,11 @@ function hasBoundedRanges(series: ChartCartesianRenderSeries): boolean {
 function toCategoryBound(options: ChartCartesianRenderOptions, index: number) {
   const timestamps = options.timestamps;
 
-  if (isNil(timestamps) || timestamps.length === 0) {
+  if (isNil(timestamps) || isEmpty(timestamps)) {
     return index;
   }
 
-  const clamped = Math.min(timestamps.length - 1, Math.max(0, index));
-
-  return timestamps[Math.round(clamped)];
+  return timestamps[Math.round(clamp(index, 0, timestamps.length - 1))];
 }
 
 /**

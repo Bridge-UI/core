@@ -1,18 +1,19 @@
 // ** External Imports
-import { isArray, isDate, isNil, isString } from "es-toolkit/compat";
+import { isDate, isEmpty, isNil, isString } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
 import {
-  applyChartTone,
   DEFAULT_CHART_AREA_OPACITY,
   DEFAULT_CHART_BAR_RADIUS,
   formatChartValue,
-  getChartCartesianItemColors,
+  getChartCartesianRenderSeries,
   getChartCartesianSummaryParams,
   getChartCartesianTable,
   getChartCartesianTooltip,
+  getChartCategoryColorItems,
   getChartCategoryLabels,
+  getChartRangeColorItems,
   getChartTimeTickFormatter,
   isChartEmpty,
   isChartTimeCategories,
@@ -123,13 +124,6 @@ const cartesianRegistryKeys = [
 
 type CartesianRegistration =
   ChartBarSeriesRegistration | ChartLineSeriesRegistration;
-
-/**
- * Color id of range `index` of a series.
- */
-function toRangeId(seriesId: string, index: number) {
-  return `${seriesId}-range-${index}`;
-}
 
 /**
  * Stable snapshot of `categories`: same identity while labels and dates
@@ -267,17 +261,8 @@ export function useChartCartesian(
     });
   }, [kind, stack, merged, registry.entries]);
 
-  // Range colors resolve with the series colors (they are never empty, so
-  // they never take a palette entry).
   const colorItems = useMemo(() => {
-    return [
-      ...registry.entries,
-      ...series.flatMap((item) => {
-        return item.colorRanges.map((range, index) => {
-          return { color: range.color, id: toRangeId(item.id, index) };
-        });
-      }),
-    ];
+    return [...registry.entries, ...getChartRangeColorItems(series)];
   }, [series, registry.entries]);
 
   const colors = useChartColors(root, colorItems);
@@ -287,64 +272,24 @@ export function useChartCartesian(
   );
 
   const categoryItems = useMemo(() => {
-    const categoryColors = JSON.parse(
-      categoryColorsSignature,
-    ) as ChartCategoryColors;
-
-    if (categoryColors === false) {
-      return [];
-    }
-
-    return labels.map((label, index) => {
-      const color =
-        categoryColors === true
-          ? undefined
-          : isArray(categoryColors)
-            ? categoryColors[index]
-            : categoryColors[label];
-
-      return { color, id: `category-${index}` };
+    return getChartCategoryColorItems({
+      labels,
+      categoryColors: JSON.parse(
+        categoryColorsSignature,
+      ) as ChartCategoryColors,
     });
   }, [labels, categoryColorsSignature]);
 
   const categoryColors = useChartColors(root, categoryItems);
 
   const renderSeries = useMemo((): ChartCartesianRenderSeries[] => {
-    const background = theme?.backgroundColor ?? "";
-
-    const byCategory =
-      categoryItems.length > 0
-        ? categoryItems.map((item) => categoryColors[item.id] ?? "")
-        : null;
-
-    return series.map((item) => {
-      const tone = item.kind === "bar" ? item.tone : "solid";
-      const tint = (color: string) => applyChartTone(color, tone, background);
-      const base = tint(colors[item.id] ?? "");
-
-      const colorRanges = item.colorRanges.map((range, index) => {
-        return {
-          ...range,
-          color: tint(colors[toRangeId(item.id, index)] ?? ""),
-        };
-      });
-
-      // Category colors paint the bars; the series keeps a neutral color
-      // (legend) and its tone.
-      const ownCategories = item.kind === "bar" ? byCategory : null;
-
-      return {
-        ...item,
-        colorRanges,
-        color: isNil(ownCategories) ? base : tint(theme?.textColor ?? ""),
-        itemColors: getChartCartesianItemColors({
-          colorRanges,
-          color: base,
-          data: item.data,
-          colorBy: item.colorBy,
-          categoryColors: ownCategories?.map(tint),
-        }),
-      };
+    return getChartCartesianRenderSeries({
+      theme,
+      colors,
+      series,
+      categoryColors: isEmpty(categoryItems)
+        ? null
+        : categoryItems.map((item) => categoryColors[item.id] ?? ""),
     });
   }, [theme, colors, series, categoryItems, categoryColors]);
 

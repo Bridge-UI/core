@@ -1,7 +1,7 @@
 ---
 name: bridge-ui-components
 description: >-
-  Use Bridge UI Vue components — Button, ButtonGroup, Avatar, Card, Alert, Accordion, ActionFooter, Badge, Icon,
+  Use Bridge UI Vue components — Button, ButtonGroup, Avatar, Card, Alert, Accordion, ActionFooter, Badge, Icon, Text, Heading,
   Link, List, Table, DataTable, Tabs, Spinner, Skeleton, EmptyState, Sidebar, Progress, Stepper, Carousel, Resizable, ChartLine, ChartBar, ChartScatter, ChartPie, ChartFunnel, Pagination, TextField, Select,
   Autocomplete, DateField, DatePicker, DateRangeField, DateRangePicker,
   TimeField, TimePicker, DateTimeField, DateTimePicker, ColorField, ColorPicker,
@@ -29,6 +29,7 @@ In templates, use kebab-case attrs (`start-icon`, `custom-props`, `error-message
 | Carousel                                                               | `.ai/docs/components/Carousel.md`                                                                                      |
 | Resizable panels                                                       | `.ai/docs/components/Resizable.md`                                                                                     |
 | Charts (line, area, sparkline, bar, scatter, pie, donut, rose, funnel) | `.ai/docs/components/Chart.md`, then `ChartLine.md`, `ChartBar.md`, `ChartScatter.md`, `ChartPie.md`, `ChartFunnel.md` |
+| Text / headings (tone, color, size)                                    | `.ai/docs/components/Text.md`, `Heading.md`                                                                            |
 | Icon                                                                   | `.ai/docs/components/Icon.md`                                                                                          |
 | Lists                                                                  | `.ai/docs/components/List.md`                                                                                          |
 | Table                                                                  | `.ai/docs/components/Table.md`                                                                                         |
@@ -52,7 +53,7 @@ In templates, use kebab-case attrs (`start-icon`, `custom-props`, `error-message
 ## Hard rules
 
 1. Import from `@bridge-ui/vue/Components/{Name}`.
-2. Prefer Bridge tokens (`color`, `size`, `variant`, `density`) when they exist.
+2. Prefer Bridge tokens (`color`, `size`, `variant`, `density`) when they exist. For text, use `Text` / `Heading` (`variant="muted"` for secondary text) instead of `text-dark-* dark:text-dark-*` pairs.
 3. `:classes` / `:custom-props` / named slots follow each component doc.
 4. Root HTML attributes stay on the component; use `custom-props` for **inner** parts.
 5. Modal/Drawer content uses **`Card`** — there is no `ModalCard` export.

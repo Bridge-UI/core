@@ -8,7 +8,7 @@ import {
 } from "echarts/components";
 import { use, type ComposeOption } from "echarts/core";
 import { SVGRenderer } from "echarts/renderers";
-import { get, isArray, isNil, isNumber } from "es-toolkit/compat";
+import { get, isArray, isEmpty, isNil, isNumber } from "es-toolkit/compat";
 
 // ** Core Imports
 import {
@@ -66,7 +66,7 @@ function getSymbolSize(
 function toScatterData(
   series: ChartScatterRenderSeries,
 ): ScatterSeriesOption["data"] {
-  if (isNil(series.colorRanges) || series.colorRanges.length === 0) {
+  if (isEmpty(series.colorRanges)) {
     return series.data;
   }
 

@@ -10,11 +10,13 @@ import {
   formatChartPercent,
   formatChartValue,
   getAdjacentChartIndex,
+  getChartRangeColorItems,
   isChartEmpty,
   isChartValue,
   isSameChartAxisOptions,
   mixChartColors,
   resolveChartColor,
+  resolveChartRangeColors,
   resolveChartTooltipPosition,
   roundChartPercents,
   toChartCssSize,
@@ -322,5 +324,35 @@ describe("applyChartTone", () => {
     expect(applyChartTone("rgb(0, 0, 0)", "muted", "#fff")).toBe(
       "rgb(153, 153, 153)",
     );
+  });
+});
+
+describe("getChartRangeColorItems", () => {
+  test("it should list one item per range with a series-scoped id", () => {
+    expect(
+      getChartRangeColorItems([
+        { id: "a", colorRanges: [{ color: "red" }, { color: "green" }] },
+        { id: "b" },
+      ]),
+    ).toEqual([
+      { color: "red", id: "a-range-0" },
+      { color: "green", id: "a-range-1" },
+    ]);
+  });
+});
+
+describe("resolveChartRangeColors", () => {
+  test("it should replace range colors with resolved ones and tint them", () => {
+    expect(
+      resolveChartRangeColors({
+        seriesId: "a",
+        tint: (color) => `${color}!`,
+        colors: { "a-range-0": "rgb(0, 0, 0)" },
+        ranges: [{ min: 1, label: "High", color: "error" }, { color: "x" }],
+      }),
+    ).toEqual([
+      { min: 1, label: "High", color: "rgb(0, 0, 0)!" },
+      { color: "!" },
+    ]);
   });
 });

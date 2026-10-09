@@ -79,6 +79,7 @@ export type {
   EmptyStateConfigOverrides,
   FormControlConfigOverrides,
   FormFieldConfigOverrides,
+  HeadingConfigOverrides,
   IconConfigOverrides,
   LabelConfigOverrides,
   LinkConfigOverrides,
@@ -108,6 +109,7 @@ export type {
   TabPanelConfigOverrides,
   TableConfigOverrides,
   TabsConfigOverrides,
+  TextConfigOverrides,
   TextFieldConfigOverrides,
   TextareaConfigOverrides,
   TimeFieldConfigOverrides,
@@ -216,9 +218,12 @@ export {
   getChartBubbleSizeDomain,
   getChartCartesianItemColors,
   getChartCartesianNote,
+  getChartCartesianRenderSeries,
   getChartCartesianSummaryParams,
   getChartCartesianTable,
   getChartCartesianTooltip,
+  getChartCategoryColorId,
+  getChartCategoryColorItems,
   getChartCategoryLabels,
   getChartFunnelPercents,
   getChartFunnelSummaryParams,
@@ -228,6 +233,8 @@ export {
   getChartPiePercents,
   getChartPieSliceDefaults,
   getChartPieSummaryParams,
+  getChartRangeColorId,
+  getChartRangeColorItems,
   getChartScatterPoints,
   getChartScatterTable,
   getChartScatterTooltip,
@@ -353,6 +360,7 @@ export {
   resolveChartBarRadii,
   resolveChartCartesianAxes,
   resolveChartColor,
+  resolveChartRangeColors,
   resolveChartSliceLabel,
   resolveChartTooltipPosition,
   resolveColorAlpha,
@@ -443,6 +451,7 @@ export type {
   ChartCartesianRenderSeries,
   ChartCartesianSeriesEntry,
   ChartCategory,
+  ChartCategoryColorsOption,
   ChartColorRange,
   ChartColorRangeAxis,
   ChartCurve,
@@ -855,6 +864,8 @@ export type {
   FormFieldVariant,
   FormFieldVariantItem,
 } from "@/Tokens/FormField";
+export { levelProps as headingLevelProps } from "@/Tokens/Heading";
+export type { HeadingLevel } from "@/Tokens/Heading";
 export { sizeProps as iconSizeProps } from "@/Tokens/Icon";
 export type { IconSize } from "@/Tokens/Icon";
 export { sizeProps as labelSizeProps } from "@/Tokens/Label";
@@ -1084,6 +1095,19 @@ export type {
   TabsVariant,
   TabsVariantItem,
 } from "@/Tokens/Tabs";
+export {
+  defaultProps as textDefaultProps,
+  mutedProps as textMutedProps,
+  sizeProps as textSizeProps,
+  variantProps as textVariantProps,
+  weightProps as textWeightProps,
+} from "@/Tokens/Text";
+export type {
+  TextColor,
+  TextSize,
+  TextVariant,
+  TextWeight,
+} from "@/Tokens/Text";
 export { resizeProps as textareaResizeProps } from "@/Tokens/Textarea";
 export type { TextareaResize } from "@/Tokens/Textarea";
 export {

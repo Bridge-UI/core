@@ -29,7 +29,7 @@ npx bridge-ui-react-ai install
 
 ## Hard rules
 
-1. Tailwind CSS **v4** + `@import "@bridge-ui/react/theme.css"`.
+1. Tailwind CSS **v4** + `@import "@bridge-ui/react/theme.css"`. It also sets the base text color on `body` for light and dark themes.
 2. Wrap the app with `BridgeUIProvider`.
 3. Mount `BridgeUIHosts` inside the provider when using action hooks (`useDialogAction`, `useModalAction`, `useDrawerAction`, `useSnackbarAction`).
 4. Semantic icon names, chrome strings, and date libs need `global.icons` / `global.i18n` / `global.dates` — install `@bridge-ui/adapters`, import factories from `@bridge-ui/adapters/react/{date,icon,i18n}-*`, and install the matching optional peer.

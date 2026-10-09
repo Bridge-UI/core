@@ -1,16 +1,27 @@
 // ** External Imports
-import { get, isDate, isNil, last } from "es-toolkit/compat";
+import {
+  get,
+  has,
+  isArray,
+  isDate,
+  isEmpty,
+  isNil,
+  last,
+} from "es-toolkit/compat";
 
 // ** Local Imports
 import {
+  applyChartTone,
   findChartColorRange,
   formatChartValue,
   isChartValue,
+  resolveChartRangeColors,
   type ChartAxisOptions,
   type ChartBaseRenderOptions,
   type ChartColorRange,
   type ChartColorRangeAxis,
   type ChartDatum,
+  type ChartRenderTheme,
   type ChartTable,
   type ChartTone,
   type ChartTooltipContent,
@@ -347,6 +358,101 @@ export function getChartCartesianItemColors({
 }
 
 /**
+ * Bar colors per category: `true` takes palette entries in category order,
+ * an array follows the category order, and a record maps category labels.
+ */
+export type ChartCategoryColorsOption =
+  boolean | readonly string[] | Readonly<Record<string, string>>;
+
+/**
+ * Color id of category `index` (`categoryColors`).
+ */
+export function getChartCategoryColorId(index: number): string {
+  return `category-${index}`;
+}
+
+/**
+ * Color items for each category when `categoryColors` is set, empty when it
+ * is not. `true` leaves every category color to the palette. Record keys
+ * are matched as own keys only (a `"constructor"` label stays unset).
+ */
+export function getChartCategoryColorItems({
+  labels,
+  categoryColors,
+}: {
+  categoryColors?: ChartCategoryColorsOption;
+  labels: readonly string[];
+}): Array<{ color?: string; id: string }> {
+  if (isNil(categoryColors) || categoryColors === false) {
+    return [];
+  }
+
+  return labels.map((label, index) => {
+    const color =
+      categoryColors === true
+        ? undefined
+        : isArray(categoryColors)
+          ? categoryColors[index]
+          : has(categoryColors, [label])
+            ? get(categoryColors, [label])
+            : undefined;
+
+    return { color, id: getChartCategoryColorId(index) };
+  });
+}
+
+/**
+ * Render series with resolved colors: the series tone (`muted` bars mix
+ * toward the background), range colors, and per-item colors. With category
+ * colors a bar series takes a neutral (text) color for the legend while its
+ * bars follow the categories; line series keep their own color.
+ */
+export function getChartCartesianRenderSeries({
+  theme,
+  colors,
+  series,
+  categoryColors,
+}: {
+  categoryColors: null | readonly string[];
+  colors: Readonly<Record<string, string>>;
+  series: readonly ChartCartesianSeriesEntry[];
+  theme: null | Pick<ChartRenderTheme, "textColor" | "backgroundColor">;
+}): ChartCartesianRenderSeries[] {
+  const background = theme?.backgroundColor ?? "";
+
+  return series.map((item) => {
+    const tone = item.kind === "bar" ? item.tone : "solid";
+
+    const tint = (color: string) => {
+      return applyChartTone(color, tone, background);
+    };
+
+    const base = tint(colors[item.id] ?? "");
+    const ownCategories = item.kind === "bar" ? categoryColors : null;
+
+    const colorRanges = resolveChartRangeColors({
+      tint,
+      colors,
+      seriesId: item.id,
+      ranges: item.colorRanges,
+    });
+
+    return {
+      ...item,
+      colorRanges,
+      color: isNil(ownCategories) ? base : tint(theme?.textColor ?? ""),
+      itemColors: getChartCartesianItemColors({
+        colorRanges,
+        color: base,
+        data: item.data,
+        colorBy: item.colorBy,
+        categoryColors: ownCategories?.map(tint),
+      }),
+    };
+  });
+}
+
+/**
  * Label of the color range a series value falls in, if any.
  */
 export function getChartCartesianNote(
@@ -354,14 +460,16 @@ export function getChartCartesianNote(
   value: number,
   index: number,
 ): string | undefined {
-  if (isNil(series.colorRanges) || series.colorRanges.length === 0) {
+  const colorRanges = series.colorRanges ?? [];
+
+  if (isEmpty(colorRanges)) {
     return undefined;
   }
 
   const colorBy = series.colorBy ?? "value";
 
   return findChartColorRange(
-    series.colorRanges,
+    colorRanges,
     colorBy === "category" ? index : value,
     colorBy,
   )?.label;

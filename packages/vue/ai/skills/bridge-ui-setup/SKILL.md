@@ -30,7 +30,7 @@ npx bridge-ui-vue-ai install
 
 ## Hard rules
 
-1. Tailwind CSS **v4** + `@import "@bridge-ui/vue/theme.css"`.
+1. Tailwind CSS **v4** + `@import "@bridge-ui/vue/theme.css"`. It also sets the base text color on `body` for light and dark themes.
 2. Use `app.use(createBridgeUI({ ... }))` and/or `<BridgeUIProvider>`.
 3. Mount `BridgeUIHosts` when using action hooks (`useDialogAction`, `useModalAction`, `useDrawerAction`, `useSnackbarAction`).
 4. Semantic icon names, chrome strings, and date libs need `global.icons` / `global.i18n` / `global.dates` — install `@bridge-ui/adapters`, import factories from `@bridge-ui/adapters/vue/{date,icon,i18n}-*`, and install the matching optional peer.

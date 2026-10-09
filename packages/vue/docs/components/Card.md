@@ -34,6 +34,21 @@ import { Card } from "@bridge-ui/vue/Components/Card";
 </Card>
 ```
 
+### Text color
+
+Card content and the title inherit the surrounding text color (the base color from `theme.css` on `body`). For secondary text, use `Text` with `variant="muted"`.
+
+```vue
+<Card title="Balance">
+  <Text numeric size="2xl" weight="semibold">
+    $9,300.00
+  </Text>
+  <Text size="xs" variant="muted">
+    Compared to last month
+  </Text>
+</Card>
+```
+
 ### Borderless
 
 ```vue

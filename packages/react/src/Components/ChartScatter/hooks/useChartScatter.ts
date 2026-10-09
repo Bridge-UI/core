@@ -7,10 +7,12 @@ import {
   DEFAULT_CHART_BUBBLE_SIZE,
   DEFAULT_CHART_SYMBOL_SIZE,
   getChartBubbleSizeDomain,
+  getChartRangeColorItems,
   getChartScatterPoints,
   getChartScatterTable,
   getChartScatterTooltip,
   isChartScatterEmpty,
+  resolveChartRangeColors,
   type ChartScatterRenderOptions,
   type ChartScatterRenderSeries,
 } from "@bridge-ui/core/Domain";
@@ -77,17 +79,8 @@ export function useChartScatter(
     return JSON.parse(bubbleSignature) as [number, number];
   }, [bubbleSignature]);
 
-  // Range colors resolve with the series colors (they are never empty, so
-  // they never take a palette entry).
   const colorItems = useMemo(() => {
-    return [
-      ...registry.entries,
-      ...registry.entries.flatMap((item) => {
-        return (item.colorRanges ?? []).map((range, index) => {
-          return { color: range.color, id: `${item.id}-range-${index}` };
-        });
-      }),
-    ];
+    return [...registry.entries, ...getChartRangeColorItems(registry.entries)];
   }, [registry.entries]);
 
   const colors = useChartColors(root, colorItems);
@@ -99,11 +92,10 @@ export function useChartScatter(
         return {
           ...item,
           color: colors[item.id] ?? "",
-          colorRanges: item.colorRanges?.map((range, index) => {
-            return {
-              ...range,
-              color: colors[`${item.id}-range-${index}`] ?? "",
-            };
+          colorRanges: resolveChartRangeColors({
+            colors,
+            seriesId: item.id,
+            ranges: item.colorRanges ?? [],
           }),
         };
       });
