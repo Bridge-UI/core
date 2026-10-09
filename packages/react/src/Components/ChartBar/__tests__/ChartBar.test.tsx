@@ -132,3 +132,51 @@ test("it should show the empty message", () => {
 
   expect(screen.getByText("No data")).toBeTruthy();
 });
+
+test("it should paint bars by category and mute a series", () => {
+  stubPlotSize({ width: 320, height: 180 });
+
+  render(
+    <ChartBar
+      animation={false}
+      categories={categories}
+      categoryColors={["#ff0000", "#00ff00", "#0000ff"]}
+    >
+      <ChartBarSeries name="October" data={[3, 2, 1]} />
+      <ChartBarSeries tone="muted" name="Average" data={[3, 2, 1]} />
+    </ChartBar>,
+  );
+
+  const option = getInstanceByDom(getEchartsHost())?.getOption() as {
+    series: Array<{ data: Array<{ itemStyle: { color: string } }> }>;
+  };
+
+  const colorsOf = (index: number) => {
+    return option.series[index].data.map((item) => item.itemStyle.color);
+  };
+
+  expect(new Set(colorsOf(0)).size).toBe(3);
+  expect(colorsOf(1)).not.toEqual(colorsOf(0));
+  expect(colorsOf(1).every((color) => color.startsWith("rgb("))).toBe(true);
+});
+
+test("it should name the color range of a bar in the live region", () => {
+  render(
+    <ChartBar categories={categories}>
+      <ChartBarSeries
+        name="Spend"
+        data={[3450, 1310, 1240]}
+        colorRanges={[{ min: 3000, color: "error", label: "Over budget" }]}
+      />
+    </ChartBar>,
+  );
+
+  fireEvent.keyDown(screen.getByRole("img"), { key: "Home" });
+
+  expect(screen.getByRole("status").textContent).toBe(
+    "Housing: Spend 3,450 (Over budget)",
+  );
+  expect(screen.getAllByRole("cell")[0].textContent).toBe(
+    "3,450 (Over budget)",
+  );
+});

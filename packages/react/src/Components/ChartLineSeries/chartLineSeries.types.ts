@@ -1,5 +1,6 @@
 // ** Core Imports
 import type {
+  ChartColorRangeAxis,
   ChartCurve,
   ChartDatum,
   ChartReference,
@@ -7,7 +8,7 @@ import type {
 } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
-import type { ChartColorValue } from "@/Utils/Charts";
+import type { ChartColorRangeOption, ChartColorValue } from "@/Utils/Charts";
 
 /**
  * One line registered on the nearest `ChartLine`, or drawn over the bars of
@@ -22,11 +23,35 @@ export interface ChartLineSeriesOwnProps {
   area?: boolean;
 
   /**
+   * Opacity (`0`–`1`) of the area fill.
+   *
+   * @default ChartLine `areaOpacity` (0.15)
+   */
+  areaOpacity?: number;
+
+  /**
    * Series color (token key or CSS color). Falls back to the palette.
    *
    * @default undefined
    */
   color?: ChartColorValue;
+
+  /**
+   * What `colorRanges` match: each point's value, or its category index.
+   *
+   * @default "value"
+   */
+  colorBy?: ChartColorRangeAxis;
+
+  /**
+   * Recolors the line (and its area) piece by piece: values in
+   * `[min, max)` take the range color. With `colorBy="category"`, `min`
+   * and `max` are category indices (both included). Points outside every
+   * range keep `color`. Range labels show in the tooltip and data table.
+   *
+   * @default undefined
+   */
+  colorRanges?: ChartColorRangeOption[];
 
   /**
    * Line interpolation.

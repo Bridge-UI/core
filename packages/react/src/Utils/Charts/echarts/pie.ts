@@ -69,9 +69,10 @@ export function buildEchartsPieOption(
         avoidLabelOverlap: true,
         minAngle: options.minAngle,
         radius: [`${inner}%`, `${outer}%`],
-        itemStyle: { borderRadius: donut ? 2 : 0 },
-        padAngle: donut && slices.length > 1 ? 1 : 0,
+        roseType: options.rose ?? undefined,
         emphasis: { label, scale: true, scaleSize: 4 },
+        itemStyle: { borderRadius: options.cornerRadius },
+        padAngle: slices.length > 1 ? options.padAngle : 0,
         labelLine: {
           show: outside,
           lineStyle: { color: theme.axisColor },

@@ -1,7 +1,9 @@
 // ** Exports
 export type {
+  ChartCategoryColors,
   ChartClasses,
   ChartColorOverrides,
+  ChartColorRangeOption,
   ChartColorValue,
   ChartCustomProps,
   ChartRootOwnProps,

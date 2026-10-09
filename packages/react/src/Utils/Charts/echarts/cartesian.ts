@@ -4,6 +4,7 @@ import type {
   GridComponentOption,
   MarkLineComponentOption,
   TooltipComponentOption,
+  VisualMapComponentOption,
 } from "echarts/components";
 import type { ComposeOption, ECharts } from "echarts/core";
 import { get, isArray, isNil, isNumber } from "es-toolkit/compat";
@@ -34,10 +35,8 @@ type EChartsCartesianOption = ComposeOption<
   | GridComponentOption
   | TooltipComponentOption
   | MarkLineComponentOption
+  | VisualMapComponentOption
 >;
-
-/** Opacity of the fill under `area` series. */
-const AREA_OPACITY = 0.15;
 
 /** Maximum bar width (px) so sparse bar charts stay readable. */
 const BAR_MAX_WIDTH = 32;
@@ -123,6 +122,82 @@ function toMarkLine(
 }
 
 /**
+ * Whether a series has color ranges with at least one finite bound. ECharts
+ * cannot build a line gradient from open ranges only.
+ */
+function hasBoundedRanges(series: ChartCartesianRenderSeries): boolean {
+  return series.colorRanges.some((range) => {
+    return isChartValue(range.min) || isChartValue(range.max);
+  });
+}
+
+/**
+ * Category coordinate of category index `index` on its axis: the index, or
+ * its timestamp (clamped to the known categories).
+ */
+function toCategoryBound(options: ChartCartesianRenderOptions, index: number) {
+  const timestamps = options.timestamps;
+
+  if (isNil(timestamps) || timestamps.length === 0) {
+    return index;
+  }
+
+  const clamped = Math.min(timestamps.length - 1, Math.max(0, index));
+
+  return timestamps[Math.round(clamped)];
+}
+
+/**
+ * Hidden piecewise visual maps that recolor line series with color ranges,
+ * piece by piece (line and area). Values outside every range keep the
+ * series color.
+ */
+function toVisualMaps(
+  options: ChartCartesianRenderOptions,
+): undefined | VisualMapComponentOption[] {
+  const horizontal = options.orientation === "horizontal";
+
+  const maps = options.series.flatMap((series, seriesIndex) => {
+    if (series.kind !== "line" || !hasBoundedRanges(series)) {
+      return [];
+    }
+
+    const byCategory = series.colorBy === "category";
+
+    return [
+      {
+        seriesIndex,
+        show: false,
+        type: "piecewise" as const,
+        outOfRange: { color: series.color },
+        dimension: byCategory === horizontal ? 1 : 0,
+        pieces: series.colorRanges.map((range) => {
+          if (byCategory) {
+            return {
+              color: range.color,
+              ...(isNil(range.min)
+                ? {}
+                : { gte: toCategoryBound(options, range.min) }),
+              ...(isNil(range.max)
+                ? {}
+                : { lte: toCategoryBound(options, range.max) }),
+            };
+          }
+
+          return {
+            color: range.color,
+            ...(isNil(range.min) ? {} : { gte: range.min }),
+            ...(isNil(range.max) ? {} : { lt: range.max }),
+          };
+        }),
+      },
+    ];
+  });
+
+  return maps.length > 0 ? maps : undefined;
+}
+
+/**
  * Hides an inside label that does not fit its bar segment. ECharts has no
  * `hide` here, so the font size drops to 0.
  */
@@ -152,8 +227,13 @@ function toLabel(
     position,
     show: true,
     ...labelStyle(options.theme),
-    // Inside a filled bar the theme text color has no contrast.
-    color: position === "inside" ? "#fff" : options.theme.textColor,
+    // Inside a solid bar the theme text color has no contrast; a muted bar
+    // sits close to the background, so the theme text color reads best.
+    color:
+      position === "inside" &&
+      !(series.kind === "bar" && series.tone === "muted")
+        ? "#fff"
+        : options.theme.textColor,
     formatter: (params: unknown) => {
       const value = get(series.data, Number(get(params, "dataIndex")));
 
@@ -200,11 +280,23 @@ function toSeriesOption(
 
         return {
           value: point,
-          itemStyle: { borderRadius: get(radii, [series.id, index]) ?? 0 },
+          itemStyle: {
+            borderRadius: get(radii, [series.id, index]) ?? 0,
+            ...(isNil(series.itemColors)
+              ? {}
+              : { color: series.itemColors[index] ?? series.color }),
+          },
         };
       }) as BarSeriesOption["data"],
     };
   }
+
+  // A visual map paints ranged lines; a fixed stroke or fill would win.
+  const ranged = hasBoundedRanges(series);
+  const color =
+    series.colorRanges.length > 0 && !ranged
+      ? (series.colorRanges[0]?.color ?? series.color)
+      : series.color;
 
   return {
     markLine,
@@ -216,19 +308,22 @@ function toSeriesOption(
     step: series.step,
     stack: series.stack,
     connectNulls: false,
+    itemStyle: { color },
     showSymbol: series.showPoints,
     emphasis: { focus: "series" },
     smooth: series.curve === "smooth",
-    itemStyle: { color: series.color },
     label: toLabel(options, series, "top"),
-    areaStyle: series.area
-      ? { color: series.color, opacity: AREA_OPACITY }
-      : undefined,
     data: series.data.map((value, index) => {
       return toPoint(options, value, index);
     }) as LineSeriesOption["data"],
+    areaStyle: series.area
+      ? {
+          opacity: series.areaOpacity,
+          ...(ranged ? {} : { color }),
+        }
+      : undefined,
     lineStyle: {
-      color: series.color,
+      ...(ranged ? {} : { color }),
       width: options.sparkline ? 1.5 : 2,
       type: series.dashed ? "dashed" : "solid",
     },
@@ -321,6 +416,7 @@ export function buildEchartsCartesianOption(
 
   return {
     animation: options.animation,
+    visualMap: toVisualMaps(options),
     xAxis: horizontal ? valueAxis : categoryAxis,
     yAxis: horizontal ? categoryAxis : valueAxis,
     textStyle: { fontSize: theme.fontSize, fontFamily: theme.fontFamily },

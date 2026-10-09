@@ -14,11 +14,14 @@ export function useChartBarSeries(props: ChartBarSeriesProps) {
     componentName: "ChartBarSeries",
     entry: {
       kind: "bar",
+      tone: props.tone,
       name: props.name,
       data: props.data,
       color: props.color,
       stack: props.stack,
       labels: props.labels,
+      colorBy: props.colorBy,
+      colorRanges: props.colorRanges,
       reference: isNil(props.reference)
         ? undefined
         : castArray(props.reference),

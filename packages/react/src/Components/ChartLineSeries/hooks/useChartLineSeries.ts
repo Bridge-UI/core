@@ -23,7 +23,10 @@ export function useChartLineSeries(props: ChartLineSeriesProps) {
       stack: props.stack,
       dashed: props.dashed,
       labels: props.labels,
+      colorBy: props.colorBy,
       showPoints: props.showPoints,
+      areaOpacity: props.areaOpacity,
+      colorRanges: props.colorRanges,
       reference: isNil(props.reference)
         ? undefined
         : castArray(props.reference),

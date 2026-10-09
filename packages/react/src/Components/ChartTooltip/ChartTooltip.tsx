@@ -11,6 +11,7 @@ function ChartTooltip(props: ChartTooltipProps) {
     isOpen,
     context,
     itemBind,
+    noteBind,
     rootBind,
     labelBind,
     titleBind,
@@ -48,6 +49,7 @@ function ChartTooltip(props: ChartTooltipProps) {
                 {item.color ? <span {...getSwatchBind(item.color)} /> : null}
                 <span {...labelBind}>{item.name}</span>
                 <span {...valueBind}>{formatValue(item)}</span>
+                {item.note ? <span {...noteBind}>{item.note}</span> : null}
                 {isNil(percent) ? null : (
                   <span {...percentBind}>{percent}</span>
                 )}

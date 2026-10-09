@@ -6,6 +6,7 @@ import {
   DEFAULT_CHART_DONUT_THICKNESS,
   DEFAULT_CHART_MIN_ANGLE,
   getChartPiePercents,
+  getChartPieSliceDefaults,
   getChartPieSummaryParams,
   type ChartBaseRenderOptions,
   type ChartPartRenderSlice,
@@ -28,32 +29,45 @@ import { useChartPart } from "@/Utils/Charts/useChartPart";
 const chartPieBridgeKeys = [
   ...chartRootBridgeKeys,
   "data",
+  "rose",
   "labels",
   "variant",
   "minAngle",
+  "padAngle",
   "maxSlices",
   "thickness",
+  "cornerRadius",
   "labelContent",
   "labelPosition",
 ] as const satisfies readonly (keyof ChartPieOwnProps)[];
 
 const chartPieRegistryKeys = [
+  "rose",
   "size",
   "height",
   "labels",
   "classes",
   "variant",
   "minAngle",
+  "padAngle",
   "animation",
   "thickness",
   "customProps",
+  "cornerRadius",
   "labelPosition",
 ] as const satisfies readonly (keyof ChartPieOwnProps)[];
 
 type ChartPieMerged = ChartRootMerged &
   Pick<
     ChartPieOwnProps,
-    "labels" | "variant" | "minAngle" | "thickness" | "labelPosition"
+    | "rose"
+    | "labels"
+    | "variant"
+    | "minAngle"
+    | "padAngle"
+    | "thickness"
+    | "cornerRadius"
+    | "labelPosition"
   >;
 
 export function useChartPie(
@@ -75,14 +89,37 @@ export function useChartPie(
   const variant = merged.variant ?? "pie";
   const minAngle = merged.minAngle ?? DEFAULT_CHART_MIN_ANGLE;
   const thickness = merged.thickness ?? DEFAULT_CHART_DONUT_THICKNESS;
+  const rose = merged.rose ?? null;
+  const sliceDefaults = getChartPieSliceDefaults(variant);
+  const padAngle = merged.padAngle ?? sliceDefaults.padAngle;
+  const cornerRadius = merged.cornerRadius ?? sliceDefaults.cornerRadius;
 
   const buildOptions = useCallback(
     (
       base: ChartBaseRenderOptions & { slices: ChartPartRenderSlice[] },
     ): ChartPieRenderOptions => {
-      return { ...base, labels, variant, minAngle, thickness, labelPosition };
+      return {
+        ...base,
+        rose,
+        labels,
+        variant,
+        minAngle,
+        padAngle,
+        thickness,
+        cornerRadius,
+        labelPosition,
+      };
     },
-    [labels, variant, minAngle, thickness, labelPosition],
+    [
+      rose,
+      labels,
+      variant,
+      minAngle,
+      padAngle,
+      thickness,
+      cornerRadius,
+      labelPosition,
+    ],
   );
 
   const summary = (slices: ChartPartRenderSlice[]) => {

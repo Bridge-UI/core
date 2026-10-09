@@ -77,12 +77,36 @@ export function useChartScatter(
     return JSON.parse(bubbleSignature) as [number, number];
   }, [bubbleSignature]);
 
-  const colors = useChartColors(root, registry.entries);
+  // Range colors resolve with the series colors (they are never empty, so
+  // they never take a palette entry).
+  const colorItems = useMemo(() => {
+    return [
+      ...registry.entries,
+      ...registry.entries.flatMap((item) => {
+        return (item.colorRanges ?? []).map((range, index) => {
+          return { color: range.color, id: `${item.id}-range-${index}` };
+        });
+      }),
+    ];
+  }, [registry.entries]);
+
+  const colors = useChartColors(root, colorItems);
 
   const visibleSeries = useMemo((): ChartScatterRenderSeries[] => {
     return registry.entries
       .filter((item) => !hidden.includes(item.id))
-      .map((item) => ({ ...item, color: colors[item.id] ?? "" }));
+      .map((item) => {
+        return {
+          ...item,
+          color: colors[item.id] ?? "",
+          colorRanges: item.colorRanges?.map((range, index) => {
+            return {
+              ...range,
+              color: colors[`${item.id}-range-${index}`] ?? "",
+            };
+          }),
+        };
+      });
   }, [colors, hidden, registry.entries]);
 
   const points = useMemo(() => {

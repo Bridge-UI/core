@@ -21,6 +21,14 @@ export interface ChartLineOwnProps extends ChartRootOwnProps {
   area?: boolean;
 
   /**
+   * Opacity (`0`–`1`) of the area fill for every series (per-series
+   * `areaOpacity` wins).
+   *
+   * @default 0.15
+   */
+  areaOpacity?: number;
+
+  /**
    * Category labels, or dates for a time axis (points spaced by time).
    * Each series has one value per category.
    */
