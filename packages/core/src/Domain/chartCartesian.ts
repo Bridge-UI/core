@@ -1,5 +1,13 @@
 // ** External Imports
-import { get, isArray, isDate, isEmpty, isNil, last } from "es-toolkit/compat";
+import {
+  get,
+  has,
+  isArray,
+  isDate,
+  isEmpty,
+  isNil,
+  last,
+} from "es-toolkit/compat";
 
 // ** Local Imports
 import {
@@ -365,7 +373,8 @@ export function getChartCategoryColorId(index: number): string {
 
 /**
  * Color items for each category when `categoryColors` is set, empty when it
- * is not. `true` leaves every category color to the palette.
+ * is not. `true` leaves every category color to the palette. Record keys
+ * are matched as own keys only (a `"constructor"` label stays unset).
  */
 export function getChartCategoryColorItems({
   labels,
@@ -384,7 +393,9 @@ export function getChartCategoryColorItems({
         ? undefined
         : isArray(categoryColors)
           ? categoryColors[index]
-          : get(categoryColors, label);
+          : has(categoryColors, [label])
+            ? get(categoryColors, [label])
+            : undefined;
 
     return { color, id: getChartCategoryColorId(index) };
   });

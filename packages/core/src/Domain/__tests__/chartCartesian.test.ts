@@ -340,6 +340,18 @@ describe("getChartCartesianItemColors", () => {
 describe("getChartCategoryColorItems", () => {
   const labels = ["A", "B"];
 
+  test("it should ignore inherited keys and read labels with dots", () => {
+    expect(
+      getChartCategoryColorItems({
+        labels: ["constructor", "v1.2"],
+        categoryColors: { "v1.2": "red" },
+      }),
+    ).toEqual([
+      { color: undefined, id: "category-0" },
+      { color: "red", id: "category-1" },
+    ]);
+  });
+
   test("it should be empty without category colors", () => {
     expect(getChartCategoryColorItems({ labels })).toEqual([]);
 
