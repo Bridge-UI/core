@@ -38,10 +38,47 @@ const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
 Series with the same `stack` key stack on top of each other.
 
 ```tsx
-<ChartLine area stack="total" categories={months}>
-  <ChartLineSeries name="Organic" data={organic} />
-  <ChartLineSeries name="Paid" data={paid} />
+<ChartLine area stack="total" areaOpacity={0.6} categories={months}>
+  <ChartLineSeries color="info" name="Organic" data={organic} />
+  <ChartLineSeries name="Paid" data={paid} color="warning" />
   <ChartLegend />
+</ChartLine>
+```
+
+`areaOpacity` sets the fill opacity (`0.15` by default). Stacked bands read better with a stronger fill. Set it on the root for every series, or per series.
+
+### Color by value
+
+`colorRanges` recolors the line (and its area) piece by piece. A value in `[min, max)` takes the range color; values outside every range keep the series color. Range labels show in the tooltip, the data table, and the keyboard announcements.
+
+```tsx
+<ChartLine categories={days}>
+  <ChartLineSeries
+    name="AQI"
+    data={aqi}
+    reference={[{ value: 50 }, { value: 100 }]}
+    colorRanges={[
+      { max: 50, color: "success", label: "Good" },
+      { min: 50, max: 100, color: "warning", label: "Moderate" },
+      { min: 100, color: "error", label: "Unhealthy" },
+    ]}
+  />
+  <ChartTooltip />
+</ChartLine>
+```
+
+### Highlight categories
+
+With `colorBy="category"`, `min` and `max` are category indices (zero-based, both included): the line changes color over that stretch of the axis. On a time axis the indices still point at the categories.
+
+```tsx
+<ChartLine area curve="smooth" categories={months}>
+  <ChartLineSeries
+    name="Visitors"
+    data={visitors}
+    colorBy="category"
+    colorRanges={[{ min: 2, max: 4, color: "warning", label: "Campaign" }]}
+  />
 </ChartLine>
 ```
 
@@ -115,6 +152,7 @@ Shared root props (`height`, `palette`, `loading`, `summary`, …) are listed in
 | ------------- | --------------------------------------- | ---------- | ----------------------------------------------- |
 | `categories`  | `string[] \| Date[]`                    | required   | Category labels, or dates for a time axis.      |
 | `area`        | `boolean`                               | `false`    | Fill under every series.                        |
+| `areaOpacity` | `number`                                | `0.15`     | Area fill opacity (`0`–`1`) for every series.   |
 | `curve`       | `"linear" \| "smooth"`                  | `"linear"` | Interpolation for every series.                 |
 | `step`        | `false \| "start" \| "middle" \| "end"` | `false`    | Step line for every series.                     |
 | `stack`       | `string`                                | —          | Stack every series under this key.              |
@@ -128,16 +166,19 @@ Shared root props (`height`, `palette`, `loading`, `summary`, …) are listed in
 
 Unset options fall back to the `ChartLine` props.
 
-| Prop         | Type                                    | Default  | Description                                                                            |
-| ------------ | --------------------------------------- | -------- | -------------------------------------------------------------------------------------- |
-| `name`       | `string`                                | required | Legend, tooltip, and table name.                                                       |
-| `data`       | `(number \| null)[]`                    | required | One value per category; `null` leaves a gap.                                           |
-| `color`      | `ChartColorValue`                       | palette  | Token key or CSS color.                                                                |
-| `area`       | `boolean`                               | root     | Fill under the line.                                                                   |
-| `curve`      | `"linear" \| "smooth"`                  | root     | Interpolation.                                                                         |
-| `step`       | `false \| "start" \| "middle" \| "end"` | root     | Step line.                                                                             |
-| `stack`      | `string`                                | root     | Stack key.                                                                             |
-| `dashed`     | `boolean`                               | `false`  | Dashed stroke.                                                                         |
-| `labels`     | `boolean`                               | root     | Value labels.                                                                          |
-| `showPoints` | `boolean`                               | root     | Point symbols.                                                                         |
-| `reference`  | `ChartReference \| ChartReference[]`    | —        | `{ type: "average" \| "min" \| "max" }` or `{ value }`, each with an optional `label`. |
+| Prop          | Type                                    | Default   | Description                                                                                 |
+| ------------- | --------------------------------------- | --------- | ------------------------------------------------------------------------------------------- |
+| `name`        | `string`                                | required  | Legend, tooltip, and table name.                                                            |
+| `data`        | `(number \| null)[]`                    | required  | One value per category; `null` leaves a gap.                                                |
+| `color`       | `ChartColorValue`                       | palette   | Token key or CSS color.                                                                     |
+| `area`        | `boolean`                               | root      | Fill under the line.                                                                        |
+| `areaOpacity` | `number`                                | root      | Area fill opacity (`0`–`1`).                                                                |
+| `curve`       | `"linear" \| "smooth"`                  | root      | Interpolation.                                                                              |
+| `step`        | `false \| "start" \| "middle" \| "end"` | root      | Step line.                                                                                  |
+| `stack`       | `string`                                | root      | Stack key.                                                                                  |
+| `dashed`      | `boolean`                               | `false`   | Dashed stroke.                                                                              |
+| `labels`      | `boolean`                               | root      | Value labels.                                                                               |
+| `showPoints`  | `boolean`                               | root      | Point symbols.                                                                              |
+| `reference`   | `ChartReference \| ChartReference[]`    | —         | `{ type: "average" \| "min" \| "max" }` or `{ value }`, each with an optional `label`.      |
+| `colorRanges` | `ChartColorRangeOption[]`               | —         | `{ min?, max?, color, label? }`: the line takes `color` where the value is in `[min, max)`. |
+| `colorBy`     | `"value" \| "category"`                 | `"value"` | `category` matches `colorRanges` against category indices (both ends included).             |
