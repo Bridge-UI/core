@@ -129,6 +129,7 @@ import type {
   FormFieldVariant,
   FormFieldVariantItem,
 } from "@/Tokens/FormField";
+import type { HeadingLevel } from "@/Tokens/Heading";
 import type { IconSize } from "@/Tokens/Icon";
 import type { LabelSize } from "@/Tokens/Label";
 import type {
@@ -260,6 +261,12 @@ import type {
   TabsVariant,
   TabsVariantItem,
 } from "@/Tokens/Tabs";
+import type {
+  TextColor,
+  TextSize,
+  TextVariant,
+  TextWeight,
+} from "@/Tokens/Text";
 import type { TextareaResize } from "@/Tokens/Textarea";
 import type { TimeColor, TimeColorItem, TimeRounded } from "@/Tokens/Time";
 import type {
@@ -350,7 +357,7 @@ export interface BridgeUIGlobal {
    * Checkbox, form fields, pickers, …), replacing the library default
    * (`primary`, `dark`, or `secondary`). Use `"black"` for a monochrome UI;
    * to rebrand `primary`, change the palette in CSS instead.
-   * Divider and Tooltip keep their neutral defaults.
+   * Divider, Tooltip, Text, and Heading keep their neutral defaults.
    * Merge order: instance props → component `defaultProps` → chrome
    * `defaultProps` → `formDefaults` → `defaultColor` → lib defaults.
    *
@@ -470,6 +477,7 @@ export interface EmptyStateConfigOverrides {}
 export interface FileUploadConfigOverrides {}
 export interface FormControlConfigOverrides {}
 export interface FormFieldConfigOverrides {}
+export interface HeadingConfigOverrides {}
 export interface IconConfigOverrides {}
 export interface LabelConfigOverrides {}
 export interface LinkConfigOverrides {}
@@ -505,6 +513,7 @@ export interface TableConfigOverrides {}
 export interface TabListConfigOverrides {}
 export interface TabPanelConfigOverrides {}
 export interface TabsConfigOverrides {}
+export interface TextConfigOverrides {}
 export interface TextareaConfigOverrides {}
 export interface TextFieldConfigOverrides {}
 export interface TimeFieldConfigOverrides {}
@@ -1178,6 +1187,22 @@ export interface FormFieldConfigBase {
   }>;
 }
 
+export interface HeadingConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof TextColor;
+    size: keyof TextSize;
+    variant: keyof TextVariant;
+    weight: keyof TextWeight;
+  }>;
+  tokens: Partial<{
+    level: Partial<Record<keyof HeadingLevel, string>>;
+    size: Record<string, string>;
+    variant: Record<string, Record<string, string>>;
+    weight: Record<string, string>;
+  }>;
+}
+
 export interface IconConfigBase {
   defaultProps: Partial<{
     size: keyof IconSize;
@@ -1637,6 +1662,21 @@ export interface TabsConfigBase {
   }>;
 }
 
+export interface TextConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof TextColor;
+    size: keyof TextSize;
+    variant: keyof TextVariant;
+    weight: keyof TextWeight;
+  }>;
+  tokens: Partial<{
+    size: Record<string, string>;
+    variant: Record<string, Record<string, string>>;
+    weight: Record<string, string>;
+  }>;
+}
+
 export interface TextareaConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -1897,6 +1937,7 @@ export interface BridgeUIComponentsRegistry {
     Overwrite<FormControlConfigBase, FormControlConfigOverrides>
   >;
   FormField: Partial<Overwrite<FormFieldConfigBase, FormFieldConfigOverrides>>;
+  Heading: Partial<Overwrite<HeadingConfigBase, HeadingConfigOverrides>>;
   Icon: Partial<Overwrite<IconConfigBase, IconConfigOverrides>>;
   Label: Partial<Overwrite<LabelConfigBase, LabelConfigOverrides>>;
   Link: Partial<Overwrite<LinkConfigBase, LinkConfigOverrides>>;
@@ -1946,6 +1987,7 @@ export interface BridgeUIComponentsRegistry {
   TabList: Partial<Overwrite<TabListConfigBase, TabListConfigOverrides>>;
   TabPanel: Partial<Overwrite<TabPanelConfigBase, TabPanelConfigOverrides>>;
   Tabs: Partial<Overwrite<TabsConfigBase, TabsConfigOverrides>>;
+  Text: Partial<Overwrite<TextConfigBase, TextConfigOverrides>>;
   Textarea: Partial<Overwrite<TextareaConfigBase, TextareaConfigOverrides>>;
   TextField: Partial<Overwrite<TextFieldConfigBase, TextFieldConfigOverrides>>;
   TimeField: Partial<Overwrite<TimeFieldConfigBase, TimeFieldConfigOverrides>>;
