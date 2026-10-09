@@ -113,8 +113,43 @@ export function readCssColor(
   return normalizeCssColor(computed.length > 0 ? computed : (color ?? ""));
 }
 
+/** Background assumed when no ancestor paints one. */
+const FALLBACK_BACKGROUND = "rgb(255, 255, 255)";
+
 /**
- * Resolves axis / grid / label colors and typography for the plot.
+ * Opaque background behind `element`: the first ancestor (itself included)
+ * whose computed `background-color` is not transparent, else white.
+ */
+export function readCssBackground(element: HTMLElement): string {
+  if (!hasWindow()) {
+    return FALLBACK_BACKGROUND;
+  }
+
+  let current: null | HTMLElement = element;
+
+  while (!isNil(current)) {
+    const color = normalizeCssColor(
+      window.getComputedStyle(current).backgroundColor,
+    );
+
+    const transparent =
+      color.length === 0 ||
+      color === "transparent" ||
+      /^rgba\([^)]*,\s*0\)$/.test(color);
+
+    if (!transparent) {
+      return color;
+    }
+
+    current = current.parentElement;
+  }
+
+  return FALLBACK_BACKGROUND;
+}
+
+/**
+ * Resolves axis / grid / label colors, the background, and typography for
+ * the plot.
  */
 export function readChartTheme(
   container: HTMLElement,
@@ -125,6 +160,7 @@ export function readChartTheme(
 
   return {
     fontFamily: style?.fontFamily ?? "",
+    backgroundColor: readCssBackground(container),
     fontSize: Number.isFinite(fontSize) ? fontSize : 12,
     axisColor: readCssColor(container, { className: classes.axis }),
     gridColor: readCssColor(container, { className: classes.grid }),

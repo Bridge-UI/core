@@ -5,3 +5,4 @@ export type {
   ChartBarSeriesProps,
 } from "@/Components/ChartBarSeries/chartBarSeries.types";
 export { useChartBarSeries } from "@/Components/ChartBarSeries/hooks/useChartBarSeries";
+export type { ChartColorRangeOption } from "@/Utils/Charts";

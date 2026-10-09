@@ -13,10 +13,10 @@ Charts for dashboards and reports. Pick the root for the shape of your data; eve
 Shared parts:
 
 | Part           | Line | Bar | Scatter | Pie | Funnel |
-| -------------- | :--: | :-: | :-----: | :-: | :----: |
-| `ChartLegend`  |  ✅  | ✅  |   ✅    | ✅  |   ✅   |
-| `ChartTooltip` |  ✅  | ✅  |   ✅    | ✅  |   ✅   |
-| `ChartAxis`    |  ✅  | ✅  |   ✅    |  —  |   —    |
+| -------------- | ---- | --- | ------- | --- | ------ |
+| `ChartLegend`  | ✅   | ✅  | ✅      | ✅  | ✅     |
+| `ChartTooltip` | ✅   | ✅  | ✅      | ✅  | ✅     |
+| `ChartAxis`    | ✅   | ✅  | ✅      | —   | —      |
 
 ## Import
 
@@ -93,6 +93,13 @@ Series and slices take palette colors in order. Override the palette on the root
 ```
 
 Token keys (`primary`, `info`, `success`, `warning`, `error`, `secondary`, `dark`, `black`) follow light and dark mode automatically.
+
+Colors can also follow the data:
+
+- `color-ranges` on `ChartLineSeries`, `ChartBarSeries`, and `ChartScatterSeries` recolors points, bars, or stretches of a line by value ([ChartLine](./ChartLine.md#color-by-value), [ChartBar](./ChartBar.md#color-by-value), [ChartScatter](./ChartScatter.md#color-by-range)).
+- `category-colors` on `ChartBar` gives each category its own color, and `tone="muted"` lightens a series ([ChartBar](./ChartBar.md#category-colors)).
+
+Color is never the only cue: range labels show in the tooltip, the data table, and the keyboard announcements.
 
 ### Loading and empty
 
@@ -204,11 +211,11 @@ Slots: `default` (series, `ChartAxis`, `ChartLegend`, `ChartTooltip`), `empty`, 
 
 ## Props (`ChartTooltip`)
 
-| Prop             | Type                        | Default | Description                                                     |
-| ---------------- | --------------------------- | ------- | --------------------------------------------------------------- |
-| `format-value`   | `(value, item) => string`   | —       | Value formatter.                                                |
-| `format-percent` | `(percent, item) => string` | —       | Share formatter (pie, funnel).                                  |
-| `classes`        | `ChartTooltipClasses`       | —       | `root`, `title`, `item`, `swatch`, `label`, `value`, `percent`. |
-| `custom-props`   | `ChartTooltipCustomProps`   | —       | Extra props for `root`.                                         |
+| Prop             | Type                        | Default | Description                                                             |
+| ---------------- | --------------------------- | ------- | ----------------------------------------------------------------------- |
+| `format-value`   | `(value, item) => string`   | —       | Value formatter.                                                        |
+| `format-percent` | `(percent, item) => string` | —       | Share formatter (pie, funnel).                                          |
+| `classes`        | `ChartTooltipClasses`       | —       | `root`, `title`, `item`, `swatch`, `label`, `value`, `percent`, `note`. |
+| `custom-props`   | `ChartTooltipCustomProps`   | —       | Extra props for `root`.                                                 |
 
 Slot: `content` (`{ index, title, color, items }`) replaces the title and rows.

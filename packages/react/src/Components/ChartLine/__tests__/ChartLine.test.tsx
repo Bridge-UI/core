@@ -217,3 +217,36 @@ test("it should dispose ECharts and remove its host on unmount", () => {
   expect(host.isConnected).toBe(false);
   expect(chart?.isDisposed()).toBe(true);
 });
+
+test("it should recolor a ranged line with a visual map", () => {
+  stubPlotSize({ width: 320, height: 180 });
+
+  render(
+    <ChartLine area animation={false} areaOpacity={0.4} categories={categories}>
+      <ChartLineSeries
+        name="AQI"
+        data={[40, 120, 80]}
+        colorRanges={[
+          { max: 50, label: "Good", color: "success" },
+          { min: 100, color: "error", label: "Unhealthy" },
+        ]}
+      />
+    </ChartLine>,
+  );
+
+  const option = getInstanceByDom(getEchartsHost())?.getOption() as {
+    series: Array<{ areaStyle: { opacity: number } }>;
+    visualMap: Array<{ pieces: unknown[]; seriesIndex: number }>;
+  };
+
+  expect(option.visualMap[0].seriesIndex).toBe(0);
+  expect(option.visualMap[0].pieces).toHaveLength(2);
+  expect(option.series[0].areaStyle.opacity).toBe(0.4);
+
+  fireEvent.keyDown(screen.getByRole("img"), { key: "ArrowRight" });
+  fireEvent.keyDown(screen.getByRole("img"), { key: "ArrowRight" });
+
+  expect(screen.getByRole("status").textContent).toBe(
+    "Feb: AQI 120 (Unhealthy)",
+  );
+});

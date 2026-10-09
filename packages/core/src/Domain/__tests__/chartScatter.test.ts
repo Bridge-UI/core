@@ -153,3 +153,48 @@ describe("getChartScatterTable", () => {
     });
   });
 });
+
+describe("scatter color ranges", () => {
+  const series = {
+    name: "S",
+    color: "gray",
+    colorRanges: [{ min: 10, color: "red", label: "High" }],
+    data: [
+      [1, 5],
+      [2, 20],
+    ] as Array<[number, number]>,
+  };
+
+  test("it should color the tooltip by the point range", () => {
+    const tooltip = getChartScatterTooltip({
+      series,
+      labels: { x: "x", y: "y" },
+      point: {
+        x: 2,
+        y: 20,
+        size: null,
+        dataIndex: 1,
+        seriesId: "s",
+        seriesIndex: 0,
+      },
+    });
+
+    expect(tooltip.color).toBe("red");
+    expect(tooltip.items[1]).toEqual({
+      id: "y",
+      name: "y",
+      value: 20,
+      note: "High",
+    });
+  });
+
+  test("it should append the range label to y in the data table", () => {
+    const table = getChartScatterTable({
+      locale: "en-US",
+      series: [series],
+      headers: { x: "x", y: "y", size: "Size", series: "Series" },
+    });
+
+    expect(table.rows.map((row) => row.cells[2])).toEqual(["5", "20 (High)"]);
+  });
+});

@@ -3,12 +3,16 @@ import { get, isDate, isNil, last } from "es-toolkit/compat";
 
 // ** Local Imports
 import {
+  findChartColorRange,
   formatChartValue,
   isChartValue,
   type ChartAxisOptions,
   type ChartBaseRenderOptions,
+  type ChartColorRange,
+  type ChartColorRangeAxis,
   type ChartDatum,
   type ChartTable,
+  type ChartTone,
   type ChartTooltipContent,
 } from "@/Domain/chart";
 
@@ -70,9 +74,24 @@ export type ChartLineSeriesEntry = {
   area: boolean;
 
   /**
+   * Opacity (`0`–`1`) of the area fill.
+   */
+  areaOpacity: number;
+
+  /**
    * Color token key or raw CSS color. Falls back to the palette.
    */
   color?: string;
+
+  /**
+   * What `colorRanges` match: the value or the category index.
+   */
+  colorBy: ChartColorRangeAxis;
+
+  /**
+   * Ranges that recolor the line (and its area) piece by piece.
+   */
+  colorRanges: ChartColorRange[];
 
   /**
    * Line interpolation.
@@ -140,6 +159,16 @@ export type ChartBarSeriesEntry = {
   color?: string;
 
   /**
+   * What `colorRanges` match: the value or the category index.
+   */
+  colorBy: ChartColorRangeAxis;
+
+  /**
+   * Ranges that recolor single bars.
+   */
+  colorRanges: ChartColorRange[];
+
+  /**
    * One value per category.
    */
   data: ChartDatum[];
@@ -173,6 +202,11 @@ export type ChartBarSeriesEntry = {
    * Stack key. Series with the same key stack.
    */
   stack?: string;
+
+  /**
+   * `muted` mixes every bar color toward the plot background.
+   */
+  tone: ChartTone;
 };
 
 /**
@@ -187,8 +221,15 @@ export type ChartCartesianSeriesEntry =
 export type ChartCartesianRenderSeries = ChartCartesianSeriesEntry & {
   /**
    * Resolved CSS color (`rgb()` / `rgba()` / hex). Never a Tailwind class.
+   * With category colors, the neutral legend color of a bar series.
    */
   color: string;
+
+  /**
+   * Resolved color of each category's point or bar, when it differs from
+   * `color` (color ranges, category colors). `null` when uniform.
+   */
+  itemColors: null | string[];
 };
 
 /**
@@ -268,6 +309,63 @@ export type ChartBarRadius = [number, number, number, number];
 
 /** Default bar corner radius (px). */
 export const DEFAULT_CHART_BAR_RADIUS = 4;
+
+/** Default opacity of the area under a line. */
+export const DEFAULT_CHART_AREA_OPACITY = 0.15;
+
+/**
+ * Color of each category's point or bar: the matching color range first,
+ * then the category color. `null` when neither applies (uniform series).
+ * Colors are already resolved (and toned) CSS colors.
+ */
+export function getChartCartesianItemColors({
+  data,
+  color,
+  colorBy,
+  colorRanges,
+  categoryColors,
+}: {
+  categoryColors?: null | readonly string[];
+  color: string;
+  colorBy: ChartColorRangeAxis;
+  colorRanges: readonly ChartColorRange[];
+  data: readonly ChartDatum[];
+}): null | string[] {
+  if (colorRanges.length === 0 && isNil(categoryColors)) {
+    return null;
+  }
+
+  return data.map((value, index) => {
+    const target = colorBy === "category" ? index : value;
+
+    const range = isChartValue(target)
+      ? findChartColorRange(colorRanges, target, colorBy)
+      : undefined;
+
+    return range?.color ?? categoryColors?.[index] ?? color;
+  });
+}
+
+/**
+ * Label of the color range a series value falls in, if any.
+ */
+export function getChartCartesianNote(
+  series: Partial<Pick<ChartCartesianSeriesEntry, "colorBy" | "colorRanges">>,
+  value: number,
+  index: number,
+): string | undefined {
+  if (isNil(series.colorRanges) || series.colorRanges.length === 0) {
+    return undefined;
+  }
+
+  const colorBy = series.colorBy ?? "value";
+
+  return findChartColorRange(
+    series.colorRanges,
+    colorBy === "category" ? index : value,
+    colorBy,
+  )?.label;
+}
 
 /**
  * Whether `categories` are dates (time axis).
@@ -548,7 +646,11 @@ export function getChartCartesianTooltip({
 }: {
   index: number;
   series: ReadonlyArray<
-    Pick<ChartCartesianSeriesEntry, "id" | "data" | "name"> & { color: string }
+    Pick<ChartCartesianSeriesEntry, "id" | "data" | "name"> &
+      Partial<Pick<ChartCartesianSeriesEntry, "colorBy" | "colorRanges">> & {
+        color: string;
+        itemColors?: null | string[];
+      }
   >;
   title: string;
 }): ChartTooltipContent {
@@ -561,7 +663,17 @@ export function getChartCartesianTooltip({
         return [];
       }
 
-      return [{ value, id: item.id, name: item.name, color: item.color }];
+      const note = getChartCartesianNote(item, value, index);
+
+      return [
+        {
+          value,
+          id: item.id,
+          name: item.name,
+          ...(isNil(note) ? {} : { note }),
+          color: item.itemColors?.[index] ?? item.color,
+        },
+      ];
     }),
   };
 }
@@ -578,7 +690,10 @@ export function getChartCartesianTable({
   categories: readonly string[];
   categoryHeader: string;
   locale?: string;
-  series: ReadonlyArray<Pick<ChartCartesianSeriesEntry, "data" | "name">>;
+  series: ReadonlyArray<
+    Pick<ChartCartesianSeriesEntry, "data" | "name"> &
+      Partial<Pick<ChartCartesianSeriesEntry, "colorBy" | "colorRanges">>
+  >;
 }): ChartTable {
   return {
     headers: [categoryHeader, ...series.map((item) => item.name)],
@@ -590,7 +705,14 @@ export function getChartCartesianTable({
           ...series.map((item) => {
             const value = get(item.data, index);
 
-            return isChartValue(value) ? formatChartValue(value, locale) : "—";
+            if (!isChartValue(value)) {
+              return "—";
+            }
+
+            const text = formatChartValue(value, locale);
+            const note = getChartCartesianNote(item, value, index);
+
+            return isNil(note) ? text : `${text} (${note})`;
           }),
         ],
       };

@@ -211,6 +211,15 @@ export function useChartTooltip(props: ChartTooltipProps) {
     };
   });
 
+  const noteBind = derived((): HTMLAttributes<HTMLSpanElement> => {
+    return {
+      className: cn({
+        "text-dark-500 dark:text-dark-400": true,
+        [get(mergedClasses, "note") ?? ""]: true,
+      }),
+    };
+  });
+
   const valueBind = derived((): HTMLAttributes<HTMLSpanElement> => {
     return {
       className: cn({
@@ -226,6 +235,7 @@ export function useChartTooltip(props: ChartTooltipProps) {
     merged,
     context,
     itemBind,
+    noteBind,
     rootBind,
     labelBind,
     titleBind,

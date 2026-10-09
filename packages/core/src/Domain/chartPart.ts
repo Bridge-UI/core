@@ -80,6 +80,12 @@ export type ChartLabelContent =
 export type ChartPieVariant = "pie" | "donut";
 
 /**
+ * Nightingale (rose) pie: slice radius shows the value. `radius` keeps the
+ * angle as the share; `area` gives every slice the same angle.
+ */
+export type ChartPieRose = "area" | "radius";
+
+/**
  * Funnel stage order.
  */
 export type ChartFunnelSort = "none" | "ascending" | "descending";
@@ -129,6 +135,11 @@ export type ChartPartRenderSlice = {
  */
 export type ChartPieRenderOptions = ChartBaseRenderOptions & {
   /**
+   * Slice corner radius (px).
+   */
+  cornerRadius: number;
+
+  /**
    * Where plot labels sit.
    */
   labelPosition: ChartLabelPosition;
@@ -142,6 +153,16 @@ export type ChartPieRenderOptions = ChartBaseRenderOptions & {
    * Minimum slice angle (deg) so tiny slices stay visible.
    */
   minAngle: number;
+
+  /**
+   * Gap angle (deg) between slices.
+   */
+  padAngle: number;
+
+  /**
+   * Nightingale mode. `null` draws a regular pie.
+   */
+  rose: null | ChartPieRose;
 
   /**
    * Visible slices in render order.
@@ -189,6 +210,19 @@ export const DEFAULT_CHART_DONUT_THICKNESS = 0.3;
 
 /** Default minimum slice angle (deg). */
 export const DEFAULT_CHART_MIN_ANGLE = 2;
+
+/**
+ * Default gap (deg) and corner radius (px) between slices: a pie is solid,
+ * a donut gets thin gaps and soft corners.
+ */
+export function getChartPieSliceDefaults(variant: ChartPieVariant): {
+  cornerRadius: number;
+  padAngle: number;
+} {
+  return variant === "donut"
+    ? { padAngle: 1, cornerRadius: 2 }
+    : { padAngle: 0, cornerRadius: 0 };
+}
 
 /** Id of the slice that groups the rest when `maxSlices` is set. */
 export const CHART_OTHER_SLICE_ID = "other";

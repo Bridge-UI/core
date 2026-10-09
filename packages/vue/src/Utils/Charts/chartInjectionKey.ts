@@ -34,7 +34,16 @@ export type ChartLineSeriesRegistration = Pick<
   Partial<
     Pick<
       ChartLineSeriesEntry,
-      "area" | "step" | "curve" | "stack" | "dashed" | "labels" | "showPoints"
+      | "area"
+      | "step"
+      | "curve"
+      | "stack"
+      | "dashed"
+      | "labels"
+      | "colorBy"
+      | "showPoints"
+      | "areaOpacity"
+      | "colorRanges"
     >
   > & {
     /**
@@ -51,7 +60,12 @@ export type ChartBarSeriesRegistration = Pick<
   ChartBarSeriesEntry,
   "id" | "data" | "kind" | "name" | "color"
 > &
-  Partial<Pick<ChartBarSeriesEntry, "stack" | "labels">> & {
+  Partial<
+    Pick<
+      ChartBarSeriesEntry,
+      "tone" | "stack" | "labels" | "colorBy" | "colorRanges"
+    >
+  > & {
     /**
      * Reference lines.
      */

@@ -3,10 +3,12 @@ import { isNil } from "es-toolkit/compat";
 
 // ** Local Imports
 import {
+  findChartColorRange,
   formatChartValue,
   isChartValue,
   type ChartAxisOptions,
   type ChartBaseRenderOptions,
+  type ChartColorRange,
   type ChartTable,
   type ChartTooltipContent,
   type ChartTooltipItem,
@@ -25,6 +27,11 @@ export type ChartScatterSeriesEntry = {
    * Color token key or raw CSS color. Falls back to the palette.
    */
   color?: string;
+
+  /**
+   * Ranges matched against each point's `y` that recolor single points.
+   */
+  colorRanges?: ChartColorRange[];
 
   /**
    * Points.
@@ -263,6 +270,16 @@ export function isChartScatterEmpty(
 }
 
 /**
+ * Color range a point's `y` falls in, if any.
+ */
+export function findChartScatterRange(
+  series: Pick<ChartScatterSeriesEntry, "colorRanges">,
+  y: number,
+): undefined | ChartColorRange {
+  return findChartColorRange(series.colorRanges ?? [], y);
+}
+
+/**
  * Tooltip content for one point: the series name as title, then `x`, `y`,
  * and the size when present.
  */
@@ -273,18 +290,28 @@ export function getChartScatterTooltip({
 }: {
   labels: { size?: string; x: string; y: string };
   point: ChartScatterFlatPoint;
-  series: Pick<ChartScatterSeriesEntry, "name"> & { color: string };
+  series: Pick<ChartScatterSeriesEntry, "name" | "colorRanges"> & {
+    color: string;
+  };
 }): ChartTooltipContent {
+  const range = findChartScatterRange(series, point.y);
+  const note = range?.label;
+
   const items: ChartTooltipItem[] = [
     { id: "x", name: labels.x, value: point.x },
-    { id: "y", name: labels.y, value: point.y },
+    {
+      id: "y",
+      name: labels.y,
+      value: point.y,
+      ...(isNil(note) ? {} : { note }),
+    },
   ];
 
   if (!isNil(point.size)) {
     items.push({ id: "size", value: point.size, name: labels.size ?? "" });
   }
 
-  return { items, title: series.name, color: series.color };
+  return { items, title: series.name, color: range?.color ?? series.color };
 }
 
 /**
@@ -298,12 +325,23 @@ export function getChartScatterTable({
 }: {
   headers: { series: string; size: string; x: string; y: string };
   locale?: string;
-  series: ReadonlyArray<Pick<ChartScatterSeriesEntry, "data" | "name">>;
+  series: ReadonlyArray<
+    Pick<ChartScatterSeriesEntry, "data" | "name" | "colorRanges">
+  >;
 }): ChartTable {
   const hasSize = !isNil(getChartBubbleSizeDomain(series));
 
   const format = (value: null | number) => {
     return isNil(value) ? "—" : formatChartValue(value, locale);
+  };
+
+  const withNote = (
+    item: Pick<ChartScatterSeriesEntry, "colorRanges">,
+    y: number,
+  ) => {
+    const note = findChartScatterRange(item, y)?.label;
+
+    return isNil(note) ? format(y) : `${format(y)} (${note})`;
   };
 
   return {
@@ -325,7 +363,7 @@ export function getChartScatterTable({
             cells: [
               item.name,
               format(point[0]),
-              format(point[1]),
+              withNote(item, point[1]),
               ...(hasSize ? [format(getPointSize(point))] : []),
             ],
           },

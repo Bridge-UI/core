@@ -7,6 +7,7 @@ export type {
 export { useChartBar } from "@/Components/ChartBar/hooks/useChartBar";
 export {
   useChartContext,
+  type ChartCategoryColors,
   type ChartClasses,
   type ChartColorOverrides,
   type ChartColorValue,

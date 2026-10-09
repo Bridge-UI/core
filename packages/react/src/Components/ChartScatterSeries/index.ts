@@ -5,3 +5,4 @@ export type {
   ChartScatterSeriesProps,
 } from "@/Components/ChartScatterSeries/chartScatterSeries.types";
 export { useChartScatterSeries } from "@/Components/ChartScatterSeries/hooks/useChartScatterSeries";
+export type { ChartColorRangeOption } from "@/Utils/Charts";

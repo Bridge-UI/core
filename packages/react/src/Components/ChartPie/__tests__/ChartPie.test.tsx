@@ -142,3 +142,26 @@ test("it should show the empty message without positive slices", () => {
 
   expect(screen.getByText("No data")).toBeTruthy();
 });
+
+test("it should draw a rose with slice gaps and corners", () => {
+  stubPlotSize({ width: 320, height: 240 });
+
+  renderChart({
+    padAngle: 4,
+    rose: "radius",
+    cornerRadius: 6,
+    animation: false,
+  });
+
+  const option = getInstanceByDom(getEchartsHost())?.getOption() as {
+    series: Array<{
+      itemStyle: { borderRadius: number };
+      padAngle: number;
+      roseType: string;
+    }>;
+  };
+
+  expect(option.series[0].padAngle).toBe(4);
+  expect(option.series[0].roseType).toBe("radius");
+  expect(option.series[0].itemStyle.borderRadius).toBe(6);
+});

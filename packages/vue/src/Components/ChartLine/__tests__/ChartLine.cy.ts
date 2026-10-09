@@ -54,3 +54,24 @@ test("it should show the empty message", () => {
 
   cy.contains("No data").should("be.visible");
 });
+
+test("it should recolor a line by value ranges", () => {
+  cy.mount(ChartLine, {
+    props: { area: true, animation: false, categories: ["Jan", "Feb", "Mar"] },
+    slots: {
+      default: () => [
+        h(ChartLineSeries, {
+          name: "AQI",
+          data: [40, 120, 80],
+          colorRanges: [
+            { max: 50, color: "#00ff00" },
+            { min: 100, color: "#ff0000" },
+          ],
+        }),
+      ],
+    },
+  });
+
+  cy.get("[role='img'] svg linearGradient").should("exist");
+  cy.get("[role='img'] svg path[stroke^='url(']").should("exist");
+});

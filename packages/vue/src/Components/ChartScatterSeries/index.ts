@@ -5,3 +5,4 @@ export type {
 } from "@/Components/ChartScatterSeries/chartScatterSeries.types";
 export { default as ChartScatterSeries } from "@/Components/ChartScatterSeries/ChartScatterSeries.vue";
 export { useChartScatterSeries } from "@/Components/ChartScatterSeries/composables/useChartScatterSeries";
+export type { ChartColorRangeOption } from "@/Utils/Charts";

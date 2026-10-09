@@ -12,6 +12,7 @@ import { get, isArray, isNil, isNumber } from "es-toolkit/compat";
 
 // ** Core Imports
 import {
+  findChartScatterRange,
   isChartValue,
   scaleChartBubbleSize,
   type ChartAxisOptions,
@@ -56,6 +57,27 @@ function getSymbolSize(
     value: size,
     range: options.bubbleSize,
     domain: options.sizeDomain,
+  });
+}
+
+/**
+ * Points, with their own color when `y` falls in a color range.
+ */
+function toScatterData(
+  series: ChartScatterRenderSeries,
+): ScatterSeriesOption["data"] {
+  if (isNil(series.colorRanges) || series.colorRanges.length === 0) {
+    return series.data;
+  }
+
+  return series.data.map((point) => {
+    const range = isChartValue(point[1])
+      ? findChartScatterRange(series, point[1])
+      : undefined;
+
+    return isNil(range)
+      ? point
+      : { value: point, itemStyle: { color: range.color } };
   });
 }
 
@@ -121,7 +143,7 @@ export function buildEchartsScatterOption(
         id: series.id,
         type: "scatter",
         name: series.name,
-        data: series.data,
+        data: toScatterData(series),
         emphasis: { scale: 1.2, focus: "series" },
         symbolSize: (point: unknown) => getSymbolSize(options, series, point),
         itemStyle: {

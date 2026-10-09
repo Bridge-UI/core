@@ -43,3 +43,29 @@ test("it should draw a line over the bars", () => {
 
   cy.get("[role='img'] svg path[fill='none']").should("exist");
 });
+
+test("it should paint bars by category and mix muted bars toward the background", () => {
+  cy.mount(
+    <div style={{ backgroundColor: "rgb(255, 255, 255)" }}>
+      <ChartBar
+        animation={false}
+        categories={categories}
+        categoryColors={["#ff0000", "#00ff00", "#0000ff"]}
+      >
+        <ChartBarSeries name="October" data={[3, 2, 1]} />
+        <ChartBarSeries tone="muted" name="Average" data={[3, 2, 1]} />
+      </ChartBar>
+    </div>,
+  );
+
+  cy.get("[role='img'] svg path").should((paths) => {
+    const fills = [...paths].map((path) => path.getAttribute("fill"));
+
+    expect(fills).to.include.members([
+      "rgb(255,0,0)",
+      "rgb(0,0,255)",
+      "rgb(255, 153, 153)",
+      "rgb(153, 153, 255)",
+    ]);
+  });
+});

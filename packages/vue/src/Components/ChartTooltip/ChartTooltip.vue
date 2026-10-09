@@ -21,6 +21,7 @@ const {
   isOpen,
   context,
   itemBind,
+  noteBind,
   rootBind,
   labelBind,
   titleBind,
@@ -44,6 +45,7 @@ const {
         <span v-if="item.color" v-bind="getSwatchBind(item.color)" />
         <span v-bind="labelBind">{{ item.name }}</span>
         <span v-bind="valueBind">{{ formatValue(item) }}</span>
+        <span v-if="item.note" v-bind="noteBind">{{ item.note }}</span>
         <span v-bind="percentBind" v-if="formatPercent(item) !== null">
           {{ formatPercent(item) }}
         </span>

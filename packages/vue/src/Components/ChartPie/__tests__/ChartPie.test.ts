@@ -138,3 +138,26 @@ test("it should mount a donut ring with plot labels", async () => {
 
   wrapper.unmount();
 });
+
+test("it should draw a rose with slice gaps and corners", async () => {
+  stubPlotSize({ width: 320, height: 240 });
+
+  const wrapper = await mountChart({
+    padAngle: 4,
+    rose: "radius",
+    cornerRadius: 6,
+    animation: false,
+  });
+
+  const option = getInstanceByDom(getEchartsHost(wrapper))?.getOption() as {
+    series: Array<{
+      itemStyle: { borderRadius: number };
+      padAngle: number;
+      roseType: string;
+    }>;
+  };
+
+  expect(option.series[0].padAngle).toBe(4);
+  expect(option.series[0].roseType).toBe("radius");
+  expect(option.series[0].itemStyle.borderRadius).toBe(6);
+});

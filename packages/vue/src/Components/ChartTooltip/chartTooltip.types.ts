@@ -17,6 +17,11 @@ export interface ChartTooltipClasses {
   label?: string;
 
   /**
+   * Classes merged onto each color range label (`colorRanges`).
+   */
+  note?: string;
+
+  /**
    * Classes merged onto each percent (pie, funnel).
    */
   percent?: string;

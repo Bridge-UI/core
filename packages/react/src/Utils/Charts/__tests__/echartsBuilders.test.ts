@@ -14,6 +14,7 @@ import type {
 import { buildEchartsCartesianOption } from "@/Utils/Charts/echarts/cartesian";
 import { buildEchartsFunnelOption } from "@/Utils/Charts/echarts/funnel";
 import { buildEchartsPieOption } from "@/Utils/Charts/echarts/pie";
+import { buildEchartsScatterOption } from "@/Utils/Charts/echarts/scatter";
 
 const theme: ChartRenderTheme = {
   fontSize: 12,
@@ -21,6 +22,7 @@ const theme: ChartRenderTheme = {
   axisColor: "rgb(1, 1, 1)",
   gridColor: "rgb(2, 2, 2)",
   textColor: "rgb(3, 3, 3)",
+  backgroundColor: "rgb(255, 255, 255)",
 };
 
 const line: ChartCartesianRenderSeries = {
@@ -34,9 +36,32 @@ const line: ChartCartesianRenderSeries = {
   reference: [],
   data: [1, null],
   curve: "linear",
+  colorRanges: [],
+  itemColors: null,
+  colorBy: "value",
+  areaOpacity: 0.15,
   showPoints: false,
   color: "rgb(9, 9, 9)",
 };
+
+const bar: ChartCartesianRenderSeries = {
+  id: "b",
+  name: "B",
+  kind: "bar",
+  data: [1, 2],
+  tone: "solid",
+  labels: false,
+  reference: [],
+  colorRanges: [],
+  itemColors: null,
+  colorBy: "value",
+  color: "rgb(8, 8, 8)",
+};
+
+const ranges = [
+  { max: 50, label: "Good", color: "rgb(0, 200, 0)" },
+  { min: 50, label: "Bad", color: "rgb(200, 0, 0)" },
+];
 
 function cartesian(
   options: Partial<ChartCartesianRenderOptions> = {},
@@ -92,7 +117,7 @@ describe("buildEchartsCartesianOption", () => {
       cartesian({
         yAxis: { label: "Tag" },
         orientation: "horizontal",
-        series: [{ ...line, kind: "bar", labels: true, data: [1, 2] }],
+        series: [{ ...bar, labels: true }],
       }),
     );
 
@@ -171,6 +196,101 @@ describe("buildEchartsCartesianOption", () => {
     expect(formatReference({ value: 5 })).toBe("v5");
     expect(get(option, "series[0].markLine.data[0].yAxis")).toBe(5);
   });
+
+  test("it should fill the area with the series color and opacity", () => {
+    const option = buildEchartsCartesianOption(
+      cartesian({ series: [{ ...line, area: true, areaOpacity: 0.6 }] }),
+    );
+
+    expect(get(option, "visualMap")).toBeUndefined();
+    expect(get(option, "series[0].areaStyle")).toEqual({
+      opacity: 0.6,
+      color: "rgb(9, 9, 9)",
+    });
+  });
+
+  test("it should recolor ranged lines with a hidden visual map", () => {
+    const option = buildEchartsCartesianOption(
+      cartesian({ series: [{ ...line, area: true, colorRanges: ranges }] }),
+    );
+
+    expect(get(option, "visualMap[0]")).toMatchObject({
+      show: false,
+      dimension: 1,
+      seriesIndex: 0,
+      type: "piecewise",
+      outOfRange: { color: "rgb(9, 9, 9)" },
+      pieces: [
+        { lt: 50, color: "rgb(0, 200, 0)" },
+        { gte: 50, color: "rgb(200, 0, 0)" },
+      ],
+    });
+
+    // A fixed stroke or fill would win over the visual map.
+    expect(get(option, "series[0].lineStyle.color")).toBeUndefined();
+    expect(get(option, "series[0].areaStyle")).toEqual({ opacity: 0.15 });
+  });
+
+  test("it should match category ranges by timestamp on a time axis", () => {
+    const option = buildEchartsCartesianOption(
+      cartesian({
+        timestamps: [100, 200, 300],
+        series: [
+          {
+            ...line,
+            data: [1, 2, 3],
+            colorBy: "category",
+            colorRanges: [{ min: 1, max: 9, color: "red" }],
+          },
+        ],
+      }),
+    );
+
+    expect(get(option, "visualMap[0].dimension")).toBe(0);
+    expect(get(option, "visualMap[0].pieces")).toEqual([
+      { gte: 200, lte: 300, color: "red" },
+    ]);
+  });
+
+  test("it should use the value dimension of lines in horizontal charts", () => {
+    const option = buildEchartsCartesianOption(
+      cartesian({
+        orientation: "horizontal",
+        series: [{ ...line, colorRanges: ranges }],
+      }),
+    );
+
+    expect(get(option, "visualMap[0].dimension")).toBe(0);
+  });
+
+  test("it should paint open ranges as a plain color", () => {
+    const option = buildEchartsCartesianOption(
+      cartesian({ series: [{ ...line, colorRanges: [{ color: "red" }] }] }),
+    );
+
+    expect(get(option, "visualMap")).toBeUndefined();
+    expect(get(option, "series[0].lineStyle.color")).toBe("red");
+  });
+
+  test("it should paint each bar with its item color", () => {
+    const option = buildEchartsCartesianOption(
+      cartesian({ series: [{ ...bar, itemColors: ["red", "blue"] }] }),
+    );
+
+    expect(get(option, "series[0].data[0].itemStyle.color")).toBe("red");
+    expect(get(option, "series[0].data[1].itemStyle.color")).toBe("blue");
+  });
+
+  test("it should keep the theme text color for labels inside muted bars", () => {
+    const option = buildEchartsCartesianOption(
+      cartesian({
+        series: [{ ...bar, stack: "s", labels: true, tone: "muted" }],
+      }),
+    );
+
+    expect(get(option, "series[0].label.position")).toBe("inside");
+    expect(get(option, "series[0].label.color")).toBe("rgb(3, 3, 3)");
+  });
 });
 
 describe("buildEchartsPieOption", () => {
@@ -178,10 +298,13 @@ describe("buildEchartsPieOption", () => {
     theme,
     slices,
     width: 320,
+    rose: null,
     height: 240,
     minAngle: 2,
+    padAngle: 0,
     labels: false,
     thickness: 0.3,
+    cornerRadius: 0,
     animation: false,
     labelPosition: "outside",
   } as const;
@@ -196,11 +319,14 @@ describe("buildEchartsPieOption", () => {
   test("it should leave a hole for donuts and room for outside labels", () => {
     const option = buildEchartsPieOption({
       ...base,
+      padAngle: 1,
       labels: true,
+      cornerRadius: 2,
       variant: "donut",
     });
 
     expect(get(option, "series[0].padAngle")).toBe(1);
+    expect(get(option, "series[0].itemStyle.borderRadius")).toBe(2);
     expect(get(option, "series[0].labelLine.show")).toBe(true);
     expect(get(option, "series[0].radius")).toEqual(["49%", "70%"]);
   });
@@ -216,6 +342,82 @@ describe("buildEchartsPieOption", () => {
     expect(get(option, "series[0].label.color")).toBe("#fff");
     expect(get(option, "series[0].label.position")).toBe("inside");
     expect(get(option, "series[0].radius")).toEqual(["0%", "92%"]);
+  });
+});
+
+describe("buildEchartsPieOption slices", () => {
+  const base = {
+    theme,
+    slices,
+    width: 320,
+    height: 240,
+    minAngle: 2,
+    labels: false,
+    thickness: 0.3,
+    variant: "pie",
+    animation: false,
+    labelPosition: "outside",
+  } as const;
+
+  test("it should draw a rose with gaps and round corners", () => {
+    const option = buildEchartsPieOption({
+      ...base,
+      padAngle: 3,
+      rose: "area",
+      cornerRadius: 6,
+    });
+
+    expect(get(option, "series[0].padAngle")).toBe(3);
+    expect(get(option, "series[0].roseType")).toBe("area");
+    expect(get(option, "series[0].itemStyle.borderRadius")).toBe(6);
+  });
+
+  test("it should skip the gap for a single slice", () => {
+    const option = buildEchartsPieOption({
+      ...base,
+      rose: null,
+      padAngle: 3,
+      cornerRadius: 0,
+      slices: [slices[0]],
+    });
+
+    expect(get(option, "series[0].padAngle")).toBe(0);
+    expect(get(option, "series[0].roseType")).toBeUndefined();
+  });
+});
+
+describe("buildEchartsScatterOption", () => {
+  test("it should color points by their y range", () => {
+    const option = buildEchartsScatterOption({
+      theme,
+      xAxis: {},
+      yAxis: {},
+      points: [],
+      width: 320,
+      height: 240,
+      symbolSize: 8,
+      animation: false,
+      sizeDomain: null,
+      bubbleSize: [8, 40],
+      series: [
+        {
+          id: "s",
+          name: "S",
+          color: "gray",
+          kind: "scatter",
+          colorRanges: ranges,
+          data: [
+            [1, 10],
+            [2, 80],
+          ],
+        },
+      ],
+    });
+
+    expect(get(option, "series[0].data")).toEqual([
+      { value: [1, 10], itemStyle: { color: "rgb(0, 200, 0)" } },
+      { value: [2, 80], itemStyle: { color: "rgb(200, 0, 0)" } },
+    ]);
   });
 });
 

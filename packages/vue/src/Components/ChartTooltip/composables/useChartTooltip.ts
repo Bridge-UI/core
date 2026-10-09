@@ -220,6 +220,15 @@ export function useChartTooltip(
     };
   });
 
+  const noteBind = computed((): HTMLAttributes => {
+    return {
+      class: cn({
+        "text-dark-500 dark:text-dark-400": true,
+        [get(mergedClasses.value, "note") ?? ""]: true,
+      }),
+    };
+  });
+
   const valueBind = computed((): HTMLAttributes => {
     return {
       class: cn({
@@ -234,6 +243,7 @@ export function useChartTooltip(
     merged,
     context,
     itemBind,
+    noteBind,
     rootBind,
     labelBind,
     titleBind,

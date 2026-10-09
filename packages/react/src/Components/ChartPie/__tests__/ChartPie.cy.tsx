@@ -35,3 +35,20 @@ test("it should hide a slice from the legend", () => {
   cy.contains("button", "Housing").click();
   cy.contains("button", "Kids").should("contain.text", "51%");
 });
+
+test("it should draw a rose pie", () => {
+  cy.mount(
+    <ChartPie
+      rose="area"
+      padAngle={3}
+      animation={false}
+      data={[
+        { value: 3, label: "A" },
+        { value: 6, label: "B" },
+        { value: 9, label: "C" },
+      ]}
+    />,
+  );
+
+  cy.get("[role='img'] svg path").should("have.length.at.least", 3);
+});

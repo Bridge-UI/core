@@ -4,6 +4,7 @@ import {
   GridComponent,
   MarkLineComponent,
   TooltipComponent,
+  VisualMapPiecewiseComponent,
 } from "echarts/components";
 import { use } from "echarts/core";
 import { LabelLayout } from "echarts/features";
@@ -29,6 +30,7 @@ use([
   SVGRenderer,
   TooltipComponent,
   MarkLineComponent,
+  VisualMapPiecewiseComponent,
 ]);
 
 /**

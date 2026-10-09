@@ -96,3 +96,29 @@ test("it should show the empty message", () => {
 
   expect(screen.getByText("No data")).toBeTruthy();
 });
+
+test("it should color points by their y range", () => {
+  stubPlotSize({ width: 320, height: 240 });
+
+  render(
+    <ChartScatter animation={false}>
+      <ChartScatterSeries
+        name="Runs"
+        color="#888888"
+        data={[
+          [1, 5],
+          [2, 20],
+        ]}
+        colorRanges={[{ min: 10, label: "Fast", color: "#ff0000" }]}
+      />
+    </ChartScatter>,
+  );
+
+  const option = getInstanceByDom(getEchartsHost())?.getOption() as {
+    series: Array<{ data: unknown[] }>;
+  };
+
+  expect(option.series[0].data[0]).toEqual([1, 5]);
+  expect(option.series[0].data[1]).toMatchObject({ value: [2, 20] });
+  expect(screen.getAllByRole("cell")[3].textContent).toBe("20 (Fast)");
+});

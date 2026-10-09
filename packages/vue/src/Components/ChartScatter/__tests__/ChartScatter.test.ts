@@ -92,3 +92,34 @@ test("it should mount ECharts with scaled bubbles", async () => {
 
   wrapper.unmount();
 });
+
+test("it should color points by their y range", async () => {
+  stubPlotSize({ width: 320, height: 240 });
+
+  const wrapper = mount(ChartScatter, {
+    props: { animation: false },
+    slots: {
+      default: () => [
+        h(ChartScatterSeries, {
+          name: "Runs",
+          color: "#888888",
+          colorRanges: [{ min: 10, label: "Fast", color: "#ff0000" }],
+          data: [
+            [1, 5],
+            [2, 20],
+          ],
+        }),
+      ],
+    },
+  });
+
+  await flushPromises();
+
+  const option = getInstanceByDom(getEchartsHost(wrapper))?.getOption() as {
+    series: Array<{ data: unknown[] }>;
+  };
+
+  expect(option.series[0].data[0]).toEqual([1, 5]);
+  expect(option.series[0].data[1]).toMatchObject({ value: [2, 20] });
+  expect(wrapper.findAll("td")[3].text()).toBe("20 (Fast)");
+});

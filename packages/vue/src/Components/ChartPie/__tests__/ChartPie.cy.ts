@@ -24,3 +24,20 @@ test("it should draw a donut with center content and a side legend", () => {
   cy.contains("R$ 6,9 mil").should("be.visible");
   cy.get("ul").should("be.visible").and("contain.text", "57%");
 });
+
+test("it should draw a rose pie", () => {
+  cy.mount(ChartPie, {
+    props: {
+      padAngle: 3,
+      rose: "area",
+      animation: false,
+      data: [
+        { value: 3, label: "A" },
+        { value: 6, label: "B" },
+        { value: 9, label: "C" },
+      ],
+    },
+  });
+
+  cy.get("[role='img'] svg path").should("have.length.at.least", 3);
+});

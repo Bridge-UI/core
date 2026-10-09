@@ -4,6 +4,7 @@ import {
   GridComponent,
   MarkLineComponent,
   TooltipComponent,
+  VisualMapPiecewiseComponent,
 } from "echarts/components";
 import { use } from "echarts/core";
 import { SVGRenderer } from "echarts/renderers";
@@ -25,6 +26,7 @@ use([
   SVGRenderer,
   TooltipComponent,
   MarkLineComponent,
+  VisualMapPiecewiseComponent,
 ]);
 
 /**

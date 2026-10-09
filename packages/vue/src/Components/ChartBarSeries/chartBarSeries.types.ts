@@ -1,8 +1,13 @@
 // ** Core Imports
-import type { ChartDatum, ChartReference } from "@bridge-ui/core/Domain";
+import type {
+  ChartColorRangeAxis,
+  ChartDatum,
+  ChartReference,
+  ChartTone,
+} from "@bridge-ui/core/Domain";
 
 // ** Local Imports
-import type { ChartColorValue } from "@/Utils/Charts";
+import type { ChartColorRangeOption, ChartColorValue } from "@/Utils/Charts";
 
 /**
  * One bar series registered on the nearest `ChartBar`. Renders nothing.
@@ -15,6 +20,23 @@ export interface ChartBarSeriesOwnProps {
    * @default undefined
    */
   color?: ChartColorValue;
+
+  /**
+   * What `colorRanges` match: each bar's value, or its category index.
+   *
+   * @default "value"
+   */
+  colorBy?: ChartColorRangeAxis;
+
+  /**
+   * Recolors single bars: values in `[min, max)` take the range color.
+   * With `colorBy="category"`, `min` and `max` are category indices (both
+   * included). Ranges win over `ChartBar` `categoryColors`. Range labels
+   * show in the tooltip and data table.
+   *
+   * @default undefined
+   */
+  colorRanges?: ChartColorRangeOption[];
 
   /**
    * One value per `ChartBar` category. `null` leaves the slot empty.
@@ -47,6 +69,14 @@ export interface ChartBarSeriesOwnProps {
    * @default ChartBar `stack`
    */
   stack?: string;
+
+  /**
+   * `muted` mixes every bar color toward the background (a comparison or
+   * past period next to a `solid` series).
+   *
+   * @default "solid"
+   */
+  tone?: ChartTone;
 }
 
 /**

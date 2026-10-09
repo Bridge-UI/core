@@ -7,6 +7,7 @@ export { default as ChartBar } from "@/Components/ChartBar/ChartBar.vue";
 export { useChartBar } from "@/Components/ChartBar/composables/useChartBar";
 export {
   useChartContext,
+  type ChartCategoryColors,
   type ChartClasses,
   type ChartColorOverrides,
   type ChartColorValue,

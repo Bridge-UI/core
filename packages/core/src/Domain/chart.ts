@@ -69,6 +69,12 @@ export type ChartRenderTheme = {
   axisColor: string;
 
   /**
+   * Opaque color behind the plot (nearest painted ancestor). Muted tones
+   * mix toward it.
+   */
+  backgroundColor: string;
+
+  /**
    * Font family for axis labels.
    */
   fontFamily: string;
@@ -88,6 +94,46 @@ export type ChartRenderTheme = {
    */
   textColor: string;
 };
+
+/**
+ * One color range: values in `[min, max)` take `color`. On the category
+ * axis `min` and `max` are category indices and both ends are included.
+ */
+export type ChartColorRange = {
+  /**
+   * Color token key or CSS color (resolved to a CSS color before render).
+   */
+  color: string;
+
+  /**
+   * Text for the range (`"Good"`, `"Peak"`), shown in the tooltip, the
+   * data table, and the live region.
+   */
+  label?: string;
+
+  /**
+   * Upper bound: excluded for values, included for category indices.
+   * Open when omitted.
+   */
+  max?: number;
+
+  /**
+   * Lower bound (included). Open when omitted.
+   */
+  min?: number;
+};
+
+/**
+ * What color ranges are matched against: each point's value, or its
+ * category index.
+ */
+export type ChartColorRangeAxis = "value" | "category";
+
+/**
+ * Series tone. `muted` mixes the color toward the plot background (a
+ * comparison or past period next to a `solid` series).
+ */
+export type ChartTone = "muted" | "solid";
 
 /**
  * Options every chart family hands to its plot.
@@ -198,6 +244,11 @@ export type ChartTooltipItem = {
   name: string;
 
   /**
+   * Label of the color range the value falls in (`"Good"`).
+   */
+  note?: string;
+
+  /**
    * Share of the total (pie) or of the largest stage (funnel), `0`–`100`.
    */
   percent?: number;
@@ -298,6 +349,115 @@ export function resolveChartColor({
   const source = palette.length > 0 ? palette : DEFAULT_CHART_PALETTE;
 
   return get(source, index % source.length, "primary");
+}
+
+/**
+ * Range that `value` falls in (the first match wins). `axis: "category"`
+ * matches a category index, with both ends included.
+ */
+export function findChartColorRange<Range extends ChartColorRange>(
+  ranges: readonly Range[],
+  value: number,
+  axis: ChartColorRangeAxis = "value",
+): Range | undefined {
+  return ranges.find((range) => {
+    const aboveMin = isNil(range.min) || value >= range.min;
+
+    if (isNil(range.max)) {
+      return aboveMin;
+    }
+
+    return (
+      aboveMin && (axis === "category" ? value <= range.max : value < range.max)
+    );
+  });
+}
+
+/** Share of the original color kept by the `muted` tone. */
+export const CHART_MUTED_WEIGHT = 0.4;
+
+/**
+ * Parses `rgb()` / `rgba()` (comma or space syntax) and `#rgb` / `#rrggbb`
+ * into `[red, green, blue, alpha]`. `null` for anything else.
+ */
+function parseRgb(color: string): null | [number, number, number, number] {
+  const hex = /^#([\da-f]{3}|[\da-f]{6})$/i.exec(color.trim());
+
+  if (!isNil(hex)) {
+    const digits =
+      hex[1].length === 3
+        ? [...hex[1]].map((digit) => digit + digit).join("")
+        : hex[1];
+
+    return [
+      Number.parseInt(digits.slice(0, 2), 16),
+      Number.parseInt(digits.slice(2, 4), 16),
+      Number.parseInt(digits.slice(4, 6), 16),
+      1,
+    ];
+  }
+
+  const rgb = /^rgba?\(([^)]+)\)$/i.exec(color.trim());
+
+  if (isNil(rgb)) {
+    return null;
+  }
+
+  const parts = rgb[1].split(/[\s,/]+/).filter((part) => part.length > 0);
+  const [red, green, blue, alpha = "1"] = parts.map((part) => part.trim());
+  const channels = [red, green, blue].map(Number);
+
+  const opacity = alpha.endsWith("%")
+    ? Number.parseFloat(alpha) / 100
+    : Number(alpha);
+
+  if (![...channels, opacity].every(Number.isFinite)) {
+    return null;
+  }
+
+  return [channels[0], channels[1], channels[2], opacity];
+}
+
+/**
+ * Mixes `color` over an opaque `base`, keeping `weight` (`0`–`1`) of
+ * `color`. Returns `color` unchanged when either color is not `rgb()` /
+ * `rgba()` / hex (resolved chart colors always are in the browser).
+ */
+export function mixChartColors(
+  color: string,
+  base: string,
+  weight: number,
+): string {
+  const top = parseRgb(color);
+  const bottom = parseRgb(base);
+
+  if (isNil(top) || isNil(bottom)) {
+    return color;
+  }
+
+  const share = clamp(weight, 0, 1) * clamp(top[3], 0, 1);
+
+  const [red, green, blue] = [0, 1, 2].map((channel) => {
+    return Math.round(top[channel] * share + bottom[channel] * (1 - share));
+  });
+
+  return `rgb(${red}, ${green}, ${blue})`;
+}
+
+/**
+ * Applies a series tone to a resolved color. `muted` mixes it toward the
+ * plot background.
+ */
+export function applyChartTone(
+  color: string,
+  tone: ChartTone,
+  background: string,
+): string {
+  if (tone === "solid" || color.length === 0) {
+    return color;
+  }
+
+  return mixChartColors(color, background, CHART_MUTED_WEIGHT);
 }
 
 /**
@@ -445,9 +605,14 @@ export function formatChartAnnouncement({
     .map((item) => {
       const value = formatChartValue(item.value, locale);
 
-      return isNil(item.percent)
+      const extras = [
+        isNil(item.percent) ? null : formatChartPercent(item.percent, locale),
+        item.note,
+      ].filter((extra) => !isNil(extra) && extra.length > 0);
+
+      return extras.length === 0
         ? `${item.name} ${value}`
-        : `${item.name} ${value} (${formatChartPercent(item.percent, locale)})`;
+        : `${item.name} ${value} (${extras.join(", ")})`;
     })
     .join(", ");
 
@@ -459,8 +624,10 @@ export function formatChartAnnouncement({
 }
 
 /**
- * Places the tooltip above `anchor` (below when there is no room), clamped
- * horizontally inside `bounds`.
+ * Places the tooltip above `anchor`, or below it when only that side fits
+ * inside `bounds`. When neither side fits (sparklines, short charts) it
+ * stays above and leaves the bounds (`top` may be negative) instead of
+ * covering the plot. Always clamped horizontally inside `bounds`.
  */
 export function resolveChartTooltipPosition({
   size,
@@ -481,9 +648,11 @@ export function resolveChartTooltipPosition({
     return { left, top: above };
   }
 
-  const maxTop = Math.max(0, bounds.height - size.height);
+  const below = anchor.y + offset;
 
-  return { left, top: clamp(anchor.y + offset, 0, maxTop) };
+  return below + size.height <= bounds.height
+    ? { left, top: below }
+    : { left, top: above };
 }
 
 /**

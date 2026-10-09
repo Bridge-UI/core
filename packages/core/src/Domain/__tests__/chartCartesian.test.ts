@@ -4,6 +4,7 @@ import { describe, expect, test } from "vitest";
 // ** Local Imports
 import {
   getChartBarRadius,
+  getChartCartesianItemColors,
   getChartCartesianSummaryParams,
   getChartCartesianTable,
   getChartCartesianTooltip,
@@ -257,5 +258,75 @@ describe("getChartCartesianSummaryParams", () => {
       categories: 3,
       names: "Revenue, Cost",
     });
+  });
+});
+
+describe("getChartCartesianItemColors", () => {
+  const colorRanges = [{ min: 10, color: "red", label: "High" }];
+
+  test("it should be null for uniform series", () => {
+    expect(
+      getChartCartesianItemColors({
+        data: [1, 2],
+        color: "gray",
+        colorRanges: [],
+        colorBy: "value",
+      }),
+    ).toBeNull();
+  });
+
+  test("it should prefer the matching range, then the category color", () => {
+    expect(
+      getChartCartesianItemColors({
+        colorRanges,
+        color: "gray",
+        colorBy: "value",
+        data: [5, 20, null],
+        categoryColors: ["blue", "green", "pink"],
+      }),
+    ).toEqual(["blue", "red", "pink"]);
+  });
+
+  test("it should match category ranges by index", () => {
+    expect(
+      getChartCartesianItemColors({
+        color: "gray",
+        data: [1, 1, 1],
+        colorBy: "category",
+        colorRanges: [{ min: 1, max: 1, color: "red" }],
+      }),
+    ).toEqual(["gray", "red", "gray"]);
+  });
+});
+
+describe("color range notes", () => {
+  const series = {
+    id: "a",
+    name: "AQI",
+    color: "gray",
+    data: [5, 20],
+    colorBy: "value" as const,
+    itemColors: ["gray", "red"],
+    colorRanges: [{ min: 10, color: "red", label: "High" }],
+  };
+
+  test("it should use the item color and range label in the tooltip", () => {
+    expect(
+      getChartCartesianTooltip({ index: 1, title: "B", series: [series] }),
+    ).toEqual({
+      title: "B",
+      items: [{ id: "a", value: 20, name: "AQI", color: "red", note: "High" }],
+    });
+  });
+
+  test("it should append the range label in the data table", () => {
+    const table = getChartCartesianTable({
+      locale: "en-US",
+      series: [series],
+      categories: ["A", "B"],
+      categoryHeader: "Category",
+    });
+
+    expect(table.rows.map((row) => row.cells[1])).toEqual(["5", "20 (High)"]);
   });
 });

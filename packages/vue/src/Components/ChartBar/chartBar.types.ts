@@ -6,7 +6,7 @@ import type { ChartOrientation } from "@bridge-ui/core/Domain";
 import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import type { ChartRootOwnProps } from "@/Utils/Charts";
+import type { ChartCategoryColors, ChartRootOwnProps } from "@/Utils/Charts";
 
 /**
  * Bar chart root. Compose with `ChartBarSeries` (and `ChartLineSeries` for
@@ -19,6 +19,17 @@ export interface ChartBarOwnProps extends ChartRootOwnProps {
    * Each series has one value per category.
    */
   categories: Date[] | string[];
+
+  /**
+   * Gives each category its own bar color: `true` takes palette entries in
+   * category order, an array follows the category order, and a record maps
+   * category labels. Every bar series in a category shares the color (use
+   * `tone` to tell them apart); the legend shows each series in a neutral
+   * color. `ChartLineSeries` keep their own color.
+   *
+   * @default undefined
+   */
+  categoryColors?: ChartCategoryColors;
 
   /**
    * Formats date categories in the tooltip, data table, and summary.
