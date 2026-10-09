@@ -39,6 +39,7 @@ import type {
   FileUploadClasses,
   FileUploadProps,
 } from "@/Components/FileUpload";
+import type { HeadingClasses, HeadingProps } from "@/Components/Heading";
 import type { IconProps } from "@/Components/Icon";
 import type { LabelClasses, LabelProps } from "@/Components/Label";
 import type { LinkClasses, LinkProps } from "@/Components/Link";
@@ -87,6 +88,7 @@ import type { SliderClasses, SliderProps } from "@/Components/Slider";
 import type { SnackbarClasses, SnackbarProps } from "@/Components/Snackbar";
 import type { SpinnerClasses, SpinnerProps } from "@/Components/Spinner";
 import type { SwitchClasses, SwitchProps } from "@/Components/Switch";
+import type { TextClasses, TextProps } from "@/Components/Text";
 import type { TextareaClasses, TextareaProps } from "@/Components/Textarea";
 import type { TextFieldClasses, TextFieldProps } from "@/Components/TextField";
 
@@ -318,6 +320,13 @@ declare module "@bridge-ui/core/Config" {
     >;
   }
 
+  interface HeadingConfigOverrides {
+    classes: HeadingClasses;
+    defaultProps: Partial<
+      Pick<HeadingProps, "size" | "color" | "weight" | "variant">
+    >;
+  }
+
   interface IconConfigOverrides {
     defaultProps: Partial<Pick<IconProps, "size">>;
   }
@@ -546,6 +555,13 @@ declare module "@bridge-ui/core/Config" {
     classes: SwitchClasses;
     defaultProps: Partial<
       Pick<SwitchProps, "size" | "color" | "rounded" | "hideErrorMessage">
+    >;
+  }
+
+  interface TextConfigOverrides {
+    classes: TextClasses;
+    defaultProps: Partial<
+      Pick<TextProps, "size" | "color" | "weight" | "variant">
     >;
   }
 
