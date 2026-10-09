@@ -1,5 +1,5 @@
 // ** External Imports
-import type { HTMLAttributes, ReactNode } from "react";
+import type { HTMLAttributes, LabelHTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
@@ -105,7 +105,12 @@ export interface TextOwnProps {
   weight?: MergeProps<TextWeight, TextWeightOverrides>;
 }
 
-export type TextProps = MergeHtmlProps<
-  TextOwnProps,
-  HTMLAttributes<HTMLElement>
->;
+export type TextProps =
+  | MergeHtmlProps<
+      TextOwnProps & { as: "label" },
+      LabelHTMLAttributes<HTMLLabelElement>
+    >
+  | MergeHtmlProps<
+      TextOwnProps & { as?: Exclude<TextOwnProps["as"], "label"> },
+      HTMLAttributes<HTMLElement>
+    >;

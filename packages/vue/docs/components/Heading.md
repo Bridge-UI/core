@@ -47,7 +47,7 @@ Keep the right level for the page outline and set the look with `size`.
 <Heading :level="3" variant="muted">
   Archived
 </Heading>
-<Heading :level="3" color="primary" weight="bold">
+<Heading :level="3" weight="bold" color="primary">
   Highlights
 </Heading>
 ```

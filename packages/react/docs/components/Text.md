@@ -55,7 +55,7 @@ Use `variant="muted"` for subtitles, captions, and metadata.
 ### Label
 
 ```tsx
-<Text size="xs" uppercase variant="muted" weight="medium">
+<Text uppercase size="xs" variant="muted" weight="medium">
   Balance
 </Text>
 ```

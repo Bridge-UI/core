@@ -19,8 +19,8 @@ test("it should render as a p element by default", () => {
 test("it should render the element set by as", () => {
   const { container } = render(<Text as="span">Hello</Text>);
 
-  expect(container.querySelector("span")).not.toBeNull();
   expect(container.querySelector("p")).toBeNull();
+  expect(container.querySelector("span")).not.toBeNull();
 });
 
 test("it should apply default size, weight and color", () => {
@@ -77,9 +77,9 @@ test("it should apply numeric, truncate and uppercase classes", () => {
 
   const root = container.querySelector("p");
 
-  expect(root?.classList.contains("tabular-nums")).toBe(true);
   expect(root?.classList.contains("truncate")).toBe(true);
   expect(root?.classList.contains("uppercase")).toBe(true);
+  expect(root?.classList.contains("tabular-nums")).toBe(true);
 });
 
 test("it should ignore global defaultColor", () => {
@@ -144,4 +144,14 @@ test("it should forward additional attributes to the root element", () => {
 
   expect(root).not.toBeNull();
   expect(root?.getAttribute("data-testid")).toBe("text");
+});
+
+test("it should forward label attributes when rendered as a label", () => {
+  const { container } = render(
+    <Text as="label" htmlFor="email">
+      Email
+    </Text>,
+  );
+
+  expect(container.querySelector("label")?.getAttribute("for")).toBe("email");
 });

@@ -16,8 +16,8 @@ test("it should render as a p element by default", () => {
 test("it should render the element set by as", () => {
   const wrapper = mount(Text, { props: { as: "span" } });
 
-  expect(wrapper.find("span").exists()).toBe(true);
   expect(wrapper.find("p").exists()).toBe(false);
+  expect(wrapper.find("span").exists()).toBe(true);
 });
 
 test("it should apply default size, weight and color", () => {
@@ -58,9 +58,9 @@ test("it should apply numeric, truncate and uppercase classes", () => {
     props: { numeric: true, truncate: true, uppercase: true },
   }).find("p");
 
-  expect(root.classes()).toContain("tabular-nums");
   expect(root.classes()).toContain("truncate");
   expect(root.classes()).toContain("uppercase");
+  expect(root.classes()).toContain("tabular-nums");
 });
 
 test("it should ignore global defaultColor", () => {
