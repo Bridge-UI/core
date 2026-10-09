@@ -459,8 +459,10 @@ export function formatChartAnnouncement({
 }
 
 /**
- * Places the tooltip above `anchor` (below when there is no room), clamped
- * horizontally inside `bounds`.
+ * Places the tooltip above `anchor`, or below it when only that side fits
+ * inside `bounds`. When neither side fits (sparklines, short charts) it
+ * stays above and leaves the bounds (`top` may be negative) instead of
+ * covering the plot. Always clamped horizontally inside `bounds`.
  */
 export function resolveChartTooltipPosition({
   size,
@@ -481,9 +483,11 @@ export function resolveChartTooltipPosition({
     return { left, top: above };
   }
 
-  const maxTop = Math.max(0, bounds.height - size.height);
+  const below = anchor.y + offset;
 
-  return { left, top: clamp(anchor.y + offset, 0, maxTop) };
+  return below + size.height <= bounds.height
+    ? { left, top: below }
+    : { left, top: above };
 }
 
 /**

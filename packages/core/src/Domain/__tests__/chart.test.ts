@@ -211,6 +211,29 @@ describe("resolveChartTooltipPosition", () => {
         .top,
     ).toBe(28);
   });
+
+  test("it should stay above and leave the bounds when neither side fits", () => {
+    const sparkline = { width: 300, height: 48 };
+    const tooltip = { width: 100, height: 50 };
+
+    expect(
+      resolveChartTooltipPosition({
+        size: tooltip,
+        bounds: sparkline,
+        anchor: { y: 24, x: 150 },
+      }),
+    ).toEqual({ top: -34, left: 100 });
+  });
+
+  test("it should stay above when the tooltip is taller than the room below", () => {
+    expect(
+      resolveChartTooltipPosition({
+        anchor: { y: 60, x: 150 },
+        size: { width: 100, height: 60 },
+        bounds: { width: 300, height: 120 },
+      }).top,
+    ).toBe(-8);
+  });
 });
 
 describe("toChartCssSize", () => {
