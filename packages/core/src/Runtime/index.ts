@@ -19,6 +19,7 @@ export {
   observeColorScheme,
   prefersReducedMotion,
   readChartTheme,
+  readCssBackground,
   readCssColor,
   type ChartThemeProbeClasses,
 } from "@/Runtime/color";

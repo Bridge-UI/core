@@ -9,6 +9,7 @@ import {
   getChartPartTable,
   getChartPartTooltip,
   getChartPiePercents,
+  getChartPieSliceDefaults,
   getChartPieSummaryParams,
   isChartPartEmpty,
   resolveChartSliceLabel,
@@ -191,5 +192,19 @@ describe("getChartFunnelSummaryParams", () => {
 
   test("it should handle no stages", () => {
     expect(getChartFunnelSummaryParams({ slices: [] }).first).toBe("");
+  });
+});
+
+describe("getChartPieSliceDefaults", () => {
+  test("it should keep a pie solid and give a donut gaps and corners", () => {
+    expect(getChartPieSliceDefaults("pie")).toEqual({
+      padAngle: 0,
+      cornerRadius: 0,
+    });
+
+    expect(getChartPieSliceDefaults("donut")).toEqual({
+      padAngle: 1,
+      cornerRadius: 2,
+    });
   });
 });

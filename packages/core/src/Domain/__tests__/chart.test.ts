@@ -3,7 +3,9 @@ import { describe, expect, test } from "vitest";
 
 // ** Local Imports
 import {
+  applyChartTone,
   DEFAULT_CHART_PALETTE,
+  findChartColorRange,
   formatChartAnnouncement,
   formatChartPercent,
   formatChartValue,
@@ -11,6 +13,7 @@ import {
   isChartEmpty,
   isChartValue,
   isSameChartAxisOptions,
+  mixChartColors,
   resolveChartColor,
   resolveChartTooltipPosition,
   roundChartPercents,
@@ -182,6 +185,16 @@ describe("formatChartAnnouncement", () => {
   test("it should return the title alone without values", () => {
     expect(formatChartAnnouncement({ items: [], title: "Q1" })).toBe("Q1");
   });
+
+  test("it should append the range label", () => {
+    expect(
+      formatChartAnnouncement({
+        title: "Mon",
+        locale: "en-US",
+        items: [{ id: "a", value: 120, name: "AQI", note: "Unhealthy" }],
+      }),
+    ).toBe("Mon: AQI 120 (Unhealthy)");
+  });
 });
 
 describe("resolveChartTooltipPosition", () => {
@@ -245,5 +258,69 @@ describe("toChartCssSize", () => {
     expect(toChartCssSize("", "100%")).toBe("100%");
     expect(toChartCssSize("50vh", "100%")).toBe("50vh");
     expect(toChartCssSize(undefined, "100%")).toBe("100%");
+  });
+});
+
+describe("findChartColorRange", () => {
+  const ranges = [
+    { max: 50, color: "green" },
+    { min: 50, max: 100, color: "yellow" },
+    { min: 100, color: "red" },
+  ];
+
+  test("it should include the lower bound and exclude the upper one", () => {
+    expect(findChartColorRange(ranges, 49.9)?.color).toBe("green");
+    expect(findChartColorRange(ranges, 50)?.color).toBe("yellow");
+    expect(findChartColorRange(ranges, 100)?.color).toBe("red");
+  });
+
+  test("it should include both ends of a category range", () => {
+    const category = [{ min: 1, max: 2, color: "red" }];
+
+    expect(findChartColorRange(category, 0, "category")).toBeUndefined();
+    expect(findChartColorRange(category, 1, "category")?.color).toBe("red");
+    expect(findChartColorRange(category, 2, "category")?.color).toBe("red");
+    expect(findChartColorRange(category, 3, "category")).toBeUndefined();
+  });
+
+  test("it should return the first match and nothing outside every range", () => {
+    const overlapping = [
+      { min: 0, color: "a" },
+      { min: 0, color: "b" },
+    ];
+
+    expect(findChartColorRange(overlapping, 5)?.color).toBe("a");
+    expect(findChartColorRange(overlapping, -1)).toBeUndefined();
+  });
+});
+
+describe("mixChartColors", () => {
+  test("it should mix toward the base by weight", () => {
+    expect(mixChartColors("rgb(0, 0, 0)", "rgb(255, 255, 255)", 0.4)).toBe(
+      "rgb(153, 153, 153)",
+    );
+  });
+
+  test("it should parse hex, space syntax, and alpha", () => {
+    expect(mixChartColors("#f00", "#ffffff", 1)).toBe("rgb(255, 0, 0)");
+    expect(mixChartColors("rgb(0 0 0 / 50%)", "rgb(200, 200, 200)", 1)).toBe(
+      "rgb(100, 100, 100)",
+    );
+  });
+
+  test("it should keep colors it cannot parse", () => {
+    expect(mixChartColors("var(--brand)", "#fff", 0.5)).toBe("var(--brand)");
+  });
+});
+
+describe("applyChartTone", () => {
+  test("it should keep solid colors and mix muted ones", () => {
+    expect(applyChartTone("rgb(0, 0, 0)", "solid", "#fff")).toBe(
+      "rgb(0, 0, 0)",
+    );
+
+    expect(applyChartTone("rgb(0, 0, 0)", "muted", "#fff")).toBe(
+      "rgb(153, 153, 153)",
+    );
   });
 });

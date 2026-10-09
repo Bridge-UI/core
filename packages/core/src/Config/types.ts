@@ -11,6 +11,7 @@ import type {
   ChartFunnelAlign,
   ChartFunnelSort,
   ChartLabelPosition,
+  ChartPieRose,
   ChartPieVariant,
 } from "@/Domain/chartPart";
 import type { RichTextTool } from "@/Domain/richText";
@@ -790,6 +791,7 @@ export interface ChartLineConfigBase {
   defaultProps: Partial<
     ChartRootDefaultProps & {
       area: boolean;
+      areaOpacity: number;
       curve: ChartCurve;
       labels: boolean;
       showPoints: boolean;
@@ -803,9 +805,12 @@ export interface ChartPieConfigBase {
   classes: object;
   defaultProps: Partial<
     ChartRootDefaultProps & {
+      cornerRadius: number;
       labelPosition: ChartLabelPosition;
       labels: boolean;
       minAngle: number;
+      padAngle: number;
+      rose: ChartPieRose;
       thickness: number;
       variant: ChartPieVariant;
     }

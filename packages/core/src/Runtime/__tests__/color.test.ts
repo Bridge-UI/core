@@ -9,6 +9,7 @@ import {
   observeColorScheme,
   prefersReducedMotion,
   readChartTheme,
+  readCssBackground,
   readCssColor,
 } from "@/Runtime/color";
 
@@ -51,6 +52,25 @@ describe("readChartTheme", () => {
     expect(theme.fontSize).toBe(14);
     expect(typeof theme.axisColor).toBe("string");
     expect(container.children).toHaveLength(0);
+  });
+});
+
+describe("readCssBackground", () => {
+  test("it should read the nearest painted ancestor", () => {
+    const parent = document.createElement("div");
+    const child = document.createElement("div");
+    parent.style.backgroundColor = "rgb(10, 20, 30)";
+    parent.appendChild(child);
+    document.body.appendChild(parent);
+
+    expect(readCssBackground(child)).toBe("rgb(10, 20, 30)");
+  });
+
+  test("it should fall back to white when nothing is painted", () => {
+    const element = document.createElement("div");
+    document.body.appendChild(element);
+
+    expect(readCssBackground(element)).toBe("rgb(255, 255, 255)");
   });
 });
 
