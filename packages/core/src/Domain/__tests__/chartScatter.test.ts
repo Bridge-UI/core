@@ -88,6 +88,17 @@ describe("isChartScatterEmpty", () => {
   });
 });
 
+/** Series with one color range, shared by the tooltip and table tests. */
+const rangedSeries = {
+  name: "S",
+  color: "gray",
+  colorRanges: [{ min: 10, color: "red", label: "High" }],
+  data: [
+    [1, 5],
+    [2, 20],
+  ] as Array<[number, number]>,
+};
+
 describe("getChartScatterTooltip", () => {
   test("it should list x, y, and the size", () => {
     expect(
@@ -111,6 +122,29 @@ describe("getChartScatterTooltip", () => {
         { id: "y", value: 340, name: "Ticket" },
         { value: 3, id: "size", name: "Orders" },
       ],
+    });
+  });
+
+  test("it should color the tooltip by the point range", () => {
+    const tooltip = getChartScatterTooltip({
+      series: rangedSeries,
+      labels: { x: "x", y: "y" },
+      point: {
+        x: 2,
+        y: 20,
+        size: null,
+        dataIndex: 1,
+        seriesId: "s",
+        seriesIndex: 0,
+      },
+    });
+
+    expect(tooltip.color).toBe("red");
+    expect(tooltip.items[1]).toEqual({
+      id: "y",
+      name: "y",
+      value: 20,
+      note: "High",
     });
   });
 });
@@ -152,47 +186,12 @@ describe("getChartScatterTable", () => {
       ],
     });
   });
-});
 
-describe("scatter color ranges", () => {
-  const series = {
-    name: "S",
-    color: "gray",
-    colorRanges: [{ min: 10, color: "red", label: "High" }],
-    data: [
-      [1, 5],
-      [2, 20],
-    ] as Array<[number, number]>,
-  };
-
-  test("it should color the tooltip by the point range", () => {
-    const tooltip = getChartScatterTooltip({
-      series,
-      labels: { x: "x", y: "y" },
-      point: {
-        x: 2,
-        y: 20,
-        size: null,
-        dataIndex: 1,
-        seriesId: "s",
-        seriesIndex: 0,
-      },
-    });
-
-    expect(tooltip.color).toBe("red");
-    expect(tooltip.items[1]).toEqual({
-      id: "y",
-      name: "y",
-      value: 20,
-      note: "High",
-    });
-  });
-
-  test("it should append the range label to y in the data table", () => {
+  test("it should append the range label to y", () => {
     const table = getChartScatterTable({
+      headers,
       locale: "en-US",
-      series: [series],
-      headers: { x: "x", y: "y", size: "Size", series: "Series" },
+      series: [rangedSeries],
     });
 
     expect(table.rows.map((row) => row.cells[2])).toEqual(["5", "20 (High)"]);

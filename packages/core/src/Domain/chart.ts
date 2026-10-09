@@ -461,6 +461,55 @@ export function applyChartTone(
 }
 
 /**
+ * Color id of range `index` of a series. Range colors resolve together with
+ * the series colors under this id.
+ */
+export function getChartRangeColorId(seriesId: string, index: number): string {
+  return `${seriesId}-range-${index}`;
+}
+
+/**
+ * Color items for the ranges of every series, resolved together with the
+ * series colors. Range colors are never empty, so they never take a palette
+ * entry.
+ */
+export function getChartRangeColorItems(
+  series: ReadonlyArray<{
+    colorRanges?: ReadonlyArray<{ color: string }>;
+    id: string;
+  }>,
+): Array<{ color: string; id: string }> {
+  return series.flatMap((item) => {
+    return (item.colorRanges ?? []).map((range, index) => {
+      return { color: range.color, id: getChartRangeColorId(item.id, index) };
+    });
+  });
+}
+
+/**
+ * Replaces each range color of a series with its resolved CSS color
+ * (`colors` keyed by `getChartRangeColorId`), passed through `tint` when
+ * given.
+ */
+export function resolveChartRangeColors<Range extends { color: string }>({
+  tint,
+  colors,
+  ranges,
+  seriesId,
+}: {
+  colors: Readonly<Record<string, string>>;
+  ranges: readonly Range[];
+  seriesId: string;
+  tint?: (color: string) => string;
+}): Array<Omit<Range, "color"> & { color: string }> {
+  return ranges.map((range, index) => {
+    const color = colors[getChartRangeColorId(seriesId, index)] ?? "";
+
+    return { ...range, color: isNil(tint) ? color : tint(color) };
+  });
+}
+
+/**
  * Shallow equality for axis options registered by `ChartAxis`.
  */
 export function isSameChartAxisOptions(

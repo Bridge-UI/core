@@ -3,11 +3,14 @@ import { describe, expect, test } from "vitest";
 
 // ** Local Imports
 import {
+  type ChartBarSeriesEntry,
   getChartBarRadius,
   getChartCartesianItemColors,
+  getChartCartesianRenderSeries,
   getChartCartesianSummaryParams,
   getChartCartesianTable,
   getChartCartesianTooltip,
+  getChartCategoryColorItems,
   getChartCategoryLabels,
   getChartNearestIndex,
   getChartStackEnds,
@@ -204,6 +207,17 @@ describe("resolveChartBarRadii", () => {
   });
 });
 
+/** Series with one color range, shared by the tooltip and table tests. */
+const rangedSeries = {
+  id: "a",
+  name: "AQI",
+  color: "gray",
+  data: [5, 20],
+  colorBy: "value" as const,
+  itemColors: ["gray", "red"],
+  colorRanges: [{ min: 10, color: "red", label: "High" }],
+};
+
 describe("getChartCartesianTooltip", () => {
   test("it should return values at the index and skip nulls", () => {
     expect(
@@ -218,6 +232,19 @@ describe("getChartCartesianTooltip", () => {
     ).toEqual({
       title: "Feb",
       items: [{ id: "a", value: 2, name: "A", color: "red" }],
+    });
+  });
+
+  test("it should use the item color and range label", () => {
+    expect(
+      getChartCartesianTooltip({
+        index: 1,
+        title: "B",
+        series: [rangedSeries],
+      }),
+    ).toEqual({
+      title: "B",
+      items: [{ id: "a", value: 20, name: "AQI", color: "red", note: "High" }],
     });
   });
 });
@@ -241,6 +268,17 @@ describe("getChartCartesianTable", () => {
         { key: "1-Q2", cells: ["Q2", "2", "—"] },
       ],
     });
+  });
+
+  test("it should append the range label", () => {
+    const table = getChartCartesianTable({
+      locale: "en-US",
+      categories: ["A", "B"],
+      series: [rangedSeries],
+      categoryHeader: "Category",
+    });
+
+    expect(table.rows.map((row) => row.cells[1])).toEqual(["5", "20 (High)"]);
   });
 });
 
@@ -299,34 +337,92 @@ describe("getChartCartesianItemColors", () => {
   });
 });
 
-describe("color range notes", () => {
-  const series = {
-    id: "a",
-    name: "AQI",
-    color: "gray",
-    data: [5, 20],
-    colorBy: "value" as const,
-    itemColors: ["gray", "red"],
-    colorRanges: [{ min: 10, color: "red", label: "High" }],
-  };
+describe("getChartCategoryColorItems", () => {
+  const labels = ["A", "B"];
 
-  test("it should use the item color and range label in the tooltip", () => {
+  test("it should be empty without category colors", () => {
+    expect(getChartCategoryColorItems({ labels })).toEqual([]);
+
     expect(
-      getChartCartesianTooltip({ index: 1, title: "B", series: [series] }),
-    ).toEqual({
-      title: "B",
-      items: [{ id: "a", value: 20, name: "AQI", color: "red", note: "High" }],
-    });
+      getChartCategoryColorItems({ labels, categoryColors: false }),
+    ).toEqual([]);
   });
 
-  test("it should append the range label in the data table", () => {
-    const table = getChartCartesianTable({
-      locale: "en-US",
-      series: [series],
-      categories: ["A", "B"],
-      categoryHeader: "Category",
+  test("it should leave colors to the palette, follow arrays, and map records", () => {
+    expect(
+      getChartCategoryColorItems({ labels, categoryColors: true }),
+    ).toEqual([
+      { color: undefined, id: "category-0" },
+      { color: undefined, id: "category-1" },
+    ]);
+
+    expect(
+      getChartCategoryColorItems({ labels, categoryColors: ["red"] }),
+    ).toEqual([
+      { color: "red", id: "category-0" },
+      { color: undefined, id: "category-1" },
+    ]);
+
+    expect(
+      getChartCategoryColorItems({ labels, categoryColors: { B: "blue" } }),
+    ).toEqual([
+      { color: undefined, id: "category-0" },
+      { color: "blue", id: "category-1" },
+    ]);
+  });
+});
+
+describe("getChartCartesianRenderSeries", () => {
+  const bar: ChartBarSeriesEntry = {
+    id: "a",
+    name: "A",
+    kind: "bar",
+    data: [1, 20],
+    tone: "solid",
+    labels: false,
+    reference: [],
+    colorBy: "value",
+    colorRanges: [{ min: 10, color: "error" }],
+  };
+
+  const theme = {
+    textColor: "rgb(0, 0, 0)",
+    backgroundColor: "rgb(255, 255, 255)",
+  };
+
+  test("it should resolve the series and range colors", () => {
+    const [series] = getChartCartesianRenderSeries({
+      theme,
+      series: [bar],
+      categoryColors: null,
+      colors: { a: "rgb(0, 0, 255)", "a-range-0": "rgb(255, 0, 0)" },
     });
 
-    expect(table.rows.map((row) => row.cells[1])).toEqual(["5", "20 (High)"]);
+    expect(series.color).toBe("rgb(0, 0, 255)");
+    expect(series.colorRanges[0].color).toBe("rgb(255, 0, 0)");
+    expect(series.itemColors).toEqual(["rgb(0, 0, 255)", "rgb(255, 0, 0)"]);
+  });
+
+  test("it should mix muted bars toward the background", () => {
+    const [series] = getChartCartesianRenderSeries({
+      theme,
+      categoryColors: null,
+      colors: { a: "rgb(0, 0, 0)" },
+      series: [{ ...bar, tone: "muted", colorRanges: [] }],
+    });
+
+    expect(series.color).toBe("rgb(153, 153, 153)");
+  });
+
+  test("it should give bars category colors and a neutral legend color", () => {
+    const [series] = getChartCartesianRenderSeries({
+      theme,
+      colors: { a: "rgb(0, 0, 255)" },
+      series: [{ ...bar, colorRanges: [] }],
+      categoryColors: ["rgb(1, 1, 1)", "rgb(2, 2, 2)"],
+    });
+
+    expect(series.color).toBe("rgb(0, 0, 0)");
+    expect(series.itemColors).toEqual(["rgb(1, 1, 1)", "rgb(2, 2, 2)"]);
   });
 });
