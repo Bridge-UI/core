@@ -2,6 +2,7 @@
 import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
+import type { ChartColorRange } from "@bridge-ui/core/Domain";
 import type { ChartColor, ChartSize } from "@bridge-ui/core/Tokens";
 import type { MergeProps } from "@bridge-ui/core/Utils";
 
@@ -14,6 +15,13 @@ export interface ChartColorOverrides {}
  */
 export type ChartColorValue =
   (string & {}) | MergeProps<ChartColor, ChartColorOverrides>;
+
+/**
+ * Bar colors per category: `true` takes palette entries in category order,
+ * an array follows the category order, and a record maps category labels.
+ */
+export type ChartCategoryColors =
+  boolean | ChartColorValue[] | Record<string, ChartColorValue>;
 
 export interface ChartClasses {
   /**
@@ -45,6 +53,18 @@ export interface ChartClasses {
    * Classes merged onto the data table (screen-reader only).
    */
   table?: string;
+}
+
+/**
+ * One color range: values in `[min, max)` take `color` (token key or CSS
+ * color). With `colorBy="category"`, `min` and `max` are category indices
+ * and both ends are included.
+ */
+export interface ChartColorRangeOption extends Omit<ChartColorRange, "color"> {
+  /**
+   * Range color.
+   */
+  color: ChartColorValue;
 }
 
 export interface ChartCustomProps {

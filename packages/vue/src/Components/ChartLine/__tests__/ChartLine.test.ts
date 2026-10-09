@@ -258,3 +258,41 @@ test("it should wait for a plot size before mounting ECharts and follow resizes"
   expect(chart?.isDisposed()).toBe(true);
   expect(host.isConnected).toBe(false);
 });
+
+test("it should recolor a ranged line with a visual map", async () => {
+  stubPlotSize({ width: 320, height: 180 });
+
+  const wrapper = mount(ChartLine, {
+    props: { categories, area: true, animation: false, areaOpacity: 0.4 },
+    slots: {
+      default: () => [
+        h(ChartLineSeries, {
+          name: "AQI",
+          data: [40, 120, 80],
+          colorRanges: [
+            { max: 50, label: "Good", color: "success" },
+            { min: 100, color: "error", label: "Unhealthy" },
+          ],
+        }),
+      ],
+    },
+  });
+
+  await flushPromises();
+
+  const option = getInstanceByDom(getEchartsHost(wrapper))?.getOption() as {
+    series: Array<{ areaStyle: { opacity: number } }>;
+    visualMap: Array<{ pieces: unknown[]; seriesIndex: number }>;
+  };
+
+  expect(option.visualMap[0].seriesIndex).toBe(0);
+  expect(option.visualMap[0].pieces).toHaveLength(2);
+  expect(option.series[0].areaStyle.opacity).toBe(0.4);
+
+  await pressChartKey(wrapper, "ArrowRight");
+  await pressChartKey(wrapper, "ArrowRight");
+
+  expect(wrapper.find("[role='status']").text()).toBe(
+    "Feb: AQI 120 (Unhealthy)",
+  );
+});

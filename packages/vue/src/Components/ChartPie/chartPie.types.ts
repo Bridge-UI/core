@@ -5,6 +5,7 @@ import type { HTMLAttributes, Slot } from "vue";
 import type {
   ChartLabelContent,
   ChartLabelPosition,
+  ChartPieRose,
   ChartPieVariant,
   ChartSlice,
 } from "@bridge-ui/core/Domain";
@@ -22,6 +23,13 @@ import type {
  * `ChartLegend` and `ChartTooltip`.
  */
 export interface ChartPieOwnProps extends ChartRootOwnProps {
+  /**
+   * Slice corner radius (px).
+   *
+   * @default 0 (2 for `donut`)
+   */
+  cornerRadius?: number;
+
   /**
    * Slices in order. Non-positive values are skipped.
    */
@@ -62,6 +70,21 @@ export interface ChartPieOwnProps extends ChartRootOwnProps {
    * @default 2
    */
   minAngle?: number;
+
+  /**
+   * Gap angle (deg) between slices.
+   *
+   * @default 0 (1 for `donut`)
+   */
+  padAngle?: number;
+
+  /**
+   * Nightingale (rose) pie: each slice radius shows its value. `radius`
+   * keeps the angle as the share; `area` gives every slice the same angle.
+   *
+   * @default undefined
+   */
+  rose?: ChartPieRose;
 
   /**
    * Donut ring thickness as a fraction of the radius (`0`–`1`).

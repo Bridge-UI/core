@@ -2,7 +2,7 @@
 import type { ChartScatterPoint } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
-import type { ChartColorValue } from "@/Utils/Charts";
+import type { ChartColorRangeOption, ChartColorValue } from "@/Utils/Charts";
 
 /**
  * One group of points registered on the nearest `ChartScatter`.
@@ -15,6 +15,14 @@ export interface ChartScatterSeriesOwnProps {
    * @default undefined
    */
   color?: ChartColorValue;
+
+  /**
+   * Recolors single points by their `y`: values in `[min, max)` take the
+   * range color. Range labels show in the tooltip and data table.
+   *
+   * @default undefined
+   */
+  colorRanges?: ChartColorRangeOption[];
 
   /**
    * Points: `[x, y]`, or `[x, y, size]` for bubbles.

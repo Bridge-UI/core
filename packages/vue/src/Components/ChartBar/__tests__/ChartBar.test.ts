@@ -157,3 +157,58 @@ test("it should throw when a scatter series is placed inside", () => {
     }),
   ).toThrow("ChartScatterSeries must be used within ChartScatter");
 });
+
+test("it should paint bars by category and mute a series", async () => {
+  stubPlotSize({ width: 320, height: 180 });
+
+  const wrapper = mount(ChartBar, {
+    props: {
+      categories,
+      animation: false,
+      categoryColors: ["#ff0000", "#00ff00", "#0000ff"],
+    },
+    slots: {
+      default: () => [
+        h(ChartBarSeries, { name: "October", data: [3, 2, 1] }),
+        h(ChartBarSeries, { tone: "muted", name: "Average", data: [3, 2, 1] }),
+      ],
+    },
+  });
+
+  await flushPromises();
+
+  const option = getInstanceByDom(getEchartsHost(wrapper))?.getOption() as {
+    series: Array<{ data: Array<{ itemStyle: { color: string } }> }>;
+  };
+
+  const colorsOf = (index: number) => {
+    return option.series[index].data.map((item) => item.itemStyle.color);
+  };
+
+  expect(new Set(colorsOf(0)).size).toBe(3);
+  expect(colorsOf(1)).not.toEqual(colorsOf(0));
+  expect(colorsOf(1).every((color) => color.startsWith("rgb("))).toBe(true);
+});
+
+test("it should name the color range of a bar in the live region", async () => {
+  const wrapper = mount(ChartBar, {
+    props: { categories },
+    slots: {
+      default: () => [
+        h(ChartBarSeries, {
+          name: "Spend",
+          data: [3450, 1310, 1240],
+          colorRanges: [{ min: 3000, color: "error", label: "Over budget" }],
+        }),
+      ],
+    },
+  });
+
+  await flushPromises();
+  await pressChartKey(wrapper, "Home");
+
+  expect(wrapper.find("[role='status']").text()).toBe(
+    "Housing: Spend 3,450 (Over budget)",
+  );
+  expect(wrapper.findAll("td")[0].text()).toBe("3,450 (Over budget)");
+});

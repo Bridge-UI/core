@@ -17,6 +17,7 @@ export function useChartScatterSeries(props: ChartScatterSeriesOwnProps) {
         color: props.color,
         sizeName: props.sizeName,
         symbolSize: props.symbolSize,
+        colorRanges: props.colorRanges,
       };
     },
   });

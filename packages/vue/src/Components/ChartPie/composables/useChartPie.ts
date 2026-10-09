@@ -6,6 +6,7 @@ import {
   DEFAULT_CHART_DONUT_THICKNESS,
   DEFAULT_CHART_MIN_ANGLE,
   getChartPiePercents,
+  getChartPieSliceDefaults,
   getChartPieSummaryParams,
   type ChartBaseRenderOptions,
   type ChartPartRenderSlice,
@@ -25,32 +26,45 @@ import { useChartPart } from "@/Utils/Charts/useChartPart";
 const chartPieBridgeKeys = [
   ...chartRootBridgeKeys,
   "data",
+  "rose",
   "labels",
   "variant",
   "minAngle",
+  "padAngle",
   "maxSlices",
   "thickness",
+  "cornerRadius",
   "labelContent",
   "labelPosition",
 ] as const satisfies readonly (keyof ChartPieOwnProps)[];
 
 const chartPieRegistryKeys = [
+  "rose",
   "size",
   "height",
   "labels",
   "classes",
   "variant",
   "minAngle",
+  "padAngle",
   "animation",
   "thickness",
   "customProps",
+  "cornerRadius",
   "labelPosition",
 ] as const satisfies readonly (keyof ChartPieOwnProps)[];
 
 type ChartPieMerged = ChartRootMerged &
   Pick<
     ChartPieOwnProps,
-    "labels" | "variant" | "minAngle" | "thickness" | "labelPosition"
+    | "rose"
+    | "labels"
+    | "variant"
+    | "minAngle"
+    | "padAngle"
+    | "thickness"
+    | "cornerRadius"
+    | "labelPosition"
   >;
 
 export function useChartPie(
@@ -78,13 +92,18 @@ export function useChartPie(
   function buildOptions(
     base: ChartBaseRenderOptions & { slices: ChartPartRenderSlice[] },
   ): ChartPieRenderOptions {
+    const sliceDefaults = getChartPieSliceDefaults(variant.value);
+
     return {
       ...base,
       labels: labels.value,
       variant: variant.value,
+      rose: merged.value.rose ?? null,
       labelPosition: merged.value.labelPosition ?? "outside",
+      padAngle: merged.value.padAngle ?? sliceDefaults.padAngle,
       minAngle: merged.value.minAngle ?? DEFAULT_CHART_MIN_ANGLE,
       thickness: merged.value.thickness ?? DEFAULT_CHART_DONUT_THICKNESS,
+      cornerRadius: merged.value.cornerRadius ?? sliceDefaults.cornerRadius,
     };
   }
 
