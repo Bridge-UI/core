@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil, isNumber, pick } from "es-toolkit/compat";
+import { get, isNil, pick } from "es-toolkit/compat";
 import type {
   KeyboardEvent as ReactKeyboardEvent,
   PointerEvent as ReactPointerEvent,
@@ -12,16 +12,16 @@ import {
   getSliderPointerClientX,
   isSliderStopCovered,
   normalizeSliderStops,
+  normalizeSliderValue,
   percentFromSliderPointer,
   percentToValue,
-  pickClosestSliderThumb,
+  readSliderThumbValue as readThumbValue,
   resolveSliderBounds,
   resolveSliderDefaultValue,
-  snapSliderValue,
-  sortSliderRangeValue,
-  stepSliderValue,
+  resolveSliderKeyValue,
+  resolveSliderTrackPress,
   valueToPercent,
-  writeSliderRangeThumb,
+  writeSliderThumbValue as writeThumbValue,
   type SliderRangeValue,
   type SliderStop,
 } from "@bridge-ui/core/Domain";
@@ -94,31 +94,6 @@ type SliderMerged = MergeLibDefaults<SliderOwnProps, SliderLibDefaults>;
 type DragState = {
   thumbIndex: 0 | 1;
 };
-
-function readThumbValue(
-  value: number | SliderRangeValue,
-  thumbIndex: 0 | 1,
-  range: boolean,
-) {
-  if (range && Array.isArray(value)) {
-    return value[thumbIndex];
-  }
-
-  return Array.isArray(value) ? value[0] : value;
-}
-
-function writeThumbValue(
-  value: number | SliderRangeValue,
-  thumbIndex: 0 | 1,
-  next: number,
-  range: boolean,
-): { thumbIndex: 0 | 1; value: number | SliderRangeValue } {
-  if (!range || !Array.isArray(value)) {
-    return { thumbIndex, value: next };
-  }
-
-  return writeSliderRangeThumb(value, thumbIndex, next);
-}
 
 export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
   const bridge = useBridgeUI();
@@ -232,36 +207,11 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
 
   const value = derived((): number | SliderRangeValue => {
     if (isControlled) {
-      const next = merged.value;
-
-      if (isRange) {
-        if (Array.isArray(next)) {
-          return sortSliderRangeValue(
-            snapSliderValue(next[0], bounds.min, bounds.max, bounds.step),
-            snapSliderValue(next[1], bounds.min, bounds.max, bounds.step),
-          );
-        }
-
-        const single = snapSliderValue(
-          isNumber(next) ? next : bounds.min,
-          bounds.min,
-          bounds.max,
-          bounds.step,
-        );
-
-        return [single, single];
-      }
-
-      if (Array.isArray(next)) {
-        return snapSliderValue(next[0], bounds.min, bounds.max, bounds.step);
-      }
-
-      return snapSliderValue(
-        isNumber(next) ? next : bounds.min,
-        bounds.min,
-        bounds.max,
-        bounds.step,
-      );
+      return normalizeSliderValue({
+        ...bounds,
+        range: isRange,
+        value: merged.value,
+      });
     }
 
     return uncontrolledValue;
@@ -451,31 +401,12 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
       clientX: getSliderPointerClientX(event.nativeEvent),
     });
 
-    const currentBounds = boundsRef.current;
-    const targetValue = percentToValue(
+    const written = resolveSliderTrackPress({
       percent,
-      currentBounds.min,
-      currentBounds.max,
-      currentBounds.step,
-    );
-
-    let thumbIndex: 0 | 1 = 0;
-    const currentValue = valueRef.current;
-
-    if (isRangeRef.current && Array.isArray(currentValue)) {
-      thumbIndex = pickClosestSliderThumb(
-        targetValue,
-        currentValue[0],
-        currentValue[1],
-      );
-    }
-
-    const written = writeThumbValue(
-      currentValue,
-      thumbIndex,
-      targetValue,
-      isRangeRef.current,
-    );
+      value: valueRef.current,
+      bounds: boundsRef.current,
+      range: isRangeRef.current,
+    });
 
     commitValue(written.value);
     beginDrag(event, written.thumbIndex);
@@ -492,79 +423,16 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
         return;
       }
 
-      const currentBounds = boundsRef.current;
-      const current = readThumbValue(
-        valueRef.current,
-        thumbIndex,
-        isRangeRef.current,
-      );
-      let next: null | number = null;
-      const rtl = isRtlRef.current;
-
-      switch (event.key) {
-        case "ArrowRight":
-          next = stepSliderValue(
-            current,
-            rtl ? -1 : 1,
-            currentBounds.min,
-            currentBounds.max,
-            currentBounds.step,
-          );
-          break;
-        case "ArrowLeft":
-          next = stepSliderValue(
-            current,
-            rtl ? 1 : -1,
-            currentBounds.min,
-            currentBounds.max,
-            currentBounds.step,
-          );
-          break;
-        case "ArrowUp":
-          next = stepSliderValue(
-            current,
-            1,
-            currentBounds.min,
-            currentBounds.max,
-            currentBounds.step,
-          );
-          break;
-        case "ArrowDown":
-          next = stepSliderValue(
-            current,
-            -1,
-            currentBounds.min,
-            currentBounds.max,
-            currentBounds.step,
-          );
-          break;
-        case "Home":
-          next = currentBounds.min;
-          break;
-        case "End":
-          next = currentBounds.max;
-          break;
-        case "PageUp":
-          next = stepSliderValue(
-            current,
-            1,
-            currentBounds.min,
-            currentBounds.max,
-            currentBounds.step * 10,
-          );
-          break;
-        case "PageDown":
-          next = stepSliderValue(
-            current,
-            -1,
-            currentBounds.min,
-            currentBounds.max,
-            currentBounds.step * 10,
-          );
-          break;
-        default:
-          break;
-      }
+      const next = resolveSliderKeyValue({
+        key: event.key,
+        isRtl: isRtlRef.current,
+        bounds: boundsRef.current,
+        current: readThumbValue(
+          valueRef.current,
+          thumbIndex,
+          isRangeRef.current,
+        ),
+      });
 
       if (next === null) {
         return;

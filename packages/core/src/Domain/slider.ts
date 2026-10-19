@@ -362,6 +362,48 @@ export function percentFromSliderPointer({
 }
 
 /**
+ * Snaps a raw value into bounds and coerces it to the mode's shape:
+ * a sorted pair when `range`, a single number otherwise.
+ */
+export function normalizeSliderValue({
+  max,
+  min,
+  step,
+  range,
+  value,
+}: {
+  max: number;
+  min: number;
+  range: boolean;
+  step: number;
+  value?: null | number | SliderRangeValue;
+}): number | SliderRangeValue {
+  if (range) {
+    if (isArray(value)) {
+      return sortSliderRangeValue(
+        snapSliderValue(value[0], min, max, step),
+        snapSliderValue(value[1], min, max, step),
+      );
+    }
+
+    const single = snapSliderValue(
+      isNumber(value) ? value : min,
+      min,
+      max,
+      step,
+    );
+
+    return [single, single];
+  }
+
+  if (isArray(value)) {
+    return snapSliderValue(value[0], min, max, step);
+  }
+
+  return snapSliderValue(isNumber(value) ? value : min, min, max, step);
+}
+
+/**
  * Resolves the uncontrolled default value for single or range mode.
  */
 export function resolveSliderDefaultValue({
@@ -377,32 +419,104 @@ export function resolveSliderDefaultValue({
   range: boolean;
   step: number;
 }): number | SliderRangeValue {
-  if (range) {
-    if (isArray(defaultValue)) {
-      return sortSliderRangeValue(
-        snapSliderValue(defaultValue[0], min, max, step),
-        snapSliderValue(defaultValue[1], min, max, step),
-      );
-    }
+  return normalizeSliderValue({ max, min, step, range, value: defaultValue });
+}
 
-    const single = snapSliderValue(
-      isNumber(defaultValue) ? defaultValue : min,
-      min,
-      max,
-      step,
-    );
-
-    return [single, single];
+/**
+ * Reads the value held by `thumbIndex` (single mode always reads the one value).
+ */
+export function readSliderThumbValue(
+  value: number | SliderRangeValue,
+  thumbIndex: 0 | 1,
+  range: boolean,
+) {
+  if (range && isArray(value)) {
+    return value[thumbIndex];
   }
 
-  if (isArray(defaultValue)) {
-    return snapSliderValue(defaultValue[0], min, max, step);
+  return isArray(value) ? value[0] : value;
+}
+
+/**
+ * Writes `next` at `thumbIndex`. In range mode the pair is re-sorted and the
+ * returned `thumbIndex` follows `next` (see {@link writeSliderRangeThumb}).
+ */
+export function writeSliderThumbValue(
+  value: number | SliderRangeValue,
+  thumbIndex: 0 | 1,
+  next: number,
+  range: boolean,
+): { thumbIndex: 0 | 1; value: number | SliderRangeValue } {
+  if (!range || !isArray(value)) {
+    return { thumbIndex, value: next };
   }
 
-  return snapSliderValue(
-    isNumber(defaultValue) ? defaultValue : min,
-    min,
-    max,
-    step,
-  );
+  return writeSliderRangeThumb(value, thumbIndex, next);
+}
+
+/**
+ * Maps a thumb `keydown` key to its next value (WAI-ARIA slider pattern).
+ * Horizontal arrows flip in RTL; `PageUp` / `PageDown` move ten steps.
+ * Returns `null` for keys the slider does not handle.
+ */
+export function resolveSliderKeyValue({
+  key,
+  bounds,
+  current,
+  isRtl = false,
+}: {
+  bounds: SliderBounds;
+  current: number;
+  isRtl?: boolean;
+  key: string;
+}): null | number {
+  const { max, min, step } = bounds;
+  const forward = isRtl ? -1 : 1;
+  const backward = isRtl ? 1 : -1;
+
+  switch (key) {
+    case "ArrowRight":
+      return stepSliderValue(current, forward, min, max, step);
+    case "ArrowLeft":
+      return stepSliderValue(current, backward, min, max, step);
+    case "ArrowUp":
+      return stepSliderValue(current, 1, min, max, step);
+    case "ArrowDown":
+      return stepSliderValue(current, -1, min, max, step);
+    case "Home":
+      return min;
+    case "End":
+      return max;
+    case "PageUp":
+      return stepSliderValue(current, 1, min, max, step * 10);
+    case "PageDown":
+      return stepSliderValue(current, -1, min, max, step * 10);
+    default:
+      return null;
+  }
+}
+
+/**
+ * Resolves a track press at `percent`: snaps to a value, picks the closest
+ * thumb in range mode, and writes it. Returns the next value and the thumb
+ * that should start dragging.
+ */
+export function resolveSliderTrackPress({
+  range,
+  value,
+  bounds,
+  percent,
+}: {
+  bounds: SliderBounds;
+  percent: number;
+  range: boolean;
+  value: number | SliderRangeValue;
+}): { thumbIndex: 0 | 1; value: number | SliderRangeValue } {
+  const target = percentToValue(percent, bounds.min, bounds.max, bounds.step);
+  const thumbIndex =
+    range && isArray(value)
+      ? pickClosestSliderThumb(target, value[0], value[1])
+      : 0;
+
+  return writeSliderThumbValue(value, thumbIndex, target, range);
 }

@@ -11,16 +11,21 @@ import {
   getSliderPrecision,
   isSliderStopCovered,
   normalizeSliderStops,
+  normalizeSliderValue,
   percentFromSliderPointer,
   percentToValue,
   pickClosestSliderThumb,
+  readSliderThumbValue,
   resolveSliderBounds,
   resolveSliderDefaultValue,
+  resolveSliderKeyValue,
+  resolveSliderTrackPress,
   snapSliderValue,
   sortSliderRangeValue,
   stepSliderValue,
   valueToPercent,
   writeSliderRangeThumb,
+  writeSliderThumbValue,
 } from "@/Domain/slider";
 
 describe("resolveSliderBounds", () => {
@@ -224,5 +229,161 @@ describe("resolveSliderDefaultValue", () => {
         defaultValue: [80, 20],
       }),
     ).toEqual([20, 80]);
+  });
+});
+
+describe("normalizeSliderValue", () => {
+  const bounds = { min: 0, max: 100, step: 10 };
+
+  test("it should snap a single value", () => {
+    expect(normalizeSliderValue({ ...bounds, value: 33, range: false })).toBe(
+      30,
+    );
+  });
+
+  test("it should read the first item when a pair is given in single mode", () => {
+    expect(
+      normalizeSliderValue({ ...bounds, range: false, value: [42, 80] }),
+    ).toBe(40);
+  });
+
+  test("it should sort and snap a range pair", () => {
+    expect(
+      normalizeSliderValue({ ...bounds, range: true, value: [78, 12] }),
+    ).toEqual([10, 80]);
+  });
+
+  test("it should collapse a single number into a range pair", () => {
+    expect(normalizeSliderValue({ ...bounds, value: 50, range: true })).toEqual(
+      [50, 50],
+    );
+  });
+
+  test("it should fall back to min when the value is missing", () => {
+    expect(normalizeSliderValue({ ...bounds, value: null, range: false })).toBe(
+      0,
+    );
+  });
+});
+
+describe("readSliderThumbValue / writeSliderThumbValue", () => {
+  test("it should read the thumb in range mode", () => {
+    expect(readSliderThumbValue([20, 80], 1, true)).toBe(80);
+  });
+
+  test("it should read the single value outside range mode", () => {
+    expect(readSliderThumbValue(30, 1, false)).toBe(30);
+    expect(readSliderThumbValue([20, 80], 1, false)).toBe(20);
+  });
+
+  test("it should write a single value", () => {
+    expect(writeSliderThumbValue(30, 0, 50, false)).toEqual({
+      value: 50,
+      thumbIndex: 0,
+    });
+  });
+
+  test("it should follow the thumb when it crosses the other one", () => {
+    expect(writeSliderThumbValue([20, 50], 0, 70, true)).toEqual({
+      thumbIndex: 1,
+      value: [50, 70],
+    });
+  });
+});
+
+describe("resolveSliderKeyValue", () => {
+  const bounds = { min: 0, step: 5, max: 100 };
+
+  test("it should step with arrow keys", () => {
+    expect(
+      resolveSliderKeyValue({ bounds, current: 50, key: "ArrowRight" }),
+    ).toBe(55);
+    expect(
+      resolveSliderKeyValue({ bounds, current: 50, key: "ArrowLeft" }),
+    ).toBe(45);
+    expect(resolveSliderKeyValue({ bounds, current: 50, key: "ArrowUp" })).toBe(
+      55,
+    );
+    expect(
+      resolveSliderKeyValue({ bounds, current: 50, key: "ArrowDown" }),
+    ).toBe(45);
+  });
+
+  test("it should flip horizontal arrows in RTL", () => {
+    expect(
+      resolveSliderKeyValue({
+        bounds,
+        current: 50,
+        isRtl: true,
+        key: "ArrowRight",
+      }),
+    ).toBe(45);
+    expect(
+      resolveSliderKeyValue({
+        bounds,
+        current: 50,
+        isRtl: true,
+        key: "ArrowLeft",
+      }),
+    ).toBe(55);
+    expect(
+      resolveSliderKeyValue({
+        bounds,
+        current: 50,
+        isRtl: true,
+        key: "ArrowUp",
+      }),
+    ).toBe(55);
+  });
+
+  test("it should jump to bounds with Home / End", () => {
+    expect(resolveSliderKeyValue({ bounds, key: "Home", current: 50 })).toBe(0);
+    expect(resolveSliderKeyValue({ bounds, key: "End", current: 50 })).toBe(
+      100,
+    );
+  });
+
+  test("it should move ten steps with PageUp / PageDown", () => {
+    expect(resolveSliderKeyValue({ bounds, current: 50, key: "PageUp" })).toBe(
+      100,
+    );
+    expect(
+      resolveSliderKeyValue({ bounds, current: 30, key: "PageDown" }),
+    ).toBe(0);
+  });
+
+  test("it should return null for unhandled keys", () => {
+    expect(
+      resolveSliderKeyValue({ bounds, key: "Tab", current: 50 }),
+    ).toBeNull();
+  });
+});
+
+describe("resolveSliderTrackPress", () => {
+  const bounds = { min: 0, max: 100, step: 10 };
+
+  test("it should snap the pressed position in single mode", () => {
+    expect(
+      resolveSliderTrackPress({ bounds, value: 0, percent: 47, range: false }),
+    ).toEqual({ value: 50, thumbIndex: 0 });
+  });
+
+  test("it should move the closest thumb in range mode", () => {
+    expect(
+      resolveSliderTrackPress({
+        bounds,
+        percent: 72,
+        range: true,
+        value: [20, 90],
+      }),
+    ).toEqual({ thumbIndex: 1, value: [20, 70] });
+    expect(
+      resolveSliderTrackPress({
+        bounds,
+        percent: 31,
+        range: true,
+        value: [20, 90],
+      }),
+    ).toEqual({ thumbIndex: 0, value: [30, 90] });
   });
 });
