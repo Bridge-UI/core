@@ -1,0 +1,263 @@
+// ** External Imports
+import type { Snippet } from "svelte";
+import type {
+  HTMLAnchorAttributes,
+  HTMLAttributes,
+  HTMLButtonAttributes,
+} from "svelte/elements";
+
+// ** Core Imports
+import type {
+  ButtonColor,
+  ButtonDensity,
+  ButtonRounded,
+  ButtonSize,
+  ButtonVariant,
+} from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
+
+// ** Local Imports
+import type { IconSource } from "@/Adapters/Icon";
+import type { IconProps } from "@/Components/Icon";
+import type { LinkAsTag, LinkHref, LinkPropsOf } from "@/Utils/linkAs";
+
+export interface ButtonSizeOverrides {}
+export interface ButtonColorOverrides {}
+export interface ButtonDensityOverrides {}
+export interface ButtonRoundedOverrides {}
+export interface ButtonVariantOverrides {}
+
+export interface ButtonClasses {
+  /**
+   * The classes to apply to the end icon.
+   */
+  endIcon?: string;
+
+  /**
+   * The classes to apply to the icon (mini density).
+   */
+  icon?: string;
+
+  /**
+   * The classes to apply to the loading.
+   */
+  loading?: string;
+
+  /**
+   * The classes to apply to the root.
+   */
+  root?: string;
+
+  /**
+   * The classes to apply to the start icon.
+   */
+  startIcon?: string;
+}
+
+export interface ButtonCustomProps {
+  /**
+   * Props forwarded to the inline-end slot wrapper.
+   */
+  end?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the end `Icon` (`icon` is set by the button).
+   */
+  endIcon?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the icon `Icon` (`icon` is set by the button).
+   */
+  icon?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the loading spinner `Icon`.
+   */
+  loading?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the root element.
+   */
+  root?: HTMLAttributes<HTMLElement>;
+
+  /**
+   * Props forwarded to the inline-start slot wrapper.
+   */
+  start?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the inline-start `Icon` (`icon` is set by the button).
+   */
+  startIcon?: Partial<Omit<IconProps, "icon">>;
+}
+
+export interface ButtonOwnProps<T extends LinkAsTag = "button"> {
+  /**
+   * The element to render as.
+   *
+   * @default "button"
+   */
+  as?: "a" | "span" | "button";
+
+  /**
+   * The classes to apply to the button.
+   *
+   * @default undefined
+   */
+  classes?: ButtonClasses;
+
+  /**
+   * The color to apply to the button.
+   *
+   * @default "primary"
+   */
+  color?: MergeProps<ButtonColor, ButtonColorOverrides>;
+
+  /**
+   * Extra props for internal parts (`startIcon`, `endIcon`, slot wrappers, etc.).
+   * Root HTML attributes stay on the component top level.
+   *
+   * @default undefined
+   */
+  customProps?: ButtonCustomProps;
+
+  /**
+   * The density of the button.
+   *
+   * @default "default"
+   */
+  density?: MergeProps<ButtonDensity, ButtonDensityOverrides>;
+
+  /**
+   * Whether the button is disabled.
+   *
+   * @default false
+   */
+  disabled?: boolean;
+
+  /**
+   * Icon at the **inline end** (physical right in `ltr`, physical left in `rtl`).
+   *
+   * @default undefined
+   */
+  endIcon?: IconSource;
+
+  /**
+   * Whether the button is full width.
+   *
+   * @default false
+   */
+  full?: boolean;
+
+  /**
+   * The href to apply to the button.
+   * When `linkAs` is set, this also accepts that component's `href`.
+   *
+   * @default undefined
+   */
+  href?: LinkHref<T, "button">;
+
+  /**
+   * Icon for mini density (replaces label and start/end icons).
+   *
+   * @default undefined
+   */
+  icon?: IconSource;
+
+  /**
+   * Component rendered in place of the navigating `<a>`.
+   * With `href` and no `as`, this renders a link. `as="button"` and `as="span"` ignore it.
+   * Ignored while disabled or loading.
+   *
+   * @default undefined
+   */
+  linkAs?: T;
+
+  /**
+   * Props forwarded to `linkAs` (`method`, `replace`, `prefetch`, and so on).
+   * Checked against that component. Ignored while `linkAs` is not rendered.
+   *
+   * @default undefined
+   */
+  linkProps?: LinkPropsOf<T, "button">;
+
+  /**
+   * Whether the button is loading.
+   *
+   * @default false
+   */
+  loading?: boolean;
+
+  /**
+   * The roundedness of the button.
+   *
+   * @default "md"
+   */
+  rounded?: MergeProps<ButtonRounded, ButtonRoundedOverrides>;
+
+  /**
+   * Whether the button is in a selected / pressed state.
+   *
+   * @default false
+   */
+  selected?: boolean;
+
+  /**
+   * The size of the button.
+   *
+   * @default "md"
+   */
+  size?: MergeProps<ButtonSize, ButtonSizeOverrides>;
+
+  /**
+   * Icon at the **inline start** (physical left in `ltr`, physical right in `rtl`).
+   *
+   * @default undefined
+   */
+  startIcon?: IconSource;
+
+  /**
+   * Label text when `children` is not passed.
+   *
+   * @default undefined
+   */
+  text?: string;
+
+  /**
+   * The variant of the button.
+   *
+   * @default "solid"
+   */
+  variant?: MergeProps<ButtonVariant, ButtonVariantOverrides>;
+}
+
+export interface ButtonSnippets {
+  /**
+   * Label / main content.
+   */
+  children?: Snippet;
+
+  /**
+   * Content at the inline end (follows `dir` on an ancestor, e.g. `<html dir="rtl">`).
+   */
+  end?: Snippet;
+
+  /**
+   * Content at the inline start (follows `dir` on an ancestor, e.g. `<html dir="rtl">`).
+   */
+  start?: Snippet;
+}
+
+export type ButtonProps<T extends LinkAsTag = "button"> =
+  | MergeHtmlProps<
+      ButtonOwnProps<T> & ButtonSnippets & { as: "span" },
+      HTMLAttributes<HTMLSpanElement>
+    >
+  | MergeHtmlProps<
+      ButtonOwnProps<T> & ButtonSnippets & { as: "a" },
+      HTMLAnchorAttributes
+    >
+  | MergeHtmlProps<
+      ButtonOwnProps<T> & ButtonSnippets & { as?: "button" },
+      HTMLButtonAttributes
+    >;
