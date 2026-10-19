@@ -4,6 +4,7 @@ import { useEffect, useMemo, type ElementType, type MouseEvent } from "react";
 
 // ** Core Imports
 import {
+  getListboxOptionId,
   listboxOptionFromComposedItem,
   type ListboxOption,
 } from "@bridge-ui/core/Domain";
@@ -17,7 +18,6 @@ import {
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";
 import { useListContext } from "@/Components/List/ListContext";
-import { getListboxOptionId } from "@/Components/Listbox/hooks/useListboxNavigation";
 import { useListboxContext } from "@/Components/Listbox/ListboxContext";
 import type {
   ListItemOwnProps,

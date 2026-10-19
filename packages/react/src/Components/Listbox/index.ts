@@ -1,15 +1,7 @@
 // ** Exports
 export { useListbox } from "@/Components/Listbox/hooks/useListbox";
 export type { ListboxOptions } from "@/Components/Listbox/hooks/useListbox";
-export {
-  findFirstEnabledOptionIndex,
-  findLastEnabledOptionIndex,
-  getListboxActiveDescendantId,
-  getListboxOptionId,
-  highlightCurrentSelection,
-  moveListboxHighlight,
-  useListboxNavigation,
-} from "@/Components/Listbox/hooks/useListboxNavigation";
+export { useListboxNavigation } from "@/Components/Listbox/hooks/useListboxNavigation";
 export { default as Listbox } from "@/Components/Listbox/Listbox";
 export type {
   ListboxClasses,

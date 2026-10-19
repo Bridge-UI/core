@@ -673,3 +673,148 @@ export function upsertListboxOption(
 
   return next;
 }
+
+/**
+ * Minimal keyboard event shape (DOM and framework synthetic events both fit).
+ */
+export type SelectTriggerKeyEvent = {
+  key: string;
+  preventDefault: () => void;
+};
+
+/**
+ * State read by {@link handleSelectTriggerKeyDown}.
+ */
+export type SelectTriggerKeyState = {
+  /**
+   * Whether chips are shown (Backspace removes the last one).
+   */
+  multiple: boolean;
+
+  /**
+   * Whether the menu is open.
+   */
+  open: boolean;
+
+  /**
+   * Current text typed into the trigger.
+   */
+  searchQuery: string;
+
+  /**
+   * Number of selected options.
+   */
+  selectedCount: number;
+};
+
+/**
+ * Actions the trigger keyboard can run. Each framework wires them to its state.
+ */
+export type SelectTriggerKeyHandlers = {
+  /**
+   * Enter on an open menu.
+   */
+  commitHighlighted: () => void;
+
+  /**
+   * Escape.
+   */
+  dismiss: () => void;
+
+  /**
+   * Home on an open menu.
+   */
+  highlightFirst: () => void;
+
+  /**
+   * End on an open menu.
+   */
+  highlightLast: () => void;
+
+  /**
+   * ArrowDown / ArrowUp on an open menu.
+   */
+  moveHighlight: (delta: 1 | -1) => void;
+
+  /**
+   * ArrowDown / ArrowUp / Enter on a closed menu.
+   */
+  open: () => void;
+
+  /**
+   * Backspace on an empty query with chips.
+   */
+  removeLastSelected: () => void;
+
+  /**
+   * Tab (focus leaves the trigger; default is not prevented).
+   */
+  tabOut: () => void;
+};
+
+/**
+ * Keyboard contract shared by `Select` and `Autocomplete` triggers
+ * (WAI-ARIA combobox). Calls `preventDefault` when the key is handled and
+ * runs the matching handler. Returns whether the key was handled.
+ */
+export function handleSelectTriggerKeyDown(
+  event: SelectTriggerKeyEvent,
+  state: SelectTriggerKeyState,
+  handlers: SelectTriggerKeyHandlers,
+): boolean {
+  switch (event.key) {
+    case "ArrowDown":
+    case "ArrowUp":
+      event.preventDefault();
+
+      if (state.open) {
+        handlers.moveHighlight(event.key === "ArrowDown" ? 1 : -1);
+      } else {
+        handlers.open();
+      }
+
+      return true;
+    case "Enter":
+      event.preventDefault();
+
+      if (state.open) {
+        handlers.commitHighlighted();
+      } else {
+        handlers.open();
+      }
+
+      return true;
+    case "Escape":
+      event.preventDefault();
+      handlers.dismiss();
+      return true;
+    case "Home":
+    case "End":
+      if (!state.open) {
+        return false;
+      }
+
+      event.preventDefault();
+
+      if (event.key === "Home") {
+        handlers.highlightFirst();
+      } else {
+        handlers.highlightLast();
+      }
+
+      return true;
+    case "Backspace":
+      if (!state.multiple || state.searchQuery || state.selectedCount === 0) {
+        return false;
+      }
+
+      event.preventDefault();
+      handlers.removeLastSelected();
+      return true;
+    case "Tab":
+      handlers.tabOut();
+      return true;
+    default:
+      return false;
+  }
+}

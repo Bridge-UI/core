@@ -489,11 +489,6 @@ export type {
 } from "@/Components/List";
 export {
   Listbox,
-  findFirstEnabledOptionIndex,
-  findLastEnabledOptionIndex,
-  getListboxActiveDescendantId,
-  getListboxOptionId,
-  moveListboxHighlight,
   useListbox,
   useListboxNavigation,
 } from "@/Components/Listbox";

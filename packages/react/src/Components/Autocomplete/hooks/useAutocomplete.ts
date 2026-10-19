@@ -15,7 +15,9 @@ import {
   commitFreeSoloValue,
   createSelectAsyncSearch,
   filterListboxEntries,
+  findSelectedListboxOptionIndex,
   flattenListboxOptions,
+  handleSelectTriggerKeyDown,
   mergeListboxOptionsByValue,
   normalizeListboxEntries,
   normalizeSelectOptions,
@@ -51,10 +53,7 @@ import {
   useFormField,
 } from "@/Components/FormField/hooks/useFormField";
 import { collectComposedListboxOptions } from "@/Components/Listbox/collectComposedListboxOptions";
-import {
-  highlightCurrentSelection,
-  useListboxNavigation,
-} from "@/Components/Listbox/hooks/useListboxNavigation";
+import { useListboxNavigation } from "@/Components/Listbox/hooks/useListboxNavigation";
 import {
   derived,
   hasNamedSlot,
@@ -513,7 +512,7 @@ export function useAutocomplete(
     setOpen(true);
     setSearchQuery("");
     setHighlightedIndex(
-      highlightCurrentSelection(resolvedOptions, (value) =>
+      findSelectedListboxOptionIndex(resolvedOptions, (value) =>
         selectedValues.some((item) => selectValuesEqual(item, value)),
       ),
     );
@@ -787,72 +786,35 @@ export function useAutocomplete(
         return;
       }
 
-      switch (event.key) {
-        case "ArrowDown":
-          event.preventDefault();
-
-          if (!open) {
-            openMenu();
-          } else {
-            navigation.moveHighlight(1);
-          }
-
-          break;
-        case "ArrowUp":
-          event.preventDefault();
-
-          if (!open) {
-            openMenu();
-          } else {
-            navigation.moveHighlight(-1);
-          }
-
-          break;
-        case "Enter":
-          event.preventDefault();
-
-          if (!open) {
-            openMenu();
-          } else if (!selectHighlighted()) {
-            commitFreeSolo();
-          }
-
-          break;
-        case "Escape":
-          event.preventDefault();
-          closeMenu();
-          break;
-        case "Home":
-          if (open) {
-            event.preventDefault();
-            navigation.highlightFirst();
-          }
-
-          break;
-        case "End":
-          if (open) {
-            event.preventDefault();
-            navigation.highlightLast();
-          }
-
-          break;
-        case "Backspace":
-          if (multiple && !searchQuery && selectedOptions.length > 0) {
-            event.preventDefault();
+      handleSelectTriggerKeyDown(
+        event,
+        {
+          open: open,
+          multiple: multiple,
+          searchQuery: searchQuery,
+          selectedCount: selectedOptions.length,
+        },
+        {
+          open: openMenu,
+          dismiss: () => closeMenu(),
+          moveHighlight: navigation.moveHighlight,
+          highlightLast: navigation.highlightLast,
+          highlightFirst: navigation.highlightFirst,
+          tabOut: () => closeMenu({ commitFreeSolo: true }),
+          commitHighlighted: () => {
+            if (!selectHighlighted()) {
+              commitFreeSolo();
+            }
+          },
+          removeLastSelected: () => {
             const last = selectedOptions.at(-1);
 
             if (last) {
               removeChip(last, event);
             }
-          }
-
-          break;
-        case "Tab":
-          closeMenu({ commitFreeSolo: true });
-          break;
-        default:
-          break;
-      }
+          },
+        },
+      );
     },
     [
       open,

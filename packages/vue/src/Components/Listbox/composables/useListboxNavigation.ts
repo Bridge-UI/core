@@ -1,68 +1,20 @@
 // ** External Imports
 import { computed, toValue, type MaybeRefOrGetter, type Ref } from "vue";
 
+// ** Core Imports
+import {
+  findFirstEnabledOptionIndex,
+  findLastEnabledOptionIndex,
+  findSelectedListboxOptionIndex,
+  getListboxActiveDescendantId,
+  moveListboxHighlight,
+} from "@bridge-ui/core/Domain";
+
 // ** Local Imports
 import type {
   ListboxOption,
   ListboxValue,
 } from "@/Components/Listbox/listbox.types";
-
-export function findFirstEnabledOptionIndex(options: ListboxOption[]) {
-  return options.findIndex((option) => !option.disabled);
-}
-
-export function findLastEnabledOptionIndex(options: ListboxOption[]) {
-  for (let index = options.length - 1; index >= 0; index -= 1) {
-    if (!options[index]?.disabled) {
-      return index;
-    }
-  }
-
-  return -1;
-}
-
-export function moveListboxHighlight(
-  options: ListboxOption[],
-  currentIndex: number,
-  delta: number,
-) {
-  if (!options.length) {
-    return -1;
-  }
-
-  if (currentIndex < 0) {
-    return delta > 0
-      ? findFirstEnabledOptionIndex(options)
-      : findLastEnabledOptionIndex(options);
-  }
-
-  let index = currentIndex;
-
-  for (let step = 0; step < options.length; step += 1) {
-    index = (index + delta + options.length) % options.length;
-
-    if (!options[index]?.disabled) {
-      return index;
-    }
-  }
-
-  return -1;
-}
-
-export function getListboxOptionId(listboxId: string, index: number) {
-  return `${listboxId}-option-${index}`;
-}
-
-export function getListboxActiveDescendantId(
-  listboxId: string,
-  highlightedIndex: number,
-) {
-  if (highlightedIndex < 0) {
-    return undefined;
-  }
-
-  return getListboxOptionId(listboxId, highlightedIndex);
-}
 
 export function useListboxNavigation(
   options: MaybeRefOrGetter<ListboxOption[]>,
@@ -83,21 +35,10 @@ export function useListboxNavigation(
   function highlightCurrentSelection(
     isSelected?: (value: ListboxValue) => boolean,
   ) {
-    const resolvedOptions = toValue(options);
-
-    if (isSelected) {
-      const selectedIndex = resolvedOptions.findIndex(
-        (option) => !option.disabled && isSelected(option.value),
-      );
-
-      if (selectedIndex >= 0) {
-        highlightedIndex.value = selectedIndex;
-
-        return;
-      }
-    }
-
-    highlightedIndex.value = -1;
+    highlightedIndex.value = findSelectedListboxOptionIndex(
+      toValue(options),
+      isSelected,
+    );
   }
 
   function highlightFirst() {

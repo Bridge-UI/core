@@ -12,6 +12,7 @@ import {
   createSelectAsyncSearch,
   filterListboxEntries,
   flattenListboxOptions,
+  handleSelectTriggerKeyDown,
   isListboxOptionGroup,
   listboxOptionFromComposedItem,
   mapListboxEntriesToRows,
@@ -530,5 +531,101 @@ describe("upsertListboxOption", () => {
         label: "Low",
       }),
     ).toEqual([{ value: "low", label: "Low" }]);
+  });
+});
+
+describe("handleSelectTriggerKeyDown", () => {
+  const createHandlers = () => ({
+    open: vi.fn(),
+    tabOut: vi.fn(),
+    dismiss: vi.fn(),
+    highlightLast: vi.fn(),
+    moveHighlight: vi.fn(),
+    highlightFirst: vi.fn(),
+    commitHighlighted: vi.fn(),
+    removeLastSelected: vi.fn(),
+  });
+
+  const createEvent = (key: string) => ({ key, preventDefault: vi.fn() });
+
+  const closed = {
+    open: false,
+    multiple: false,
+    searchQuery: "",
+    selectedCount: 0,
+  };
+  const opened = { ...closed, open: true };
+
+  test("it should open a closed menu with arrows and Enter", () => {
+    for (const key of ["ArrowDown", "ArrowUp", "Enter"]) {
+      const handlers = createHandlers();
+      const event = createEvent(key);
+
+      expect(handleSelectTriggerKeyDown(event, closed, handlers)).toBe(true);
+      expect(handlers.open).toHaveBeenCalledOnce();
+      expect(event.preventDefault).toHaveBeenCalledOnce();
+    }
+  });
+
+  test("it should move and commit the highlight on an open menu", () => {
+    const handlers = createHandlers();
+
+    handleSelectTriggerKeyDown(createEvent("ArrowDown"), opened, handlers);
+    handleSelectTriggerKeyDown(createEvent("ArrowUp"), opened, handlers);
+    handleSelectTriggerKeyDown(createEvent("Enter"), opened, handlers);
+
+    expect(handlers.moveHighlight).toHaveBeenNthCalledWith(1, 1);
+    expect(handlers.moveHighlight).toHaveBeenNthCalledWith(2, -1);
+    expect(handlers.commitHighlighted).toHaveBeenCalledOnce();
+    expect(handlers.open).not.toHaveBeenCalled();
+  });
+
+  test("it should only handle Home / End on an open menu", () => {
+    const handlers = createHandlers();
+    const event = createEvent("Home");
+
+    expect(handleSelectTriggerKeyDown(event, closed, handlers)).toBe(false);
+    expect(event.preventDefault).not.toHaveBeenCalled();
+
+    handleSelectTriggerKeyDown(createEvent("Home"), opened, handlers);
+    handleSelectTriggerKeyDown(createEvent("End"), opened, handlers);
+
+    expect(handlers.highlightFirst).toHaveBeenCalledOnce();
+    expect(handlers.highlightLast).toHaveBeenCalledOnce();
+  });
+
+  test("it should remove the last chip on Backspace with an empty query", () => {
+    const handlers = createHandlers();
+    const state = { ...closed, multiple: true, selectedCount: 2 };
+
+    expect(
+      handleSelectTriggerKeyDown(createEvent("Backspace"), state, handlers),
+    ).toBe(true);
+    expect(
+      handleSelectTriggerKeyDown(
+        createEvent("Backspace"),
+        { ...state, searchQuery: "ab" },
+        handlers,
+      ),
+    ).toBe(false);
+    expect(handlers.removeLastSelected).toHaveBeenCalledOnce();
+  });
+
+  test("it should dismiss on Escape and tab out without preventing default", () => {
+    const handlers = createHandlers();
+    const tab = createEvent("Tab");
+
+    handleSelectTriggerKeyDown(createEvent("Escape"), opened, handlers);
+    handleSelectTriggerKeyDown(tab, opened, handlers);
+
+    expect(handlers.dismiss).toHaveBeenCalledOnce();
+    expect(handlers.tabOut).toHaveBeenCalledOnce();
+    expect(tab.preventDefault).not.toHaveBeenCalled();
+  });
+
+  test("it should ignore other keys", () => {
+    expect(
+      handleSelectTriggerKeyDown(createEvent("a"), opened, createHandlers()),
+    ).toBe(false);
   });
 });

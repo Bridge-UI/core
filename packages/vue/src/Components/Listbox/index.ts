@@ -1,13 +1,6 @@
 // ** Exports
 export { useListbox } from "@/Components/Listbox/composables/useListbox";
-export {
-  findFirstEnabledOptionIndex,
-  findLastEnabledOptionIndex,
-  getListboxActiveDescendantId,
-  getListboxOptionId,
-  moveListboxHighlight,
-  useListboxNavigation,
-} from "@/Components/Listbox/composables/useListboxNavigation";
+export { useListboxNavigation } from "@/Components/Listbox/composables/useListboxNavigation";
 export type {
   ListboxClasses,
   ListboxColorOverrides,

@@ -367,6 +367,14 @@ export type {
   FileUploadValue,
 } from "@/Domain/fileUpload";
 export {
+  findFirstEnabledOptionIndex,
+  findLastEnabledOptionIndex,
+  findSelectedListboxOptionIndex,
+  getListboxActiveDescendantId,
+  getListboxOptionId,
+  moveListboxHighlight,
+} from "@/Domain/listbox";
+export {
   getNumberFieldStepper,
   resolveNumberFieldStepperIconSize,
 } from "@/Domain/numberField";
@@ -482,6 +490,7 @@ export {
   fetchSelectAsyncData,
   filterListboxEntries,
   flattenListboxOptions,
+  handleSelectTriggerKeyDown,
   isListboxOptionGroup,
   listboxOptionFromComposedItem,
   mapListboxEntriesToRows,
@@ -511,6 +520,9 @@ export type {
   SelectOptionInput,
   SelectOptionKeys,
   SelectOptionLike,
+  SelectTriggerKeyEvent,
+  SelectTriggerKeyHandlers,
+  SelectTriggerKeyState,
   SelectValue,
 } from "@/Domain/select";
 export {
