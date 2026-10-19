@@ -3,17 +3,17 @@ import { useRef, useState } from "react";
 
 // ** Core Imports
 import {
+  type DataTableVisibilityItem,
+  type FieldOverlayMode,
   getDataTableHiddenColumnIds,
   getDataTableResetHiddenColumnIds,
   getFieldOverlayControlSize,
   resolveFieldOverlay,
   resolveFieldShowFooter,
   toggleDataTableColumnVisibility,
-  type FieldOverlayMode,
 } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
-import type { DataTableVisibilityItem } from "@/Components/DataTable/hooks/useDataTable";
 import { derived, useBreakpoint } from "@/Utils";
 
 /**

@@ -3,17 +3,17 @@ import { computed, ref, watch } from "vue";
 
 // ** Core Imports
 import {
+  type DataTableVisibilityItem,
+  type FieldOverlayMode,
   getDataTableHiddenColumnIds,
   getDataTableResetHiddenColumnIds,
   getFieldOverlayControlSize,
   resolveFieldOverlay,
   resolveFieldShowFooter,
   toggleDataTableColumnVisibility,
-  type FieldOverlayMode,
 } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
-import type { DataTableVisibilityItem } from "@/Components/DataTable/composables/useDataTable";
 import { useBreakpoint } from "@/Utils";
 
 /**

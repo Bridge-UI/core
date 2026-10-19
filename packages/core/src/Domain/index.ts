@@ -281,6 +281,22 @@ export type {
   DataTableStickyPing,
 } from "@/Domain/dataTable";
 export {
+  getDataTableBodyInsets,
+  getDataTableColumnLayoutStyle,
+  getDataTableViewAlign,
+  resolveDataTableHeaderViews,
+  resolveDataTableRowCells,
+  resolveDataTableSummaryCells,
+  resolveDataTableVisibilityItems,
+} from "@/Domain/dataTableView";
+export type {
+  DataTableCellView,
+  DataTableColumnLayoutStyle,
+  DataTableHeaderView,
+  DataTableViewColumn,
+  DataTableVisibilityItem,
+} from "@/Domain/dataTableView";
+export {
   CALENDAR_YEAR_PAGE_SIZE,
   DEFAULT_CALENDAR_GRANULARITY,
   DEFAULT_START_OF_WEEK,

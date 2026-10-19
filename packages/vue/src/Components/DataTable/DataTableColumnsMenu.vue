@@ -1,13 +1,15 @@
 <script setup lang="ts">
 // ** Core Imports
-import { type FieldOverlayMode } from "@bridge-ui/core/Domain";
+import {
+  type DataTableVisibilityItem,
+  type FieldOverlayMode,
+} from "@bridge-ui/core/Domain";
 import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
 import { Button } from "@/Components/Button";
 import { Checkbox } from "@/Components/Checkbox";
-import type { DataTableVisibilityItem } from "@/Components/DataTable/composables/useDataTable";
 import { useDataTableColumnsMenu } from "@/Components/DataTable/composables/useDataTableColumnsMenu";
 import DataTableToolbarButton from "@/Components/DataTable/DataTableToolbarButton.vue";
 import { FieldOverlay } from "@/Components/FieldOverlay";

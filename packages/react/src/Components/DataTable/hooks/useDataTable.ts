@@ -26,8 +26,6 @@ import {
   isArray,
   isEmpty,
   isFunction,
-  isNil,
-  isString,
   keyBy,
   map,
   omit,
@@ -38,7 +36,6 @@ import {
   useMemo,
   useRef,
   useState,
-  type CSSProperties,
   type HTMLAttributes,
   type ReactNode,
   type Ref,
@@ -50,12 +47,9 @@ import {
   DATATABLE_AMBIGUOUS_PAGING_WARNING,
   DATATABLE_EXPAND_COLUMN_ID,
   DATATABLE_SELECTION_COLUMN_ID,
-  getDataTableAriaSort,
+  getDataTableBodyInsets,
   getDataTableColumnAccessor,
-  getDataTableColumnCssWidth,
-  getDataTableColumnFilterValues,
-  getDataTableColumnSearch,
-  getDataTableDefaultCellContent,
+  getDataTableColumnLayoutStyle,
   getDataTableFooterLayout,
   getDataTablePaginationSlotProps,
   getDataTablePerPageSelectOptions,
@@ -63,14 +57,11 @@ import {
   getDataTableResolvedPerPage,
   getDataTableSelectAllState,
   getDataTableSelectionTotal,
-  getDataTableSortIcon,
-  getDataTableStickyInsets,
   getDataTableStickyPing,
+  getDataTableViewAlign,
   isDataTableClientPaged,
   isDataTableColumnFilterable,
-  isDataTableColumnFiltered,
   isDataTableColumnSearchable,
-  isDataTableColumnSearched,
   isDataTableCursorPaged,
   isDataTableExpandEnabled,
   isDataTablePagingAmbiguous,
@@ -82,7 +73,11 @@ import {
   isDataTableStickyHeader,
   isDataTableStickyHeaderBoxed,
   isDataTableVisibilityEnabled,
+  resolveDataTableHeaderViews,
+  resolveDataTableRowCells,
   resolveDataTableRowId,
+  resolveDataTableSummaryCells,
+  resolveDataTableVisibilityItems,
   rowMatchesDataTableColumnSearch,
   rowMatchesDataTableToolbarSearch,
   rowSelectionToIds,
@@ -95,12 +90,12 @@ import {
   toggleDataTablePageSelection,
   toggleDataTableRowExpansion,
   toggleDataTableSorting,
-  type DataTableFilterOption,
+  type DataTableCellView as CoreDataTableCellView,
+  type DataTableHeaderView as CoreDataTableHeaderView,
   type DataTablePaginationSlotProps,
   type DataTablePerPageSlotProps,
   type DataTableSelectedSlotProps,
-  type DataTableStickyEdge,
-  type DataTableStickyInset,
+  type DataTableVisibilityItem,
 } from "@bridge-ui/core/Domain";
 import { tableVariantProps as variantProps } from "@bridge-ui/core/Tokens";
 import {
@@ -220,46 +215,17 @@ type DataTableMerged<T> = MergeLibDefaults<
     | "onHiddenColumnsChange"
   >;
 
-export type DataTableHeaderView = {
-  align?: DataTableColumn<unknown>["align"];
-  ariaSort: ReturnType<typeof getDataTableAriaSort>;
-  classes?: DataTableColumn<unknown>["classes"];
-  ellipsis: boolean;
-  filterable: boolean;
-  filterActive: boolean;
-  filterMultiple: boolean;
-  filterOptions: DataTableFilterOption[];
-  filterValues: string[];
-  header: ReactNode;
-  hideable: boolean;
-  id: string;
-  isExpand: boolean;
-  isSelection: boolean;
-  searchable: boolean;
-  searchQuery: string;
-  sortable: boolean;
-  sortIcon: ReturnType<typeof getDataTableSortIcon>;
-  sticky?: DataTableStickyEdge;
-  stickyEdge: boolean;
-  stickyStyle?: DataTableStickyInset["style"];
-  width?: number | string;
-};
+type DataTableAlign = NonNullable<DataTableColumn<unknown>["align"]>;
 
-export type DataTableCellView = {
-  align?: DataTableColumn<unknown>["align"];
-  classes?: DataTableColumn<unknown>["classes"];
-  content: ReactNode;
-  ellipsis: boolean;
-  id: string;
-  isExpand: boolean;
-  isSelection: boolean;
-  sticky?: DataTableStickyEdge;
-  stickyEdge: boolean;
-  stickyStyle?: DataTableStickyInset["style"];
-  tooltip?: string;
-  value?: unknown;
-  width?: number | string;
-};
+export type DataTableHeaderView = CoreDataTableHeaderView<
+  ReactNode,
+  DataTableAlign
+>;
+
+export type DataTableCellView = CoreDataTableCellView<
+  ReactNode,
+  DataTableAlign
+>;
 
 export type DataTableRowView<T = unknown> = {
   cells: DataTableCellView[];
@@ -267,13 +233,6 @@ export type DataTableRowView<T = unknown> = {
   id: string;
   original: T;
   selected: boolean;
-};
-
-export type DataTableVisibilityItem = {
-  hidden: boolean;
-  hideable: boolean;
-  id: string;
-  label: string;
 };
 
 const chromeColumn = {
@@ -305,54 +264,6 @@ const dataTableFeatures = tableFeatures({
 });
 
 type DataTableFeatures = typeof dataTableFeatures;
-
-function getDataTableHeadAlign(header: {
-  align?: DataTableColumn<unknown>["align"];
-  isExpand: boolean;
-  isSelection: boolean;
-}) {
-  return header.isSelection || header.isExpand
-    ? "center"
-    : (header.align ?? "start");
-}
-
-function getDataTableCellAlign(cell: {
-  align?: DataTableColumn<unknown>["align"];
-  isExpand: boolean;
-  isSelection: boolean;
-}) {
-  return cell.isSelection || cell.isExpand ? "center" : (cell.align ?? "start");
-}
-
-function getDataTableColumnLayoutStyle(
-  view: {
-    isExpand: boolean;
-    isSelection: boolean;
-    stickyStyle?: DataTableStickyInset["style"];
-    width?: number | string;
-  },
-  stickyHeaderEnabled: boolean,
-  header = false,
-): CSSProperties {
-  const width = getDataTableColumnCssWidth(
-    view.width,
-    view.isExpand || view.isSelection,
-  );
-  const headerSticky = header && stickyHeaderEnabled;
-
-  return {
-    ...(width ? { width, maxWidth: width } : {}),
-    ...view.stickyStyle,
-    ...(header && view.stickyStyle && !headerSticky ? { zIndex: 20 } : {}),
-    ...(headerSticky
-      ? {
-          top: 0,
-          position: "sticky",
-          zIndex: view.stickyStyle ? 20 : 11,
-        }
-      : {}),
-  };
-}
 
 export function useDataTable<T extends Record<string, unknown>>(
   props: DataTableProps<T>,
@@ -738,56 +649,16 @@ export function useDataTable<T extends Record<string, unknown>>(
 
   const headerViews = useMemo((): DataTableHeaderView[] => {
     const headerGroup = head(table.getHeaderGroups());
-    const metas = (headerGroup?.headers ?? []).map((header) => {
-      const column = get(columnsById, header.column.id) as
-        undefined | DataTableColumn<T>;
 
-      return {
-        column,
-        id: header.column.id,
-        width: column?.width,
-        sticky: column?.sticky,
-        isExpand: header.column.id === DATATABLE_EXPAND_COLUMN_ID,
-        isSelection: header.column.id === DATATABLE_SELECTION_COLUMN_ID,
-      };
-    });
-    const insets = getDataTableStickyInsets(
-      metas,
-      stickyHeaderEnabled ? 20 : 10,
-    );
-
-    return metas.map((meta) => {
-      const inset = get(insets, meta.id) as undefined | DataTableStickyInset;
-      const ariaSort = meta.column?.sortable
-        ? getDataTableAriaSort(resolvedSorting ?? null, meta.id)
-        : "none";
-
-      return {
-        ariaSort,
-        id: meta.id,
-        width: meta.width,
-        sticky: inset?.sticky,
-        isExpand: meta.isExpand,
-        align: meta.column?.align,
-        stickyStyle: inset?.style,
-        header: meta.column?.header,
-        classes: meta.column?.classes,
-        isSelection: meta.isSelection,
-        stickyEdge: inset?.edge === true,
-        ellipsis: meta.column?.ellipsis === true,
-        sortable: meta.column?.sortable === true,
-        sortIcon: getDataTableSortIcon(ariaSort),
-        hideable: meta.column?.hideable !== false,
-        filterOptions: meta.column?.filters ?? [],
-        filterable: isDataTableColumnFilterable(meta.column),
-        searchable: isDataTableColumnSearchable(meta.column),
-        filterMultiple: meta.column?.filterMultiple !== false,
-        searchQuery: getDataTableColumnSearch(merged.columnSearch, meta.id),
-        filterValues: getDataTableColumnFilterValues(merged.filters, meta.id),
-        filterActive:
-          isDataTableColumnFiltered(merged.filters, meta.id) ||
-          isDataTableColumnSearched(merged.columnSearch, meta.id),
-      };
+    return resolveDataTableHeaderViews({
+      filters: merged.filters,
+      sorting: resolvedSorting,
+      columnsById: columnsById,
+      columnSearch: merged.columnSearch,
+      stickyHeader: stickyHeaderEnabled,
+      columnIds: (headerGroup?.headers ?? []).map((header) => {
+        return header.column.id;
+      }),
     });
   }, [
     columnDefs,
@@ -802,18 +673,7 @@ export function useDataTable<T extends Record<string, unknown>>(
   ]);
 
   const rowViews = useMemo((): DataTableRowView<T>[] => {
-    const insets = getDataTableStickyInsets(
-      headerViews.map((header) => {
-        return {
-          id: header.id,
-          width: header.width,
-          sticky: header.sticky,
-          isExpand: header.isExpand,
-          isSelection: header.isSelection,
-        };
-      }),
-      1,
-    );
+    const insets = getDataTableBodyInsets(headerViews);
 
     return pagedRows.map((row) => {
       return {
@@ -821,36 +681,13 @@ export function useDataTable<T extends Record<string, unknown>>(
         original: row.original,
         expanded: expandedIds.includes(row.id),
         selected: selectionIds.includes(row.id),
-        cells: row.getVisibleCells().map((cell) => {
-          const column = get(columnsById, cell.column.id) as
-            undefined | DataTableColumn<T>;
-          const inset = get(insets, cell.column.id) as
-            undefined | DataTableStickyInset;
-          const accessor = column
-            ? getDataTableColumnAccessor(row.original, column)
-            : undefined;
-          const tooltip =
-            column?.ellipsis === true && !isNil(accessor) && accessor !== ""
-              ? String(accessor)
-              : undefined;
-
-          return {
-            tooltip,
-            value: accessor,
-            id: cell.column.id,
-            width: column?.width,
-            align: column?.align,
-            sticky: inset?.sticky,
-            classes: column?.classes,
-            stickyStyle: inset?.style,
-            stickyEdge: inset?.edge === true,
-            ellipsis: column?.ellipsis === true,
-            isExpand: cell.column.id === DATATABLE_EXPAND_COLUMN_ID,
-            isSelection: cell.column.id === DATATABLE_SELECTION_COLUMN_ID,
-            content: column?.cell
-              ? column.cell(row.original)
-              : getDataTableDefaultCellContent(accessor),
-          };
+        cells: resolveDataTableRowCells({
+          insets,
+          row: row.original,
+          columnsById: columnsById,
+          columnIds: row.getVisibleCells().map((cell) => {
+            return cell.column.id;
+          }),
         }),
       };
     });
@@ -1051,8 +888,8 @@ export function useDataTable<T extends Record<string, unknown>>(
     merged.loadingVariant,
   ]);
 
-  const getHeadAlign = getDataTableHeadAlign;
-  const getCellAlign = getDataTableCellAlign;
+  const getHeadAlign = getDataTableViewAlign<DataTableAlign>;
+  const getCellAlign = getDataTableViewAlign<DataTableAlign>;
 
   const getHeadBind = useCallback(
     (header: DataTableHeaderView) => {
@@ -1281,50 +1118,15 @@ export function useDataTable<T extends Record<string, unknown>>(
   }, [footerLayout, mergedClasses]);
 
   const summaryCells = useMemo((): null | DataTableCellView[] => {
-    const hasSummary = columns.some((column) => {
-      return column.summary !== undefined;
-    });
-
-    if (!hasSummary) {
-      return null;
-    }
-
-    const data = map(searchedRows, "original");
-
-    return headerViews.map((header) => {
-      const column = get(columnsById, header.id) as
-        undefined | DataTableColumn<T>;
-
-      return {
-        id: header.id,
-        ellipsis: false,
-        value: undefined,
-        tooltip: undefined,
-        width: header.width,
-        align: header.align,
-        sticky: header.sticky,
-        classes: header.classes,
-        isExpand: header.isExpand,
-        stickyEdge: header.stickyEdge,
-        stickyStyle: header.stickyStyle,
-        isSelection: header.isSelection,
-        content:
-          header.isSelection || header.isExpand
-            ? null
-            : (column?.summary?.(data) ?? null),
-      };
+    return resolveDataTableSummaryCells({
+      columns: columns,
+      headers: headerViews,
+      data: map(searchedRows, "original"),
     });
   }, [columns, columnsById, headerViews, searchedRows]);
 
   const visibilityItems = useMemo((): DataTableVisibilityItem[] => {
-    return columns.map((column) => {
-      return {
-        id: column.id,
-        hideable: column.hideable !== false,
-        hidden: hiddenColumns.includes(column.id),
-        label: isString(column.header) ? column.header : column.id,
-      };
-    });
+    return resolveDataTableVisibilityItems(columns, hiddenColumns);
   }, [columns, hiddenColumns]);
 
   const showSearch = derived(() => {
