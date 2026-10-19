@@ -281,6 +281,7 @@ export type {
   DataTableStickyPing,
 } from "@/Domain/dataTable";
 export {
+  CALENDAR_YEAR_PAGE_SIZE,
   DEFAULT_CALENDAR_GRANULARITY,
   DEFAULT_START_OF_WEEK,
   applyDateSelection,
@@ -289,6 +290,8 @@ export {
   dateFromYear,
   dateFromYearMonth,
   formatDatePickerModel,
+  getCalendarNavigationMessage,
+  getCalendarYearPageStart,
   isAfterAtGranularity,
   isBeforeAtGranularity,
   isCalendarMonthPanelHidden,
@@ -304,7 +307,11 @@ export {
   normalizeDatePickerModel,
   normalizeDateToGranularity,
   resolveCalendarDayInteractionState,
+  resolveCalendarFocusDate,
+  resolveCalendarMonthSelection,
+  resolveCalendarNavigation,
   resolveCalendarPanelView,
+  resolveCalendarYearSelection,
   resolveDatePickerMode,
   resolveStartOfWeek,
   sortDateRangeValue,
@@ -312,6 +319,8 @@ export {
 export type {
   CalendarDayInteractionState,
   CalendarGranularity,
+  CalendarNavigation,
+  CalendarPanelSelection,
   CalendarView,
   DatePickerMode,
   DatePickerModel,
