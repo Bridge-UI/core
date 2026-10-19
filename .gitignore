@@ -14,3 +14,5 @@ docs/roadmap
 **/cypress/videos/
 **/cypress/downloads/
 **/cypress/screenshots/
+# svelte-package temp output
+**/.svelte-kit/
