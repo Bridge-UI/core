@@ -2,15 +2,13 @@
 import type { ECharts } from "echarts/core";
 import { get, isNil, isNumber } from "es-toolkit/compat";
 
-// ** Core Imports
+// ** Local Imports
 import type {
   ChartAnchor,
   ChartBaseRenderOptions,
   ChartPartRenderSlice,
-} from "@bridge-ui/core/Domain";
-
-// ** Local Imports
-import type { EchartsPlotFamily } from "@/Utils/Charts/echarts/plot";
+} from "@/Domain";
+import type { EchartsPlotFamily } from "@/Integrations/Echarts/plot";
 
 /**
  * Render options with slices (pie, funnel).

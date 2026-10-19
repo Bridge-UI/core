@@ -36,7 +36,14 @@ export default defineConfig({
       formats: ["es"],
     },
     rollupOptions: {
-      external: ["clsx", /^es-toolkit/, "tailwind-merge", "@floating-ui/dom"],
+      external: [
+        "clsx",
+        /^echarts/,
+        /^@tiptap\//,
+        /^es-toolkit/,
+        "tailwind-merge",
+        "@floating-ui/dom",
+      ],
       output: {
         preserveModules: true,
         preserveModulesRoot: "src",

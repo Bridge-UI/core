@@ -21,6 +21,10 @@ import {
   type RichTextTool,
   type RichTextValue,
 } from "@bridge-ui/core/Domain";
+import {
+  mountTiptapEditor,
+  type TiptapEditorHandle,
+} from "@bridge-ui/core/Integrations/Tiptap";
 import { richTextEditorSizeProps as sizeProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
@@ -43,10 +47,6 @@ import type {
   RichTextEditorEmits,
   RichTextEditorOwnProps,
 } from "@/Components/RichTextEditor/richTextEditor.types";
-import {
-  mountTiptapEditor,
-  type TiptapEditorHandle,
-} from "@/Components/RichTextEditor/tiptapEditor";
 import {
   mergePartBind,
   useBridgeUIComponent,

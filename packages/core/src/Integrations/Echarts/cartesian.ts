@@ -16,7 +16,7 @@ import {
   isNumber,
 } from "es-toolkit/compat";
 
-// ** Core Imports
+// ** Local Imports
 import {
   getChartNearestIndex,
   getChartStackEnds,
@@ -28,13 +28,11 @@ import {
   type ChartCartesianRenderSeries,
   type ChartDatum,
   type ChartReference,
-} from "@bridge-ui/core/Domain";
-
-// ** Local Imports
+} from "@/Domain";
 import {
   labelStyle,
   type EchartsPlotFamily,
-} from "@/Utils/Charts/echarts/plot";
+} from "@/Integrations/Echarts/plot";
 
 type EChartsCartesianOption = ComposeOption<
   | BarSeriesOption

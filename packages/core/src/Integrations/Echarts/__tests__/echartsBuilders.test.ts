@@ -2,19 +2,17 @@
 import { get } from "es-toolkit/compat";
 import { describe, expect, test } from "vitest";
 
-// ** Core Imports
+// ** Local Imports
 import type {
   ChartCartesianRenderOptions,
   ChartCartesianRenderSeries,
   ChartPartRenderSlice,
   ChartRenderTheme,
-} from "@bridge-ui/core/Domain";
-
-// ** Local Imports
-import { buildEchartsCartesianOption } from "@/Utils/Charts/echarts/cartesian";
-import { buildEchartsFunnelOption } from "@/Utils/Charts/echarts/funnel";
-import { buildEchartsPieOption } from "@/Utils/Charts/echarts/pie";
-import { buildEchartsScatterOption } from "@/Utils/Charts/echarts/scatter";
+} from "@/Domain";
+import { buildEchartsCartesianOption } from "@/Integrations/Echarts/cartesian";
+import { buildEchartsFunnelOption } from "@/Integrations/Echarts/funnel";
+import { buildEchartsPieOption } from "@/Integrations/Echarts/pie";
+import { buildEchartsScatterOption } from "@/Integrations/Echarts/scatter";
 
 const theme: ChartRenderTheme = {
   fontSize: 12,
