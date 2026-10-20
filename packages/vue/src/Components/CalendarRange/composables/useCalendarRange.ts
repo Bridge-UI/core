@@ -12,15 +12,20 @@ import {
 } from "vue";
 
 // ** Core Imports
-import type { DateAdapter } from "@bridge-ui/core/Adapters";
 import {
   applyDateSelection,
+  CALENDAR_YEAR_PAGE_SIZE,
   calendarPanelViewFromGranularity,
+  getCalendarNavigationMessage,
+  getCalendarYearPageStart,
   isCalendarMonthPanelHidden,
   isCalendarYearPanelHidden,
   isDateRangeValue,
-  normalizeDateToGranularity,
+  resolveCalendarFocusDate,
+  resolveCalendarMonthSelection,
+  resolveCalendarNavigation,
   resolveCalendarPanelView,
+  resolveCalendarYearSelection,
   type CalendarView,
   type DatePickerModel,
   type DateRangeValue,
@@ -85,18 +90,6 @@ type CalendarRangeMerged = MergeLibDefaults<
   CalendarRangeOwnProps,
   CalendarRangeLibDefaults
 >;
-
-function resolveFocusDate(
-  value: null | DateRangeValue,
-  adapter: DateAdapter,
-  timeZone?: string,
-): Date {
-  if (isNil(value)) {
-    return adapter.now(timeZone);
-  }
-
-  return value[0];
-}
 
 function toRangeValue(value: DatePickerModel): null | DateRangeValue {
   if (isDateRangeValue(value)) {
@@ -192,14 +185,13 @@ export function useCalendarRange(
     adapter.value.startOfMonth(
       !isNil(propsValue.value.viewDate)
         ? (propsValue.value.viewDate as Date)
-        : resolveFocusDate(model.value, adapter.value, timeZone.value),
+        : resolveCalendarFocusDate(model.value, adapter.value, timeZone.value),
       timeZone.value,
     ),
   );
 
   const uncontrolledPreview = ref<Date | null>(null);
 
-  const yearPageSize = 15;
   const yearPageStart = ref<null | number>(null);
 
   const granularity = computed(() => {
@@ -266,7 +258,7 @@ export function useCalendarRange(
       return yearPageStart.value;
     }
 
-    return Math.max(1, viewYear.value - Math.floor(yearPageSize / 2));
+    return getCalendarYearPageStart(viewYear.value);
   });
 
   const roundedClass = computed(() => {
@@ -283,10 +275,7 @@ export function useCalendarRange(
   };
 
   const openYearView = () => {
-    yearPageStart.value = Math.max(
-      1,
-      viewYear.value - Math.floor(yearPageSize / 2),
-    );
+    yearPageStart.value = getCalendarYearPageStart(viewYear.value);
     setView("year");
   };
 
@@ -323,35 +312,30 @@ export function useCalendarRange(
     emit("previewDateChange", next);
   };
 
+  const navigate = (direction: 1 | -1) => {
+    const navigation = resolveCalendarNavigation({
+      direction,
+      view: view.value,
+      adapter: adapter.value,
+      viewDate: viewDate.value,
+      timeZone: timeZone.value,
+      yearPageStart: resolvedYearPageStart.value,
+    });
+
+    if (navigation.type === "yearPage") {
+      yearPageStart.value = navigation.yearPageStart;
+      return;
+    }
+
+    setViewDate(navigation.viewDate);
+  };
+
   const goToPrevious = () => {
-    if (view.value === "year") {
-      yearPageStart.value = Math.max(
-        1,
-        resolvedYearPageStart.value - yearPageSize,
-      );
-      return;
-    }
-
-    if (view.value === "month") {
-      setViewDate(adapter.value.addYears(viewDate.value, -1, timeZone.value));
-      return;
-    }
-
-    setViewDate(adapter.value.addMonths(viewDate.value, -1, timeZone.value));
+    navigate(-1);
   };
 
   const goToNext = () => {
-    if (view.value === "year") {
-      yearPageStart.value = resolvedYearPageStart.value + yearPageSize;
-      return;
-    }
-
-    if (view.value === "month") {
-      setViewDate(adapter.value.addYears(viewDate.value, 1, timeZone.value));
-      return;
-    }
-
-    setViewDate(adapter.value.addMonths(viewDate.value, 1, timeZone.value));
+    navigate(1);
   };
 
   /**
@@ -370,40 +354,33 @@ export function useCalendarRange(
 
   const handleYearSelect = (year: number) => {
     yearPageStart.value = null;
-    const nextDate = adapter.value.setYear(
-      viewDate.value,
-      year,
-      timeZone.value,
-    );
-    setViewDate(nextDate);
 
-    if (granularity.value === "year") {
+    const selection = resolveCalendarYearSelection({
+      year,
+      adapter: adapter.value,
+      viewDate: viewDate.value,
+      timeZone: timeZone.value,
+      granularity: granularity.value,
+      hideMonths: merged.value.hideMonths,
+    });
+
+    setViewDate(selection.viewDate);
+
+    if (selection.type === "commit") {
       handleChange(
         applyDateSelection({
           mode: "range",
           value: model.value,
-          granularity: "year",
+          next: selection.date,
           adapter: adapter.value,
           timeZone: timeZone.value,
-          next: normalizeDateToGranularity(
-            nextDate,
-            "year",
-            adapter.value,
-            timeZone.value,
-          ),
+          granularity: granularity.value,
         }),
       );
       return;
     }
 
-    setView(
-      isCalendarMonthPanelHidden({
-        granularity: granularity.value,
-        hideMonths: merged.value.hideMonths,
-      })
-        ? calendarPanelViewFromGranularity(granularity.value)
-        : "month",
-    );
+    setView(selection.view);
   };
 
   const openMonthView = () => {
@@ -411,33 +388,31 @@ export function useCalendarRange(
   };
 
   const handleMonthSelect = (month: number) => {
-    const nextDate = adapter.value.setMonth(
-      viewDate.value,
+    const selection = resolveCalendarMonthSelection({
       month,
-      timeZone.value,
-    );
-    setViewDate(nextDate);
+      adapter: adapter.value,
+      viewDate: viewDate.value,
+      timeZone: timeZone.value,
+      granularity: granularity.value,
+    });
 
-    if (granularity.value === "month") {
+    setViewDate(selection.viewDate);
+
+    if (selection.type === "commit") {
       handleChange(
         applyDateSelection({
           mode: "range",
           value: model.value,
-          granularity: "month",
+          next: selection.date,
           adapter: adapter.value,
           timeZone: timeZone.value,
-          next: normalizeDateToGranularity(
-            nextDate,
-            "month",
-            adapter.value,
-            timeZone.value,
-          ),
+          granularity: granularity.value,
         }),
       );
       return;
     }
 
-    setView("date");
+    setView(selection.view);
   };
 
   const monthPanelYear = viewYear;
@@ -608,27 +583,11 @@ export function useCalendarRange(
   });
 
   const previousNavLabel = computed(() => {
-    if (view.value === "year") {
-      return resolveMessage("Previous years");
-    }
-
-    if (view.value === "month") {
-      return resolveMessage("Previous year");
-    }
-
-    return resolveMessage("Previous month");
+    return resolveMessage(getCalendarNavigationMessage(view.value, -1));
   });
 
   const nextNavLabel = computed(() => {
-    if (view.value === "year") {
-      return resolveMessage("Next years");
-    }
-
-    if (view.value === "month") {
-      return resolveMessage("Next year");
-    }
-
-    return resolveMessage("Next month");
+    return resolveMessage(getCalendarNavigationMessage(view.value, 1));
   });
 
   const previousButtonBind = computed(() => {
@@ -780,7 +739,6 @@ export function useCalendarRange(
     navIconBind,
     granularity,
     handleChange,
-    yearPageSize,
     endMonthLabel,
     endHeaderBind,
     monthYearBind,
@@ -801,5 +759,6 @@ export function useCalendarRange(
     handlePreviewDateChange,
     handleStartViewDateChange,
     yearPageStart: resolvedYearPageStart,
+    yearPageSize: CALENDAR_YEAR_PAGE_SIZE,
   };
 }

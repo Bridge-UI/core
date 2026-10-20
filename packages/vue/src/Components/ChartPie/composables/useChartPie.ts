@@ -12,6 +12,7 @@ import {
   type ChartPartRenderSlice,
   type ChartPieRenderOptions,
 } from "@bridge-ui/core/Domain";
+import { mountEchartsPie } from "@bridge-ui/core/Integrations/Echarts";
 
 // ** Local Imports
 import type { ChartPieOwnProps } from "@/Components/ChartPie/chartPie.types";
@@ -20,7 +21,6 @@ import {
   useChartRoot,
   type ChartRootMerged,
 } from "@/Utils/Charts";
-import { mountEchartsPie } from "@/Utils/Charts/echarts/pie";
 import { useChartPart } from "@/Utils/Charts/useChartPart";
 
 const chartPieBridgeKeys = [

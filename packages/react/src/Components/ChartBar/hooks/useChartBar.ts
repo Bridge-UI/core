@@ -1,6 +1,8 @@
+// ** Core Imports
+import { mountEchartsBar } from "@bridge-ui/core/Integrations/Echarts";
+
 // ** Local Imports
 import type { ChartBarProps } from "@/Components/ChartBar/chartBar.types";
-import { mountEchartsBar } from "@/Utils/Charts/echarts/bar";
 import {
   useChartCartesian,
   type ChartCartesianMerged,

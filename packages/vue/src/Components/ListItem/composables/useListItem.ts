@@ -13,6 +13,7 @@ import {
 
 // ** Core Imports
 import {
+  getListboxOptionId,
   listboxOptionFromComposedItem,
   type ListboxOption,
 } from "@bridge-ui/core/Domain";
@@ -26,7 +27,6 @@ import {
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";
 import { LIST_INJECTION_KEY } from "@/Components/List/listInjectionKey";
-import { getListboxOptionId } from "@/Components/Listbox/composables/useListboxNavigation";
 import { LISTBOX_INJECTION_KEY } from "@/Components/Listbox/listboxInjectionKey";
 import type {
   ListItemOwnProps,

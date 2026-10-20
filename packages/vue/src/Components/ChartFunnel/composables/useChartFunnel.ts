@@ -11,6 +11,7 @@ import {
   type ChartPartRenderSlice,
   type ChartSliceEntry,
 } from "@bridge-ui/core/Domain";
+import { mountEchartsFunnel } from "@bridge-ui/core/Integrations/Echarts";
 
 // ** Local Imports
 import type { ChartFunnelOwnProps } from "@/Components/ChartFunnel/chartFunnel.types";
@@ -19,7 +20,6 @@ import {
   useChartRoot,
   type ChartRootMerged,
 } from "@/Utils/Charts";
-import { mountEchartsFunnel } from "@/Utils/Charts/echarts/funnel";
 import { useChartPart } from "@/Utils/Charts/useChartPart";
 
 const chartFunnelBridgeKeys = [

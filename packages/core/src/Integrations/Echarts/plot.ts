@@ -9,14 +9,14 @@
 import { init, type ECharts, type EChartsCoreOption } from "echarts/core";
 import { get, isFunction, isNil } from "es-toolkit/compat";
 
-// ** Core Imports
+// ** Local Imports
 import type {
   ChartAnchor,
   ChartBaseRenderOptions,
   ChartHandle,
   ChartMountOptions,
   ChartRenderTheme,
-} from "@bridge-ui/core/Domain";
+} from "@/Domain";
 
 /**
  * Family-specific pieces of a plot.

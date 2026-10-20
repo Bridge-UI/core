@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNumber, omit, pick } from "es-toolkit/compat";
+import { get, omit, pick } from "es-toolkit/compat";
 import {
   computed,
   ref,
@@ -16,15 +16,15 @@ import {
   getSliderPointerClientX,
   isSliderStopCovered,
   normalizeSliderStops,
+  normalizeSliderValue,
   percentFromSliderPointer,
   percentToValue,
-  pickClosestSliderThumb,
+  readSliderThumbValue as readThumbValue,
   resolveSliderBounds,
-  snapSliderValue,
-  sortSliderRangeValue,
-  stepSliderValue,
+  resolveSliderKeyValue,
+  resolveSliderTrackPress,
   valueToPercent,
-  writeSliderRangeThumb,
+  writeSliderThumbValue as writeThumbValue,
   type SliderRangeValue,
   type SliderStop,
 } from "@bridge-ui/core/Domain";
@@ -101,31 +101,6 @@ export type UseSliderOptions = {
    */
   onChange?: (value: number | SliderRangeValue) => void;
 };
-
-function readThumbValue(
-  value: number | SliderRangeValue,
-  thumbIndex: 0 | 1,
-  range: boolean,
-) {
-  if (range && Array.isArray(value)) {
-    return value[thumbIndex];
-  }
-
-  return Array.isArray(value) ? value[0] : value;
-}
-
-function writeThumbValue(
-  value: number | SliderRangeValue,
-  thumbIndex: 0 | 1,
-  next: number,
-  range: boolean,
-): { thumbIndex: 0 | 1; value: number | SliderRangeValue } {
-  if (!range || !Array.isArray(value)) {
-    return { thumbIndex, value: next };
-  }
-
-  return writeSliderRangeThumb(value, thumbIndex, next);
-}
 
 /**
  * Composes slider state, field chrome via BaseField, and pointer/keyboard handlers.
@@ -221,53 +196,11 @@ export function useSlider(
     baseField;
 
   const resolvedValue = computed((): number | SliderRangeValue => {
-    const raw = model.value;
-    const currentBounds = bounds.value;
-    const range = isRange.value;
-
-    if (range) {
-      if (Array.isArray(raw)) {
-        return sortSliderRangeValue(
-          snapSliderValue(
-            raw[0],
-            currentBounds.min,
-            currentBounds.max,
-            currentBounds.step,
-          ),
-          snapSliderValue(
-            raw[1],
-            currentBounds.min,
-            currentBounds.max,
-            currentBounds.step,
-          ),
-        );
-      }
-
-      const single = snapSliderValue(
-        isNumber(raw) ? raw : currentBounds.min,
-        currentBounds.min,
-        currentBounds.max,
-        currentBounds.step,
-      );
-
-      return [single, single];
-    }
-
-    if (Array.isArray(raw)) {
-      return snapSliderValue(
-        raw[0],
-        currentBounds.min,
-        currentBounds.max,
-        currentBounds.step,
-      );
-    }
-
-    return snapSliderValue(
-      isNumber(raw) ? raw : currentBounds.min,
-      currentBounds.min,
-      currentBounds.max,
-      currentBounds.step,
-    );
+    return normalizeSliderValue({
+      ...bounds.value,
+      value: model.value,
+      range: isRange.value,
+    });
   });
 
   const resolvedStops = computed((): SliderStop[] => {
@@ -399,31 +332,12 @@ export function useSlider(
       clientX: getSliderPointerClientX(event),
     });
 
-    const currentBounds = bounds.value;
-    const targetValue = percentToValue(
+    const written = resolveSliderTrackPress({
       percent,
-      currentBounds.min,
-      currentBounds.max,
-      currentBounds.step,
-    );
-
-    let thumbIndex: 0 | 1 = 0;
-    const currentValue = resolvedValue.value;
-
-    if (isRange.value && Array.isArray(currentValue)) {
-      thumbIndex = pickClosestSliderThumb(
-        targetValue,
-        currentValue[0],
-        currentValue[1],
-      );
-    }
-
-    const written = writeThumbValue(
-      currentValue,
-      thumbIndex,
-      targetValue,
-      isRange.value,
-    );
+      bounds: bounds.value,
+      range: isRange.value,
+      value: resolvedValue.value,
+    });
 
     commitValue(written.value);
     beginDrag(event, written.thumbIndex);
@@ -439,79 +353,12 @@ export function useSlider(
       return;
     }
 
-    const currentBounds = bounds.value;
-    const current = readThumbValue(
-      resolvedValue.value,
-      thumbIndex,
-      isRange.value,
-    );
-    let next: null | number = null;
-    const rtl = isRtl.value;
-
-    switch (event.key) {
-      case "ArrowRight":
-        next = stepSliderValue(
-          current,
-          rtl ? -1 : 1,
-          currentBounds.min,
-          currentBounds.max,
-          currentBounds.step,
-        );
-        break;
-      case "ArrowLeft":
-        next = stepSliderValue(
-          current,
-          rtl ? 1 : -1,
-          currentBounds.min,
-          currentBounds.max,
-          currentBounds.step,
-        );
-        break;
-      case "ArrowUp":
-        next = stepSliderValue(
-          current,
-          1,
-          currentBounds.min,
-          currentBounds.max,
-          currentBounds.step,
-        );
-        break;
-      case "ArrowDown":
-        next = stepSliderValue(
-          current,
-          -1,
-          currentBounds.min,
-          currentBounds.max,
-          currentBounds.step,
-        );
-        break;
-      case "Home":
-        next = currentBounds.min;
-        break;
-      case "End":
-        next = currentBounds.max;
-        break;
-      case "PageUp":
-        next = stepSliderValue(
-          current,
-          1,
-          currentBounds.min,
-          currentBounds.max,
-          currentBounds.step * 10,
-        );
-        break;
-      case "PageDown":
-        next = stepSliderValue(
-          current,
-          -1,
-          currentBounds.min,
-          currentBounds.max,
-          currentBounds.step * 10,
-        );
-        break;
-      default:
-        break;
-    }
+    const next = resolveSliderKeyValue({
+      key: event.key,
+      isRtl: isRtl.value,
+      bounds: bounds.value,
+      current: readThumbValue(resolvedValue.value, thumbIndex, isRange.value),
+    });
 
     if (next === null) {
       return;

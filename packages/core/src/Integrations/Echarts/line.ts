@@ -9,16 +9,14 @@ import {
 import { use } from "echarts/core";
 import { SVGRenderer } from "echarts/renderers";
 
-// ** Core Imports
+// ** Local Imports
 import type {
   ChartCartesianRenderOptions,
   ChartHandle,
   ChartMountOptions,
-} from "@bridge-ui/core/Domain";
-
-// ** Local Imports
-import { echartsCartesianFamily } from "@/Utils/Charts/echarts/cartesian";
-import { mountEchartsPlot } from "@/Utils/Charts/echarts/plot";
+} from "@/Domain";
+import { echartsCartesianFamily } from "@/Integrations/Echarts/cartesian";
+import { mountEchartsPlot } from "@/Integrations/Echarts/plot";
 
 use([
   LineChart,

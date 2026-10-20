@@ -1,6 +1,8 @@
+// ** Core Imports
+import { mountEchartsLine } from "@bridge-ui/core/Integrations/Echarts";
+
 // ** Local Imports
 import type { ChartLineOwnProps } from "@/Components/ChartLine/chartLine.types";
-import { mountEchartsLine } from "@/Utils/Charts/echarts/line";
 import {
   useChartCartesian,
   type ChartCartesianMerged,

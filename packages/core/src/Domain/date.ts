@@ -176,6 +176,182 @@ export function isCalendarYearPanelHidden({
   return hideYears;
 }
 
+/** Number of years listed per page in the calendar year panel. */
+export const CALENDAR_YEAR_PAGE_SIZE = 15;
+
+/**
+ * First year of the year-panel page that centers `year` (never below 1).
+ */
+export function getCalendarYearPageStart(
+  year: number,
+  pageSize: number = CALENDAR_YEAR_PAGE_SIZE,
+) {
+  return Math.max(1, year - Math.floor(pageSize / 2));
+}
+
+/**
+ * Date the calendar opens on for a model: the first selected date, or now.
+ */
+export function resolveCalendarFocusDate<TDate>(
+  value: DatePickerModel<TDate>,
+  adapter: DateAdapter<TDate>,
+  timeZone?: string,
+): TDate {
+  if (isNil(value)) {
+    return adapter.now(timeZone);
+  }
+
+  if (isArray(value)) {
+    return value[0] ?? adapter.now(timeZone);
+  }
+
+  return value;
+}
+
+/**
+ * Result of a header previous / next press: page the year panel, or move the
+ * visible month / year.
+ */
+export type CalendarNavigation<TDate = Date> =
+  | { type: "viewDate"; viewDate: TDate }
+  | { type: "yearPage"; yearPageStart: number };
+
+/**
+ * Resolves header navigation for the visible panel: years page by
+ * `yearPageSize`, months move one year, days move one month.
+ */
+export function resolveCalendarNavigation<TDate>({
+  view,
+  adapter,
+  timeZone,
+  viewDate,
+  direction,
+  yearPageStart,
+  yearPageSize = CALENDAR_YEAR_PAGE_SIZE,
+}: {
+  adapter: DateAdapter<TDate>;
+  direction: 1 | -1;
+  timeZone?: string;
+  view: CalendarView;
+  viewDate: TDate;
+  yearPageSize?: number;
+  yearPageStart: number;
+}): CalendarNavigation<TDate> {
+  if (view === "year") {
+    return {
+      type: "yearPage",
+      yearPageStart: Math.max(1, yearPageStart + direction * yearPageSize),
+    };
+  }
+
+  if (view === "month") {
+    return {
+      type: "viewDate",
+      viewDate: adapter.addYears(viewDate, direction, timeZone),
+    };
+  }
+
+  return {
+    type: "viewDate",
+    viewDate: adapter.addMonths(viewDate, direction, timeZone),
+  };
+}
+
+/**
+ * I18n message key for the header previous / next button of `view`.
+ */
+export function getCalendarNavigationMessage(
+  view: CalendarView,
+  direction: 1 | -1,
+) {
+  if (view === "year") {
+    return direction < 0 ? "Previous years" : "Next years";
+  }
+
+  if (view === "month") {
+    return direction < 0 ? "Previous year" : "Next year";
+  }
+
+  return direction < 0 ? "Previous month" : "Next month";
+}
+
+/**
+ * Result of picking a year or month in the panel: commit `date` when the
+ * panel is the commit panel for `granularity`, otherwise drill into `view`.
+ * `viewDate` is always the new visible date.
+ */
+export type CalendarPanelSelection<TDate = Date> =
+  | { date: TDate; type: "commit"; viewDate: TDate }
+  | { type: "view"; view: CalendarView; viewDate: TDate };
+
+/**
+ * Resolves a year pick: commits on `granularity="year"`, otherwise opens the
+ * month panel (or the commit panel when months are hidden).
+ */
+export function resolveCalendarYearSelection<TDate>({
+  year,
+  adapter,
+  timeZone,
+  viewDate,
+  hideMonths,
+  granularity = DEFAULT_CALENDAR_GRANULARITY,
+}: {
+  adapter: DateAdapter<TDate>;
+  granularity?: CalendarGranularity;
+  hideMonths?: boolean;
+  timeZone?: string;
+  viewDate: TDate;
+  year: number;
+}): CalendarPanelSelection<TDate> {
+  const nextDate = adapter.setYear(viewDate, year, timeZone);
+
+  if (granularity === "year") {
+    return {
+      type: "commit",
+      viewDate: nextDate,
+      date: normalizeDateToGranularity(nextDate, "year", adapter, timeZone),
+    };
+  }
+
+  return {
+    type: "view",
+    viewDate: nextDate,
+    view: isCalendarMonthPanelHidden({ hideMonths, granularity })
+      ? calendarPanelViewFromGranularity(granularity)
+      : "month",
+  };
+}
+
+/**
+ * Resolves a month pick: commits on `granularity="month"`, otherwise opens
+ * the date panel.
+ */
+export function resolveCalendarMonthSelection<TDate>({
+  month,
+  adapter,
+  timeZone,
+  viewDate,
+  granularity = DEFAULT_CALENDAR_GRANULARITY,
+}: {
+  adapter: DateAdapter<TDate>;
+  granularity?: CalendarGranularity;
+  month: number;
+  timeZone?: string;
+  viewDate: TDate;
+}): CalendarPanelSelection<TDate> {
+  const nextDate = adapter.setMonth(viewDate, month, timeZone);
+
+  if (granularity === "month") {
+    return {
+      type: "commit",
+      viewDate: nextDate,
+      date: normalizeDateToGranularity(nextDate, "month", adapter, timeZone),
+    };
+  }
+
+  return { type: "view", view: "date", viewDate: nextDate };
+}
+
 /**
  * Builds the first day of `month` in `year` (local / zoned).
  */

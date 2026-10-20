@@ -1,5 +1,5 @@
 // ** External Imports
-import { LineChart } from "echarts/charts";
+import { BarChart, LineChart } from "echarts/charts";
 import {
   GridComponent,
   MarkLineComponent,
@@ -7,21 +7,23 @@ import {
   VisualMapPiecewiseComponent,
 } from "echarts/components";
 import { use } from "echarts/core";
+import { LabelLayout } from "echarts/features";
 import { SVGRenderer } from "echarts/renderers";
 
-// ** Core Imports
+// ** Local Imports
 import type {
   ChartCartesianRenderOptions,
   ChartHandle,
   ChartMountOptions,
-} from "@bridge-ui/core/Domain";
+} from "@/Domain";
+import { echartsCartesianFamily } from "@/Integrations/Echarts/cartesian";
+import { mountEchartsPlot } from "@/Integrations/Echarts/plot";
 
-// ** Local Imports
-import { echartsCartesianFamily } from "@/Utils/Charts/echarts/cartesian";
-import { mountEchartsPlot } from "@/Utils/Charts/echarts/plot";
-
+// `LineChart` draws `ChartLineSeries` placed inside `ChartBar`.
 use([
+  BarChart,
   LineChart,
+  LabelLayout,
   GridComponent,
   SVGRenderer,
   TooltipComponent,
@@ -30,9 +32,10 @@ use([
 ]);
 
 /**
- * Mounts a line plot (tree-shaken: line series only).
+ * Mounts a bar plot (tree-shaken: bar and line series, for bar + line
+ * charts).
  */
-export function mountEchartsLine(
+export function mountEchartsBar(
   options: ChartMountOptions<ChartCartesianRenderOptions>,
 ): ChartHandle<ChartCartesianRenderOptions> {
   return mountEchartsPlot(options, echartsCartesianFamily);

@@ -10,7 +10,7 @@ import { use, type ComposeOption } from "echarts/core";
 import { SVGRenderer } from "echarts/renderers";
 import { get, isArray, isEmpty, isNil, isNumber } from "es-toolkit/compat";
 
-// ** Core Imports
+// ** Local Imports
 import {
   findChartScatterRange,
   isChartValue,
@@ -20,14 +20,12 @@ import {
   type ChartMountOptions,
   type ChartScatterRenderOptions,
   type ChartScatterRenderSeries,
-} from "@bridge-ui/core/Domain";
-
-// ** Local Imports
+} from "@/Domain";
 import {
   labelStyle,
   mountEchartsPlot,
   type EchartsPlotFamily,
-} from "@/Utils/Charts/echarts/plot";
+} from "@/Integrations/Echarts/plot";
 
 use([ScatterChart, GridComponent, SVGRenderer, TooltipComponent]);
 

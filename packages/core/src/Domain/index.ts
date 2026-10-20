@@ -281,6 +281,23 @@ export type {
   DataTableStickyPing,
 } from "@/Domain/dataTable";
 export {
+  getDataTableBodyInsets,
+  getDataTableColumnLayoutStyle,
+  getDataTableViewAlign,
+  resolveDataTableHeaderViews,
+  resolveDataTableRowCells,
+  resolveDataTableSummaryCells,
+  resolveDataTableVisibilityItems,
+} from "@/Domain/dataTableView";
+export type {
+  DataTableCellView,
+  DataTableColumnLayoutStyle,
+  DataTableHeaderView,
+  DataTableViewColumn,
+  DataTableVisibilityItem,
+} from "@/Domain/dataTableView";
+export {
+  CALENDAR_YEAR_PAGE_SIZE,
   DEFAULT_CALENDAR_GRANULARITY,
   DEFAULT_START_OF_WEEK,
   applyDateSelection,
@@ -289,6 +306,8 @@ export {
   dateFromYear,
   dateFromYearMonth,
   formatDatePickerModel,
+  getCalendarNavigationMessage,
+  getCalendarYearPageStart,
   isAfterAtGranularity,
   isBeforeAtGranularity,
   isCalendarMonthPanelHidden,
@@ -304,7 +323,11 @@ export {
   normalizeDatePickerModel,
   normalizeDateToGranularity,
   resolveCalendarDayInteractionState,
+  resolveCalendarFocusDate,
+  resolveCalendarMonthSelection,
+  resolveCalendarNavigation,
   resolveCalendarPanelView,
+  resolveCalendarYearSelection,
   resolveDatePickerMode,
   resolveStartOfWeek,
   sortDateRangeValue,
@@ -312,6 +335,8 @@ export {
 export type {
   CalendarDayInteractionState,
   CalendarGranularity,
+  CalendarNavigation,
+  CalendarPanelSelection,
   CalendarView,
   DatePickerMode,
   DatePickerModel,
@@ -357,6 +382,14 @@ export type {
   FileUploadRemote,
   FileUploadValue,
 } from "@/Domain/fileUpload";
+export {
+  findFirstEnabledOptionIndex,
+  findLastEnabledOptionIndex,
+  findSelectedListboxOptionIndex,
+  getListboxActiveDescendantId,
+  getListboxOptionId,
+  moveListboxHighlight,
+} from "@/Domain/listbox";
 export {
   getNumberFieldStepper,
   resolveNumberFieldStepperIconSize,
@@ -473,6 +506,7 @@ export {
   fetchSelectAsyncData,
   filterListboxEntries,
   flattenListboxOptions,
+  handleSelectTriggerKeyDown,
   isListboxOptionGroup,
   listboxOptionFromComposedItem,
   mapListboxEntriesToRows,
@@ -502,6 +536,9 @@ export type {
   SelectOptionInput,
   SelectOptionKeys,
   SelectOptionLike,
+  SelectTriggerKeyEvent,
+  SelectTriggerKeyHandlers,
+  SelectTriggerKeyState,
   SelectValue,
 } from "@/Domain/select";
 export {
@@ -529,16 +566,21 @@ export {
   getSliderPrecision,
   isSliderStopCovered,
   normalizeSliderStops,
+  normalizeSliderValue,
   percentFromSliderPointer,
   percentToValue,
   pickClosestSliderThumb,
+  readSliderThumbValue,
   resolveSliderBounds,
   resolveSliderDefaultValue,
+  resolveSliderKeyValue,
+  resolveSliderTrackPress,
   snapSliderValue,
   sortSliderRangeValue,
   stepSliderValue,
   valueToPercent,
   writeSliderRangeThumb,
+  writeSliderThumbValue,
 } from "@/Domain/slider";
 export type {
   SliderBarGeometry,

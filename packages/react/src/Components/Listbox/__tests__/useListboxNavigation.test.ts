@@ -3,14 +3,16 @@ import { act, renderHook } from "@testing-library/react";
 import { useState } from "react";
 import { expect, test } from "vitest";
 
-// ** Local Imports
+// ** Core Imports
 import {
   findFirstEnabledOptionIndex,
   findLastEnabledOptionIndex,
   getListboxActiveDescendantId,
   moveListboxHighlight,
-  useListboxNavigation,
-} from "@/Components/Listbox/hooks/useListboxNavigation";
+} from "@bridge-ui/core/Domain";
+
+// ** Local Imports
+import { useListboxNavigation } from "@/Components/Listbox/hooks/useListboxNavigation";
 import type { ListboxOption } from "@/Components/Listbox/listbox.types";
 
 const options: ListboxOption[] = [

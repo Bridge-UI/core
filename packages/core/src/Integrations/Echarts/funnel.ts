@@ -8,23 +8,21 @@ import { use, type ComposeOption, type ECharts } from "echarts/core";
 import { SVGRenderer } from "echarts/renderers";
 import { get, isArray, isNumber } from "es-toolkit/compat";
 
-// ** Core Imports
+// ** Local Imports
 import type {
   ChartFunnelRenderOptions,
   ChartHandle,
   ChartMountOptions,
-} from "@bridge-ui/core/Domain";
-
-// ** Local Imports
+} from "@/Domain";
 import {
   createEchartsPartFamily,
   formatSliceLabel,
-} from "@/Utils/Charts/echarts/part";
+} from "@/Integrations/Echarts/part";
 import {
   labelStyle,
   mountEchartsPlot,
   readItemLayout,
-} from "@/Utils/Charts/echarts/plot";
+} from "@/Integrations/Echarts/plot";
 
 use([FunnelChart, SVGRenderer, TooltipComponent]);
 

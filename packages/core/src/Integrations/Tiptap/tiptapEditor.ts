@@ -9,7 +9,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import StarterKit from "@tiptap/starter-kit";
 import { get, isNil, isString } from "es-toolkit/compat";
 
-// ** Core Imports
+// ** Local Imports
 import {
   applyRichTextEditableA11y,
   type RichTextA11yOptions,
@@ -17,7 +17,7 @@ import {
   type RichTextTool,
   type RichTextToolPayload,
   type RichTextValue,
-} from "@bridge-ui/core/Domain";
+} from "@/Domain";
 
 /**
  * Editable class styled by the Bridge `theme.css`.

@@ -21,6 +21,7 @@ import {
   createSelectAsyncSearch,
   filterListboxEntries,
   flattenListboxOptions,
+  handleSelectTriggerKeyDown,
   mergeListboxOptionsByValue,
   normalizeListboxEntries,
   normalizeSelectOptions,
@@ -721,76 +722,31 @@ export function useSelect(
       return;
     }
 
-    switch (event.key) {
-      case "ArrowDown":
-        event.preventDefault();
-
-        if (!open.value) {
-          openMenu();
-        } else {
-          navigation.moveHighlight(1);
-        }
-
-        break;
-      case "ArrowUp":
-        event.preventDefault();
-
-        if (!open.value) {
-          openMenu();
-        } else {
-          navigation.moveHighlight(-1);
-        }
-
-        break;
-      case "Enter":
-        event.preventDefault();
-
-        if (!open.value) {
-          openMenu();
-        } else {
-          selectHighlighted();
-        }
-
-        break;
-      case "Escape":
-        event.preventDefault();
-        closeMenu();
-        break;
-      case "Home":
-        if (open.value) {
-          event.preventDefault();
-          navigation.highlightFirst();
-        }
-
-        break;
-      case "End":
-        if (open.value) {
-          event.preventDefault();
-          navigation.highlightLast();
-        }
-
-        break;
-      case "Backspace":
-        if (
-          multiple.value &&
-          !searchQuery.value &&
-          selectedOptions.value.length > 0
-        ) {
-          event.preventDefault();
+    handleSelectTriggerKeyDown(
+      event,
+      {
+        open: open.value,
+        multiple: multiple.value,
+        searchQuery: searchQuery.value,
+        selectedCount: selectedOptions.value.length,
+      },
+      {
+        open: openMenu,
+        tabOut: () => closeMenu(),
+        dismiss: () => closeMenu(),
+        commitHighlighted: selectHighlighted,
+        moveHighlight: navigation.moveHighlight,
+        highlightLast: navigation.highlightLast,
+        highlightFirst: navigation.highlightFirst,
+        removeLastSelected: () => {
           const last = selectedOptions.value.at(-1);
 
           if (last) {
             removeChip(last, event);
           }
-        }
-
-        break;
-      case "Tab":
-        closeMenu();
-        break;
-      default:
-        break;
-    }
+        },
+      },
+    );
   }
 
   async function fetchAsyncOptions(query: string) {

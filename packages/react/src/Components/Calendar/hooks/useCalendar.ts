@@ -1,16 +1,21 @@
 // ** External Imports
-import { get, isArray, isNil, omit } from "es-toolkit/compat";
+import { get, isNil, omit } from "es-toolkit/compat";
 import { useMemo, useState } from "react";
 
 // ** Core Imports
 import {
   applyDateSelection,
+  CALENDAR_YEAR_PAGE_SIZE,
   calendarPanelViewFromGranularity,
+  getCalendarNavigationMessage,
+  getCalendarYearPageStart,
   isCalendarMonthPanelHidden,
   isCalendarYearPanelHidden,
-  isDateRangeValue,
-  normalizeDateToGranularity,
+  resolveCalendarFocusDate,
+  resolveCalendarMonthSelection,
+  resolveCalendarNavigation,
   resolveCalendarPanelView,
+  resolveCalendarYearSelection,
   resolveDatePickerMode,
   type CalendarView,
   type DatePickerModel,
@@ -76,26 +81,6 @@ type CalendarLibDefaults = LibDefaultsShape<
 >;
 
 type CalendarMerged = MergeLibDefaults<CalendarOwnProps, CalendarLibDefaults>;
-
-function resolveFocusDate(
-  value: DatePickerModel,
-  adapter: ReturnType<typeof useDateAdapter>,
-  timeZone?: string,
-): Date {
-  if (isNil(value)) {
-    return adapter.now(timeZone);
-  }
-
-  if (isDateRangeValue(value)) {
-    return value[0];
-  }
-
-  if (isArray(value)) {
-    return value[0] ?? adapter.now(timeZone);
-  }
-
-  return value;
-}
 
 export function useCalendar(
   props: CalendarProps,
@@ -184,7 +169,7 @@ export function useCalendar(
   const [uncontrolledViewDate, setUncontrolledViewDate] = useState(() => {
     const focus = !isNil(props.viewDate)
       ? (props.viewDate as Date)
-      : resolveFocusDate(
+      : resolveCalendarFocusDate(
           props.value ?? merged.defaultValue ?? null,
           adapter,
           timeZone,
@@ -192,8 +177,6 @@ export function useCalendar(
 
     return adapter.startOfMonth(focus, timeZone);
   });
-
-  const yearPageSize = 15;
 
   const [yearPageStart, setYearPageStart] = useState<null | number>(null);
 
@@ -260,7 +243,7 @@ export function useCalendar(
       return yearPageStart;
     }
 
-    return Math.max(1, viewYear - Math.floor(yearPageSize / 2));
+    return getCalendarYearPageStart(viewYear);
   });
 
   const setView = (next: CalendarView) => {
@@ -272,7 +255,7 @@ export function useCalendar(
   };
 
   const openYearView = () => {
-    setYearPageStart(Math.max(1, viewYear - Math.floor(yearPageSize / 2)));
+    setYearPageStart(getCalendarYearPageStart(viewYear));
     setView("year");
   };
 
@@ -294,32 +277,30 @@ export function useCalendar(
     props.onChange?.(next);
   };
 
+  const navigate = (direction: 1 | -1) => {
+    const navigation = resolveCalendarNavigation({
+      view,
+      adapter,
+      timeZone,
+      viewDate,
+      direction,
+      yearPageStart: resolvedYearPageStart,
+    });
+
+    if (navigation.type === "yearPage") {
+      setYearPageStart(navigation.yearPageStart);
+      return;
+    }
+
+    setViewDate(navigation.viewDate);
+  };
+
   const goToPrevious = () => {
-    if (view === "year") {
-      setYearPageStart(Math.max(1, resolvedYearPageStart - yearPageSize));
-      return;
-    }
-
-    if (view === "month") {
-      setViewDate(adapter.addYears(viewDate, -1, timeZone));
-      return;
-    }
-
-    setViewDate(adapter.addMonths(viewDate, -1, timeZone));
+    navigate(-1);
   };
 
   const goToNext = () => {
-    if (view === "year") {
-      setYearPageStart(resolvedYearPageStart + yearPageSize);
-      return;
-    }
-
-    if (view === "month") {
-      setViewDate(adapter.addYears(viewDate, 1, timeZone));
-      return;
-    }
-
-    setViewDate(adapter.addMonths(viewDate, 1, timeZone));
+    navigate(1);
   };
 
   /**
@@ -335,10 +316,19 @@ export function useCalendar(
 
   const handleYearSelect = (year: number) => {
     setYearPageStart(null);
-    const nextDate = adapter.setYear(viewDate, year, timeZone);
-    setViewDate(nextDate);
 
-    if (granularity === "year") {
+    const selection = resolveCalendarYearSelection({
+      year,
+      adapter,
+      timeZone,
+      viewDate,
+      granularity,
+      hideMonths: merged.hideMonths,
+    });
+
+    setViewDate(selection.viewDate);
+
+    if (selection.type === "commit") {
       handleChange(
         applyDateSelection({
           mode,
@@ -346,27 +336,27 @@ export function useCalendar(
           adapter,
           timeZone,
           granularity,
-          next: normalizeDateToGranularity(nextDate, "year", adapter, timeZone),
+          next: selection.date,
         }),
       );
       return;
     }
 
-    setView(
-      isCalendarMonthPanelHidden({
-        granularity,
-        hideMonths: merged.hideMonths,
-      })
-        ? calendarPanelViewFromGranularity(granularity)
-        : "month",
-    );
+    setView(selection.view);
   };
 
   const handleMonthSelect = (month: number) => {
-    const nextDate = adapter.setMonth(viewDate, month, timeZone);
-    setViewDate(nextDate);
+    const selection = resolveCalendarMonthSelection({
+      month,
+      adapter,
+      timeZone,
+      viewDate,
+      granularity,
+    });
 
-    if (granularity === "month") {
+    setViewDate(selection.viewDate);
+
+    if (selection.type === "commit") {
       handleChange(
         applyDateSelection({
           mode,
@@ -374,18 +364,13 @@ export function useCalendar(
           adapter,
           timeZone,
           granularity,
-          next: normalizeDateToGranularity(
-            nextDate,
-            "month",
-            adapter,
-            timeZone,
-          ),
+          next: selection.date,
         }),
       );
       return;
     }
 
-    setView("date");
+    setView(selection.view);
   };
 
   const rootBind = derived(() => {
@@ -457,27 +442,11 @@ export function useCalendar(
   });
 
   const previousNavLabel = derived(() => {
-    if (view === "year") {
-      return resolveMessage("Previous years");
-    }
-
-    if (view === "month") {
-      return resolveMessage("Previous year");
-    }
-
-    return resolveMessage("Previous month");
+    return resolveMessage(getCalendarNavigationMessage(view, -1));
   });
 
   const nextNavLabel = derived(() => {
-    if (view === "year") {
-      return resolveMessage("Next years");
-    }
-
-    if (view === "month") {
-      return resolveMessage("Next year");
-    }
-
-    return resolveMessage("Next month");
+    return resolveMessage(getCalendarNavigationMessage(view, 1));
   });
 
   const previousButtonBind = derived(() => {
@@ -576,7 +545,6 @@ export function useCalendar(
     setViewDate,
     granularity,
     handleChange,
-    yearPageSize,
     showNav: true,
     nextButtonBind,
     todayButtonBind,
@@ -587,6 +555,7 @@ export function useCalendar(
     previousButtonBind,
     navIconBind: customProps?.navIcon,
     yearPageStart: resolvedYearPageStart,
+    yearPageSize: CALENDAR_YEAR_PAGE_SIZE,
     showYearSelector: !isCalendarYearPanelHidden({
       granularity,
       hideYears: merged.hideYears,

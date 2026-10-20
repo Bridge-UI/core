@@ -16,6 +16,7 @@ import {
   type ChartScatterRenderOptions,
   type ChartScatterRenderSeries,
 } from "@bridge-ui/core/Domain";
+import { mountEchartsScatter } from "@bridge-ui/core/Integrations/Echarts";
 
 // ** Local Imports
 import type { ChartScatterOwnProps } from "@/Components/ChartScatter/chartScatter.types";
@@ -31,7 +32,6 @@ import {
   type ChartRootMerged,
   type ChartScatterSeriesRegistration,
 } from "@/Utils/Charts";
-import { mountEchartsScatter } from "@/Utils/Charts/echarts/scatter";
 
 const chartScatterBridgeKeys = [
   ...chartRootBridgeKeys,

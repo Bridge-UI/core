@@ -2,14 +2,16 @@
 import { expect, test } from "vitest";
 import { ref } from "vue";
 
-// ** Local Imports
+// ** Core Imports
 import {
   findFirstEnabledOptionIndex,
   findLastEnabledOptionIndex,
   getListboxActiveDescendantId,
   moveListboxHighlight,
-  useListboxNavigation,
-} from "@/Components/Listbox/composables/useListboxNavigation";
+} from "@bridge-ui/core/Domain";
+
+// ** Local Imports
+import { useListboxNavigation } from "@/Components/Listbox/composables/useListboxNavigation";
 import type { ListboxOption } from "@/Components/Listbox/listbox.types";
 
 const options: ListboxOption[] = [
