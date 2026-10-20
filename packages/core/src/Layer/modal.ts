@@ -319,8 +319,14 @@ function unlockBodyScroll() {
   savedBodyScrollLockStyles = null;
   setScrollbarCompensationVar(0);
 
+  // `instant` overrides a host `scroll-behavior: smooth`, which would otherwise
+  // animate the restore from the top of the page.
   if (hasWindow()) {
-    window.scrollTo(savedScrollX, savedScrollY);
+    window.scrollTo({
+      top: savedScrollY,
+      left: savedScrollX,
+      behavior: "instant",
+    });
   }
 
   savedScrollX = 0;
