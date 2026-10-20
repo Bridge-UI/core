@@ -128,8 +128,12 @@ test("it should pin body and restore viewport scroll when unlocking", () => {
 
   expect(document.body.style.top).toBe("");
   expect(document.body.style.overflow).toBe("");
-  expect(scrollToSpy).toHaveBeenCalledWith(12, 480);
   expect(document.body.style.position).toBe("relative");
+  expect(scrollToSpy).toHaveBeenCalledWith({
+    left: 12,
+    top: 480,
+    behavior: "instant",
+  });
 
   scrollXSpy.mockRestore();
   scrollYSpy.mockRestore();
@@ -152,7 +156,11 @@ test("it should restore viewport scroll only after the last lock releases", () =
   outer.release();
 
   expect(document.body.style.position).toBe("");
-  expect(scrollToSpy).toHaveBeenCalledWith(0, 240);
+  expect(scrollToSpy).toHaveBeenCalledWith({
+    left: 0,
+    top: 240,
+    behavior: "instant",
+  });
 
   scrollXSpy.mockRestore();
   scrollYSpy.mockRestore();
