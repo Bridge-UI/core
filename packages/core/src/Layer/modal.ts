@@ -323,8 +323,8 @@ function unlockBodyScroll() {
   // animate the restore from the top of the page.
   if (hasWindow()) {
     window.scrollTo({
-      left: savedScrollX,
       top: savedScrollY,
+      left: savedScrollX,
       behavior: "instant",
     });
   }
