@@ -200,7 +200,7 @@ test("it should let a nested button override the group size", () => {
 
   const className = wrapper.find("button").classes().join(" ");
 
-  expect(className).toContain("py-2.5");
+  expect(className).toContain("h-10");
   expect(className).not.toContain("px-3");
 });
 
@@ -296,10 +296,10 @@ test("it should keep the group variant on mini buttons and stretch their height"
     .join(" ");
 
   expect(className).toContain("h-auto");
-  expect(className).toContain("min-h-7");
+  expect(className).toContain("min-h-9");
   expect(className).toContain("bg-primary-500");
   expect(className).toContain("border-transparent");
-  expect(className.split(/\s+/).includes("h-7")).toBe(false);
+  expect(className.split(/\s+/).includes("h-9")).toBe(false);
 });
 
 test("it should keep mini size when the group density is mini", () => {
@@ -314,9 +314,9 @@ test("it should keep mini size when the group density is mini", () => {
 
   const className = wrapper.find("button").classes();
 
-  expect(className).toContain("w-7");
-  expect(className).toContain("h-7");
-  expect(className).toContain("min-w-7");
+  expect(className).toContain("w-9");
+  expect(className).toContain("h-9");
+  expect(className).toContain("min-w-9");
   expect(className).not.toContain("h-auto");
 });
 
@@ -336,8 +336,8 @@ test("it should keep mini size in a vertical group", () => {
 
   const className = wrapper.find("button").classes();
 
-  expect(className).toContain("w-7");
-  expect(className).toContain("h-7");
-  expect(className).toContain("min-w-7");
-  expect(className).toContain("min-h-7");
+  expect(className).toContain("w-9");
+  expect(className).toContain("h-9");
+  expect(className).toContain("min-w-9");
+  expect(className).toContain("min-h-9");
 });

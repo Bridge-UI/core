@@ -56,24 +56,24 @@ export const sizeProps: OtpFieldSize = {
     "pin": "h-8 w-8",
     "input": "text-xs leading-normal",
   },
+  "md": {
+    "pin": "h-9 w-9",
+    "input": "text-sm leading-normal",
+  },
   "2xs": {
     "pin": "h-6 w-6",
     "input": "text-2xs leading-tight",
   },
-  "md": {
+  "lg": {
     "pin": "h-10 w-10",
     "input": "text-sm leading-normal",
   },
-  "lg": {
+  "2xl": {
     "pin": "h-12 w-12",
     "input": "text-lg leading-normal",
   },
   "xl": {
-    "pin": "h-14 w-14",
-    "input": "text-xl leading-normal",
-  },
-  "2xl": {
-    "pin": "h-16 w-16",
-    "input": "text-2xl leading-normal",
+    "pin": "h-11 w-11",
+    "input": "text-base leading-normal",
   },
 };

@@ -85,7 +85,7 @@ test("it should render mini density with icon", () => {
   });
 
   cy.get("button svg").should("exist");
-  cy.get("button").should("have.class", "w-7");
+  cy.get("button").should("have.class", "w-9");
   cy.get("button").should("not.have.class", "w-full");
 });
 

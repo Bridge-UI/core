@@ -192,7 +192,7 @@ test("it should let a nested button override the group size", () => {
 
   const className = screen.getByRole("button").className;
 
-  expect(className).toContain("py-2.5");
+  expect(className).toContain("h-10");
   expect(className).not.toContain("px-3");
 });
 
@@ -242,10 +242,10 @@ test("it should keep the group variant on mini buttons and stretch their height"
   const className = screen.getByRole("button", { name: "More" }).className;
 
   expect(className).toContain("h-auto");
-  expect(className).toContain("min-h-7");
+  expect(className).toContain("min-h-9");
   expect(className).toContain("bg-primary-500");
   expect(className).toContain("border-transparent");
-  expect(className.split(/\s+/).includes("h-7")).toBe(false);
+  expect(className.split(/\s+/).includes("h-9")).toBe(false);
 });
 
 test("it should keep mini size when the group density is mini", () => {
@@ -257,10 +257,10 @@ test("it should keep mini size when the group density is mini", () => {
 
   const className = screen.getByRole("button").className;
 
-  expect(className.split(/\s+/).includes("w-7")).toBe(true);
-  expect(className.split(/\s+/).includes("h-7")).toBe(true);
+  expect(className.split(/\s+/).includes("w-9")).toBe(true);
+  expect(className.split(/\s+/).includes("h-9")).toBe(true);
   expect(className.split(/\s+/).includes("h-auto")).toBe(false);
-  expect(className.split(/\s+/).includes("min-w-7")).toBe(true);
+  expect(className.split(/\s+/).includes("min-w-9")).toBe(true);
 });
 
 test("it should keep mini size in a vertical group", () => {
@@ -272,10 +272,10 @@ test("it should keep mini size in a vertical group", () => {
 
   const className = screen.getByRole("button").className;
 
-  expect(className.split(/\s+/).includes("w-7")).toBe(true);
-  expect(className.split(/\s+/).includes("h-7")).toBe(true);
-  expect(className.split(/\s+/).includes("min-w-7")).toBe(true);
-  expect(className.split(/\s+/).includes("min-h-7")).toBe(true);
+  expect(className.split(/\s+/).includes("w-9")).toBe(true);
+  expect(className.split(/\s+/).includes("h-9")).toBe(true);
+  expect(className.split(/\s+/).includes("min-w-9")).toBe(true);
+  expect(className.split(/\s+/).includes("min-h-9")).toBe(true);
 });
 
 test("it should draw the parent variant divider inside nested groups", () => {

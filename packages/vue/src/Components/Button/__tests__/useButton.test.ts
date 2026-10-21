@@ -132,7 +132,7 @@ test("it should use mini size classes when density is mini", () => {
   });
 
   expect(merged.value.density).toBe("mini");
-  expect(rootBind.value.class).toContain("w-7");
+  expect(rootBind.value.class).toContain("w-9");
   expect(rootBind.value.class).not.toContain("w-full");
 });
 
@@ -279,9 +279,9 @@ test("it should not force flat variant on mini buttons inside a ButtonGroup", ()
   mount(Wrapper);
 
   expect(result.rootBind.value.class).toContain("h-auto");
-  expect(result.rootBind.value.class).toContain("min-h-7");
+  expect(result.rootBind.value.class).toContain("min-h-9");
   expect(result.rootBind.value.class).toContain("bg-primary-500");
-  expect(result.rootBind.value.class.split(/\s+/).includes("h-7")).toBe(false);
+  expect(result.rootBind.value.class.split(/\s+/).includes("h-9")).toBe(false);
 });
 
 test("it should keep mini height when ButtonGroup density is mini", () => {
@@ -310,7 +310,7 @@ test("it should keep mini height when ButtonGroup density is mini", () => {
 
   mount(Wrapper);
 
-  expect(result.rootBind.value.class.split(/\s+/).includes("h-7")).toBe(true);
+  expect(result.rootBind.value.class.split(/\s+/).includes("h-9")).toBe(true);
   expect(result.rootBind.value.class.split(/\s+/).includes("h-auto")).toBe(
     false,
   );

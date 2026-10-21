@@ -51,18 +51,18 @@ export const sizeProps: ToggleGroupSize = {
     "icon": "sm",
     "gap": "gap-2",
     "root": "gap-1 p-1",
-    "item": "px-3 py-1.5 text-sm font-medium",
+    "item": "h-6.5 px-3 text-sm font-medium",
+  },
+  "lg": {
+    "icon": "md",
+    "gap": "gap-2.5",
+    "root": "gap-1 p-1",
+    "item": "h-7.5 px-3.5 text-sm font-medium",
   },
   "sm": {
     "icon": "xs",
     "gap": "gap-1.5",
     "root": "gap-0.5 p-0.5",
-    "item": "px-2.5 py-1 text-xs font-medium",
-  },
-  "lg": {
-    "icon": "md",
-    "gap": "gap-2.5",
-    "root": "gap-1.5 p-1.5",
-    "item": "px-4 py-2 text-base font-medium",
+    "item": "h-6.5 px-2.5 text-xs font-medium",
   },
 };
