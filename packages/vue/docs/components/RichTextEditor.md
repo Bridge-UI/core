@@ -10,7 +10,14 @@ Sanitize HTML before rendering it outside the editor — XSS prevention stays in
 import { RichTextEditor } from "@bridge-ui/vue/Components/RichTextEditor";
 ```
 
-Install `@tiptap/core`, `@tiptap/pm`, `@tiptap/starter-kit`, and `@tiptap/extension-placeholder` next to `@bridge-ui/vue` when you use `RichTextEditor`.
+Install `@tiptap/core`, `@tiptap/pm`, `@tiptap/starter-kit`, `@tiptap/extension-placeholder`, and `@tailwindcss/typography` next to `@bridge-ui/vue` when you use `RichTextEditor`. Content typography comes from the `prose` classes, so register the plugin in the app stylesheet after the Bridge theme:
+
+```css
+@import "tailwindcss";
+@import "@bridge-ui/vue/theme.css";
+
+@plugin "@tailwindcss/typography";
+```
 
 ## Examples
 

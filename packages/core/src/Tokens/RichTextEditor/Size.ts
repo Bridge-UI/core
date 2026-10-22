@@ -40,7 +40,7 @@ export interface RichTextEditorSize {
 
 /**
  * Default RichTextEditor size classes.
- * Content typography comes from `@tailwindcss/typography` (`prose` in theme.css).
+ * Content typography comes from `@tailwindcss/typography` (`prose`), registered by the app.
  */
 export const sizeProps: RichTextEditorSize = {
   "lg": {
