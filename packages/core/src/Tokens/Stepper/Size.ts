@@ -65,8 +65,8 @@ export const sizeProps: StepperSize = {
   "md": {
     "icon": "sm",
     "connector": "top-4",
+    "description": "text-xs",
     "label": "text-sm font-medium",
-    "description": "text-sm font-medium",
     "indicator": "size-8 text-sm font-medium",
     "track": "[--bridge-stepper-indicator-half:1rem]",
     "content": "pt-2 pb-2 text-sm text-dark-600 dark:text-dark-300",
@@ -74,8 +74,8 @@ export const sizeProps: StepperSize = {
   "sm": {
     "icon": "xs",
     "connector": "top-3",
+    "description": "text-xs",
     "label": "text-xs font-medium",
-    "description": "text-xs font-medium",
     "indicator": "size-6 text-xs font-medium",
     "track": "[--bridge-stepper-indicator-half:0.75rem]",
     "content": "pt-1.5 pb-1.5 text-xs text-dark-600 dark:text-dark-300",
@@ -83,8 +83,8 @@ export const sizeProps: StepperSize = {
   "lg": {
     "icon": "md",
     "connector": "top-5",
+    "description": "text-sm",
     "label": "text-base font-medium",
-    "description": "text-sm font-medium",
     "indicator": "size-10 text-base font-medium",
     "track": "[--bridge-stepper-indicator-half:1.25rem]",
     "content": "pt-2.5 pb-2.5 text-base text-dark-600 dark:text-dark-300",
