@@ -18,6 +18,7 @@ import {
   getDataTableColumnSearch,
   getDataTableColumnTrack,
   getDataTableColumnWidthPx,
+  getDataTableControlSize,
   getDataTableDefaultCellContent,
   getDataTableFooterLayout,
   getDataTableGridTemplate,
@@ -68,6 +69,18 @@ import {
   toggleDataTableRowSelection,
   toggleDataTableSorting,
 } from "@/Domain/dataTable";
+
+describe("getDataTableControlSize", () => {
+  test("it should use sm controls for sm and md tables", () => {
+    expect(getDataTableControlSize("sm")).toBe("sm");
+    expect(getDataTableControlSize("md")).toBe("sm");
+    expect(getDataTableControlSize(undefined)).toBe("sm");
+  });
+
+  test("it should use md controls for lg tables", () => {
+    expect(getDataTableControlSize("lg")).toBe("md");
+  });
+});
 
 describe("getDataTableFooterLayout", () => {
   test("it should use the wide breakpoint for three clusters", () => {

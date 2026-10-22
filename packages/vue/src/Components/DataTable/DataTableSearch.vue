@@ -12,6 +12,7 @@ defineOptions({ inheritAttrs: false, name: "DataTableSearch" });
 defineProps<{
   fieldProps?: Partial<Omit<TextFieldOwnProps, "modelValue">>;
   modelValue: string;
+  size?: TextFieldOwnProps["size"];
 }>();
 
 const emit = defineEmits<{
@@ -23,7 +24,7 @@ const resolveMessage = useResolveMessage();
 
 <template>
   <TextField
-    size="sm"
+    :size="size"
     hide-error-message
     start-icon="search"
     v-bind="fieldProps"

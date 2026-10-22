@@ -9,6 +9,7 @@ import { Tooltip } from "@/Components/Tooltip";
  */
 export function DataTableToolbarButton({
   icon,
+  size,
   label,
   onClick,
   buttonProps,
@@ -19,6 +20,7 @@ export function DataTableToolbarButton({
   icon: IconSource;
   label: string;
   onClick?: () => void;
+  size?: ButtonProps["size"];
 }) {
   return (
     <Tooltip
@@ -26,7 +28,7 @@ export function DataTableToolbarButton({
       slots={{
         trigger: (
           <Button
-            size="sm"
+            size={size}
             icon={icon}
             color="dark"
             type="button"

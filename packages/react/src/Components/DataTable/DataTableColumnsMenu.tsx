@@ -8,6 +8,7 @@ import { cn } from "@bridge-ui/core/Utils";
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
 import { Button } from "@/Components/Button";
+import type { ButtonProps } from "@/Components/Button/button.types";
 import { Checkbox } from "@/Components/Checkbox";
 import { DataTableToolbarButton } from "@/Components/DataTable/DataTableToolbarButton";
 import { useDataTableColumnsMenu } from "@/Components/DataTable/hooks/useDataTableColumnsMenu";
@@ -20,8 +21,10 @@ export function DataTableColumnsMenu({
   items,
   onChange,
   showFooter,
+  buttonSize,
   overlay = "auto",
 }: {
+  buttonSize?: ButtonProps["size"];
   items: DataTableVisibilityItem[];
   onChange: (hiddenIds: string[]) => void;
   overlay?: FieldOverlayMode;
@@ -52,6 +55,7 @@ export function DataTableColumnsMenu({
       <span ref={triggerRef} className="inline-flex">
         <DataTableToolbarButton
           icon="columns"
+          size={buttonSize}
           onClick={onToggleShow}
           label={resolveMessage("Columns")}
         />

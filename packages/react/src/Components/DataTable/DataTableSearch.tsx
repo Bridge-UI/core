@@ -10,19 +10,21 @@ import type { TextFieldProps } from "@/Components/TextField/textField.types";
  * Internal toolbar search field. Not part of the public API.
  */
 export function DataTableSearch({
+  size,
   value,
   onChange,
   fieldProps,
 }: {
   fieldProps?: Partial<Omit<TextFieldProps, "value" | "onChange">>;
   onChange: (query: string) => void;
+  size?: TextFieldProps["size"];
   value: string;
 }) {
   const resolveMessage = useResolveMessage();
 
   return (
     <TextField
-      size="sm"
+      size={size}
       value={value}
       hideErrorMessage
       startIcon="search"

@@ -209,6 +209,7 @@ export {
   getDataTableColumnSearch,
   getDataTableColumnTrack,
   getDataTableColumnWidthPx,
+  getDataTableControlSize,
   getDataTableDefaultCellContent,
   getDataTableFooterLayout,
   getDataTableGridTemplate,
