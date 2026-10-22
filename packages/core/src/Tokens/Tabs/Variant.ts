@@ -82,7 +82,7 @@ export const variantProps: TabsVariant = {
     "list":
       "inline-flex w-fit items-center bg-dark-100 dark:bg-dark-950/40 p-1 gap-1 rounded-lg",
     "tab":
-      "rounded-md py-1 text-dark-500 aria-[selected=false]:hover:text-dark-700 aria-[selected=false]:hover:bg-dark-500/10 dark:text-dark-400 dark:aria-[selected=false]:hover:text-dark-200 dark:aria-[selected=false]:hover:bg-dark-500/15",
+      "rounded-md h-auto py-1 text-dark-500 aria-[selected=false]:hover:text-dark-700 aria-[selected=false]:hover:bg-dark-500/10 dark:text-dark-400 dark:aria-[selected=false]:hover:text-dark-200 dark:aria-[selected=false]:hover:bg-dark-500/15",
   },
   "line": {
     "tabSelected": "after:bg-current",
