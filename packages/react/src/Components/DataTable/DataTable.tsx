@@ -39,7 +39,7 @@ import {
   TableRow,
 } from "@/Components/Table";
 import { Tooltip } from "@/Components/Tooltip";
-import { hasNamedSlot } from "@/Utils";
+import { derived, hasNamedSlot } from "@/Utils";
 import { LoadingSpin } from "@/Utils/LoadingSpin";
 
 const dataTableLibDefaults = {
@@ -388,8 +388,13 @@ function DataTable<T extends Record<string, unknown>>(
   const resolveMessage = useResolveMessage();
   const perPageCustom = merged.customProps?.perPage;
   const controlSize = getDataTableControlSize(merged.size);
+
   const checkboxSize = controlSize;
-  const toolbarButtonSize = controlSize === "md" ? "sm" : "xs";
+
+  const toolbarButtonSize = derived(() => {
+    return controlSize === "md" ? "sm" : "xs";
+  });
+
   const selectionSummary = resolveMessage(
     "{{selected}} of {{total}} row(s) selected.",
     selectedSlotProps.selectedCount,
@@ -398,6 +403,7 @@ function DataTable<T extends Record<string, unknown>>(
       selected: selectedSlotProps.selectedCount,
     },
   );
+
   const pageStatus = resolveMessage("Page {{page}} of {{count}}", {
     page: paginationSlotProps.page,
     count: paginationSlotProps.count,
