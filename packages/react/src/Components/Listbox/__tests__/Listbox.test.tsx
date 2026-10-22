@@ -409,9 +409,9 @@ test("it should apply listbox size padding once on composed ListItem options", a
   const option = screen.getByRole("option", { name: "Apple" });
   const row = option.querySelector(":scope > div");
 
-  expect(option.className).toContain("py-1.5");
-  expect(row?.className).not.toContain("py-1.5");
   expect(row?.className).not.toContain("px-2");
+  expect(option.className).toContain("min-h-8");
+  expect(row?.className).not.toContain("min-h-8");
 });
 
 test("it should show footer actions when showFooter is set", async () => {
