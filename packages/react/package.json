@@ -80,6 +80,7 @@
     "docs"
   ],
   "peerDependencies": {
+    "@tailwindcss/typography": "^0.5.0",
     "@tanstack/react-table": "^9.2.0",
     "@tiptap/core": "^3.0.0",
     "@tiptap/extension-placeholder": "^3.0.0",
@@ -90,6 +91,9 @@
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "peerDependenciesMeta": {
+    "@tailwindcss/typography": {
+      "optional": true
+    },
     "@tanstack/react-table": {
       "optional": true
     },
@@ -111,7 +115,6 @@
   },
   "dependencies": {
     "@bridge-ui/core": "^0.20.0",
-    "@tailwindcss/typography": "^0.5.20",
     "clsx": "^2.1.1",
     "es-toolkit": "^1.52.0",
     "tailwind-merge": "^3.7.0"
@@ -128,6 +131,7 @@
   "devDependencies": {
     "@inertiajs/react": "^3.7.1",
     "@tailwindcss/cli": "^4.3.3",
+    "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/react-table": "^9.2.4",
     "@testing-library/react": "^16.3.3",
