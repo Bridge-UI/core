@@ -167,7 +167,7 @@ test("it should return default size as md", () => {
   expect(result.current.merged.size).toBe("md");
   expect(result.current.checkClass).toContain("size-4");
   expect(result.current.sizeClasses?.option).toContain("px-2");
-  expect(result.current.sizeClasses?.option).toContain("py-1.5");
+  expect(result.current.sizeClasses?.option).toContain("min-h-8");
   expect(result.current.sizeClasses?.option).toContain("text-sm");
   expect(result.current.sizeClasses?.primary).toContain("text-sm");
   expect(result.current.messageBind.className).toContain("text-sm");

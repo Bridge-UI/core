@@ -55,10 +55,10 @@ export const sizeProps: TableSize = {
   "md": {
     "root": "",
     "table": "text-sm",
-    "head": "px-3 py-3.5 text-sm font-semibold",
+    "head": "px-3 py-2.5 text-sm font-semibold",
     "caption": "py-2 text-sm text-dark-500 dark:text-dark-400",
     "cell":
-      "whitespace-nowrap px-3 py-4 text-sm text-dark-500 dark:text-dark-400",
+      "whitespace-nowrap px-3 py-3 text-sm text-dark-500 dark:text-dark-400",
   },
   "sm": {
     "root": "",
@@ -71,9 +71,9 @@ export const sizeProps: TableSize = {
   "lg": {
     "root": "",
     "table": "text-base",
-    "head": "px-4 py-4 text-base font-semibold",
+    "head": "px-4 py-3 text-base font-semibold",
     "caption": "py-2.5 text-base text-dark-500 dark:text-dark-400",
     "cell":
-      "whitespace-nowrap px-4 py-4 text-base text-dark-500 dark:text-dark-400",
+      "whitespace-nowrap px-4 py-3.5 text-base text-dark-500 dark:text-dark-400",
   },
 };

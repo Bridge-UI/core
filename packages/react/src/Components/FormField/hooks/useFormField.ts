@@ -510,7 +510,7 @@ export function useFormField(
       customProps?.end,
       {},
       cn({
-        "group/end wrapper-end-slot shrink-0 flex w-auto items-stretch self-stretch [&>*]:min-h-0": true,
+        "group/end wrapper-end-slot shrink-0 flex w-auto items-stretch self-stretch [&>*]:h-auto! [&>*]:min-h-0": true,
         "self-stretch min-h-0 overflow-hidden py-0.5 pe-0.5": isStacked,
         "h-full min-h-0 overflow-hidden py-0.5 pe-0.5": !isStacked,
         [mergedClasses.end ?? ""]: true,
@@ -587,7 +587,7 @@ export function useFormField(
       customProps?.start,
       {},
       cn({
-        "group/start wrapper-start-slot shrink-0 flex w-auto items-stretch self-stretch [&>*]:min-h-0": true,
+        "group/start wrapper-start-slot shrink-0 flex w-auto items-stretch self-stretch [&>*]:h-auto! [&>*]:min-h-0": true,
         "self-stretch min-h-0 overflow-hidden py-0.5 ps-0.5": isStacked,
         "h-full min-h-0 overflow-hidden py-0.5 ps-0.5": !isStacked,
         [mergedClasses.start ?? ""]: true,

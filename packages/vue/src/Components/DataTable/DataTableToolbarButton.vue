@@ -11,6 +11,7 @@ defineProps<{
   buttonProps?: Partial<Omit<ButtonOwnProps, "icon">>;
   icon: IconSource;
   label: string;
+  size?: ButtonOwnProps["size"];
 }>();
 
 const emit = defineEmits<{
@@ -22,7 +23,7 @@ const emit = defineEmits<{
   <Tooltip :content="label">
     <template #trigger>
       <Button
-        size="sm"
+        :size="size"
         color="dark"
         :icon="icon"
         type="button"

@@ -3,10 +3,11 @@
 import { computed, useId, useSlots, type VNodeChild } from "vue";
 
 // ** Core Imports
-import type {
-  DataTableColumnSearch,
-  DataTableFilters,
-  PaginationCursor,
+import {
+  getDataTableControlSize,
+  type DataTableColumnSearch,
+  type DataTableFilters,
+  type PaginationCursor,
 } from "@bridge-ui/core/Domain";
 import { cn } from "@bridge-ui/core/Utils";
 
@@ -172,8 +173,14 @@ const {
   },
 );
 
-const checkboxSize = computed(() => {
-  return merged.value.size === "lg" ? "md" : "sm";
+const controlSize = computed(() => {
+  return getDataTableControlSize(merged.value.size);
+});
+
+const checkboxSize = controlSize;
+
+const toolbarButtonSize = computed(() => {
+  return controlSize.value === "md" ? "sm" : "xs";
 });
 
 const selectionSummary = computed(() => {
@@ -262,10 +269,11 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
       <div class="flex shrink-0 items-center gap-2">
         <div
           v-if="visibilityEnabled"
-          class="inline-flex items-center rounded-lg border border-dark-200 bg-white p-0.5 dark:border-dark-700 dark:bg-dark-800"
+          class="inline-flex items-center rounded-lg border border-dark-200 bg-white p-px dark:border-dark-700 dark:bg-dark-800"
         >
           <DataTableColumnsMenu
             :items="visibilityItems"
+            :button-size="toolbarButtonSize"
             :overlay="merged.columnsOverlay"
             v-on:change="onHiddenColumnsChange"
             :show-footer="merged.columnsShowFooter"
@@ -276,6 +284,7 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
 
         <slot name="search" v-if="showSearch">
           <DataTableSearch
+            :size="controlSize"
             :model-value="search ?? ''"
             v-on:update:model-value="onChangeSearch"
             :field-props="merged.customProps?.search"
@@ -498,11 +507,11 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
                 {{ resolveMessage("Rows per page") }}
               </span>
               <Select
-                size="sm"
                 v-bind="merged.customProps?.perPage"
                 overlay="menu"
                 :clearable="false"
                 hide-error-message
+                :size="controlSize"
                 :options="perPageSelectOptions"
                 :custom-props="perPageSelectCustom"
                 :model-value="perPageSlotProps.perPage"
@@ -529,10 +538,10 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
 
             <slot name="pagination" v-bind="paginationSlotProps">
               <Pagination
-                size="sm"
                 v-bind="merged.customProps?.cursorPagination"
                 mode="simple"
                 v-if="cursorPaged"
+                :size="controlSize"
                 v-on:next="paginationSlotProps.onNext"
                 :has-next="paginationSlotProps.hasNext"
                 v-on:previous="paginationSlotProps.onPrevious"
@@ -540,7 +549,7 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
               />
 
               <DataTablePagination
-                size="sm"
+                :size="controlSize"
                 v-bind="merged.customProps?.pagination"
                 v-model="paginationPage"
                 :count="resolvedPageCount"

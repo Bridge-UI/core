@@ -9,6 +9,7 @@ import { cn } from "@bridge-ui/core/Utils";
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
 import { Button } from "@/Components/Button";
+import type { ButtonOwnProps } from "@/Components/Button/button.types";
 import { Checkbox } from "@/Components/Checkbox";
 import { useDataTableColumnsMenu } from "@/Components/DataTable/composables/useDataTableColumnsMenu";
 import DataTableToolbarButton from "@/Components/DataTable/DataTableToolbarButton.vue";
@@ -18,6 +19,7 @@ defineOptions({ inheritAttrs: false, name: "DataTableColumnsMenu" });
 
 const props = withDefaults(
   defineProps<{
+    buttonSize?: ButtonOwnProps["size"];
     items: DataTableVisibilityItem[];
     overlay?: FieldOverlayMode;
     showFooter?: boolean;
@@ -54,6 +56,7 @@ const {
     <span ref="triggerRef" class="inline-flex">
       <DataTableToolbarButton
         icon="columns"
+        :size="buttonSize"
         v-on:click="onToggleShow"
         :label="resolveMessage('Columns')"
       />

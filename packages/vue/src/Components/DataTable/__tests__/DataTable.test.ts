@@ -1329,7 +1329,7 @@ test("it should spread per-page and pagination across the footer", () => {
   });
 
   expect(wrapper.find(".py-3.justify-end").exists()).toBe(false);
-  expect(wrapper.find(".py-3").classes()).toContain(
+  expect(wrapper.find('.py-3[class*="@lg/footer:"]').classes()).toContain(
     "@lg/footer:justify-between",
   );
 });
@@ -1339,12 +1339,13 @@ test("it should render the responsive footer layout during SSR", async () => {
   const html = await renderToString(createSSRApp(DataTable, props));
   const ssrFooter = new DOMParser()
     .parseFromString(html, "text/html")
-    .querySelector(".py-3");
+    .querySelector('.py-3[class*="@lg/footer:"]');
 
   expect(ssrFooter?.classList).toContain("@lg/footer:flex-row");
   expect(ssrFooter?.parentElement?.classList).toContain("@container/footer");
   expect(ssrFooter?.className).toBe(
-    mountDataTable({ props }).find(".py-3").element.className,
+    mountDataTable({ props }).find('.py-3[class*="@lg/footer:"]').element
+      .className,
   );
 });
 

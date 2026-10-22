@@ -145,7 +145,7 @@ test("it should use mini size classes when density is mini", () => {
   const { result } = renderUseButton({ density: "mini", icon: CircleAlert });
 
   expect(result.current.isMini).toBe(true);
-  expect(result.current.rootBind.className).toContain("w-7");
+  expect(result.current.rootBind.className).toContain("w-9");
   expect(result.current.rootBind.className).not.toContain("w-full");
 });
 
@@ -211,9 +211,9 @@ test("it should not force flat variant on mini buttons inside a ButtonGroup", ()
   );
 
   expect(result.current.rootBind.className).toContain("h-auto");
-  expect(result.current.rootBind.className).toContain("min-h-7");
+  expect(result.current.rootBind.className).toContain("min-h-9");
   expect(result.current.rootBind.className).toContain("bg-primary-500");
-  expect(result.current.rootBind.className.split(/\s+/).includes("h-7")).toBe(
+  expect(result.current.rootBind.className.split(/\s+/).includes("h-9")).toBe(
     false,
   );
 });
@@ -235,7 +235,7 @@ test("it should keep mini height when ButtonGroup density is mini", () => {
     },
   );
 
-  expect(result.current.rootBind.className.split(/\s+/).includes("h-7")).toBe(
+  expect(result.current.rootBind.className.split(/\s+/).includes("h-9")).toBe(
     true,
   );
   expect(

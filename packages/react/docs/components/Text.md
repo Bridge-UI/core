@@ -101,18 +101,18 @@ Change the muted tone for the whole app in one place with `tokens`, or set defau
 
 ## Props
 
-| Prop        | Type                                                                                                       | Default     | Description                                                                |
-| ----------- | ---------------------------------------------------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------- |
-| `as`        | `"p" \| "dd" \| "dt" \| "em" \| "li" \| "div" \| "span" \| "label" \| "small" \| "strong" \| "figcaption"` | `"p"`       | The element rendered as the root.                                          |
-| `children`  | `ReactNode`                                                                                                | —           | The children to render.                                                    |
-| `classes`   | `TextClasses`                                                                                              | —           | The classes to apply to the text.                                          |
-| `color`     | `TextColor`                                                                                                | `"dark"`    | The color of the text. Ignores `global.defaultColor`.                      |
-| `numeric`   | `boolean`                                                                                                  | `false`     | Whether digits use tabular figures and tight tracking (money, counts).     |
-| `size`      | `TextSize`                                                                                                 | `"md"`      | The size of the text (`2xs` to `4xl`).                                     |
-| `truncate`  | `boolean`                                                                                                  | `false`     | Whether the text is cut to one line with an ellipsis.                      |
-| `uppercase` | `boolean`                                                                                                  | `false`     | Whether the text is uppercase with wide tracking (small labels).           |
-| `variant`   | `TextVariant`                                                                                              | `"default"` | The tone of the text: `default` for main text, `muted` for secondary text. |
-| `weight`    | `TextWeight`                                                                                               | `"normal"`  | The font weight of the text (`normal`, `medium`, `semibold`, `bold`).      |
+| Prop        | Type                                                                                                       | Default     | Description                                                                                                        |
+| ----------- | ---------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------ |
+| `as`        | `"p" \| "dd" \| "dt" \| "em" \| "li" \| "div" \| "span" \| "label" \| "small" \| "strong" \| "figcaption"` | `"p"`       | The element rendered as the root.                                                                                  |
+| `children`  | `ReactNode`                                                                                                | —           | The children to render.                                                                                            |
+| `classes`   | `TextClasses`                                                                                              | —           | The classes to apply to the text.                                                                                  |
+| `color`     | `TextColor`                                                                                                | `"dark"`    | The color of the text. Ignores `global.defaultColor`.                                                              |
+| `numeric`   | `boolean`                                                                                                  | `false`     | Whether digits use tabular figures and tight tracking (money, counts).                                             |
+| `size`      | `TextSize`                                                                                                 | `"md"`      | The size of the text (`2xs` to `4xl`), 1:1 with Tailwind `text-*`. Next to form controls, `sm` matches Label `md`. |
+| `truncate`  | `boolean`                                                                                                  | `false`     | Whether the text is cut to one line with an ellipsis.                                                              |
+| `uppercase` | `boolean`                                                                                                  | `false`     | Whether the text is uppercase with wide tracking (small labels).                                                   |
+| `variant`   | `TextVariant`                                                                                              | `"default"` | The tone of the text: `default` for main text, `muted` for secondary text.                                         |
+| `weight`    | `TextWeight`                                                                                               | `"normal"`  | The font weight of the text (`normal`, `medium`, `semibold`, `bold`).                                              |
 
 ## Related components
 

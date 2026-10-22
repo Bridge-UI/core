@@ -319,6 +319,14 @@ export type DataTableFooterLayout = {
 };
 
 /**
+ * Resolves the size of the chrome controls (toolbar search and buttons,
+ * footer pagination, selection checkboxes) from the DataTable `size`.
+ */
+export function getDataTableControlSize(size: string | undefined): "md" | "sm" {
+  return size === "lg" ? "md" : "sm";
+}
+
+/**
  * Resolves flex alignment and the stacking breakpoint for the DataTable
  * chrome footer.
  */

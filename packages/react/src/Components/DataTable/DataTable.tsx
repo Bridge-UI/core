@@ -3,6 +3,7 @@ import { isFunction } from "es-toolkit/compat";
 import { Fragment, memo, useId, useRef, useState, type ReactNode } from "react";
 
 // ** Core Imports
+import { getDataTableControlSize } from "@bridge-ui/core/Domain";
 import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -38,7 +39,7 @@ import {
   TableRow,
 } from "@/Components/Table";
 import { Tooltip } from "@/Components/Tooltip";
-import { hasNamedSlot } from "@/Utils";
+import { derived, hasNamedSlot } from "@/Utils";
 import { LoadingSpin } from "@/Utils/LoadingSpin";
 
 const dataTableLibDefaults = {
@@ -386,7 +387,14 @@ function DataTable<T extends Record<string, unknown>>(
   const selectionName = useId();
   const resolveMessage = useResolveMessage();
   const perPageCustom = merged.customProps?.perPage;
-  const checkboxSize = merged.size === "lg" ? "md" : "sm";
+  const controlSize = getDataTableControlSize(merged.size);
+
+  const checkboxSize = controlSize;
+
+  const toolbarButtonSize = derived(() => {
+    return controlSize === "md" ? "sm" : "xs";
+  });
+
   const selectionSummary = resolveMessage(
     "{{selected}} of {{total}} row(s) selected.",
     selectedSlotProps.selectedCount,
@@ -395,6 +403,7 @@ function DataTable<T extends Record<string, unknown>>(
       selected: selectedSlotProps.selectedCount,
     },
   );
+
   const pageStatus = resolveMessage("Page {{page}} of {{count}}", {
     page: paginationSlotProps.page,
     count: paginationSlotProps.count,
@@ -408,9 +417,10 @@ function DataTable<T extends Record<string, unknown>>(
 
           <div className="flex shrink-0 items-center gap-2">
             {visibilityEnabled ? (
-              <div className="inline-flex items-center rounded-lg border border-dark-200 bg-white p-0.5 dark:border-dark-700 dark:bg-dark-800">
+              <div className="inline-flex items-center rounded-lg border border-dark-200 bg-white p-px dark:border-dark-700 dark:bg-dark-800">
                 <DataTableColumnsMenu
                   items={visibilityItems}
+                  buttonSize={toolbarButtonSize}
                   overlay={merged.columnsOverlay}
                   onChange={onHiddenColumnsChange}
                   showFooter={merged.columnsShowFooter}
@@ -423,6 +433,7 @@ function DataTable<T extends Record<string, unknown>>(
             {showSearch
               ? (slots?.search ?? (
                   <DataTableSearch
+                    size={controlSize}
                     value={searchValue}
                     onChange={onChangeSearch}
                     fieldProps={merged.customProps?.search}
@@ -633,9 +644,9 @@ function DataTable<T extends Record<string, unknown>>(
                         {resolveMessage("Rows per page")}
                       </span>
                       <Select
-                        size="sm"
                         hideErrorMessage
                         clearable={false}
+                        size={controlSize}
                         aria-label={resolveMessage("Rows per page")}
                         {...perPageCustom}
                         overlay="menu"
@@ -683,7 +694,7 @@ function DataTable<T extends Record<string, unknown>>(
                     paginationSlotProps,
                     cursorPaged ? (
                       <Pagination
-                        size="sm"
+                        size={controlSize}
                         {...merged.customProps?.cursorPagination}
                         mode="simple"
                         onNext={paginationSlotProps.onNext}
@@ -693,7 +704,7 @@ function DataTable<T extends Record<string, unknown>>(
                       />
                     ) : resolvedPageCount !== undefined ? (
                       <DataTablePagination
-                        size="sm"
+                        size={controlSize}
                         page={paginationSlotProps.page}
                         count={paginationSlotProps.count}
                         {...merged.customProps?.pagination}
