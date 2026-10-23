@@ -14,6 +14,7 @@ import type {
   SnackbarOwnProps,
   SnackbarSlots,
 } from "@/Components/Snackbar/snackbar.types";
+import { Text } from "@/Components/Text";
 
 defineSlots<SnackbarSlots>();
 
@@ -138,13 +139,17 @@ const teleportTarget = computed(() => {
               </div>
 
               <div class="w-0 flex-1 pt-0.5" :class="{ 'ml-3': hasIcon }">
-                <p v-if="hasTitle" v-bind="titleBind">
+                <Text color="inherit" v-if="hasTitle" v-bind="titleBind">
                   <slot name="title">{{ merged.title }}</slot>
-                </p>
+                </Text>
 
-                <p v-if="hasDescription" v-bind="descriptionBind">
+                <Text
+                  color="inherit"
+                  v-if="hasDescription"
+                  v-bind="descriptionBind"
+                >
                   <slot name="description">{{ merged.description }}</slot>
-                </p>
+                </Text>
 
                 <slot />
 
@@ -219,13 +224,13 @@ const teleportTarget = computed(() => {
         </div>
 
         <div class="w-0 flex-1 pt-0.5" :class="{ 'ml-3': hasIcon }">
-          <p v-if="hasTitle" v-bind="titleBind">
+          <Text color="inherit" v-if="hasTitle" v-bind="titleBind">
             <slot name="title">{{ merged.title }}</slot>
-          </p>
+          </Text>
 
-          <p v-if="hasDescription" v-bind="descriptionBind">
+          <Text color="inherit" v-if="hasDescription" v-bind="descriptionBind">
             <slot name="description">{{ merged.description }}</slot>
-          </p>
+          </Text>
 
           <slot />
 

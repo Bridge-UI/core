@@ -302,3 +302,27 @@ test("it should not steal modal focus when a snackbar action is focused", () => 
 
   expect(document.activeElement).toBe(snackbarClose);
 });
+
+test("it should size the title and description with the Text default size", () => {
+  render(
+    <Snackbar
+      show
+      title="Hello"
+      duration={false}
+      transition="none"
+      description="World"
+      classes={{ description: "text-xs" }}
+      customProps={{
+        title: { id: "snackbar-title" },
+        description: { id: "snackbar-description" },
+      }}
+    />,
+  );
+
+  const title = document.body.querySelector("#snackbar-title");
+  const description = document.body.querySelector("#snackbar-description");
+
+  expect(title?.classList.contains("text-sm")).toBe(true);
+  expect(description?.classList.contains("text-xs")).toBe(true);
+  expect(description?.classList.contains("text-sm")).toBe(false);
+});
