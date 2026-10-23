@@ -47,3 +47,17 @@ test("it should use defaultIndex when uncontrolled", () => {
 
   expect(result.activeIndex.value).toBe(2);
 });
+
+test("it should let classes override the vertical size tokens", () => {
+  const { result } = mountUseCarousel({
+    orientation: "vertical",
+    classes: { viewport: "h-96", track: "flex-row", controls: "flex-row" },
+  });
+
+  expect(result.viewportBind.value.class).toContain("h-96");
+  expect(result.trackBind.value.class).toContain("flex-row");
+  expect(result.controlsBind.value.class).toContain("flex-row");
+  expect(result.viewportBind.value.class).not.toContain("h-64");
+  expect(result.trackBind.value.class).not.toContain("flex-col");
+  expect(result.controlsBind.value.class).not.toContain("flex-col");
+});

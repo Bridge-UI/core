@@ -534,8 +534,8 @@ export function useCarousel(
         "data-part": "viewport",
         className: cn({
           [get(sizeItem, "viewport") ?? ""]: true,
-          [get(mergedClasses, "viewport") ?? ""]: true,
           [get(sizeItem, "viewportVertical") ?? ""]: vertical,
+          [get(mergedClasses, "viewport") ?? ""]: true,
         }),
       },
     );
@@ -549,8 +549,8 @@ export function useCarousel(
         "data-part": "track",
         className: cn({
           [get(sizeItem, "track") ?? ""]: true,
-          [get(mergedClasses, "track") ?? ""]: true,
           [get(sizeItem, "trackVertical") ?? ""]: vertical,
+          [get(mergedClasses, "track") ?? ""]: true,
         }),
         style: getCarouselTrackStyle(activeIndex, {
           rtl,
@@ -571,8 +571,8 @@ export function useCarousel(
         "data-part": "controls",
         className: cn({
           [get(sizeItem, "controls") ?? ""]: true,
-          [get(mergedClasses, "controls") ?? ""]: true,
           [get(sizeItem, "controlsVertical") ?? ""]: vertical,
+          [get(mergedClasses, "controls") ?? ""]: true,
         }),
       },
     );
