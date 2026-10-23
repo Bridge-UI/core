@@ -10,6 +10,9 @@ import type {
 } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
+// ** Local Imports
+import type { TextProps } from "@/Components/Text";
+
 export interface CardShadowOverrides {}
 export interface CardPaddingOverrides {}
 export interface CardRoundedOverrides {}
@@ -44,9 +47,9 @@ export interface CardClasses {
 
 export interface CardCustomProps {
   /**
-   * Props forwarded to the default body container.
+   * Props forwarded to the `Text` that renders the default body container.
    */
-  body?: HTMLAttributes;
+  body?: Partial<Omit<TextProps, "as">>;
 
   /**
    * Props forwarded to the footer container.
@@ -64,9 +67,9 @@ export interface CardCustomProps {
   root?: HTMLAttributes;
 
   /**
-   * Props forwarded to the title container.
+   * Props forwarded to the `Text` that renders the title container.
    */
-  title?: HTMLAttributes;
+  title?: Partial<Omit<TextProps, "as">>;
 }
 
 export interface CardOwnProps {

@@ -1,6 +1,7 @@
 // ** Local Imports
 import type { CardProps } from "@/Components/Card";
 import { useCard } from "@/Components/Card";
+import { Text } from "@/Components/Text";
 import { hasNamedSlot, hasSlotOrProp } from "@/Utils";
 
 function Card(props: CardProps) {
@@ -27,15 +28,19 @@ function Card(props: CardProps) {
 
       {!slots?.header && hasSlotOrProp(slots, "title", merged.title) && (
         <div {...headerBind}>
-          <div {...titleBind}>
+          <Text as="div" color="inherit" {...titleBind}>
             {hasNamedSlot(slots, "title") ? slots?.title : merged.title}
-          </div>
+          </Text>
 
           {slots?.action}
         </div>
       )}
 
-      {hasDefaultBody && <div {...bodyBind}>{children}</div>}
+      {hasDefaultBody && (
+        <Text as="div" color="inherit" {...bodyBind}>
+          {children}
+        </Text>
+      )}
 
       {hasNamedSlot(slots, "footer") && (
         <div {...footerBind}>{slots?.footer}</div>
