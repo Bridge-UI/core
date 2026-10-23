@@ -69,6 +69,28 @@ test("it should render a dropzone when variant is dropzone", () => {
   expect(wrapper.find('[role="button"]').exists()).toBe(true);
 });
 
+test("it should size the dropzone title and description from size", () => {
+  const wrapper = mount(FileUpload, {
+    props: {
+      size: "sm",
+      variant: "dropzone",
+      title: "Drop images here",
+      description: "or click to browse",
+    },
+  });
+
+  const title = wrapper.findAll("p").find((p) => {
+    return p.text() === "Drop images here";
+  });
+
+  const description = wrapper.findAll("p").find((p) => {
+    return p.text() === "or click to browse";
+  });
+
+  expect(title?.classes()).toContain("text-sm");
+  expect(description?.classes()).toContain("text-xs");
+});
+
 test("it should render a corner label beside the field label", () => {
   const wrapper = mount(FileUpload, {
     props: { corner: "Optional", label: "Attachments" },

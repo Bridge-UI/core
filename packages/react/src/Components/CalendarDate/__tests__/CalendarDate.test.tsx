@@ -8,6 +8,7 @@ afterEach(() => {
 
 // ** Local Imports
 import { CalendarDate } from "@/Components/CalendarDate";
+import { BridgeUIProvider } from "@/Provider";
 
 test("it should render weekday labels by default", () => {
   render(<CalendarDate viewDate={new Date(2021, 4, 1)} />);
@@ -100,4 +101,27 @@ test("it should render custom day slot content", () => {
   );
 
   expect(screen.getByRole("button", { name: "D21" })).toBeTruthy();
+});
+
+test("it should size the days with the Text default size", () => {
+  const { container } = render(
+    <CalendarDate viewDate={new Date(2021, 4, 1)} />,
+  );
+
+  expect(container.querySelector("button")?.classList.contains("text-sm")).toBe(
+    true,
+  );
+});
+
+test("it should follow the Text size from the provider", () => {
+  const { container } = render(
+    <BridgeUIProvider components={{ Text: { defaultProps: { size: "xs" } } }}>
+      <CalendarDate viewDate={new Date(2021, 4, 1)} />
+    </BridgeUIProvider>,
+  );
+
+  const day = container.querySelector("button");
+
+  expect(day?.classList.contains("text-xs")).toBe(true);
+  expect(day?.classList.contains("text-sm")).toBe(false);
 });

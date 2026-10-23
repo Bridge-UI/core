@@ -51,6 +51,7 @@ import {
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
+  useDefaultTextSizeClass,
 } from "@/Utils";
 
 const calendarRangeBridgeKeys = [
@@ -552,6 +553,8 @@ export function useCalendarRange(
     });
   });
 
+  const textSizeClass = useDefaultTextSizeClass();
+
   const selectorBind = computed(() => {
     return mergePartBind(
       customProps.value?.selector,
@@ -560,8 +563,9 @@ export function useCalendarRange(
         disabled: merged.value.disabled,
       },
       cn({
-        "inline-flex cursor-pointer items-center gap-x-2 px-1.5 py-1 text-sm font-medium text-dark-600 hover:bg-dark-100 focus:outline-none disabled:cursor-not-allowed dark:text-dark-300 dark:hover:bg-dark-800": true,
+        "inline-flex cursor-pointer items-center gap-x-2 px-1.5 py-1 font-medium text-dark-600 hover:bg-dark-100 focus:outline-none disabled:cursor-not-allowed dark:text-dark-300 dark:hover:bg-dark-800": true,
         [roundedClass.value ?? ""]: true,
+        [textSizeClass.value]: true,
         [mergedClasses.value.selector ?? ""]: true,
       }),
     );

@@ -72,7 +72,7 @@ export interface TextOwnProps {
   /**
    * The size of the text.
    *
-   * @default "md"
+   * @default "sm"
    */
   size?: MergeProps<TextSize, TextSizeOverrides>;
 

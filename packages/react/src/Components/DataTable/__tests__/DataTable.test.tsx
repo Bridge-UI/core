@@ -1469,3 +1469,34 @@ test("it should keep header text from clipping truncated glyphs", () => {
   expect(header.className).toContain("leading-normal");
   expect(header.className).not.toContain("leading-none");
 });
+
+test("it should size the footer text with the chrome controls", () => {
+  const { rerender } = render(
+    <DataTable
+      page={1}
+      rows={rows}
+      perPage={10}
+      pageCount={2}
+      columns={columns}
+    />,
+  );
+
+  expect(screen.getByText("Page 1 of 2").classList.contains("text-xs")).toBe(
+    true,
+  );
+
+  rerender(
+    <DataTable
+      page={1}
+      size="lg"
+      rows={rows}
+      perPage={10}
+      pageCount={2}
+      columns={columns}
+    />,
+  );
+
+  expect(screen.getByText("Page 1 of 2").classList.contains("text-sm")).toBe(
+    true,
+  );
+});

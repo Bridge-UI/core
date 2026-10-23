@@ -621,6 +621,26 @@ export function useFileUpload(
     );
   });
 
+  const dropzoneTitleBind = derived(() => {
+    return mergePartBind(
+      {},
+      {},
+      cn({
+        [get(sizeItem, "dropzoneTitle") ?? ""]: true,
+      }),
+    );
+  });
+
+  const dropzoneDescriptionBind = derived(() => {
+    return mergePartBind(
+      {},
+      {},
+      cn({
+        [get(sizeItem, "dropzoneDescription") ?? ""]: true,
+      }),
+    );
+  });
+
   const itemDescriptionBind = derived(() => {
     return mergePartBind(
       {},
@@ -716,8 +736,10 @@ export function useFileUpload(
     orientationItem,
     validationError,
     orientationItems,
+    dropzoneTitleBind,
     itemDescriptionBind,
     resolvedErrorMessage,
+    dropzoneDescriptionBind,
     inputRef: inputRef as RefObject<null | HTMLInputElement>,
   };
 }

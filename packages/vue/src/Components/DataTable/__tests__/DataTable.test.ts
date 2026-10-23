@@ -1465,3 +1465,22 @@ test("it should keep header text from clipping truncated glyphs", () => {
   expect(header?.classes()).toContain("leading-normal");
   expect(header?.classes()).not.toContain("leading-none");
 });
+
+test("it should size the footer text with the chrome controls", () => {
+  const sm = mountDataTable({
+    props: { rows, page: 1, columns, perPage: 10, pageCount: 2 },
+  });
+
+  const lg = mountDataTable({
+    props: { rows, page: 1, columns, size: "lg", perPage: 10, pageCount: 2 },
+  });
+
+  const status = (wrapper: typeof sm) => {
+    return wrapper.findAll("span").find((span) => {
+      return span.text() === "Page 1 of 2";
+    });
+  };
+
+  expect(status(sm)?.classes()).toContain("text-xs");
+  expect(status(lg)?.classes()).toContain("text-sm");
+});

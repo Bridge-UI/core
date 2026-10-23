@@ -21,7 +21,7 @@ function Link<T extends ElementType = "a">(props: LinkProps<T>) {
     rightIconBind,
     rootAriaDisabled,
   } = useLink(props, {
-    size: "md",
+    size: "sm",
     color: "primary",
     underline: "hover",
   });

@@ -47,6 +47,24 @@ test("it should render a dropzone when variant is dropzone", () => {
   expect(screen.getByRole("button")).toBeTruthy();
 });
 
+test("it should size the dropzone title and description from size", () => {
+  render(
+    <FileUpload
+      size="sm"
+      variant="dropzone"
+      title="Drop images here"
+      description="or click to browse"
+    />,
+  );
+
+  expect(
+    screen.getByText("Drop images here").classList.contains("text-sm"),
+  ).toBe(true);
+  expect(
+    screen.getByText("or click to browse").classList.contains("text-xs"),
+  ).toBe(true);
+});
+
 test("it should render a corner label beside the field label", () => {
   render(<FileUpload corner="Optional" label="Attachments" />);
 

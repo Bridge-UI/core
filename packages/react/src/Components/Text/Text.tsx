@@ -8,7 +8,7 @@ import { useText } from "@/Components/Text";
 function Text(props: TextProps) {
   const { merged, children, rootBind } = useText(props, {
     as: "p",
-    size: "md",
+    size: "sm",
     color: "dark",
     weight: "normal",
     variant: "default",

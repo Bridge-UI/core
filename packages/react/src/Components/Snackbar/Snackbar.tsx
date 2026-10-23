@@ -14,6 +14,7 @@ import { useResolveMessage } from "@/Adapters/I18n";
 import { Icon } from "@/Components/Icon";
 import { useSnackbar } from "@/Components/Snackbar/hooks/useSnackbar";
 import type { SnackbarProps } from "@/Components/Snackbar/snackbar.types";
+import { Text } from "@/Components/Text";
 import { hasNamedSlot, hasSlotOrProp } from "@/Utils";
 
 const snackbarLibDefaults = {
@@ -99,17 +100,17 @@ function SnackbarPanel({
             })}
           >
             {hasTitle && (
-              <p {...titleBind}>
+              <Text color="inherit" {...titleBind}>
                 {hasNamedSlot(slots, "title") ? slots?.title : merged.title}
-              </p>
+              </Text>
             )}
 
             {hasDescription && (
-              <p {...descriptionBind}>
+              <Text color="inherit" {...descriptionBind}>
                 {hasNamedSlot(slots, "description")
                   ? slots?.description
                   : merged.description}
-              </p>
+              </Text>
             )}
 
             {children}

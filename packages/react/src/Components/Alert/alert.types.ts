@@ -14,6 +14,7 @@ import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";
 import type { IconProps } from "@/Components/Icon";
+import type { TextProps } from "@/Components/Text";
 
 export interface AlertColorOverrides {}
 export interface AlertShadowOverrides {}
@@ -45,9 +46,9 @@ export interface AlertClasses {
 
 export interface AlertCustomProps {
   /**
-   * Props forwarded to the default body container.
+   * Props forwarded to the `Text` that renders the default body container.
    */
-  body?: HTMLAttributes<HTMLDivElement>;
+  body?: Partial<Omit<TextProps, "as">>;
 
   /**
    * Props forwarded to the default `Icon` (`icon` is set by the alert).
@@ -60,9 +61,9 @@ export interface AlertCustomProps {
   root?: HTMLAttributes<HTMLDivElement>;
 
   /**
-   * Props forwarded to the title container.
+   * Props forwarded to the `Text` that renders the title container.
    */
-  title?: HTMLAttributes<HTMLDivElement>;
+  title?: Partial<Omit<TextProps, "as">>;
 }
 
 /**

@@ -23,6 +23,16 @@ export interface FileUploadSizeItem {
   "dropzone": string;
 
   /**
+   * Classes for the hint below the dropzone title.
+   */
+  "dropzoneDescription": string;
+
+  /**
+   * Classes for the dropzone title.
+   */
+  "dropzoneTitle": string;
+
+  /**
    * Classes for each file card root.
    */
   "item": string;
@@ -77,27 +87,14 @@ export interface FileUploadSize {
  * Default FileUpload size classes.
  */
 export const sizeProps: FileUploadSize = {
-  "md": {
-    "list": "mt-3 flex flex-col gap-2",
-    "trigger": "inline-flex items-center",
-    "content": "flex min-w-0 flex-1 flex-col gap-0.5",
-    "actions": "ms-auto flex shrink-0 items-center gap-1",
-    "description": "m-0 truncate text-xs text-dark-500 dark:text-dark-400",
-    "title":
-      "m-0 truncate text-sm font-medium text-dark-900 dark:text-dark-100",
-    "dropzone":
-      "flex min-h-36 w-full flex-col items-center justify-center gap-1.5 px-6 py-10 text-center",
-    "item":
-      "flex w-full items-center gap-3 border border-dark-200 bg-white px-2.5 py-2 dark:border-dark-700 dark:bg-dark-800",
-    "media":
-      "flex size-10 shrink-0 items-center justify-center overflow-hidden bg-dark-100 text-dark-500 dark:bg-dark-700 dark:text-dark-400 [&_img]:size-full [&_img]:object-cover [&_svg]:size-5",
-  },
   "lg": {
     "list": "mt-4 flex flex-col gap-2.5",
     "trigger": "inline-flex items-center",
     "content": "flex min-w-0 flex-1 flex-col gap-1",
     "actions": "ms-auto flex shrink-0 items-center gap-1",
     "description": "m-0 truncate text-sm text-dark-500 dark:text-dark-400",
+    "dropzoneDescription": "m-0 text-base text-dark-500 dark:text-dark-400",
+    "dropzoneTitle": "m-0 text-lg font-medium text-dark-900 dark:text-dark-100",
     "title":
       "m-0 truncate text-base font-medium text-dark-900 dark:text-dark-100",
     "dropzone":
@@ -107,27 +104,31 @@ export const sizeProps: FileUploadSize = {
     "media":
       "flex size-12 shrink-0 items-center justify-center overflow-hidden bg-dark-100 text-dark-500 dark:bg-dark-700 dark:text-dark-400 [&_img]:size-full [&_img]:object-cover [&_svg]:size-6",
   },
-  "xs": {
-    "list": "mt-1.5 flex flex-col gap-1",
+  "md": {
+    "list": "mt-3 flex flex-col gap-2",
     "trigger": "inline-flex items-center",
-    "content": "flex min-w-0 flex-1 flex-col",
-    "actions": "ms-auto flex shrink-0 items-center gap-0.5",
+    "content": "flex min-w-0 flex-1 flex-col gap-0.5",
+    "actions": "ms-auto flex shrink-0 items-center gap-1",
+    "dropzoneDescription": "m-0 text-sm text-dark-500 dark:text-dark-400",
+    "description": "m-0 truncate text-xs text-dark-500 dark:text-dark-400",
     "title":
-      "m-0 truncate text-xs font-medium text-dark-900 dark:text-dark-100",
-    "description":
-      "m-0 truncate text-[0.65rem] text-dark-500 dark:text-dark-400",
+      "m-0 truncate text-sm font-medium text-dark-900 dark:text-dark-100",
+    "dropzoneTitle":
+      "m-0 text-base font-medium text-dark-900 dark:text-dark-100",
     "dropzone":
-      "flex min-h-24 w-full flex-col items-center justify-center gap-1 px-3 py-5 text-center",
+      "flex min-h-36 w-full flex-col items-center justify-center gap-1.5 px-6 py-10 text-center",
     "item":
-      "flex w-full items-center gap-1.5 border border-dark-200 bg-white px-1.5 py-1 dark:border-dark-700 dark:bg-dark-800",
+      "flex w-full items-center gap-3 border border-dark-200 bg-white px-2.5 py-2 dark:border-dark-700 dark:bg-dark-800",
     "media":
-      "flex size-6 shrink-0 items-center justify-center overflow-hidden bg-dark-100 text-dark-500 dark:bg-dark-700 dark:text-dark-400 [&_img]:size-full [&_img]:object-cover [&_svg]:size-3.5",
+      "flex size-10 shrink-0 items-center justify-center overflow-hidden bg-dark-100 text-dark-500 dark:bg-dark-700 dark:text-dark-400 [&_img]:size-full [&_img]:object-cover [&_svg]:size-5",
   },
   "sm": {
     "list": "mt-2 flex flex-col gap-1.5",
     "trigger": "inline-flex items-center",
     "content": "flex min-w-0 flex-1 flex-col gap-0.5",
     "actions": "ms-auto flex shrink-0 items-center gap-0.5",
+    "dropzoneDescription": "m-0 text-xs text-dark-500 dark:text-dark-400",
+    "dropzoneTitle": "m-0 text-sm font-medium text-dark-900 dark:text-dark-100",
     "title":
       "m-0 truncate text-xs font-medium text-dark-900 dark:text-dark-100",
     "description":
@@ -138,5 +139,24 @@ export const sizeProps: FileUploadSize = {
       "flex w-full items-center gap-2 border border-dark-200 bg-white px-2 py-1.5 dark:border-dark-700 dark:bg-dark-800",
     "media":
       "flex size-8 shrink-0 items-center justify-center overflow-hidden bg-dark-100 text-dark-500 dark:bg-dark-700 dark:text-dark-400 [&_img]:size-full [&_img]:object-cover [&_svg]:size-4",
+  },
+  "xs": {
+    "list": "mt-1.5 flex flex-col gap-1",
+    "trigger": "inline-flex items-center",
+    "content": "flex min-w-0 flex-1 flex-col",
+    "actions": "ms-auto flex shrink-0 items-center gap-0.5",
+    "dropzoneTitle": "m-0 text-xs font-medium text-dark-900 dark:text-dark-100",
+    "title":
+      "m-0 truncate text-xs font-medium text-dark-900 dark:text-dark-100",
+    "dropzoneDescription":
+      "m-0 text-[0.65rem] text-dark-500 dark:text-dark-400",
+    "description":
+      "m-0 truncate text-[0.65rem] text-dark-500 dark:text-dark-400",
+    "dropzone":
+      "flex min-h-24 w-full flex-col items-center justify-center gap-1 px-3 py-5 text-center",
+    "item":
+      "flex w-full items-center gap-1.5 border border-dark-200 bg-white px-1.5 py-1 dark:border-dark-700 dark:bg-dark-800",
+    "media":
+      "flex size-6 shrink-0 items-center justify-center overflow-hidden bg-dark-100 text-dark-500 dark:bg-dark-700 dark:text-dark-400 [&_img]:size-full [&_img]:object-cover [&_svg]:size-3.5",
   },
 };

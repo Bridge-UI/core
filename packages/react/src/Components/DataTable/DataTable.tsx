@@ -373,6 +373,7 @@ function DataTable<T extends Record<string, unknown>>(
     selectAllState,
     onChangeSearch,
     onToggleExpand,
+    chromeTextClass,
     visibilityItems,
     perPageSlotProps,
     selectedSlotProps,
@@ -640,7 +641,9 @@ function DataTable<T extends Record<string, unknown>>(
                     slots?.perPage,
                     perPageSlotProps,
                     <div className="flex shrink-0 items-center gap-2">
-                      <span className="text-sm whitespace-nowrap">
+                      <span
+                        className={cn("whitespace-nowrap", chromeTextClass)}
+                      >
                         {resolveMessage("Rows per page")}
                       </span>
                       <Select
@@ -684,7 +687,12 @@ function DataTable<T extends Record<string, unknown>>(
                 <div className="flex shrink-0 items-center gap-3">
                   {resolvedPageCount !== undefined &&
                   !hasNamedSlot(slots, "pagination") ? (
-                    <span className="text-sm font-medium whitespace-nowrap">
+                    <span
+                      className={cn(
+                        "font-medium whitespace-nowrap",
+                        chromeTextClass,
+                      )}
+                    >
                       {pageStatus}
                     </span>
                   ) : null}

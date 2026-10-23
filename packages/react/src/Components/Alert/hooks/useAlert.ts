@@ -159,7 +159,7 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
       customProps?.body,
       {},
       cn({
-        "grow text-sm text-start": true,
+        "grow text-start": true,
         [get(paddingClass, "body") ?? ""]: true,
         [get(colorClass, "text") ?? ""]: true,
         [get(mergedClasses, "body") ?? ""]: true,
@@ -200,7 +200,7 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
       customProps?.title,
       {},
       cn({
-        "text-start text-sm whitespace-normal": true,
+        "text-start whitespace-normal": true,
         "font-normal": !hasDefaultBody,
         "font-semibold": hasDefaultBody,
         [get(colorClass, "text") ?? ""]: true,
