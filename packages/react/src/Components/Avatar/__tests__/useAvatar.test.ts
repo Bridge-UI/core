@@ -112,3 +112,14 @@ test("it should apply className after classes.root in rootBind", () => {
   expect(result.current.rootBind.className).toContain("p-4");
   expect(result.current.rootBind.className).not.toContain("p-2");
 });
+
+test("it should let classes.root override the rounded, size and color tokens", () => {
+  const { result } = renderUseAvatar({
+    classes: { root: "rounded-none size-20 bg-red-500" },
+  });
+
+  expect(result.current.rootBind.className).toContain("size-20");
+  expect(result.current.rootBind.className).toContain("bg-red-500");
+  expect(result.current.rootBind.className).toContain("rounded-none");
+  expect(result.current.rootBind.className).not.toContain("rounded-full");
+});
