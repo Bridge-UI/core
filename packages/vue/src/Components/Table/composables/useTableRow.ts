@@ -46,12 +46,12 @@ export function useTableRow(props: TableRowOwnProps) {
       {
         class: cn({
           [table.tokenClasses.variantRow ?? ""]: true,
-          [table.mergedClasses.row ?? ""]: true,
-          [split.value.componentProps.classes?.root ?? ""]: true,
           [table.tokenClasses.variantRowHover ?? ""]:
             isBodyRow && table.hoverable,
           [table.tokenClasses.variantRowStriped ?? ""]:
             isBodyRow && table.striped,
+          [table.mergedClasses.row ?? ""]: true,
+          [split.value.componentProps.classes?.root ?? ""]: true,
         }),
       },
     );

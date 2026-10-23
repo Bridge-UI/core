@@ -179,3 +179,25 @@ test("it should omit full width when full is false", () => {
     wrapper.find("table").element.parentElement?.parentElement?.className,
   ).toContain("w-fit");
 });
+
+test("it should let row classes override the hover and striped tokens", () => {
+  const wrapper = mountTable({
+    props: { striped: true, hoverable: true },
+    slots: {
+      default: () =>
+        h(TableBody, null, () =>
+          h(
+            TableRow,
+            { classes: { root: "hover:bg-primary-50 even:bg-primary-100" } },
+            () => h(TableCell, null, () => "Ada Lovelace"),
+          ),
+        ),
+    },
+  });
+  const row = wrapper.find("tbody tr");
+
+  expect(row.classes()).toContain("hover:bg-primary-50");
+  expect(row.classes()).toContain("even:bg-primary-100");
+  expect(row.classes()).not.toContain("hover:bg-dark-500/5");
+  expect(row.classes()).not.toContain("even:bg-dark-100/60");
+});

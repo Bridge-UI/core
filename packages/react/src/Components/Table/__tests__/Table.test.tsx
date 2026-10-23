@@ -153,3 +153,22 @@ test("it should omit full width when full is false", () => {
     screen.getByRole("table").parentElement?.parentElement?.className,
   ).toContain("w-fit");
 });
+
+test("it should let row classes override the hover and striped tokens", () => {
+  const { container } = render(
+    <Table striped hoverable>
+      <TableBody>
+        <TableRow classes={{ root: "hover:bg-primary-50 even:bg-primary-100" }}>
+          <TableCell>Ada Lovelace</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>,
+  );
+
+  const row = container.querySelector("tbody tr");
+
+  expect(row?.className).toContain("hover:bg-primary-50");
+  expect(row?.className).toContain("even:bg-primary-100");
+  expect(row?.className).not.toContain("hover:bg-dark-500/5");
+  expect(row?.className).not.toContain("even:bg-dark-100/60");
+});
