@@ -607,6 +607,7 @@ export type {
 } from "@/Domain/stepper";
 export { getAdjacentTabValue, getTabId, getTabPanelId } from "@/Domain/tabs";
 export type { TabsActivation } from "@/Domain/tabs";
+export { DEFAULT_TEXT_SIZE, resolveDefaultTextSizeClass } from "@/Domain/text";
 export {
   buildHourOptions,
   buildMinuteOptions,

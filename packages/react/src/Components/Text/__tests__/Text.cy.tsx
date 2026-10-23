@@ -6,7 +6,7 @@ test("it should render with default props", () => {
 
   cy.get("p")
     .should("contain.text", "Hello")
-    .and("have.class", "text-base")
+    .and("have.class", "text-sm")
     .and("have.class", "text-dark-950");
 });
 

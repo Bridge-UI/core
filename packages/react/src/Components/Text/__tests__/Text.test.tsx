@@ -28,10 +28,16 @@ test("it should apply default size, weight and color", () => {
 
   const root = container.querySelector("p");
 
-  expect(root?.classList.contains("text-base")).toBe(true);
+  expect(root?.classList.contains("text-sm")).toBe(true);
   expect(root?.classList.contains("font-normal")).toBe(true);
   expect(root?.classList.contains("text-dark-950")).toBe(true);
   expect(root?.classList.contains("dark:text-dark-50")).toBe(true);
+});
+
+test("it should apply no color class when color is inherit", () => {
+  const { container } = render(<Text color="inherit">Hello</Text>);
+
+  expect(container.querySelector("p")?.className).toBe("text-sm font-normal");
 });
 
 test("it should apply muted dark color when variant is muted", () => {

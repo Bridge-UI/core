@@ -5,6 +5,7 @@ import { useMemo, useRef } from "react";
 // ** Core Imports
 import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config";
 import {
+  resolveDefaultTextSizeClass,
   resolveFieldShowFooter,
   resolvePickerFill,
   type ResolvedFieldOverlay,
@@ -212,6 +213,17 @@ export function usePickerFill({
   });
 
   return resolvePickerFill(fill ?? registryFill, overlay);
+}
+
+/**
+ * Font-size classes of the default `Text` size (registry
+ * `Text.defaultProps.size`, then `sm`), for text in components without a
+ * `size` prop that can't render a `Text` element.
+ */
+export function useDefaultTextSizeClass(): string {
+  const bridge = useBridgeUI();
+
+  return resolveDefaultTextSizeClass(bridge?.components);
 }
 
 /**
