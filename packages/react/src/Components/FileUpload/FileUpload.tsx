@@ -55,7 +55,9 @@ function FileUpload(props: FileUploadProps) {
     dropzoneBind,
     openFileDialog,
     orientationItems,
+    dropzoneTitleBind,
     itemDescriptionBind,
+    dropzoneDescriptionBind,
   } = useFileUpload(props, {
     size: "md",
     rounded: "md",
@@ -128,15 +130,11 @@ function FileUpload(props: FileUploadProps) {
                     <Icon icon="inbox" className="mb-1 text-dark-400" />
 
                     {isPropPresent(merged.title) ? (
-                      <p className="m-0 font-medium text-dark-900 dark:text-dark-100">
-                        {merged.title}
-                      </p>
+                      <p {...dropzoneTitleBind}>{merged.title}</p>
                     ) : null}
 
                     {isPropPresent(merged.description) ? (
-                      <p className="m-0 text-sm text-dark-500 dark:text-dark-400">
-                        {merged.description}
-                      </p>
+                      <p {...dropzoneDescriptionBind}>{merged.description}</p>
                     ) : null}
                   </>
                 )}
