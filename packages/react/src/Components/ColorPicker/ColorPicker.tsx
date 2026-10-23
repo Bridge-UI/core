@@ -5,6 +5,7 @@ import { cn } from "@bridge-ui/core/Utils";
 import { ActionFooter } from "@/Components/ActionFooter";
 import type { ColorPickerProps } from "@/Components/ColorPicker/colorPicker.types";
 import { useColorPicker } from "@/Components/ColorPicker/hooks/useColorPicker";
+import { Text } from "@/Components/Text";
 
 function ColorPicker(props: ColorPickerProps) {
   const {
@@ -78,9 +79,14 @@ function ColorPicker(props: ColorPickerProps) {
           <span {...previewSwatchBind}>
             <span {...previewSwatchFillBind} />
           </span>
-          <span className="min-w-0 truncate text-sm text-dark-700 dark:text-dark-100">
+          <Text
+            truncate
+            as="span"
+            color="inherit"
+            className="min-w-0 text-dark-700 dark:text-dark-100"
+          >
             {formattedValue}
-          </span>
+          </Text>
         </div>
 
         {presetSwatches.length > 0 ? (
