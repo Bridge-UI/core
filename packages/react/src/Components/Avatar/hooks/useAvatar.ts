@@ -151,11 +151,11 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
       rootInheritedAttrs,
       cn({
         "inline-flex shrink-0 items-center justify-center overflow-hidden": true,
-        [mergedClasses.root ?? ""]: true,
         [roundedClass ?? ""]: true,
         [sizeClass ?? ""]: showFallbackSurface || hasCustomContent || hasImage,
         [get(colorClass, "background") ?? ""]: showFallbackSurface,
         [get(colorClass, "text") ?? ""]: showFallbackSurface,
+        [mergedClasses.root ?? ""]: true,
       }),
     );
   });

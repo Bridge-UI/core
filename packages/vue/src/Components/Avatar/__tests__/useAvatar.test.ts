@@ -112,3 +112,14 @@ test("it should apply class after classes.root in root bind", () => {
   expect(rootBind.value.class).toContain("p-4");
   expect(rootBind.value.class).not.toContain("p-2");
 });
+
+test("it should let classes.root override the rounded, size and color tokens", () => {
+  const { rootBind } = mountUseAvatar({
+    classes: { root: "rounded-none size-20 bg-red-500" },
+  });
+
+  expect(rootBind.value.class).toContain("size-20");
+  expect(rootBind.value.class).toContain("bg-red-500");
+  expect(rootBind.value.class).toContain("rounded-none");
+  expect(rootBind.value.class).not.toContain("rounded-full");
+});

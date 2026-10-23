@@ -227,3 +227,13 @@ test("it should keep primary line-height from clipping truncated glyphs", () => 
   expect(result.current.primaryBind.className).toContain("leading-normal");
   expect(result.current.primaryBind.className).not.toContain("leading-none");
 });
+
+test("it should let the primary classes override the line height", () => {
+  const { result } = renderUseListItem({
+    primary: "Action",
+    classes: { primary: "leading-5" },
+  });
+
+  expect(result.current.primaryBind?.className).toContain("leading-5");
+  expect(result.current.primaryBind?.className).not.toContain("leading-normal");
+});

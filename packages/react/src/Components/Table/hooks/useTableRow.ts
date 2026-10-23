@@ -52,12 +52,12 @@ export function useTableRow(props: TableRowProps) {
     return mergePartBind(customProps?.root, rootInheritedAttrs, {
       className: cn({
         [table.tokenClasses.variantRow ?? ""]: true,
-        [table.mergedClasses.row ?? ""]: true,
-        [componentProps.classes?.root ?? ""]: true,
         [table.tokenClasses.variantRowHover ?? ""]:
           isBodyRow && table.hoverable,
         [table.tokenClasses.variantRowStriped ?? ""]:
           isBodyRow && table.striped,
+        [table.mergedClasses.row ?? ""]: true,
+        [componentProps.classes?.root ?? ""]: true,
       }),
     });
   });

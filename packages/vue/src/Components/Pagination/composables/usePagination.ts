@@ -423,10 +423,10 @@ export function usePagination(
         class: cn({
           [itemClass.value]: true,
           [selectedClass.value]: selected,
-          [get(mergedClasses.value, "item") ?? ""]: true,
           "ml-0": isFirstOutlinedControl("page", pageNumber),
           [get(roundedItem.value, "itemStart") ?? ""]: isStart,
           [get(roundedItem.value, "itemEnd") ?? ""]: isEnd,
+          [get(mergedClasses.value, "item") ?? ""]: true,
         }),
       },
     );
@@ -443,8 +443,8 @@ export function usePagination(
           [get(sizeItem.value, "ellipsis") ?? ""]: true,
           [get(variantItem.value, "ellipsis") ?? ""]: true,
           [get(roundedItem.value, "item") ?? ""]: isSpaced.value,
-          [get(mergedClasses.value, "ellipsis") ?? ""]: true,
           "ml-0": isFirstOutlinedControl("ellipsis", index),
+          [get(mergedClasses.value, "ellipsis") ?? ""]: true,
         }),
       },
     );
@@ -465,10 +465,10 @@ export function usePagination(
         "aria-label": prevLabel.value,
         class: cn({
           [itemIconClass.value]: true,
-          [get(mergedClasses.value, "prev") ?? ""]: true,
-          [get(mergedClasses.value, "item") ?? ""]: true,
           "ml-0": isOutlined.value,
           [get(roundedItem.value, "itemStart") ?? ""]: isOutlined.value,
+          [get(mergedClasses.value, "item") ?? ""]: true,
+          [get(mergedClasses.value, "prev") ?? ""]: true,
         }),
       },
     );
@@ -485,9 +485,9 @@ export function usePagination(
         "aria-label": nextLabel.value,
         class: cn({
           [itemIconClass.value]: true,
-          [get(mergedClasses.value, "next") ?? ""]: true,
-          [get(mergedClasses.value, "item") ?? ""]: true,
           [get(roundedItem.value, "itemEnd") ?? ""]: isOutlined.value,
+          [get(mergedClasses.value, "item") ?? ""]: true,
+          [get(mergedClasses.value, "next") ?? ""]: true,
         }),
       },
     );

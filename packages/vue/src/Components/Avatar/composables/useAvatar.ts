@@ -139,12 +139,12 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
       split.value.inheritedAttrs,
       cn({
         "inline-flex shrink-0 items-center justify-center overflow-hidden": true,
-        [mergedClasses.value.root ?? ""]: true,
         [roundedClass.value ?? ""]: true,
         [sizeClass.value ?? ""]:
           showFallbackSurface.value || hasCustomContent.value || hasImage.value,
         [get(colorClass.value, "background") ?? ""]: showFallbackSurface.value,
         [get(colorClass.value, "text") ?? ""]: showFallbackSurface.value,
+        [mergedClasses.value.root ?? ""]: true,
       }),
     );
   });

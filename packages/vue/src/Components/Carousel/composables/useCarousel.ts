@@ -522,8 +522,8 @@ export function useCarousel(
         },
         class: cn({
           [get(sizeItem.value, "viewport") ?? ""]: true,
-          [get(mergedClasses.value, "viewport") ?? ""]: true,
           [get(sizeItem.value, "viewportVertical") ?? ""]: vertical.value,
+          [get(mergedClasses.value, "viewport") ?? ""]: true,
         }),
         onPointerdown: (event: PointerEvent) => {
           if (!(event.pointerType === "mouse" && event.button !== 0)) {
@@ -570,8 +570,8 @@ export function useCarousel(
         "data-part": "track",
         class: cn({
           [get(sizeItem.value, "track") ?? ""]: true,
-          [get(mergedClasses.value, "track") ?? ""]: true,
           [get(sizeItem.value, "trackVertical") ?? ""]: vertical.value,
+          [get(mergedClasses.value, "track") ?? ""]: true,
         }),
         style: getCarouselTrackStyle(activeIndex.value, {
           rtl: rtl.value,
@@ -592,8 +592,8 @@ export function useCarousel(
         "data-part": "controls",
         class: cn({
           [get(sizeItem.value, "controls") ?? ""]: true,
-          [get(mergedClasses.value, "controls") ?? ""]: true,
           [get(sizeItem.value, "controlsVertical") ?? ""]: vertical.value,
+          [get(mergedClasses.value, "controls") ?? ""]: true,
         }),
       },
     );

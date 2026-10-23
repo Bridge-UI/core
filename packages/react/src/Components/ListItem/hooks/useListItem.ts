@@ -292,8 +292,8 @@ export function useListItem<T extends ElementType = "a">(
           [listboxContext?.mergedClasses.optionHighlighted ?? ""]:
             isListboxOption && listboxHighlighted && !listboxSelected,
           "opacity-50 pointer-events-none": merged.disabled,
-          [get(mergedClasses, "interactive") ?? ""]: true,
           [listboxContext?.sizeClasses?.option ?? ""]: isListboxOption,
+          [get(mergedClasses, "interactive") ?? ""]: true,
         }),
       },
     );
@@ -347,10 +347,9 @@ export function useListItem<T extends ElementType = "a">(
       customProps?.primary,
       {},
       cn({
-        "block truncate text-sm font-medium": true,
+        "block truncate text-sm leading-normal font-medium": true,
         [listboxContext?.sizeClasses?.primary ?? ""]: isListboxOption,
         [get(mergedClasses, "primary") ?? ""]: true,
-        "leading-normal": true,
       }),
     );
   });
