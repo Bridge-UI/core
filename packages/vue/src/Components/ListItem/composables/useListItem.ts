@@ -360,9 +360,9 @@ export function useListItem<T extends LinkAsTag = "a">(
             listboxHighlighted.value &&
             !listboxSelected.value,
           "opacity-50 pointer-events-none": merged.value.disabled,
-          [get(mergedClasses.value, "interactive") ?? ""]: true,
           [listboxContext.value?.sizeClasses?.option ?? ""]:
             isListboxOption.value,
+          [get(mergedClasses.value, "interactive") ?? ""]: true,
         }),
       },
     );
@@ -416,11 +416,10 @@ export function useListItem<T extends LinkAsTag = "a">(
       customProps.value?.primary,
       {},
       cn({
-        "block truncate text-sm font-medium": true,
+        "block truncate text-sm leading-normal font-medium": true,
         [listboxContext.value?.sizeClasses?.primary ?? ""]:
           isListboxOption.value,
         [get(mergedClasses.value, "primary") ?? ""]: true,
-        "leading-normal": true,
       }),
     );
   });

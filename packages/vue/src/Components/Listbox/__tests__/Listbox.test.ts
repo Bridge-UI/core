@@ -305,6 +305,32 @@ test("it should apply listbox size padding once on composed ListItem options", a
   expect(row?.className).not.toContain("min-h-8");
 });
 
+test("it should let interactive classes override the listbox option size", async () => {
+  mountListbox({
+    props: {
+      options: [],
+      modelValue: true,
+    },
+    slots: {
+      default: () =>
+        h(ListItem, {
+          value: "active",
+          primary: "Active",
+          classes: { interactive: "min-h-12" },
+        }),
+    },
+  });
+
+  await flushPromises();
+
+  const option = Array.from(
+    document.body.querySelectorAll('[role="option"]'),
+  ).find((el) => el.textContent?.includes("Active"));
+
+  expect(option?.className).toContain("min-h-12");
+  expect(option?.className).not.toContain("min-h-8");
+});
+
 test("it should show footer actions when showFooter is set", async () => {
   mountListbox({
     props: {

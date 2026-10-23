@@ -255,3 +255,13 @@ test("it should keep primary line-height from clipping truncated glyphs", () => 
   expect(primaryBind.value.class).toContain("leading-normal");
   expect(primaryBind.value.class).not.toContain("leading-none");
 });
+
+test("it should let the primary classes override the line height", () => {
+  const { primaryBind } = mountUseListItem({
+    primary: "Action",
+    classes: { primary: "leading-5" },
+  });
+
+  expect(primaryBind.value?.class).toContain("leading-5");
+  expect(primaryBind.value?.class).not.toContain("leading-normal");
+});
