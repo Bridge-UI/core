@@ -46,6 +46,7 @@ import {
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
+  useDefaultTextSizeClass,
 } from "@/Utils";
 
 const timePanelBridgeKeys = [
@@ -455,6 +456,8 @@ export function useTimePanel(
     );
   });
 
+  const textSizeClass = useDefaultTextSizeClass();
+
   const getItemBind = (
     item: TimePanelItem,
     onSelect: (value: TimePanelItem["value"]) => void,
@@ -472,8 +475,9 @@ export function useTimePanel(
         onClick: () => onSelect(item.value),
       },
       cn({
-        "w-full cursor-pointer px-3 py-2 text-sm transition-colors duration-150 ease-in-out outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed": true,
+        "w-full cursor-pointer px-3 py-2 transition-colors duration-150 ease-in-out outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed": true,
         [roundedClass.value ?? ""]: true,
+        [textSizeClass.value]: true,
         [color?.base ?? ""]: item.state === "base" || item.state === "hover",
         [color?.hover ?? ""]: item.state === "base" || item.state === "hover",
         [color?.selected ?? ""]: item.state === "selected",
