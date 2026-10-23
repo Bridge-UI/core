@@ -18,6 +18,8 @@ import {
 
 // ** Local Imports
 import type { PaginationCursor } from "@/Domain/pagination";
+import { sizeProps as labelSizeProps } from "@/Tokens/Label";
+import { sizeProps as tableSizeProps } from "@/Tokens/Table";
 
 /**
  * Internal column id for the row-expand control column.
@@ -324,6 +326,25 @@ export type DataTableFooterLayout = {
  */
 export function getDataTableControlSize(size: string | undefined): "md" | "sm" {
   return size === "lg" ? "md" : "sm";
+}
+
+/**
+ * Font-size classes for the chrome text (rows-per-page label, page status,
+ * selection summary): the Label scale at {@link getDataTableControlSize}, so
+ * it matches the footer Select and Pagination.
+ */
+export function getDataTableChromeTextClass(size: string | undefined): string {
+  return labelSizeProps[getDataTableControlSize(size)];
+}
+
+/**
+ * Font-size classes for the footer region below the table: the table text
+ * size for the DataTable `size`.
+ */
+export function getDataTableFooterTextClass(size: string | undefined): string {
+  return (
+    get(tableSizeProps, [size ?? "md", "table"]) ?? tableSizeProps.md.table
+  );
 }
 
 /**
