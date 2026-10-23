@@ -99,3 +99,22 @@ test("it should call onCursorChange with the cursor of the target page", () => {
   expect(onNext).toHaveBeenCalledOnce();
   expect(onCursorChange).toHaveBeenCalledWith("c");
 });
+
+test("it should let classes override the outlined join on prev and next", () => {
+  const { result } = renderHook(() =>
+    usePagination(
+      {
+        count: 5,
+        variant: "outlined",
+        classes: { next: "rounded-r-full", prev: "ml-2 rounded-l-full" },
+      },
+      libDefaults,
+    ),
+  );
+
+  expect(result.current.prevBind.className).toContain("ml-2");
+  expect(result.current.prevBind.className).toContain("rounded-l-full");
+  expect(result.current.nextBind.className).toContain("rounded-r-full");
+  expect(result.current.prevBind.className).not.toContain("rounded-l-md");
+  expect(result.current.nextBind.className).not.toContain("rounded-r-md");
+});

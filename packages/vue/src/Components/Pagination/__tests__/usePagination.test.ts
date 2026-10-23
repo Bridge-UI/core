@@ -102,3 +102,17 @@ test("it should emit update:cursor before next", () => {
 
   expect(emit.mock.calls).toEqual([["update:cursor", "c"], ["next"]]);
 });
+
+test("it should let classes override the outlined join on prev and next", () => {
+  const { result } = mountUsePagination({
+    count: 5,
+    variant: "outlined",
+    classes: { next: "rounded-r-full", prev: "ml-2 rounded-l-full" },
+  });
+
+  expect(result.prevBind.value.class).toContain("ml-2");
+  expect(result.prevBind.value.class).toContain("rounded-l-full");
+  expect(result.nextBind.value.class).toContain("rounded-r-full");
+  expect(result.prevBind.value.class).not.toContain("rounded-l-md");
+  expect(result.nextBind.value.class).not.toContain("rounded-r-md");
+});
