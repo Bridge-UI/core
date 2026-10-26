@@ -4,6 +4,7 @@ import { get } from "es-toolkit/compat";
 // ** Local Imports
 import type { BridgeUIComponentsConfig } from "@/Config/types";
 import { sizeProps, type TextSize } from "@/Tokens/Text";
+import { mergeBridgeUILayeredClasses } from "@/Utils/merge";
 
 /**
  * Library default `size` for `Text` (and for text inside components without a
@@ -20,10 +21,10 @@ export const DEFAULT_TEXT_SIZE = "sm" satisfies keyof TextSize;
 export function resolveDefaultTextSizeClass(
   components: null | undefined | BridgeUIComponentsConfig,
 ): string {
-  const classes: Record<string, string> = {
-    ...sizeProps,
-    ...get(components, ["Text", "tokens", "size"]),
-  };
+  const classes = mergeBridgeUILayeredClasses<TextSize>(
+    sizeProps,
+    get(components, ["Text", "tokens", "size"]),
+  );
 
   const size = get(components, ["Text", "defaultProps", "size"]) as
     string | undefined;
