@@ -82,9 +82,7 @@ Use `variant="muted"` for subtitles, captions, and metadata.
 
 Change the muted tone for the whole app in one place with `tokens`, or set defaults with `defaultProps`.
 
-`defaultProps.size` also sizes the text of components without a `size` prop: the title and body of Alert and Card, the title and description of Snackbar, and the days, header and times of the Calendar and TimePanel pickers. Components with a `size` prop (DataTable, FileUpload, form fields, …) size their text from their own `size`.
-
-The title and body of Alert and Card, the title and description of Snackbar, and the ColorPicker value render `Text`, so `tokens` and `classes.root` reach them too. They keep the color and weight of their component, so `defaultProps.size` is the only default that reaches them.
+`defaultProps.size` also sizes the text of components without a `size` prop: the title and body of Alert and Card, the title and description of Snackbar, the ColorPicker value, and the days, header and times of the Calendar and TimePanel pickers. The Alert, Card, Snackbar and ColorPicker parts render `Text`, so `tokens` and `classes.root` reach them too, but they keep the color and weight of their component. Components with a `size` prop (DataTable, FileUpload, form fields, …) size their text from their own `size`.
 
 ```vue
 <BridgeUIProvider
