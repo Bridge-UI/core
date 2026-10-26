@@ -48,9 +48,11 @@ import {
   DATATABLE_EXPAND_COLUMN_ID,
   DATATABLE_SELECTION_COLUMN_ID,
   getDataTableBodyInsets,
+  getDataTableChromeTextClass,
   getDataTableColumnAccessor,
   getDataTableColumnLayoutStyle,
   getDataTableFooterLayout,
+  getDataTableFooterTextClass,
   getDataTablePaginationSlotProps,
   getDataTablePerPageSelectOptions,
   getDataTableResolvedPageCount,
@@ -1043,6 +1045,10 @@ export function useDataTable<T extends Record<string, unknown>>(
     );
   }, [merged.full]);
 
+  const chromeTextClass = useMemo(() => {
+    return getDataTableChromeTextClass(merged.size, components);
+  }, [components, merged.size]);
+
   const footerBind = useMemo(() => {
     return mergePartBind(
       customProps?.footer,
@@ -1050,12 +1056,19 @@ export function useDataTable<T extends Record<string, unknown>>(
       {
         className: cn({
           "w-0 min-w-full": merged.full === false,
-          "border-t border-dark-200 bg-dark-50 px-3 py-2.5 text-sm text-dark-600 dark:border-dark-700 dark:bg-dark-700/50 dark:text-dark-300": true,
+          "border-t border-dark-200 bg-dark-50 px-3 py-2.5 text-dark-600 dark:border-dark-700 dark:bg-dark-700/50 dark:text-dark-300": true,
+          [getDataTableFooterTextClass(merged.size, components)]: true,
           [get(mergedClasses, "footer") ?? ""]: true,
         }),
       },
     );
-  }, [customProps?.footer, merged.full, mergedClasses]);
+  }, [
+    components,
+    merged.full,
+    merged.size,
+    mergedClasses,
+    customProps?.footer,
+  ]);
 
   const footerLayout = useMemo(() => {
     return getDataTableFooterLayout({
@@ -1064,6 +1077,28 @@ export function useDataTable<T extends Record<string, unknown>>(
       showSelected,
     });
   }, [showPager, showPerPage, showSelected]);
+
+  const perPageLabelBind = useMemo(() => {
+    return mergePartBind(
+      {},
+      {},
+      cn({
+        "whitespace-nowrap": true,
+        [chromeTextClass]: true,
+      }),
+    );
+  }, [chromeTextClass]);
+
+  const pageStatusBind = useMemo(() => {
+    return mergePartBind(
+      {},
+      {},
+      cn({
+        "font-medium whitespace-nowrap": true,
+        [chromeTextClass]: true,
+      }),
+    );
+  }, [chromeTextClass]);
 
   const selectedBind = useMemo(() => {
     return mergePartBind(
@@ -1074,12 +1109,18 @@ export function useDataTable<T extends Record<string, unknown>>(
           grow: footerLayout.breakpoint === null,
           "@lg/footer:grow": footerLayout.breakpoint === "compact",
           "@2xl/footer:grow": footerLayout.breakpoint === "wide",
-          "whitespace-nowrap text-sm text-dark-500 dark:text-dark-400": true,
+          "whitespace-nowrap text-dark-500 dark:text-dark-400": true,
+          [chromeTextClass]: true,
           [get(mergedClasses, "selected") ?? ""]: true,
         }),
       },
     );
-  }, [mergedClasses, customProps?.selected, footerLayout.breakpoint]);
+  }, [
+    mergedClasses,
+    chromeTextClass,
+    customProps?.selected,
+    footerLayout.breakpoint,
+  ]);
 
   const footerBarBind = useMemo(() => {
     return mergePartBind(
@@ -1346,12 +1387,14 @@ export function useDataTable<T extends Record<string, unknown>>(
     onChangeSearch,
     loadingBarBind,
     paginationBind,
+    pageStatusBind,
     selectAllState,
     onToggleExpand,
     visibilityItems,
     onChangePerPage,
     resolvedPerPage,
     selectionEnabled,
+    perPageLabelBind,
     perPageSlotProps,
     selectedSlotProps,
     resolvedPageCount,

@@ -24,7 +24,7 @@ const {
   rightIconBind,
   rootAriaDisabled,
 } = useLink(props, {
-  size: "md",
+  size: "sm",
   color: "primary",
   underline: "hover",
 });

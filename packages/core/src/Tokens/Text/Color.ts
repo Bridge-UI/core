@@ -20,6 +20,11 @@ export interface TextColor {
   "info": string;
 
   /**
+   * No color class: the text keeps the color of its parent.
+   */
+  "inherit": string;
+
+  /**
    * `primary` semantic color palette.
    */
   "primary": string;
@@ -41,6 +46,7 @@ export interface TextColor {
 }
 
 export const defaultProps: TextColor = {
+  "inherit": "",
   "black": "text-black dark:text-white",
   "dark": "text-dark-950 dark:text-dark-50",
   "info": "text-info-600 dark:text-info-400",
@@ -52,6 +58,7 @@ export const defaultProps: TextColor = {
 };
 
 export const mutedProps: TextColor = {
+  "inherit": "",
   "dark": "text-dark-500 dark:text-dark-400",
   "black": "text-black/60 dark:text-white/60",
   "info": "text-info-600/75 dark:text-info-400/75",

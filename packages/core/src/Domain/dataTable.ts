@@ -17,7 +17,11 @@ import {
 } from "es-toolkit/compat";
 
 // ** Local Imports
+import type { BridgeUIComponentsConfig } from "@/Config/types";
 import type { PaginationCursor } from "@/Domain/pagination";
+import { sizeProps as labelSizeProps } from "@/Tokens/Label";
+import { sizeProps as tableSizeProps } from "@/Tokens/Table";
+import { mergeBridgeUILayeredClasses } from "@/Utils/merge";
 
 /**
  * Internal column id for the row-expand control column.
@@ -324,6 +328,42 @@ export type DataTableFooterLayout = {
  */
 export function getDataTableControlSize(size: string | undefined): "md" | "sm" {
   return size === "lg" ? "md" : "sm";
+}
+
+/**
+ * Font-size classes for the chrome text (rows-per-page label, page status,
+ * selection summary): the Label scale at {@link getDataTableControlSize}, so
+ * it matches the footer Select and Pagination. Follows registry
+ * `Label.tokens.size`.
+ */
+export function getDataTableChromeTextClass(
+  size: string | undefined,
+  components?: null | BridgeUIComponentsConfig,
+): string {
+  const classes = mergeBridgeUILayeredClasses(
+    labelSizeProps,
+    get(components, ["Label", "tokens", "size"]),
+  );
+
+  return get(classes, getDataTableControlSize(size)) ?? "";
+}
+
+/**
+ * Font-size classes for the footer region below the table: the table text
+ * size for the DataTable `size`. Follows registry `Table.tokens.size`.
+ */
+export function getDataTableFooterTextClass(
+  size: string | undefined,
+  components?: null | BridgeUIComponentsConfig,
+): string {
+  const classes = mergeBridgeUILayeredClasses(
+    tableSizeProps,
+    get(components, ["Table", "tokens", "size"]),
+  );
+
+  return (
+    get(classes, [size ?? "md", "table"]) ?? get(classes, ["md", "table"]) ?? ""
+  );
 }
 
 /**

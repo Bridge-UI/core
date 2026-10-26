@@ -13,6 +13,7 @@ import type {
   ColorPickerSlots,
 } from "@/Components/ColorPicker/colorPicker.types";
 import { useColorPicker } from "@/Components/ColorPicker/composables/useColorPicker";
+import { Text } from "@/Components/Text";
 import { useOptionalModel } from "@/Utils";
 
 defineSlots<ColorPickerSlots>();
@@ -106,9 +107,14 @@ const {
         <span v-bind="previewSwatchBind">
           <span v-bind="previewSwatchFillBind" />
         </span>
-        <span class="min-w-0 truncate text-sm text-dark-700 dark:text-dark-100">
+        <Text
+          truncate
+          as="span"
+          color="inherit"
+          class="min-w-0 font-normal text-dark-700 dark:text-dark-100"
+        >
           {{ formattedValue }}
-        </span>
+        </Text>
       </div>
 
       <div v-bind="swatchesBind" v-if="presetSwatches.length > 0">

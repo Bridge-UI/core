@@ -38,7 +38,7 @@ Use `variant="muted"` for subtitles, captions, and metadata.
 
 ### Color
 
-`color` works with both variants. `global.defaultColor` does not apply to `Text`; the default stays `dark`.
+`color` works with both variants. `global.defaultColor` does not apply to `Text`; the default stays `dark`. Use `color="inherit"` to keep the color of the parent.
 
 ```tsx
 <Text numeric color="success" weight="semibold">
@@ -82,11 +82,13 @@ Use `variant="muted"` for subtitles, captions, and metadata.
 
 Change the muted tone for the whole app in one place with `tokens`, or set defaults with `defaultProps`.
 
+`defaultProps.size` also sizes the text of components without a `size` prop: the title and body of Alert and Card, the title and description of Snackbar, the ColorPicker value, and the days, header and times of the Calendar and TimePanel pickers. The Alert, Card, Snackbar and ColorPicker parts render `Text`, so `tokens` and `classes.root` reach them too, but they keep the color and weight of their component. Components with a `size` prop (DataTable, FileUpload, form fields, …) size their text from their own `size`.
+
 ```tsx
 <BridgeUIProvider
   components={{
     Text: {
-      defaultProps: { size: "sm" },
+      defaultProps: { size: "xs" },
       tokens: {
         variant: {
           muted: { dark: "text-dark-600 dark:text-dark-300" },
@@ -106,9 +108,9 @@ Change the muted tone for the whole app in one place with `tokens`, or set defau
 | `as`        | `"p" \| "dd" \| "dt" \| "em" \| "li" \| "div" \| "span" \| "label" \| "small" \| "strong" \| "figcaption"` | `"p"`       | The element rendered as the root.                                                                                  |
 | `children`  | `ReactNode`                                                                                                | —           | The children to render.                                                                                            |
 | `classes`   | `TextClasses`                                                                                              | —           | The classes to apply to the text.                                                                                  |
-| `color`     | `TextColor`                                                                                                | `"dark"`    | The color of the text. Ignores `global.defaultColor`.                                                              |
+| `color`     | `TextColor`                                                                                                | `"dark"`    | The color of the text (`inherit` keeps the parent color). Ignores `global.defaultColor`.                           |
 | `numeric`   | `boolean`                                                                                                  | `false`     | Whether digits use tabular figures and tight tracking (money, counts).                                             |
-| `size`      | `TextSize`                                                                                                 | `"md"`      | The size of the text (`2xs` to `4xl`), 1:1 with Tailwind `text-*`. Next to form controls, `sm` matches Label `md`. |
+| `size`      | `TextSize`                                                                                                 | `"sm"`      | The size of the text (`2xs` to `4xl`), 1:1 with Tailwind `text-*`. Next to form controls, `sm` matches Label `md`. |
 | `truncate`  | `boolean`                                                                                                  | `false`     | Whether the text is cut to one line with an ellipsis.                                                              |
 | `uppercase` | `boolean`                                                                                                  | `false`     | Whether the text is uppercase with wide tracking (small labels).                                                   |
 | `variant`   | `TextVariant`                                                                                              | `"default"` | The tone of the text: `default` for main text, `muted` for secondary text.                                         |

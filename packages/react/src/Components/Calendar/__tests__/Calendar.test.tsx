@@ -8,6 +8,7 @@ afterEach(() => {
 
 // ** Local Imports
 import { Calendar } from "@/Components/Calendar";
+import { BridgeUIProvider } from "@/Provider";
 
 test("it should render year and month selectors", () => {
   render(<Calendar viewDate={new Date(2021, 4, 1)} />);
@@ -295,4 +296,17 @@ test("it should not mark the focused year selected when the value is empty", () 
   expect(
     screen.getByRole("button", { name: "2021" }).getAttribute("aria-pressed"),
   ).toBe("false");
+});
+
+test("it should follow the Text size from the provider", () => {
+  render(
+    <BridgeUIProvider components={{ Text: { defaultProps: { size: "xs" } } }}>
+      <Calendar viewDate={new Date(2021, 4, 1)} />
+    </BridgeUIProvider>,
+  );
+
+  const button = screen.getByRole("button", { name: "Select month" });
+
+  expect(button.classList.contains("text-xs")).toBe(true);
+  expect(button.classList.contains("text-sm")).toBe(false);
 });

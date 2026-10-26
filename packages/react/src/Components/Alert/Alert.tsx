@@ -5,6 +5,7 @@ import { Fragment } from "react";
 import type { AlertProps } from "@/Components/Alert";
 import { useAlert } from "@/Components/Alert";
 import { Icon } from "@/Components/Icon";
+import { Text } from "@/Components/Text";
 import { hasNamedSlot, isPropPresent } from "@/Utils";
 
 function Alert(props: AlertProps) {
@@ -44,20 +45,24 @@ function Alert(props: AlertProps) {
               </Fragment>
             )}
 
-            <div {...titleBind}>
+            <Text as="div" color="inherit" {...titleBind}>
               {hasNamedSlot(slots, "title")
                 ? slots?.title
                 : isPropPresent(merged.title)
                   ? merged.title
                   : children}
-            </div>
+            </Text>
           </div>
 
           {slots?.action}
         </div>
       )}
 
-      {hasDefaultBody && <div {...bodyBind}>{children}</div>}
+      {hasDefaultBody && (
+        <Text as="div" color="inherit" {...bodyBind}>
+          {children}
+        </Text>
+      )}
 
       {slots?.footer}
     </div>

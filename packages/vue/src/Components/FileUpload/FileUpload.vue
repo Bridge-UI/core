@@ -70,7 +70,9 @@ const {
   dropzoneBind,
   openFileDialog,
   orientationItems,
+  dropzoneTitleBind,
   itemDescriptionBind,
+  dropzoneDescriptionBind,
 } = useFileUpload(
   props as FileUploadOwnProps<boolean>,
   {
@@ -138,16 +140,13 @@ function onTriggerKeyDown(event: KeyboardEvent) {
           <template v-else>
             <Icon icon="inbox" class="mb-1 text-dark-400" />
 
-            <p
-              v-if="isPropPresent(merged.title)"
-              class="m-0 font-medium text-dark-900 dark:text-dark-100"
-            >
+            <p v-bind="dropzoneTitleBind" v-if="isPropPresent(merged.title)">
               {{ merged.title }}
             </p>
 
             <p
+              v-bind="dropzoneDescriptionBind"
               v-if="isPropPresent(merged.description)"
-              class="m-0 text-sm text-dark-500 dark:text-dark-400"
             >
               {{ merged.description }}
             </p>

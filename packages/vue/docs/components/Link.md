@@ -79,7 +79,7 @@ import { Link } from "@bridge-ui/vue/Components/Link";
 | `linkAs`      | `string \| Component` | —         | Component rendered in place of the navigating `<a>`. Receives `href`, `linkProps`, and the anchor attributes. Ignored while disabled. |
 | `linkProps`   | props of `linkAs`     | —         | Props forwarded to `linkAs`. Checked against that component. Ignored while `linkAs` is not rendered.                                  |
 | `rightIcon`   | `LucideIcon`          | —         | The icon to display after the link text.                                                                                              |
-| `size`        | `LinkSize`            | "md"      | The size of the link.                                                                                                                 |
+| `size`        | `LinkSize`            | "sm"      | The size of the link.                                                                                                                 |
 | `underline`   | `LinkUnderline`       | "hover"   | The underline behavior of the link.                                                                                                   |
 
 ## Related components

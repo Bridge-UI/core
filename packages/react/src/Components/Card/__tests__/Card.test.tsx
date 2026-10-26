@@ -4,6 +4,7 @@ import { expect, test } from "vitest";
 
 // ** Local Imports
 import { Card } from "@/Components/Card";
+import { BridgeUIProvider } from "@/Provider";
 
 test("it should render the root element", () => {
   const { container } = render(<Card />);
@@ -152,4 +153,88 @@ test("it should omit header border when borderless is true", () => {
   const { container } = render(<Card borderless title="Borderless" />);
 
   expect(container.querySelector(".border-b")).toBeNull();
+});
+
+test("it should follow the Text size from the provider", () => {
+  const { container } = render(
+    <BridgeUIProvider components={{ Text: { defaultProps: { size: "xs" } } }}>
+      <Card
+        title="Title"
+        customProps={{
+          body: { id: "card-body" },
+          title: { id: "card-title" },
+        }}
+      >
+        Body text
+      </Card>
+    </BridgeUIProvider>,
+  );
+
+  expect(
+    container.querySelector("#card-title")?.classList.contains("text-xs"),
+  ).toBe(true);
+  expect(
+    container.querySelector("#card-body")?.classList.contains("text-xs"),
+  ).toBe(true);
+});
+
+test("it should let classes override the title and body size", () => {
+  const { container } = render(
+    <Card
+      title="Title"
+      classes={{ title: "text-lg", body: "text-base" }}
+      customProps={{
+        body: { id: "card-body" },
+        title: { id: "card-title" },
+      }}
+    >
+      Body text
+    </Card>,
+  );
+
+  const title = container.querySelector("#card-title");
+  const body = container.querySelector("#card-body");
+
+  expect(title?.classList.contains("text-lg")).toBe(true);
+  expect(title?.classList.contains("text-sm")).toBe(false);
+  expect(body?.classList.contains("text-base")).toBe(true);
+  expect(body?.classList.contains("text-sm")).toBe(false);
+});
+
+test("it should size the title and body with the Text default size", () => {
+  const { container } = render(
+    <Card
+      title="Title"
+      customProps={{
+        body: { id: "card-body" },
+        title: { id: "card-title" },
+      }}
+    >
+      Body text
+    </Card>,
+  );
+
+  expect(
+    container.querySelector("#card-body")?.classList.contains("text-sm"),
+  ).toBe(true);
+  expect(
+    container.querySelector("#card-title")?.classList.contains("text-sm"),
+  ).toBe(true);
+});
+
+test("it should ignore the Text weight from the provider", () => {
+  const { container } = render(
+    <BridgeUIProvider
+      components={{ Text: { defaultProps: { weight: "bold" } } }}
+    >
+      <Card title="Title" customProps={{ body: { id: "card-body" } }}>
+        Body text
+      </Card>
+    </BridgeUIProvider>,
+  );
+
+  const body = container.querySelector("#card-body");
+
+  expect(body?.classList.contains("font-bold")).toBe(false);
+  expect(body?.classList.contains("font-normal")).toBe(true);
 });

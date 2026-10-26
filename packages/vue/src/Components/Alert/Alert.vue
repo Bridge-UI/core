@@ -3,6 +3,7 @@
 import type { AlertOwnProps, AlertSlots } from "@/Components/Alert/alert.types";
 import { useAlert } from "@/Components/Alert/composables/useAlert";
 import Icon from "@/Components/Icon/Icon.vue";
+import { Text } from "@/Components/Text";
 import { hasNamedSlot, isPropPresent } from "@/Utils";
 
 defineSlots<AlertSlots>();
@@ -40,7 +41,7 @@ const {
 
         <Icon v-bind="iconBind" :icon="resolvedIcon" v-else-if="resolvedIcon" />
 
-        <div v-bind="titleBind">
+        <Text as="div" color="inherit" v-bind="titleBind">
           <slot name="title" v-if="hasNamedSlot(slots, 'title')" />
 
           <template v-else-if="isPropPresent(merged.title)">
@@ -48,15 +49,15 @@ const {
           </template>
 
           <slot v-else />
-        </div>
+        </Text>
       </div>
 
       <slot name="action" />
     </div>
 
-    <div v-bind="bodyBind" v-if="hasDefaultBody">
+    <Text as="div" color="inherit" v-bind="bodyBind" v-if="hasDefaultBody">
       <slot />
-    </div>
+    </Text>
 
     <slot name="footer" />
   </div>

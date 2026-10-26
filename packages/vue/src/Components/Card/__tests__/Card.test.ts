@@ -1,9 +1,11 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
+import { h } from "vue";
 
 // ** Local Imports
 import { Card } from "@/Components/Card";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 test("it should render the root element", () => {
   const wrapper = mount(Card);
@@ -174,4 +176,83 @@ test("it should omit header border when borderless is true", () => {
   });
 
   expect(wrapper.find(".border-b").exists()).toBe(false);
+});
+
+test("it should follow the Text size from the provider", () => {
+  const wrapper = mount(BridgeUIProvider, {
+    props: { components: { Text: { defaultProps: { size: "xs" } } } },
+    slots: {
+      default: () => {
+        return h(
+          Card,
+          {
+            title: "Title",
+            customProps: {
+              body: { id: "card-body" },
+              title: { id: "card-title" },
+            },
+          },
+          { default: () => "Body text" },
+        );
+      },
+    },
+  });
+
+  expect(wrapper.find("#card-body").classes()).toContain("text-xs");
+  expect(wrapper.find("#card-title").classes()).toContain("text-xs");
+});
+
+test("it should let classes override the title and body size", () => {
+  const wrapper = mount(Card, {
+    slots: { default: "Body text" },
+    props: {
+      title: "Title",
+      classes: { title: "text-lg", body: "text-base" },
+      customProps: {
+        body: { id: "card-body" },
+        title: { id: "card-title" },
+      },
+    },
+  });
+
+  expect(wrapper.find("#card-title").classes()).toContain("text-lg");
+  expect(wrapper.find("#card-title").classes()).not.toContain("text-sm");
+  expect(wrapper.find("#card-body").classes()).toContain("text-base");
+  expect(wrapper.find("#card-body").classes()).not.toContain("text-sm");
+});
+
+test("it should size the title and body with the Text default size", () => {
+  const wrapper = mount(Card, {
+    slots: { default: "Body text" },
+    props: {
+      title: "Title",
+      customProps: {
+        body: { id: "card-body" },
+        title: { id: "card-title" },
+      },
+    },
+  });
+
+  expect(wrapper.find("#card-body").classes()).toContain("text-sm");
+  expect(wrapper.find("#card-title").classes()).toContain("text-sm");
+});
+
+test("it should ignore the Text weight from the provider", () => {
+  const wrapper = mount(BridgeUIProvider, {
+    props: { components: { Text: { defaultProps: { weight: "bold" } } } },
+    slots: {
+      default: () => {
+        return h(
+          Card,
+          { title: "Title", customProps: { body: { id: "card-body" } } },
+          { default: () => "Body text" },
+        );
+      },
+    },
+  });
+
+  const body = wrapper.find("#card-body");
+
+  expect(body.classes()).toContain("font-normal");
+  expect(body.classes()).not.toContain("font-bold");
 });

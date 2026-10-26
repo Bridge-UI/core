@@ -131,7 +131,7 @@ export function useCard(props: CardOwnProps, libDefaults: CardLibDefaults) {
       customProps.value?.body,
       {},
       cn({
-        grow: true,
+        "grow font-normal": true,
         [get(paddingClass.value, "body") ?? ""]: true,
         [get(variantClass.value, "text") ?? ""]: true,
         [get(mergedClasses.value, "body") ?? ""]: true,
@@ -188,7 +188,7 @@ export function useCard(props: CardOwnProps, libDefaults: CardLibDefaults) {
       customProps.value?.title,
       {},
       cn({
-        "text-base font-medium whitespace-normal": true,
+        "font-medium whitespace-normal": true,
         [get(variantClass.value, "text") ?? ""]: true,
         [get(mergedClasses.value, "title") ?? ""]: true,
       }),

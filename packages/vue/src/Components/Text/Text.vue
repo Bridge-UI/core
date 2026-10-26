@@ -11,7 +11,7 @@ const props = defineProps<TextOwnProps>();
 
 const { merged, rootBind } = useText(props, {
   as: "p",
-  size: "md",
+  size: "sm",
   color: "dark",
   weight: "normal",
   variant: "default",

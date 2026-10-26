@@ -12,6 +12,7 @@ import {
   filterDataTableFilterOptions,
   flattenDataTableFilterOptionValues,
   getDataTableAriaSort,
+  getDataTableChromeTextClass,
   getDataTableColumnAccessor,
   getDataTableColumnCssWidth,
   getDataTableColumnFilterValues,
@@ -21,6 +22,7 @@ import {
   getDataTableControlSize,
   getDataTableDefaultCellContent,
   getDataTableFooterLayout,
+  getDataTableFooterTextClass,
   getDataTableGridTemplate,
   getDataTableHiddenColumnIds,
   getDataTablePaginationSlotProps,
@@ -79,6 +81,38 @@ describe("getDataTableControlSize", () => {
 
   test("it should use md controls for lg tables", () => {
     expect(getDataTableControlSize("lg")).toBe("md");
+  });
+});
+
+describe("getDataTableChromeTextClass", () => {
+  test("it should match the chrome control size", () => {
+    expect(getDataTableChromeTextClass("sm")).toBe("text-xs");
+    expect(getDataTableChromeTextClass("md")).toBe("text-xs");
+    expect(getDataTableChromeTextClass("lg")).toBe("text-sm");
+  });
+
+  test("it should follow the Label size tokens from the registry", () => {
+    expect(
+      getDataTableChromeTextClass("md", {
+        Label: { tokens: { size: { sm: "text-[11px]" } } },
+      }),
+    ).toBe("text-[11px]");
+  });
+});
+
+describe("getDataTableFooterTextClass", () => {
+  test("it should match the table text size", () => {
+    expect(getDataTableFooterTextClass("sm")).toBe("text-xs");
+    expect(getDataTableFooterTextClass(undefined)).toBe("text-sm");
+    expect(getDataTableFooterTextClass("lg")).toBe("text-base");
+  });
+
+  test("it should follow the Table size tokens from the registry", () => {
+    expect(
+      getDataTableFooterTextClass("md", {
+        Table: { tokens: { size: { md: { table: "text-[13px]" } } } },
+      }),
+    ).toBe("text-[13px]");
   });
 });
 

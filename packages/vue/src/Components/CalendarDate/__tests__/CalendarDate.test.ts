@@ -1,9 +1,11 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
+import { h } from "vue";
 
 // ** Local Imports
 import { CalendarDate } from "@/Components/CalendarDate";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 test("it should render weekday labels by default", () => {
   const wrapper = mount(CalendarDate, {
@@ -101,4 +103,24 @@ test("it should disable dates before minDate", () => {
 
   expect(before?.attributes("disabled")).toBeDefined();
   expect(allowed?.attributes("disabled")).toBeUndefined();
+});
+
+test("it should size the days with the Text default size", () => {
+  const wrapper = mount(CalendarDate, {
+    props: { viewDate: new Date(2021, 4, 1) },
+  });
+
+  expect(wrapper.find("button").classes()).toContain("text-sm");
+});
+
+test("it should follow the Text size from the provider", () => {
+  const wrapper = mount(BridgeUIProvider, {
+    props: { components: { Text: { defaultProps: { size: "xs" } } } },
+    slots: {
+      default: () => h(CalendarDate, { viewDate: new Date(2021, 4, 1) }),
+    },
+  });
+
+  expect(wrapper.find("button").classes()).toContain("text-xs");
+  expect(wrapper.find("button").classes()).not.toContain("text-sm");
 });

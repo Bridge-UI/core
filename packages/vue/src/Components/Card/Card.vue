@@ -2,6 +2,7 @@
 // ** Local Imports
 import type { CardOwnProps, CardSlots } from "@/Components/Card/card.types";
 import { useCard } from "@/Components/Card/composables/useCard";
+import { Text } from "@/Components/Text";
 import { hasNamedSlot, hasSlotOrProp, isPropPresent } from "@/Utils";
 
 defineSlots<CardSlots>();
@@ -35,20 +36,20 @@ const {
       v-bind="headerBind"
       v-else-if="hasSlotOrProp(slots, 'title', merged.title)"
     >
-      <div v-bind="titleBind">
+      <Text as="div" color="inherit" v-bind="titleBind">
         <slot name="title" v-if="hasNamedSlot(slots, 'title')" />
 
         <template v-else-if="isPropPresent(merged.title)">
           {{ merged.title }}
         </template>
-      </div>
+      </Text>
 
       <slot name="action" />
     </div>
 
-    <div v-bind="bodyBind" v-if="hasDefaultBody">
+    <Text as="div" color="inherit" v-bind="bodyBind" v-if="hasDefaultBody">
       <slot />
-    </div>
+    </Text>
 
     <div v-bind="footerBind" v-if="hasNamedSlot(slots, 'footer')">
       <slot name="footer" />

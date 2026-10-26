@@ -48,9 +48,11 @@ import {
   DATATABLE_EXPAND_COLUMN_ID,
   DATATABLE_SELECTION_COLUMN_ID,
   getDataTableBodyInsets,
+  getDataTableChromeTextClass,
   getDataTableColumnAccessor,
   getDataTableColumnLayoutStyle,
   getDataTableFooterLayout,
+  getDataTableFooterTextClass,
   getDataTablePaginationSlotProps,
   getDataTablePerPageSelectOptions,
   getDataTableResolvedPageCount,
@@ -944,6 +946,10 @@ export function useDataTable<T extends Record<string, unknown>>(
     );
   });
 
+  const chromeTextClass = computed(() => {
+    return getDataTableChromeTextClass(merged.value.size, components.value);
+  });
+
   const footerBind = computed(() => {
     return mergePartBind(
       customProps.value?.footer,
@@ -951,7 +957,9 @@ export function useDataTable<T extends Record<string, unknown>>(
       {
         class: cn({
           "w-0 min-w-full": merged.value.full === false,
-          "border-t border-dark-200 bg-dark-50 px-3 py-2.5 text-sm text-dark-600 dark:border-dark-700 dark:bg-dark-700/50 dark:text-dark-300": true,
+          "border-t border-dark-200 bg-dark-50 px-3 py-2.5 text-dark-600 dark:border-dark-700 dark:bg-dark-700/50 dark:text-dark-300": true,
+          [getDataTableFooterTextClass(merged.value.size, components.value)]:
+            true,
           [get(mergedClasses.value, "footer") ?? ""]: true,
         }),
       },
@@ -966,6 +974,28 @@ export function useDataTable<T extends Record<string, unknown>>(
     });
   });
 
+  const perPageLabelBind = computed(() => {
+    return mergePartBind(
+      {},
+      {},
+      cn({
+        "whitespace-nowrap": true,
+        [chromeTextClass.value]: true,
+      }),
+    );
+  });
+
+  const pageStatusBind = computed(() => {
+    return mergePartBind(
+      {},
+      {},
+      cn({
+        "font-medium whitespace-nowrap": true,
+        [chromeTextClass.value]: true,
+      }),
+    );
+  });
+
   const selectedBind = computed(() => {
     return mergePartBind(
       customProps.value?.selected,
@@ -975,7 +1005,8 @@ export function useDataTable<T extends Record<string, unknown>>(
           grow: footerLayout.value.breakpoint === null,
           "@lg/footer:grow": footerLayout.value.breakpoint === "compact",
           "@2xl/footer:grow": footerLayout.value.breakpoint === "wide",
-          "whitespace-nowrap text-sm text-dark-500 dark:text-dark-400": true,
+          "whitespace-nowrap text-dark-500 dark:text-dark-400": true,
+          [chromeTextClass.value]: true,
           [get(mergedClasses.value, "selected") ?? ""]: true,
         }),
       },
@@ -1215,12 +1246,14 @@ export function useDataTable<T extends Record<string, unknown>>(
     onChangeSearch,
     loadingBarBind,
     paginationBind,
+    pageStatusBind,
     selectAllState,
     onToggleExpand,
     visibilityItems,
     onChangePerPage,
     resolvedPerPage,
     selectionEnabled,
+    perPageLabelBind,
     perPageSlotProps,
     selectedSlotProps,
     resolvedPageCount,

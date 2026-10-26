@@ -14,6 +14,7 @@ import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";
 import type { IconProps } from "@/Components/Icon";
+import type { TextProps } from "@/Components/Text";
 
 export interface SnackbarColorOverrides {}
 export interface SnackbarPaddingOverrides {}
@@ -75,9 +76,9 @@ export interface SnackbarCustomProps {
   content?: HTMLAttributes;
 
   /**
-   * Props forwarded to the description element.
+   * Props forwarded to the `Text` that renders the description element.
    */
-  description?: HTMLAttributes;
+  description?: Partial<Omit<TextProps, "as">>;
 
   /**
    * Props forwarded to the default `Icon` (`icon` is set by the snackbar).
@@ -100,9 +101,9 @@ export interface SnackbarCustomProps {
   root?: HTMLAttributes;
 
   /**
-   * Props forwarded to the title element.
+   * Props forwarded to the `Text` that renders the title element.
    */
-  title?: HTMLAttributes;
+  title?: Partial<Omit<TextProps, "as">>;
 }
 
 export interface SnackbarEmits {

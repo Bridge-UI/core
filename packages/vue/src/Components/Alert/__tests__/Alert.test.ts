@@ -1,9 +1,11 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
+import { h } from "vue";
 
 // ** Local Imports
 import { Alert } from "@/Components/Alert";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 test("it should render the root element", () => {
   const wrapper = mount(Alert);
@@ -165,4 +167,84 @@ test("it should apply user class after classes.root (tailwind-merge)", () => {
 
   expect(root.classes()).toContain("p-4");
   expect(root.classes()).not.toContain("p-2");
+});
+
+test("it should size the title and body with the Text default size", () => {
+  const wrapper = mount(Alert, {
+    slots: { default: "Body text" },
+    props: {
+      title: "Title",
+      customProps: {
+        body: { id: "alert-body" },
+        title: { id: "alert-title" },
+      },
+    },
+  });
+
+  expect(wrapper.find("#alert-body").classes()).toContain("text-sm");
+  expect(wrapper.find("#alert-title").classes()).toContain("text-sm");
+  expect(wrapper.find("#alert-title").classes()).not.toContain("text-dark-950");
+});
+
+test("it should follow the Text size from the provider", () => {
+  const wrapper = mount(BridgeUIProvider, {
+    props: { components: { Text: { defaultProps: { size: "xs" } } } },
+    slots: {
+      default: () => {
+        return h(
+          Alert,
+          {
+            title: "Title",
+            customProps: {
+              body: { id: "alert-body" },
+              title: { id: "alert-title" },
+            },
+          },
+          { default: () => "Body text" },
+        );
+      },
+    },
+  });
+
+  expect(wrapper.find("#alert-body").classes()).toContain("text-xs");
+  expect(wrapper.find("#alert-title").classes()).toContain("text-xs");
+});
+
+test("it should let classes override the title and body size", () => {
+  const wrapper = mount(Alert, {
+    slots: { default: "Body text" },
+    props: {
+      title: "Title",
+      classes: { title: "text-lg", body: "text-base" },
+      customProps: {
+        body: { id: "alert-body" },
+        title: { id: "alert-title" },
+      },
+    },
+  });
+
+  expect(wrapper.find("#alert-title").classes()).toContain("text-lg");
+  expect(wrapper.find("#alert-title").classes()).not.toContain("text-sm");
+  expect(wrapper.find("#alert-body").classes()).toContain("text-base");
+  expect(wrapper.find("#alert-body").classes()).not.toContain("text-sm");
+});
+
+test("it should ignore the Text weight from the provider", () => {
+  const wrapper = mount(BridgeUIProvider, {
+    props: { components: { Text: { defaultProps: { weight: "bold" } } } },
+    slots: {
+      default: () => {
+        return h(
+          Alert,
+          { title: "Title", customProps: { body: { id: "alert-body" } } },
+          { default: () => "Body text" },
+        );
+      },
+    },
+  });
+
+  const body = wrapper.find("#alert-body");
+
+  expect(body.classes()).toContain("font-normal");
+  expect(body.classes()).not.toContain("font-bold");
 });

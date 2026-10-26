@@ -131,7 +131,7 @@ export interface LinkOwnProps<T extends LinkAsTag = "a"> {
   /**
    * The size of the link.
    *
-   * @default "md"
+   * @default "sm"
    */
   size?: MergeProps<LinkSize, LinkSizeOverrides>;
 

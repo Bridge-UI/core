@@ -13,6 +13,7 @@ import {
 // ** Core Imports
 import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config";
 import {
+  resolveDefaultTextSizeClass,
   resolveFieldShowFooter,
   resolvePickerFill,
   type ResolvedFieldOverlay,
@@ -201,6 +202,19 @@ export function usePickerFill({
     });
 
     return resolvePickerFill(toValue(fill) ?? registryFill, toValue(overlay));
+  });
+}
+
+/**
+ * Font-size classes of the default `Text` size (registry
+ * `Text.defaultProps.size`, then `sm`), for text in components without a
+ * `size` prop that can't render a `Text` element.
+ */
+export function useDefaultTextSizeClass(): ComputedRef<string> {
+  const bridge = useBridgeUI();
+
+  return computed(() => {
+    return resolveDefaultTextSizeClass(unref(bridge?.components));
   });
 }
 

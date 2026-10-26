@@ -133,8 +133,10 @@ const {
   paginationBind,
   selectAllState,
   onChangeSearch,
+  pageStatusBind,
   onToggleExpand,
   visibilityItems,
+  perPageLabelBind,
   perPageSlotProps,
   selectedSlotProps,
   resolvedPageCount,
@@ -503,7 +505,7 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
 
           <slot name="perPage" v-bind="perPageSlotProps" v-if="showPerPage">
             <div class="flex shrink-0 items-center gap-2">
-              <span class="text-sm whitespace-nowrap">
+              <span v-bind="perPageLabelBind">
                 {{ resolveMessage("Rows per page") }}
               </span>
               <Select
@@ -527,7 +529,7 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
 
           <div v-if="showPager" class="flex shrink-0 items-center gap-3">
             <span
-              class="text-sm font-medium whitespace-nowrap"
+              v-bind="pageStatusBind"
               v-if="
                 resolvedPageCount !== undefined &&
                 !hasNamedSlot(tableSlots, 'pagination')

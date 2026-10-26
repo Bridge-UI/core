@@ -617,7 +617,7 @@ export function useSnackbar(
       customProps.value?.title,
       {},
       cn({
-        "text-sm font-medium": true,
+        "font-medium": true,
         [get(colorClass.value, "titleColor") ?? ""]: true,
         [get(mergedClasses.value, "title") ?? ""]: true,
       }),
@@ -629,7 +629,7 @@ export function useSnackbar(
       customProps.value?.description,
       {},
       cn({
-        "mt-1 text-sm text-dark-500 dark:text-dark-500": true,
+        "mt-1 font-normal text-dark-500 dark:text-dark-500": true,
         [get(mergedClasses.value, "description") ?? ""]: true,
       }),
     );

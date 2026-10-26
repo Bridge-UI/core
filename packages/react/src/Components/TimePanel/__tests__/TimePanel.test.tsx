@@ -8,6 +8,7 @@ afterEach(() => {
 
 // ** Local Imports
 import { TimePanel } from "@/Components/TimePanel";
+import { BridgeUIProvider } from "@/Provider";
 
 test("it should render hour buttons", () => {
   render(<TimePanel value={new Date(2021, 4, 21, 9, 30)} />);
@@ -39,4 +40,17 @@ test("it should render seconds when showSeconds is set", () => {
   render(<TimePanel showSeconds value={new Date(2021, 4, 21, 9, 30, 45)} />);
 
   expect(screen.getByRole("button", { name: "Second 45" })).toBeTruthy();
+});
+
+test("it should follow the Text size from the provider", () => {
+  render(
+    <BridgeUIProvider components={{ Text: { defaultProps: { size: "xs" } } }}>
+      <TimePanel value={new Date(2021, 4, 21, 9, 30)} />
+    </BridgeUIProvider>,
+  );
+
+  const button = screen.getByRole("button", { name: "Hour 09" });
+
+  expect(button.classList.contains("text-xs")).toBe(true);
+  expect(button.classList.contains("text-sm")).toBe(false);
 });

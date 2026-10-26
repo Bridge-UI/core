@@ -41,6 +41,7 @@ import {
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
+  useDefaultTextSizeClass,
 } from "@/Utils";
 
 const calendarDateBridgeKeys = [
@@ -370,6 +371,8 @@ export function useCalendarDate(
     );
   };
 
+  const textSizeClass = useDefaultTextSizeClass();
+
   const getDayBind = (cell: CalendarDateDayCell) => {
     const color = colorClass;
 
@@ -389,8 +392,9 @@ export function useCalendarDate(
         },
       },
       cn({
-        "relative flex h-8 w-full cursor-pointer items-center justify-center text-sm focus:outline-none disabled:cursor-not-allowed disabled:opacity-50": true,
+        "relative flex h-8 w-full cursor-pointer items-center justify-center focus:outline-none disabled:cursor-not-allowed disabled:opacity-50": true,
         [roundedClass ?? ""]: true,
+        [textSizeClass]: true,
         [color?.base ?? ""]: cell.state === "base",
         [color?.hover ?? ""]: cell.state === "base",
         [color?.selected ?? ""]: cell.state === "selected",

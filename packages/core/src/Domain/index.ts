@@ -203,6 +203,7 @@ export {
   filterDataTableFilterOptions,
   flattenDataTableFilterOptionValues,
   getDataTableAriaSort,
+  getDataTableChromeTextClass,
   getDataTableColumnAccessor,
   getDataTableColumnCssWidth,
   getDataTableColumnFilterValues,
@@ -212,6 +213,7 @@ export {
   getDataTableControlSize,
   getDataTableDefaultCellContent,
   getDataTableFooterLayout,
+  getDataTableFooterTextClass,
   getDataTableGridTemplate,
   getDataTableHiddenColumnIds,
   getDataTablePaginationSlotProps,
@@ -607,6 +609,7 @@ export type {
 } from "@/Domain/stepper";
 export { getAdjacentTabValue, getTabId, getTabPanelId } from "@/Domain/tabs";
 export type { TabsActivation } from "@/Domain/tabs";
+export { DEFAULT_TEXT_SIZE, resolveDefaultTextSizeClass } from "@/Domain/text";
 export {
   buildHourOptions,
   buildMinuteOptions,

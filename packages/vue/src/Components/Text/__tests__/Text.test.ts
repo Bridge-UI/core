@@ -23,10 +23,17 @@ test("it should render the element set by as", () => {
 test("it should apply default size, weight and color", () => {
   const root = mount(Text).find("p");
 
-  expect(root.classes()).toContain("text-base");
+  expect(root.classes()).toContain("text-sm");
   expect(root.classes()).toContain("font-normal");
   expect(root.classes()).toContain("text-dark-950");
   expect(root.classes()).toContain("dark:text-dark-50");
+});
+
+test("it should apply no color class when color is inherit", () => {
+  const root = mount(Text, { props: { color: "inherit" } }).find("p");
+
+  expect(root.classes()).not.toContain("text-dark-950");
+  expect(root.classes()).toEqual(["text-sm", "font-normal"]);
 });
 
 test("it should apply muted dark color when variant is muted", () => {

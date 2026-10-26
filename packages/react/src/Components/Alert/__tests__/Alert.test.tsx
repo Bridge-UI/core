@@ -4,6 +4,7 @@ import { expect, test } from "vitest";
 
 // ** Local Imports
 import { Alert } from "@/Components/Alert";
+import { BridgeUIProvider } from "@/Provider";
 
 test("it should render the root element", () => {
   const { container } = render(<Alert />);
@@ -143,4 +144,89 @@ test("it should forward customProps to title and body containers", () => {
 
   expect(container.querySelector("#alert-body")).toBeTruthy();
   expect(container.querySelector("#alert-title")).toBeTruthy();
+});
+
+test("it should size the title and body with the Text default size", () => {
+  const { container } = render(
+    <Alert
+      title="Title"
+      customProps={{
+        body: { id: "alert-body" },
+        title: { id: "alert-title" },
+      }}
+    >
+      Body text
+    </Alert>,
+  );
+
+  const title = container.querySelector("#alert-title");
+
+  expect(title?.classList.contains("text-sm")).toBe(true);
+  expect(title?.classList.contains("text-dark-950")).toBe(false);
+  expect(
+    container.querySelector("#alert-body")?.classList.contains("text-sm"),
+  ).toBe(true);
+});
+
+test("it should follow the Text size from the provider", () => {
+  const { container } = render(
+    <BridgeUIProvider components={{ Text: { defaultProps: { size: "xs" } } }}>
+      <Alert
+        title="Title"
+        customProps={{
+          body: { id: "alert-body" },
+          title: { id: "alert-title" },
+        }}
+      >
+        Body text
+      </Alert>
+    </BridgeUIProvider>,
+  );
+
+  expect(
+    container.querySelector("#alert-title")?.classList.contains("text-xs"),
+  ).toBe(true);
+  expect(
+    container.querySelector("#alert-body")?.classList.contains("text-xs"),
+  ).toBe(true);
+});
+
+test("it should let classes override the title and body size", () => {
+  const { container } = render(
+    <Alert
+      title="Title"
+      classes={{ title: "text-lg", body: "text-base" }}
+      customProps={{
+        body: { id: "alert-body" },
+        title: { id: "alert-title" },
+      }}
+    >
+      Body text
+    </Alert>,
+  );
+
+  const title = container.querySelector("#alert-title");
+  const body = container.querySelector("#alert-body");
+
+  expect(title?.classList.contains("text-lg")).toBe(true);
+  expect(title?.classList.contains("text-sm")).toBe(false);
+  expect(body?.classList.contains("text-base")).toBe(true);
+  expect(body?.classList.contains("text-sm")).toBe(false);
+});
+
+test("it should ignore the Text weight from the provider", () => {
+  const { container } = render(
+    <BridgeUIProvider
+      components={{ Text: { defaultProps: { weight: "bold" } } }}
+    >
+      <Alert title="Title" customProps={{ body: { id: "alert-body" } }}>
+        Body text
+      </Alert>
+    </BridgeUIProvider>,
+  );
+
+  const body = container.querySelector("#alert-body");
+
+  expect(body?.classList.contains("font-bold")).toBe(false);
+  expect(body?.classList.contains("font-normal")).toBe(true);
 });
