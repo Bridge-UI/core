@@ -16,10 +16,7 @@ defineSlots<EmptyStateSlots>();
 defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<EmptyStateOwnProps>(), {
-  size: "md",
-  titleAs: "p",
-  align: "center",
-  mediaDecorative: true,
+  mediaDecorative: undefined,
 });
 
 const {

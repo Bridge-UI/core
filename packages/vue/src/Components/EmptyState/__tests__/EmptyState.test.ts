@@ -1,9 +1,11 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
+import { h } from "vue";
 
 // ** Local Imports
 import { EmptyState } from "@/Components/EmptyState";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 test("it should render the root element", () => {
   const wrapper = mount(EmptyState, { props: { title: "Empty" } });
@@ -77,6 +79,48 @@ test("it should apply compact size classes when size is sm", () => {
   });
 
   expect(wrapper.find(".max-w-sm").exists()).toBe(true);
+});
+
+test("it should apply size, align and titleAs from the provider defaultProps", () => {
+  const wrapper = mount(BridgeUIProvider, {
+    props: {
+      components: {
+        EmptyState: {
+          defaultProps: { size: "sm", align: "start", titleAs: "h2" },
+        },
+      },
+    },
+    slots: {
+      default: () => {
+        return h(EmptyState, { title: "No results" });
+      },
+    },
+  });
+
+  expect(wrapper.find(".max-w-sm").exists()).toBe(true);
+  expect(wrapper.find(".items-start").exists()).toBe(true);
+  expect(wrapper.find("h2").text()).toBe("No results");
+});
+
+test("it should apply mediaDecorative from the provider defaultProps", () => {
+  const wrapper = mount(BridgeUIProvider, {
+    props: {
+      components: { EmptyState: { defaultProps: { mediaDecorative: false } } },
+    },
+    slots: {
+      default: () => {
+        return h(EmptyState, {
+          icon: "search",
+          title: "No results",
+          customProps: { media: { id: "empty-media" } },
+        });
+      },
+    },
+  });
+
+  expect(wrapper.find("#empty-media").attributes("aria-hidden")).toBe(
+    undefined,
+  );
 });
 
 test("it should apply start alignment classes when align is start", () => {
