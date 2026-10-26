@@ -401,3 +401,50 @@ test("it should select from composed ListSection and ListItem children", async (
 
   expect(onChange).toHaveBeenCalledWith("apple");
 });
+
+test("it should show the placeholder in multiple mode while nothing is selected", () => {
+  render(
+    <ControlledSelect
+      multiple
+      options={options}
+      initialValue={[]}
+      aria-label="Fruit"
+      placeholder="Pick fruits"
+    />,
+  );
+
+  expect(screen.getByRole("combobox").getAttribute("placeholder")).toBe(
+    "Pick fruits",
+  );
+});
+
+test("it should hide the placeholder in multiple mode once a value is selected", () => {
+  render(
+    <ControlledSelect
+      multiple
+      options={options}
+      aria-label="Fruit"
+      initialValue={["apple"]}
+      placeholder="Pick fruits"
+    />,
+  );
+
+  expect(screen.getByRole("combobox").getAttribute("placeholder")).toBeNull();
+});
+
+test("it should keep the placeholder next to the chips when persistentPlaceholder is set", () => {
+  render(
+    <ControlledSelect
+      multiple
+      options={options}
+      aria-label="Fruit"
+      persistentPlaceholder
+      initialValue={["apple"]}
+      placeholder="Pick fruits"
+    />,
+  );
+
+  expect(screen.getByRole("combobox").getAttribute("placeholder")).toBe(
+    "Pick fruits",
+  );
+});

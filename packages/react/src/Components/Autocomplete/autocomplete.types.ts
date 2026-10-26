@@ -286,6 +286,14 @@ export interface AutocompleteOwnProps extends Omit<FormFieldOwnProps, "field"> {
   overlay?: FieldOverlayMode;
 
   /**
+   * Keeps the placeholder visible next to the chips when `multiple` is set.
+   * By default it hides once a value is selected.
+   *
+   * @default false
+   */
+  persistentPlaceholder?: boolean;
+
+  /**
    * Placeholder shown when no value is selected.
    */
   placeholder?: string;

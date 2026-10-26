@@ -90,6 +90,7 @@ const selectBridgeKeys = [
   "hideEmptyMessage",
   "minItemsForSearch",
   "optionDescription",
+  "persistentPlaceholder",
 ] as const satisfies readonly (keyof SelectOwnProps)[];
 
 type SelectRegistryProps = Pick<SelectOwnProps, "classes">;
@@ -828,11 +829,16 @@ export function useSelect(
         "aria-expanded": open.value,
         readonly: triggerReadonly.value,
         onKeydown: handleTriggerKeyDown,
-        placeholder: selectMerged.value.placeholder,
         "aria-autocomplete": isSearchEnabled.value ? "list" : undefined,
         "aria-activedescendant": open.value
           ? navigation.activeDescendantId.value
           : undefined,
+        placeholder:
+          multiple.value &&
+          hasValue.value &&
+          !selectMerged.value.persistentPlaceholder
+            ? undefined
+            : selectMerged.value.placeholder,
         ...(multiple.value
           ? {
               rows: 1,

@@ -171,28 +171,29 @@ Set `components.Listbox.defaultProps.matchWidth` on `createBridgeUI` to apply th
 
 ### Autocomplete-specific
 
-| Prop                | Type                  | Default                                      | Description                                                                                             |
-| ------------------- | --------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `asyncData`         | `SelectAsyncData`     | —                                            | Remote data source. Implies `searchable`.                                                               |
-| `clearable`         | `boolean`             | `false`                                      | Whether the value can be cleared.                                                                       |
-| `defaultValue`      | `SelectModel`         | —                                            | Initial value when uncontrolled.                                                                        |
-| `disableMaxHeight`  | `boolean`             | `false`                                      | When true, the dropdown options list is not height-limited. Forwarded to the internal `Listbox`.        |
-| `emptyMessage`      | `string`              | "No options"                                 | Message when the filtered list is empty.                                                                |
-| `flipOptions`       | `boolean`             | `false`                                      | Inverts the visual order of options.                                                                    |
-| `freeSolo`          | `boolean`             | `true`                                       | Allows committing typed text that is not in `options` (Enter, Tab, or closing the menu).                |
-| `hideEmptyMessage`  | `boolean`             | `false`                                      | Hides the empty-state message.                                                                          |
-| `loading`           | `boolean`             | —                                            | External or async loading state.                                                                        |
-| `maxHeight`         | `string`              | "max-h-60"                                   | Tailwind max-height class for the dropdown options area. Forwarded to the internal `Listbox`.           |
-| `minItemsForSearch` | `number`              | 11                                           | Minimum option count before search UI is enabled.                                                       |
-| `multiple`          | `boolean`             | `false`                                      | Whether multiple values can be selected.                                                                |
-| `optionDescription` | `string`              | "description"                                | Key used to read the description from option objects.                                                   |
-| `optionLabel`       | `string`              | "label"                                      | Key used to read the label from option objects.                                                         |
-| `options`           | `ListboxOptionsInput` | —                                            | Options to display. May include section groups (`{ title, options, sticky? }`) mixed with flat options. |
-| `optionValue`       | `string`              | "value"                                      | Key used to read the value from option objects.                                                         |
-| `overlay`           | `FieldOverlayMode`    | `"auto"`                                     | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.                                                    |
-| `placeholder`       | `string`              | —                                            | Placeholder shown when no value is selected.                                                            |
-| `searchable`        | `boolean`             | `true`                                       | Whether options can be filtered via the trigger input.                                                  |
-| `showFooter`        | `boolean`             | `false` (`true` for modal/drawer when unset) | Shows Cancel / Apply on the nested listbox. Selection stays draft until Apply.                          |
+| Prop                    | Type                  | Default                                      | Description                                                                                             |
+| ----------------------- | --------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `asyncData`             | `SelectAsyncData`     | —                                            | Remote data source. Implies `searchable`.                                                               |
+| `clearable`             | `boolean`             | `false`                                      | Whether the value can be cleared.                                                                       |
+| `defaultValue`          | `SelectModel`         | —                                            | Initial value when uncontrolled.                                                                        |
+| `disableMaxHeight`      | `boolean`             | `false`                                      | When true, the dropdown options list is not height-limited. Forwarded to the internal `Listbox`.        |
+| `emptyMessage`          | `string`              | "No options"                                 | Message when the filtered list is empty.                                                                |
+| `flipOptions`           | `boolean`             | `false`                                      | Inverts the visual order of options.                                                                    |
+| `freeSolo`              | `boolean`             | `true`                                       | Allows committing typed text that is not in `options` (Enter, Tab, or closing the menu).                |
+| `hideEmptyMessage`      | `boolean`             | `false`                                      | Hides the empty-state message.                                                                          |
+| `loading`               | `boolean`             | —                                            | External or async loading state.                                                                        |
+| `maxHeight`             | `string`              | "max-h-60"                                   | Tailwind max-height class for the dropdown options area. Forwarded to the internal `Listbox`.           |
+| `minItemsForSearch`     | `number`              | 11                                           | Minimum option count before search UI is enabled.                                                       |
+| `multiple`              | `boolean`             | `false`                                      | Whether multiple values can be selected.                                                                |
+| `optionDescription`     | `string`              | "description"                                | Key used to read the description from option objects.                                                   |
+| `optionLabel`           | `string`              | "label"                                      | Key used to read the label from option objects.                                                         |
+| `options`               | `ListboxOptionsInput` | —                                            | Options to display. May include section groups (`{ title, options, sticky? }`) mixed with flat options. |
+| `optionValue`           | `string`              | "value"                                      | Key used to read the value from option objects.                                                         |
+| `overlay`               | `FieldOverlayMode`    | `"auto"`                                     | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.                                                    |
+| `persistentPlaceholder` | `boolean`             | `false`                                      | Keeps the placeholder visible next to the chips when `multiple` is set.                                 |
+| `placeholder`           | `string`              | —                                            | Placeholder shown when no value is selected.                                                            |
+| `searchable`            | `boolean`             | `true`                                       | Whether options can be filtered via the trigger input.                                                  |
+| `showFooter`            | `boolean`             | `false` (`true` for modal/drawer when unset) | Shows Cancel / Apply on the nested listbox. Selection stays draft until Apply.                          |
 
 ### v-model
 

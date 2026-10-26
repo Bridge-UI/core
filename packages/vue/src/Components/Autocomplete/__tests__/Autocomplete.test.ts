@@ -410,3 +410,38 @@ test("it should not commit free-solo text when freeSolo is disabled", async () =
   const updates = wrapper.emitted("update:modelValue") ?? [];
   expect(updates.some((payload) => payload[0] === "custom")).toBe(false);
 });
+
+test("it should show the placeholder in multiple mode while nothing is selected", () => {
+  const wrapper = mountAutocomplete({
+    props: { multiple: true, modelValue: [], placeholder: "Pick one" },
+  });
+
+  expect(wrapper.find('[role="combobox"]').attributes("placeholder")).toBe(
+    "Pick one",
+  );
+});
+
+test("it should hide the placeholder in multiple mode once a value is selected", () => {
+  const wrapper = mountAutocomplete({
+    props: { multiple: true, modelValue: ["active"], placeholder: "Pick one" },
+  });
+
+  expect(
+    wrapper.find('[role="combobox"]').attributes("placeholder"),
+  ).toBeUndefined();
+});
+
+test("it should keep the placeholder next to the chips when persistentPlaceholder is set", () => {
+  const wrapper = mountAutocomplete({
+    props: {
+      multiple: true,
+      modelValue: ["active"],
+      placeholder: "Pick one",
+      persistentPlaceholder: true,
+    },
+  });
+
+  expect(wrapper.find('[role="combobox"]').attributes("placeholder")).toBe(
+    "Pick one",
+  );
+});

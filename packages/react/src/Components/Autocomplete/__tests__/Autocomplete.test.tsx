@@ -344,3 +344,50 @@ test("it should not commit free-solo text when freeSolo is disabled", async () =
 
   expect(onChange).not.toHaveBeenCalledWith("mango");
 });
+
+test("it should show the placeholder in multiple mode while nothing is selected", () => {
+  render(
+    <ControlledAutocomplete
+      multiple
+      options={options}
+      initialValue={[]}
+      aria-label="Fruit"
+      placeholder="Pick fruits"
+    />,
+  );
+
+  expect(screen.getByRole("combobox").getAttribute("placeholder")).toBe(
+    "Pick fruits",
+  );
+});
+
+test("it should hide the placeholder in multiple mode once a value is selected", () => {
+  render(
+    <ControlledAutocomplete
+      multiple
+      options={options}
+      aria-label="Fruit"
+      initialValue={["apple"]}
+      placeholder="Pick fruits"
+    />,
+  );
+
+  expect(screen.getByRole("combobox").getAttribute("placeholder")).toBeNull();
+});
+
+test("it should keep the placeholder next to the chips when persistentPlaceholder is set", () => {
+  render(
+    <ControlledAutocomplete
+      multiple
+      options={options}
+      aria-label="Fruit"
+      persistentPlaceholder
+      initialValue={["apple"]}
+      placeholder="Pick fruits"
+    />,
+  );
+
+  expect(screen.getByRole("combobox").getAttribute("placeholder")).toBe(
+    "Pick fruits",
+  );
+});
