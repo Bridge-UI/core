@@ -1,9 +1,11 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { afterEach, expect, test } from "vitest";
+import { h } from "vue";
 
 // ** Local Imports
 import { Chip } from "@/Components/Chip";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 afterEach(() => {
   while (mountedWrappers.length > 0) {
@@ -38,6 +40,24 @@ test("it should apply size classes to the label", () => {
   const label = document.body.querySelector(".truncate");
 
   expect(label?.textContent).toBe("Small");
+  expect(label?.className).toContain("text-xs");
+});
+
+test("it should apply size from the provider defaultProps", () => {
+  const wrapper = mount(BridgeUIProvider, {
+    attachTo: document.body,
+    props: { components: { Chip: { defaultProps: { size: "xs" } } } },
+    slots: {
+      default: () => {
+        return h(Chip, { label: "Small" });
+      },
+    },
+  });
+
+  mountedWrappers.push(wrapper);
+
+  const label = document.body.querySelector(".truncate");
+
   expect(label?.className).toContain("text-xs");
 });
 

@@ -21,7 +21,6 @@ const emit = defineEmits<ChipEmits>();
 defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<ChipOwnProps>(), {
-  size: "md",
   disabled: false,
   dismissible: false,
   clearLabel: "Remove",

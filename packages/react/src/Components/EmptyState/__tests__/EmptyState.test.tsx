@@ -8,6 +8,7 @@ afterEach(() => {
 
 // ** Local Imports
 import { EmptyState } from "@/Components/EmptyState";
+import { BridgeUIProvider } from "@/Provider";
 
 test("it should render the root element", () => {
   const { container } = render(<EmptyState title="Empty" />);
@@ -81,6 +82,24 @@ test("it should apply compact size classes when size is sm", () => {
   const { container } = render(<EmptyState size="sm" title="No results" />);
 
   expect(container.querySelector(".max-w-sm")).not.toBeNull();
+});
+
+test("it should apply size, align and titleAs from the provider defaultProps", () => {
+  const { container } = render(
+    <BridgeUIProvider
+      components={{
+        EmptyState: {
+          defaultProps: { size: "sm", titleAs: "h2", align: "start" },
+        },
+      }}
+    >
+      <EmptyState title="No results" />
+    </BridgeUIProvider>,
+  );
+
+  expect(container.querySelector(".max-w-sm")).not.toBeNull();
+  expect(container.querySelector(".items-start")).not.toBeNull();
+  expect(container.querySelector("h2")?.textContent).toBe("No results");
 });
 
 test("it should apply start alignment classes when align is start", () => {

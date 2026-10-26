@@ -4,6 +4,7 @@ import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
 import { Chip } from "@/Components/Chip";
+import { BridgeUIProvider } from "@/Provider";
 
 afterEach(() => {
   cleanup();
@@ -24,6 +25,16 @@ test("it should render children instead of label when both are provided", () => 
 
 test("it should apply size classes to the label", () => {
   render(<Chip size="xs" label="Small" />);
+
+  expect(screen.getByText("Small").className).toContain("text-xs");
+});
+
+test("it should apply size from the provider defaultProps", () => {
+  render(
+    <BridgeUIProvider components={{ Chip: { defaultProps: { size: "xs" } } }}>
+      <Chip label="Small" />
+    </BridgeUIProvider>,
+  );
 
   expect(screen.getByText("Small").className).toContain("text-xs");
 });
