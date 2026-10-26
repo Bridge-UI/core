@@ -58,7 +58,7 @@ function Select(props: SelectProps) {
     <>
       <FormField field={formField}>
         {multiple ? (
-          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-0.5">
+          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-0.5 py-1.5 [&>textarea]:py-0">
             {selectedOptions.map((option) => (
               <Chip
                 dismissible

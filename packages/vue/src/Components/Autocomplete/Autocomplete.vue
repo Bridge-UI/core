@@ -114,7 +114,7 @@ const {
 
     <div
       v-if="multiple"
-      class="flex min-w-0 flex-1 flex-wrap items-center gap-0.5"
+      class="flex min-w-0 flex-1 flex-wrap items-center gap-0.5 py-1.5 [&>textarea]:py-0"
     >
       <Chip
         dismissible
