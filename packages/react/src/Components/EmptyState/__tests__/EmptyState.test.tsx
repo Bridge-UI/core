@@ -89,7 +89,7 @@ test("it should apply size, align and titleAs from the provider defaultProps", (
     <BridgeUIProvider
       components={{
         EmptyState: {
-          defaultProps: { size: "sm", align: "start", titleAs: "h2" },
+          defaultProps: { size: "sm", titleAs: "h2", align: "start" },
         },
       }}
     >

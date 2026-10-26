@@ -83,16 +83,16 @@ test("it should apply compact size classes when size is sm", () => {
 
 test("it should apply size, align and titleAs from the provider defaultProps", () => {
   const wrapper = mount(BridgeUIProvider, {
-    props: {
-      components: {
-        EmptyState: {
-          defaultProps: { size: "sm", align: "start", titleAs: "h2" },
-        },
-      },
-    },
     slots: {
       default: () => {
         return h(EmptyState, { title: "No results" });
+      },
+    },
+    props: {
+      components: {
+        EmptyState: {
+          defaultProps: { size: "sm", titleAs: "h2", align: "start" },
+        },
       },
     },
   });
