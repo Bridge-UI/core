@@ -1,9 +1,11 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
+import { h } from "vue";
 
 // ** Local Imports
 import { ColorPicker } from "@/Components/ColorPicker";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 test("it should render the saturation area", () => {
   const wrapper = mount(ColorPicker, {
@@ -88,4 +90,25 @@ test("it should commit draft value on Apply", async () => {
   await apply?.trigger("click");
   expect(wrapper.emitted("change")?.[0]).toEqual(["#ea1212"]);
   expect(wrapper.emitted("update:modelValue")?.[0]).toEqual(["#ea1212"]);
+});
+
+test("it should size the value with the Text size from the provider", () => {
+  const wrapper = mount(BridgeUIProvider, {
+    props: {
+      components: { Text: { defaultProps: { size: "xs", weight: "bold" } } },
+    },
+    slots: {
+      default: () => {
+        return h(ColorPicker, { defaultValue: "#ea1212" });
+      },
+    },
+  });
+
+  const value = wrapper.findAll("span").find((span) => {
+    return span.text() === "#ea1212";
+  });
+
+  expect(value?.classes()).toContain("text-xs");
+  expect(value?.classes()).toContain("truncate");
+  expect(value?.classes()).not.toContain("font-bold");
 });

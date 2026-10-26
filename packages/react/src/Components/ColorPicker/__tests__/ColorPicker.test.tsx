@@ -4,6 +4,7 @@ import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
 import { ColorPicker } from "@/Components/ColorPicker";
+import { BridgeUIProvider } from "@/Provider";
 
 afterEach(() => {
   cleanup();
@@ -93,4 +94,20 @@ test("it should commit draft value on Apply", () => {
 
   fireEvent.click(screen.getByRole("button", { name: "Apply" }));
   expect(onChange).toHaveBeenCalledWith("#ea1212");
+});
+
+test("it should size the value with the Text size from the provider", () => {
+  render(
+    <BridgeUIProvider
+      components={{ Text: { defaultProps: { size: "xs", weight: "bold" } } }}
+    >
+      <ColorPicker defaultValue="#ea1212" />
+    </BridgeUIProvider>,
+  );
+
+  const value = screen.getByText("#ea1212");
+
+  expect(value.classList.contains("text-xs")).toBe(true);
+  expect(value.classList.contains("truncate")).toBe(true);
+  expect(value.classList.contains("font-bold")).toBe(false);
 });

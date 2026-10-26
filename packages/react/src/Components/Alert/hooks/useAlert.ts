@@ -159,7 +159,7 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
       customProps?.body,
       {},
       cn({
-        "grow text-start": true,
+        "grow font-normal text-start": true,
         [get(paddingClass, "body") ?? ""]: true,
         [get(colorClass, "text") ?? ""]: true,
         [get(mergedClasses, "body") ?? ""]: true,

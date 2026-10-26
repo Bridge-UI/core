@@ -111,7 +111,7 @@ const {
           truncate
           as="span"
           color="inherit"
-          class="min-w-0 text-dark-700 dark:text-dark-100"
+          class="min-w-0 font-normal text-dark-700 dark:text-dark-100"
         >
           {{ formattedValue }}
         </Text>

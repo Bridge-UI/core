@@ -3,7 +3,7 @@
 import type { AlertOwnProps, AlertSlots } from "@/Components/Alert/alert.types";
 import { useAlert } from "@/Components/Alert/composables/useAlert";
 import Icon from "@/Components/Icon/Icon.vue";
-import Text from "@/Components/Text/Text.vue";
+import { Text } from "@/Components/Text";
 import { hasNamedSlot, isPropPresent } from "@/Utils";
 
 defineSlots<AlertSlots>();

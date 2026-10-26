@@ -140,7 +140,7 @@ export function useCard(props: CardProps, libDefaults: CardLibDefaults) {
       customProps?.body,
       {},
       cn({
-        grow: true,
+        "grow font-normal": true,
         [get(paddingClass, "body") ?? ""]: true,
         [get(variantClass, "text") ?? ""]: true,
         [get(mergedClasses, "body") ?? ""]: true,

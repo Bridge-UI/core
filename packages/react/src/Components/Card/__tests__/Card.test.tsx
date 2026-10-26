@@ -200,3 +200,41 @@ test("it should let classes override the title and body size", () => {
   expect(body?.classList.contains("text-base")).toBe(true);
   expect(body?.classList.contains("text-sm")).toBe(false);
 });
+
+test("it should size the title and body with the Text default size", () => {
+  const { container } = render(
+    <Card
+      title="Title"
+      customProps={{
+        body: { id: "card-body" },
+        title: { id: "card-title" },
+      }}
+    >
+      Body text
+    </Card>,
+  );
+
+  expect(
+    container.querySelector("#card-body")?.classList.contains("text-sm"),
+  ).toBe(true);
+  expect(
+    container.querySelector("#card-title")?.classList.contains("text-sm"),
+  ).toBe(true);
+});
+
+test("it should ignore the Text weight from the provider", () => {
+  const { container } = render(
+    <BridgeUIProvider
+      components={{ Text: { defaultProps: { weight: "bold" } } }}
+    >
+      <Card title="Title" customProps={{ body: { id: "card-body" } }}>
+        Body text
+      </Card>
+    </BridgeUIProvider>,
+  );
+
+  const body = container.querySelector("#card-body");
+
+  expect(body?.classList.contains("font-bold")).toBe(false);
+  expect(body?.classList.contains("font-normal")).toBe(true);
+});

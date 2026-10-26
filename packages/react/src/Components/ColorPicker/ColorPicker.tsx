@@ -83,7 +83,7 @@ function ColorPicker(props: ColorPickerProps) {
             truncate
             as="span"
             color="inherit"
-            className="min-w-0 text-dark-700 dark:text-dark-100"
+            className="min-w-0 font-normal text-dark-700 dark:text-dark-100"
           >
             {formattedValue}
           </Text>

@@ -2,7 +2,7 @@
 // ** Local Imports
 import type { CardOwnProps, CardSlots } from "@/Components/Card/card.types";
 import { useCard } from "@/Components/Card/composables/useCard";
-import Text from "@/Components/Text/Text.vue";
+import { Text } from "@/Components/Text";
 import { hasNamedSlot, hasSlotOrProp, isPropPresent } from "@/Utils";
 
 defineSlots<CardSlots>();

@@ -213,3 +213,20 @@ test("it should let classes override the title and body size", () => {
   expect(body?.classList.contains("text-base")).toBe(true);
   expect(body?.classList.contains("text-sm")).toBe(false);
 });
+
+test("it should ignore the Text weight from the provider", () => {
+  const { container } = render(
+    <BridgeUIProvider
+      components={{ Text: { defaultProps: { weight: "bold" } } }}
+    >
+      <Alert title="Title" customProps={{ body: { id: "alert-body" } }}>
+        Body text
+      </Alert>
+    </BridgeUIProvider>,
+  );
+
+  const body = container.querySelector("#alert-body");
+
+  expect(body?.classList.contains("font-bold")).toBe(false);
+  expect(body?.classList.contains("font-normal")).toBe(true);
+});
