@@ -947,7 +947,7 @@ export function useDataTable<T extends Record<string, unknown>>(
   });
 
   const chromeTextClass = computed(() => {
-    return getDataTableChromeTextClass(merged.value.size);
+    return getDataTableChromeTextClass(merged.value.size, components.value);
   });
 
   const footerBind = computed(() => {
@@ -958,7 +958,8 @@ export function useDataTable<T extends Record<string, unknown>>(
         class: cn({
           "w-0 min-w-full": merged.value.full === false,
           "border-t border-dark-200 bg-dark-50 px-3 py-2.5 text-dark-600 dark:border-dark-700 dark:bg-dark-700/50 dark:text-dark-300": true,
-          [getDataTableFooterTextClass(merged.value.size)]: true,
+          [getDataTableFooterTextClass(merged.value.size, components.value)]:
+            true,
           [get(mergedClasses.value, "footer") ?? ""]: true,
         }),
       },
@@ -971,6 +972,28 @@ export function useDataTable<T extends Record<string, unknown>>(
       showPerPage: showPerPage.value,
       showSelected: showSelected.value,
     });
+  });
+
+  const perPageLabelBind = computed(() => {
+    return mergePartBind(
+      {},
+      {},
+      cn({
+        "whitespace-nowrap": true,
+        [chromeTextClass.value]: true,
+      }),
+    );
+  });
+
+  const pageStatusBind = computed(() => {
+    return mergePartBind(
+      {},
+      {},
+      cn({
+        "font-medium whitespace-nowrap": true,
+        [chromeTextClass.value]: true,
+      }),
+    );
   });
 
   const selectedBind = computed(() => {
@@ -1223,13 +1246,14 @@ export function useDataTable<T extends Record<string, unknown>>(
     onChangeSearch,
     loadingBarBind,
     paginationBind,
+    pageStatusBind,
     selectAllState,
     onToggleExpand,
-    chromeTextClass,
     visibilityItems,
     onChangePerPage,
     resolvedPerPage,
     selectionEnabled,
+    perPageLabelBind,
     perPageSlotProps,
     selectedSlotProps,
     resolvedPageCount,
