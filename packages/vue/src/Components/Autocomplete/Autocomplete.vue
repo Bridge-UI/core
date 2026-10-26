@@ -43,6 +43,7 @@ const props = withDefaults(defineProps<AutocompleteOwnProps>(), {
   showErrorIcon: true,
   showFooter: undefined,
   minItemsForSearch: 11,
+  persistentPlaceholder: false,
 });
 
 const resolveMessage = useResolveMessage();

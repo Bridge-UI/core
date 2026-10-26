@@ -92,6 +92,7 @@ const autocompleteBridgeKeys = [
   "hideEmptyMessage",
   "minItemsForSearch",
   "optionDescription",
+  "persistentPlaceholder",
 ] as const satisfies readonly (keyof AutocompleteOwnProps)[];
 
 type AutocompleteRegistryProps = Pick<AutocompleteOwnProps, "classes">;
@@ -901,11 +902,16 @@ export function useAutocomplete(
         "aria-expanded": open.value,
         readonly: triggerReadonly.value,
         onKeydown: handleTriggerKeyDown,
-        placeholder: autocompleteMerged.value.placeholder,
         "aria-autocomplete": isSearchEnabled.value ? "list" : undefined,
         "aria-activedescendant": open.value
           ? navigation.activeDescendantId.value
           : undefined,
+        placeholder:
+          multiple.value &&
+          hasValue.value &&
+          !autocompleteMerged.value.persistentPlaceholder
+            ? undefined
+            : autocompleteMerged.value.placeholder,
         ...(multiple.value
           ? {
               rows: 1,

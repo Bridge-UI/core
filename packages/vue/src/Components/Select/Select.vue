@@ -46,6 +46,7 @@ const props = withDefaults(defineProps<SelectOwnProps>(), {
   showErrorIcon: true,
   showFooter: undefined,
   minItemsForSearch: 11,
+  persistentPlaceholder: false,
 });
 
 const uncontrolledValue = ref<null | undefined | SelectValue | SelectValue[]>(
