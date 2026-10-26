@@ -1,9 +1,11 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
+import { h } from "vue";
 
 // ** Local Imports
 import { Calendar } from "@/Components/Calendar";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 test("it should render year and month selectors", () => {
   const wrapper = mount(Calendar, {
@@ -266,4 +268,20 @@ test("it should not mark the focused year selected when the value is empty", () 
     );
 
   expect(year?.attributes("aria-pressed")).toBe("false");
+});
+
+test("it should follow the Text size from the provider", () => {
+  const wrapper = mount(BridgeUIProvider, {
+    props: { components: { Text: { defaultProps: { size: "xs" } } } },
+    slots: {
+      default: () => {
+        return h(Calendar, { viewDate: new Date(2021, 4, 1) });
+      },
+    },
+  });
+
+  const button = wrapper.find('[aria-label="Select month"]');
+
+  expect(button.classes()).toContain("text-xs");
+  expect(button.classes()).not.toContain("text-sm");
 });

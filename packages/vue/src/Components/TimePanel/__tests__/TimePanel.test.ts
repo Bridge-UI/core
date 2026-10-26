@@ -1,9 +1,11 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
+import { h } from "vue";
 
 // ** Local Imports
 import { TimePanel } from "@/Components/TimePanel";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 test("it should render hour and minute columns", () => {
   const wrapper = mount(TimePanel, {
@@ -63,4 +65,20 @@ test("it should render seconds when showSeconds is set", () => {
   expect(withSeconds.findAll("button").length).toBe(
     withoutSeconds.findAll("button").length + 60,
   );
+});
+
+test("it should follow the Text size from the provider", () => {
+  const wrapper = mount(BridgeUIProvider, {
+    props: { components: { Text: { defaultProps: { size: "xs" } } } },
+    slots: {
+      default: () => {
+        return h(TimePanel, { modelValue: new Date(2021, 4, 21, 14, 30) });
+      },
+    },
+  });
+
+  const button = wrapper.find('button[aria-label="Hour 14"]');
+
+  expect(button.classes()).toContain("text-xs");
+  expect(button.classes()).not.toContain("text-sm");
 });
