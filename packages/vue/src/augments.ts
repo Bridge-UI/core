@@ -57,6 +57,7 @@ import type {
   PasswordFieldClasses,
   PasswordFieldProps,
 } from "@/Components/PasswordField";
+import type { PopoverClasses, PopoverProps } from "@/Components/Popover";
 import type { ProgressClasses, ProgressProps } from "@/Components/Progress";
 import type { RadioClasses, RadioProps } from "@/Components/Radio";
 import type {
@@ -414,6 +415,11 @@ declare module "@bridge-ui/core/Config" {
         | "showDescriptionOnError"
       >
     >;
+  }
+
+  interface PopoverConfigOverrides {
+    classes: PopoverClasses;
+    defaultProps: Partial<Pick<PopoverProps, "arrow" | "shadow" | "rounded">>;
   }
 
   interface ProgressConfigOverrides {
