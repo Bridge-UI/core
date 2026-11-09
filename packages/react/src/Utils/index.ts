@@ -273,6 +273,11 @@ export { hasNamedSlot, hasSlotOrProp, isPropPresent } from "@/Utils/slotOrProp";
 export type { SlotMap } from "@/Utils/slotOrProp";
 export { useBreakpoint } from "@/Utils/useBreakpoint";
 export type { UseBreakpointOptions } from "@/Utils/useBreakpoint";
+export { useFloatingOverlay } from "@/Utils/useFloatingOverlay";
+export type {
+  FloatingOverlayAnchor,
+  UseFloatingOverlayOptions,
+} from "@/Utils/useFloatingOverlay";
 export { useHoldRepeat } from "@/Utils/useHoldRepeat";
 export type {
   HoldRepeatAction,
