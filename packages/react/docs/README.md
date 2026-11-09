@@ -58,6 +58,7 @@ Component reference for **React**. This folder ships with the npm package.
 - [OtpField](./components/OtpField.md)
 - [Pagination](./components/Pagination.md)
 - [PasswordField](./components/PasswordField.md)
+- [Popover](./components/Popover.md)
 - [Progress](./components/Progress.md)
 - [Radio](./components/Radio.md)
 - [Rating](./components/Rating.md)
