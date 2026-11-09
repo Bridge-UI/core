@@ -1,33 +1,10 @@
 // ** External Imports
 import { get, omit } from "es-toolkit/compat";
-import {
-  computed,
-  nextTick,
-  onBeforeUnmount,
-  ref,
-  toValue,
-  useAttrs,
-  useId,
-  watch,
-  type ComponentPublicInstance,
-  type Ref,
-} from "vue";
+import { computed, toValue, useAttrs, useId, type Ref } from "vue";
 
 // ** Core Imports
-import {
-  acquireLayerStackOrder,
-  claimOpenMenu,
-  getLayerStackEntry,
-  LAYER_STACK_BASE_Z_INDEX,
-  pushLayerStack,
-  subscribeLayerStack,
-  type LayerStackHandle,
-} from "@bridge-ui/core/Layer";
-import {
-  createFocusable,
-  createPositionable,
-  type PositionHandle,
-} from "@bridge-ui/core/Runtime";
+import { claimOpenMenu } from "@bridge-ui/core/Layer";
+import { createFocusable } from "@bridge-ui/core/Runtime";
 import {
   menuRoundedProps as roundedProps,
   menuShadowProps as shadowProps,
@@ -44,9 +21,9 @@ import {
 import type { MenuOwnProps, MenuProps } from "@/Components/Menu/menu.types";
 import {
   mergePartBind,
-  resolveVnodeRefElement,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
+  useFloatingOverlay,
 } from "@/Utils";
 
 const menuBridgeKeys = [
@@ -111,25 +88,6 @@ export function useMenu(
 
   const menuId = useId();
 
-  const mounted = ref(false);
-
-  const layerStackId = ref("");
-
-  const triggerRef = ref<null | HTMLElement>(null);
-
-  const contentRef = ref<null | HTMLElement>(null);
-
-  let stackOrder: null | number = null;
-
-  let stackHandle: null | LayerStackHandle = null;
-  let unsubscribeLayerStack: null | (() => void) = null;
-  let positionHandle: null | PositionHandle = null;
-  let removePointerListener: null | (() => void) = null;
-  let releaseOpenMenuClaim: null | (() => void) = null;
-  let allowReferenceHiddenClose = false;
-
-  const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
-
   const show = computed(() => {
     return toValue(options.show ?? false);
   });
@@ -171,10 +129,6 @@ export function useMenu(
     props: () => split.value.componentProps,
   });
 
-  const isHiddenWhileMounted = computed(() => {
-    return merged.value.keepMounted && !show.value;
-  });
-
   const isPortaled = computed(() => {
     return merged.value.teleportTo !== false;
   });
@@ -197,61 +151,23 @@ export function useMenu(
     return get(classes, merged.value.shadow);
   });
 
-  const canClose = computed(() => {
-    return !merged.value.persistent;
-  });
-
   const rootInheritedAttrs = computed(() => {
     return omit(split.value.inheritedAttrs, ["anchorEl", "onShowChange"]);
   });
 
-  function getReferenceElement(): null | HTMLElement {
-    return props.anchorEl ?? triggerRef.value;
-  }
-
-  function focusReference() {
-    getReferenceElement()?.focus({ preventScroll: true });
-  }
-
-  function isInsideReference(target: Node) {
-    const reference = getReferenceElement();
-
-    return reference?.contains(target) ?? false;
-  }
-
-  function isAnotherMenuOpener(target: Node) {
-    if (!(target instanceof Element)) {
-      return false;
-    }
-
-    if (isInsideReference(target)) {
-      return false;
-    }
-
-    if (contentRef.value?.contains(target)) {
-      return false;
-    }
-
-    return Boolean(
-      target.closest('[aria-haspopup="menu"], button, [role="button"]'),
-    );
-  }
-
-  function requestClose() {
-    if (!canClose.value || !show.value) {
-      return;
-    }
-
-    setShow(false);
-  }
-
-  function handleTriggerClick() {
-    if (merged.value.persistent && show.value) {
-      return;
-    }
-
-    setShow(!show.value);
-  }
+  const overlay = useFloatingOverlay({
+    show,
+    setShow,
+    id: menuId,
+    config: merged,
+    claimOpen: claimOpenMenu,
+    anchorEl: () => props.anchorEl,
+    isClickAwayIgnored: (target) => {
+      return Boolean(
+        target.closest('[aria-haspopup="menu"], button, [role="button"]'),
+      );
+    },
+  });
 
   function handleTriggerKeyDown(event: KeyboardEvent) {
     if (
@@ -270,7 +186,7 @@ export function useMenu(
   }
 
   function handleContentKeyDown(event: KeyboardEvent) {
-    const container = contentRef.value;
+    const container = overlay.contentRef.value;
 
     if (!container) {
       return;
@@ -281,8 +197,8 @@ export function useMenu(
     switch (event.key) {
       case "Escape":
         event.preventDefault();
-        requestClose();
-        focusReference();
+        overlay.requestClose();
+        overlay.focusReference();
         break;
       case "ArrowDown":
         event.preventDefault();
@@ -301,168 +217,6 @@ export function useMenu(
         focusable.focusLast();
         break;
     }
-  }
-
-  function destroyPositionable() {
-    allowReferenceHiddenClose = false;
-    positionHandle?.destroy();
-    positionHandle = null;
-  }
-
-  function syncPositionable() {
-    destroyPositionable();
-
-    const reference = getReferenceElement();
-    const floating = contentRef.value;
-
-    if (!show.value || !reference || !floating) {
-      return;
-    }
-
-    positionHandle = createPositionable({
-      floating,
-      reference,
-      offset: merged.value.offset,
-      strategy: merged.value.strategy,
-      placement: merged.value.placement,
-      matchWidth: merged.value.matchWidth === true,
-      onReferenceHidden: () => {
-        if (!allowReferenceHiddenClose || !canClose.value || !show.value) {
-          return;
-        }
-
-        requestClose();
-      },
-    });
-
-    positionHandle.start();
-
-    void nextTick(() => {
-      allowReferenceHiddenClose = true;
-    });
-  }
-
-  function syncAutoFocus() {
-    if (!show.value || merged.value.disableAutoFocus || !contentRef.value) {
-      return;
-    }
-
-    createFocusable(contentRef.value).focusFirst();
-  }
-
-  function attachPointerListener() {
-    removePointerListener?.();
-
-    if (!show.value) {
-      removePointerListener = null;
-
-      return;
-    }
-
-    function handlePointerDown(event: PointerEvent) {
-      const target = event.target as Node;
-
-      if (isInsideReference(target)) {
-        return;
-      }
-
-      if (contentRef.value?.contains(target)) {
-        return;
-      }
-
-      if (merged.value.closeOnClickAway === false || !canClose.value) {
-        return;
-      }
-
-      if (isAnotherMenuOpener(target)) {
-        return;
-      }
-
-      requestClose();
-    }
-
-    document.addEventListener("pointerdown", handlePointerDown, true);
-    removePointerListener = () => {
-      document.removeEventListener("pointerdown", handlePointerDown, true);
-    };
-  }
-
-  function setTriggerRef(element: null | Element | ComponentPublicInstance) {
-    const next = resolveVnodeRefElement(element);
-
-    if (triggerRef.value === next) {
-      return;
-    }
-
-    triggerRef.value = next;
-
-    if (!next) {
-      return;
-    }
-
-    void nextTick(() => {
-      syncPositionable();
-    });
-  }
-
-  function syncLayerContainer() {
-    stackHandle?.setContainer(contentRef.value);
-  }
-
-  function setContentRef(element: null | Element | ComponentPublicInstance) {
-    const next = resolveVnodeRefElement(element);
-
-    if (contentRef.value === next) {
-      return;
-    }
-
-    contentRef.value = next;
-    syncLayerContainer();
-
-    if (!next) {
-      return;
-    }
-
-    void nextTick(() => {
-      syncPositionable();
-      syncAutoFocus();
-    });
-  }
-
-  function handleEscape() {
-    if (
-      !show.value ||
-      merged.value.closeOnEscape === false ||
-      !canClose.value
-    ) {
-      return;
-    }
-
-    requestClose();
-    focusReference();
-  }
-
-  function syncZIndex() {
-    const snapshot = getLayerStackEntry(layerStackId.value);
-
-    if (snapshot) {
-      stackZIndex.value = snapshot.zIndex;
-    }
-  }
-
-  function teardownOpenState() {
-    releaseOpenMenuClaim?.();
-    releaseOpenMenuClaim = null;
-    removePointerListener?.();
-    removePointerListener = null;
-    unsubscribeLayerStack?.();
-    unsubscribeLayerStack = null;
-    stackHandle?.release();
-    stackHandle = null;
-    stackOrder = null;
-    layerStackId.value = "";
-    stackZIndex.value = LAYER_STACK_BASE_Z_INDEX;
-    destroyPositionable();
   }
 
   const rootBind = computed(() => {
@@ -484,9 +238,9 @@ export function useMenu(
         tabindex: 0,
         role: "button",
         "aria-expanded": show.value,
+        onClickCapture: overlay.toggle,
         onKeydown: handleTriggerKeyDown,
         "aria-haspopup": "menu" as const,
-        onClickCapture: handleTriggerClick,
         "aria-controls": show.value ? menuId : undefined,
         class: cn({
           "inline-flex w-fit max-w-full cursor-pointer outline-hidden": true,
@@ -505,14 +259,14 @@ export function useMenu(
         role: "menu",
         onKeydown: handleContentKeyDown,
         style: {
-          zIndex: stackZIndex.value,
+          zIndex: overlay.stackZIndex.value,
         },
-        "aria-hidden": isHiddenWhileMounted.value ? true : undefined,
+        "aria-hidden": overlay.isHiddenWhileMounted.value ? true : undefined,
         class: cn({
           "bg-white text-dark-900 dark:bg-dark-800 dark:text-dark-100 ring-1 ring-black/5 dark:ring-white/10 outline-hidden overflow-hidden max-w-[calc(100vw-16px)]": true,
           "min-w-0 w-full": merged.value.matchWidth === true,
           "min-w-32 w-max": merged.value.matchWidth !== true,
-          "invisible pointer-events-none": isHiddenWhileMounted.value,
+          "invisible pointer-events-none": overlay.isHiddenWhileMounted.value,
           [roundedClass.value ?? ""]: true,
           [shadowClass.value ?? ""]: true,
           [get(mergedClasses.value, "content") ?? ""]: true,
@@ -521,86 +275,15 @@ export function useMenu(
     );
   });
 
-  watch(
-    show,
-    (isShown) => {
-      if (isShown) {
-        mounted.value = true;
-
-        void nextTick(() => {
-          if (!show.value) {
-            return;
-          }
-
-          releaseOpenMenuClaim = claimOpenMenu({ id: menuId, requestClose });
-        });
-
-        stackOrder = acquireLayerStackOrder();
-        stackHandle = pushLayerStack({
-          order: stackOrder,
-          onEscape: handleEscape,
-          container: contentRef.value ?? undefined,
-          lockScroll: merged.value.disableScrollLock !== true,
-        });
-
-        layerStackId.value = stackHandle.id;
-        stackZIndex.value = stackHandle.zIndex;
-        syncZIndex();
-        unsubscribeLayerStack = subscribeLayerStack(syncZIndex);
-
-        void nextTick(() => {
-          syncLayerContainer();
-          syncPositionable();
-          syncAutoFocus();
-          attachPointerListener();
-        });
-
-        return;
-      }
-
-      teardownOpenState();
-
-      if (!merged.value.keepMounted) {
-        mounted.value = false;
-      }
-    },
-    { immediate: true },
-  );
-
-  watch(
-    [
-      show,
-      () => props.anchorEl,
-      () => merged.value.offset,
-      () => merged.value.strategy,
-      () => merged.value.placement,
-    ],
-    () => {
-      void nextTick(() => {
-        syncPositionable();
-      });
-    },
-  );
-
-  watch([show, () => merged.value.disableAutoFocus], () => {
-    void nextTick(() => {
-      syncAutoFocus();
-    });
-  });
-
-  onBeforeUnmount(() => {
-    teardownOpenState();
-  });
-
   return {
     merged,
     menuId,
-    mounted,
     rootBind,
     isPortaled,
     triggerBind,
     contentBind,
-    setTriggerRef,
-    setContentRef,
+    mounted: overlay.mounted,
+    setTriggerRef: overlay.setTriggerRef,
+    setContentRef: overlay.setContentRef,
   };
 }
