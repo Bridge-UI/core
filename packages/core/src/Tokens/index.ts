@@ -308,6 +308,11 @@ export type {
   PaginationVariantItem,
 } from "@/Tokens/Pagination";
 export {
+  roundedProps as popoverRoundedProps,
+  shadowProps as popoverShadowProps,
+} from "@/Tokens/Popover";
+export type { PopoverRounded, PopoverShadow } from "@/Tokens/Popover";
+export {
   colorProps as progressColorProps,
   roundedProps as progressRoundedProps,
   sizeProps as progressSizeProps,

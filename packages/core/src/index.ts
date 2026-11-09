@@ -90,6 +90,7 @@ export type {
   OtpFieldConfigOverrides,
   PaginationConfigOverrides,
   PasswordFieldConfigOverrides,
+  PopoverConfigOverrides,
   ProgressConfigOverrides,
   RadioConfigOverrides,
   ResizableConfigOverrides,
@@ -580,6 +581,7 @@ export {
   claimOpenMenu,
   closeAllLayers,
   closeLayer,
+  closeOpenMenu,
   closeTopLayer,
   completeLayerHide,
   countDrawerTransitionLayers,
@@ -953,6 +955,11 @@ export type {
   PaginationVariant,
   PaginationVariantItem,
 } from "@/Tokens/Pagination";
+export {
+  roundedProps as popoverRoundedProps,
+  shadowProps as popoverShadowProps,
+} from "@/Tokens/Popover";
+export type { PopoverRounded, PopoverShadow } from "@/Tokens/Popover";
 export {
   colorProps as progressColorProps,
   roundedProps as progressRoundedProps,

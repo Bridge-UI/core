@@ -26,6 +26,17 @@ export function claimOpenMenu(claim: OpenMenuClaim): () => void {
 }
 
 /**
+ * Closes the open menu, if any, without claiming the slot. Used by non-menu
+ * overlays (Popover) so opening them dismisses a menu left open.
+ */
+export function closeOpenMenu() {
+  const claim = openMenuClaim;
+
+  openMenuClaim = null;
+  claim?.requestClose();
+}
+
+/**
  * Clears the open-menu claim. For tests only.
  */
 export function resetOpenMenuLayersForTests() {

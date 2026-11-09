@@ -123,6 +123,8 @@ export type {
   PaginationConfigOverrides,
   PasswordFieldConfigBase,
   PasswordFieldConfigOverrides,
+  PopoverConfigBase,
+  PopoverConfigOverrides,
   ProgressConfigBase,
   ProgressConfigOverrides,
   RadioConfigBase,
