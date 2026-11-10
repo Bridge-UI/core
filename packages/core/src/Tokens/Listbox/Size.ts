@@ -87,9 +87,9 @@ export const sizeProps: ListboxSize = {
   "md": {
     "panel": {
       "check": "size-4",
-      "option": "px-2 py-2 text-sm",
       "secondary": "mt-0.5 text-xs",
       "message": "px-2 py-3 text-sm",
+      "option": "px-2 py-1 min-h-9 text-sm",
       "primary": "text-sm font-medium leading-normal",
     },
     "menu": {
@@ -100,44 +100,12 @@ export const sizeProps: ListboxSize = {
       "primary": "text-sm font-medium leading-normal",
     },
   },
-  "2xl": {
-    "panel": {
-      "check": "size-5",
-      "secondary": "mt-0.5 text-sm",
-      "message": "px-3 py-3 text-lg",
-      "option": "px-3 py-2.5 text-lg",
-      "primary": "text-lg font-medium leading-normal",
-    },
-    "menu": {
-      "check": "size-5",
-      "secondary": "mt-0.5 text-sm",
-      "message": "px-3 py-3 text-lg",
-      "option": "px-3 py-1 min-h-11 text-lg",
-      "primary": "text-lg font-medium leading-normal",
-    },
-  },
-  "2xs": {
-    "panel": {
-      "check": "size-3",
-      "option": "px-2 py-1 text-xs",
-      "message": "px-2 py-2 text-xs",
-      "secondary": "mt-0.5 text-2xs",
-      "primary": "text-xs font-medium leading-normal",
-    },
-    "menu": {
-      "check": "size-3",
-      "secondary": "mt-0.5 text-2xs",
-      "message": "px-2 py-2 text-2xs",
-      "option": "px-2 py-0.5 min-h-5 text-2xs",
-      "primary": "text-2xs font-medium leading-normal",
-    },
-  },
   "sm": {
     "panel": {
       "check": "size-4",
       "secondary": "mt-0.5 text-xs",
       "message": "px-2 py-3 text-sm",
-      "option": "px-2 py-1.5 text-sm",
+      "option": "px-2 py-1 min-h-8 text-sm",
       "primary": "text-sm font-medium leading-normal",
     },
     "menu": {
@@ -148,14 +116,39 @@ export const sizeProps: ListboxSize = {
       "primary": "text-xs font-medium leading-normal",
     },
   },
-  "xs": {
+  "2xl": {
+    "menu": {
+      "check": "size-5",
+      "secondary": "mt-0.5 text-sm",
+      "message": "px-3 py-4 text-lg",
+      "option": "px-3 py-1 min-h-11 text-lg",
+      "primary": "text-lg font-medium leading-normal",
+    },
     "panel": {
-      "check": "size-3.5",
+      "check": "size-5",
+      "secondary": "mt-0.5 text-base",
+      "message": "px-3 py-4.5 text-lg",
+      "option": "px-3 py-1 min-h-12 text-lg",
+      "primary": "text-lg font-medium leading-normal",
+    },
+  },
+  "2xs": {
+    "panel": {
+      "check": "size-3",
+      "message": "px-2 py-2 text-xs",
       "secondary": "mt-0.5 text-2xs",
-      "option": "px-2 py-1.5 text-xs",
-      "message": "px-2 py-2.5 text-xs",
+      "option": "px-2 py-1 min-h-6 text-xs",
       "primary": "text-xs font-medium leading-normal",
     },
+    "menu": {
+      "check": "size-3",
+      "secondary": "mt-0.5 text-2xs",
+      "message": "px-2 py-2 text-2xs",
+      "option": "px-2 py-0.5 min-h-5 text-2xs",
+      "primary": "text-2xs font-medium leading-normal",
+    },
+  },
+  "xs": {
     "menu": {
       "check": "size-3",
       "message": "px-2 py-2 text-xs",
@@ -163,20 +156,27 @@ export const sizeProps: ListboxSize = {
       "option": "px-2 py-0.5 min-h-6 text-xs",
       "primary": "text-xs font-medium leading-normal",
     },
+    "panel": {
+      "check": "size-3.5",
+      "secondary": "mt-0.5 text-2xs",
+      "message": "px-2 py-2.5 text-xs",
+      "option": "px-2 py-1 min-h-7 text-xs",
+      "primary": "text-xs font-medium leading-normal",
+    },
   },
   "xl": {
     "panel": {
       "check": "size-5",
       "secondary": "mt-0.5 text-sm",
-      "message": "px-3 py-3 text-lg",
-      "option": "px-3 py-2.5 text-lg",
+      "message": "px-3 py-4 text-lg",
+      "option": "px-3 py-1 min-h-11 text-lg",
       "primary": "text-lg font-medium leading-normal",
     },
     "menu": {
       "check": "size-5",
       "secondary": "mt-0.5 text-sm",
-      "message": "px-2 py-3.5 text-base",
-      "option": "px-2 py-1 min-h-10 text-base",
+      "message": "px-3 py-3.5 text-base",
+      "option": "px-3 py-1 min-h-10 text-base",
       "primary": "text-base font-medium leading-normal",
     },
   },
@@ -184,15 +184,15 @@ export const sizeProps: ListboxSize = {
     "menu": {
       "check": "size-4",
       "secondary": "mt-0.5 text-xs",
-      "message": "px-2 py-3 text-sm",
-      "option": "px-2 py-0.5 min-h-9 text-sm",
+      "message": "px-3 py-3 text-sm",
+      "option": "px-3 py-0.5 min-h-9 text-sm",
       "primary": "text-sm font-medium leading-normal",
     },
     "panel": {
       "check": "size-5",
       "secondary": "mt-0.5 text-sm",
-      "option": "px-2 py-2.5 text-base",
-      "message": "px-2 py-3.5 text-base",
+      "message": "px-3 py-3.5 text-base",
+      "option": "px-3 py-1 min-h-10 text-base",
       "primary": "text-base font-medium leading-normal",
     },
   },
