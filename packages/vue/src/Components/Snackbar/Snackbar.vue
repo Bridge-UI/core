@@ -110,18 +110,19 @@ const teleportTarget = computed(() => {
           <div v-bind="contentBind(hasRight)">
             <div
               :class="{
-                'flex items-start': !hasRight,
                 'w-full flex': hasRight,
+                'flex items-start': !hasRight && !slots.trailing,
+                'flex items-center': !hasRight && Boolean(slots.trailing),
               }"
             >
               <div
                 v-if="hasIcon"
                 class="shrink-0"
                 :class="{
+                  'pt-0.5': Boolean(merged.img),
                   'w-6':
                     Boolean(slots.icon) ||
                     (!merged.img && Boolean(resolvedIcon)),
-                  'pt-0.5': Boolean(merged.img),
                 }"
               >
                 <slot name="icon" />
@@ -129,8 +130,8 @@ const teleportTarget = computed(() => {
                 <img
                   alt=""
                   :src="merged.img"
-                  class="w-10 h-10 rounded-full object-cover"
                   v-if="!slots.icon && merged.img"
+                  class="w-10 h-10 rounded-full object-cover"
                 />
 
                 <Icon
@@ -154,17 +155,9 @@ const teleportTarget = computed(() => {
                 </Text>
 
                 <slot />
-
-                <div
-                  v-if="slots.actions"
-                  class="flex mt-3 gap-x-3"
-                  :class="merged.classes?.actions"
-                >
-                  <slot name="actions" />
-                </div>
               </div>
 
-              <div class="flex ml-4 shrink-0">
+              <div class="flex items-center ml-4 shrink-0">
                 <slot name="trailing" />
 
                 <button
@@ -177,6 +170,14 @@ const teleportTarget = computed(() => {
                   <Icon size="lg" icon="clear" />
                 </button>
               </div>
+            </div>
+
+            <div
+              v-if="slots.actions"
+              class="flex mt-3 gap-x-3"
+              :class="merged.classes?.actions"
+            >
+              <slot name="actions" />
             </div>
           </div>
 
@@ -197,17 +198,18 @@ const teleportTarget = computed(() => {
     <div v-bind="contentBind(hasRight)">
       <div
         :class="{
-          'flex items-start': !hasRight,
           'w-full flex': hasRight,
+          'flex items-start': !hasRight && !slots.trailing,
+          'flex items-center': !hasRight && Boolean(slots.trailing),
         }"
       >
         <div
           v-if="hasIcon"
           class="shrink-0"
           :class="{
+            'pt-0.5': Boolean(merged.img),
             'w-6':
               Boolean(slots.icon) || (!merged.img && Boolean(resolvedIcon)),
-            'pt-0.5': Boolean(merged.img),
           }"
         >
           <slot name="icon" />
@@ -215,8 +217,8 @@ const teleportTarget = computed(() => {
           <img
             alt=""
             :src="merged.img"
-            class="w-10 h-10 rounded-full object-cover"
             v-if="!slots.icon && merged.img"
+            class="w-10 h-10 rounded-full object-cover"
           />
 
           <Icon
@@ -236,17 +238,9 @@ const teleportTarget = computed(() => {
           </Text>
 
           <slot />
-
-          <div
-            v-if="slots.actions"
-            class="flex mt-3 gap-x-3"
-            :class="merged.classes?.actions"
-          >
-            <slot name="actions" />
-          </div>
         </div>
 
-        <div class="flex ml-4 shrink-0">
+        <div class="flex items-center ml-4 shrink-0">
           <slot name="trailing" />
 
           <button
@@ -259,6 +253,14 @@ const teleportTarget = computed(() => {
             <Icon size="lg" icon="clear" />
           </button>
         </div>
+      </div>
+
+      <div
+        v-if="slots.actions"
+        class="flex mt-3 gap-x-3"
+        :class="merged.classes?.actions"
+      >
+        <slot name="actions" />
       </div>
     </div>
 
