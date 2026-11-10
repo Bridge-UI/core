@@ -14,6 +14,7 @@ import { afterEach, expect, test, vi } from "vitest";
 import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
+import type { BridgeSnackbarOpenOptions } from "@/Actions/Snackbar";
 import {
   BridgeSnackbarHost,
   BridgeSnackbarHostMissingError,
@@ -153,11 +154,85 @@ test("it should use the snackbar color, not primary", async () => {
   );
 
   await waitFor(() => {
-    const action = document.body.querySelector("button");
+    const action = buttonByText("Undo");
 
     expect(action).toBeTruthy();
     expect(action?.className).toContain("text-success-600");
     expect(action?.className).not.toContain("text-primary-600");
+  });
+});
+
+function buttonByText(text: string) {
+  return Array.from(document.body.querySelectorAll("button")).find(
+    (button) => button.textContent?.trim() === text,
+  );
+}
+
+function renderWithPlacement(options: Partial<BridgeSnackbarOpenOptions>) {
+  render(
+    <BridgeSnackbarHost>
+      <RunOnMount
+        onMount={(snackbar) => {
+          snackbar.open({
+            title: "Saved",
+            duration: false,
+            color: "warning",
+            transition: "none",
+            actions: {
+              accept: { label: "Retry" },
+              reject: { label: "Cancel" },
+            },
+            ...options,
+          });
+        }}
+      />
+    </BridgeSnackbarHost>,
+  );
+}
+
+test("it should render the reject action in the neutral dark color", async () => {
+  renderWithPlacement({});
+
+  await waitFor(() => {
+    expect(buttonByText("Cancel")?.className).toContain("text-dark-600");
+    expect(buttonByText("Cancel")?.className).not.toContain("secondary");
+  });
+});
+
+test("it should render both actions below the content by default", async () => {
+  renderWithPlacement({});
+
+  await waitFor(() => {
+    expect(buttonByText("Retry")).toBeTruthy();
+    expect(buttonByText("Cancel")).toBeTruthy();
+    expect(document.body.querySelector('[aria-label="Close"]')).toBeTruthy();
+  });
+});
+
+test("it should render only the accept action when placement is trailing", async () => {
+  renderWithPlacement({ actionsPlacement: "trailing" });
+
+  await waitFor(() => {
+    expect(buttonByText("Retry")).toBeTruthy();
+    expect(buttonByText("Cancel")).toBeUndefined();
+  });
+});
+
+test("it should hide the close button when placement is right", async () => {
+  renderWithPlacement({ actionsPlacement: "right" });
+
+  await waitFor(() => {
+    expect(buttonByText("Retry")).toBeTruthy();
+    expect(buttonByText("Cancel")).toBeTruthy();
+    expect(document.body.querySelector('[aria-label="Close"]')).toBeNull();
+  });
+});
+
+test("it should keep the close button when placement is right and closeButton is set", async () => {
+  renderWithPlacement({ closeButton: true, actionsPlacement: "right" });
+
+  await waitFor(() => {
+    expect(document.body.querySelector('[aria-label="Close"]')).toBeTruthy();
   });
 });
 

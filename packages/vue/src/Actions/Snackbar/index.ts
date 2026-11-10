@@ -13,6 +13,7 @@ export type {
   SnackbarActionColor,
   SnackbarActionLayout,
   SnackbarActions,
+  SnackbarActionsPlacement,
 } from "@/Actions/Snackbar/bridgeSnackbar.types";
 export { default as BridgeSnackbarHost } from "@/Actions/Snackbar/BridgeSnackbarHost.vue";
 export {

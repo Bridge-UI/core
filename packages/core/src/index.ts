@@ -620,7 +620,6 @@ export {
   trimLayersToMax,
   updateLayer,
   updateLayerMerged,
-  usesTrailingSnackbarActions,
 } from "@/Layer";
 export type {
   ActionHostRegistry,

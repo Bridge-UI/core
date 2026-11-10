@@ -3,7 +3,6 @@ import { isNil } from "es-toolkit/compat";
 
 // ** Local Imports
 import { prefersReducedMotion } from "@/Runtime/color";
-import type { SnackbarPadding } from "@/Tokens/Snackbar/Padding";
 import {
   transitionProps,
   type SnackbarTransition,
@@ -40,13 +39,4 @@ export function resolveEffectiveSnackbarTransition(
   transition: keyof SnackbarTransition,
 ): keyof SnackbarTransition {
   return prefersReducedMotion() ? "none" : transition;
-}
-
-/**
- * `small` padding places a single accept action in the trailing slot (former `dense` layout).
- */
-export function usesTrailingSnackbarActions(
-  padding: undefined | keyof SnackbarPadding,
-): boolean {
-  return padding === "small";
 }

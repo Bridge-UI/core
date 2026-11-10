@@ -14,6 +14,7 @@ export type {
   SnackbarActionControlProps,
   SnackbarActionLayout,
   SnackbarActions,
+  SnackbarActionsPlacement,
 } from "@/Actions/Snackbar/bridgeSnackbar.types";
 export { BridgeSnackbarHost } from "@/Actions/Snackbar/BridgeSnackbarHost";
 export {

@@ -39,4 +39,5 @@ export type {
   SnackbarAction,
   SnackbarActionLayout,
   SnackbarActions,
+  SnackbarActionsPlacement,
 } from "@/Actions/Snackbar";
