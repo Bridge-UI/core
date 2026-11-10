@@ -664,8 +664,8 @@ export function useSnackbar(
       customProps.value?.content,
       {},
       cn({
-        [get(paddingClass.value, "contentRight") ?? ""]: hasRight,
-        [get(paddingClass.value, "content") ?? ""]: !hasRight,
+        "w-0 flex-1 flex flex-col justify-center": hasRight,
+        [get(paddingClass.value, "content") ?? ""]: true,
         [get(mergedClasses.value, "content") ?? ""]: true,
       }),
     );

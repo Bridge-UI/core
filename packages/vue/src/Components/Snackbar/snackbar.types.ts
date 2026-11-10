@@ -263,7 +263,7 @@ export interface SnackbarSlots {
   title?: Slot<undefined>;
 
   /**
-   * Content before the close button (e.g. compact accept action with `padding="small"`).
+   * Content before the close button (e.g. a compact accept action).
    */
   trailing?: Slot<undefined>;
 }

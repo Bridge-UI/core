@@ -85,12 +85,26 @@ export function BridgeSnackbarHost({
       >
         {api.entries.map((entry) => {
           const entryId = entry.id;
-          const { actions, rightButtons, ...entrySnackbar } = entry.props;
+          const { actions, actionsPlacement, ...entrySnackbar } = entry.props;
 
-          const snackbarProps = mergeLayerShellProps(
-            hostSnackbar,
-            entrySnackbar,
-          );
+          const mergedProps = mergeLayerShellProps(hostSnackbar, entrySnackbar);
+
+          // Right-column actions already dismiss the snackbar, so the close
+          // button is hidden unless the entry asks for it explicitly.
+          const hasRight = derived(() => {
+            return (
+              actionsPlacement === "right" &&
+              Boolean(actions?.accept?.label || actions?.reject?.label)
+            );
+          });
+
+          const snackbarProps = derived(() => {
+            if (hasRight && entrySnackbar.closeButton === undefined) {
+              return { ...mergedProps, closeButton: false };
+            }
+
+            return mergedProps;
+          });
 
           return (
             <Snackbar
@@ -109,9 +123,9 @@ export function BridgeSnackbarHost({
               slots={resolveBridgeSnackbarSlots(
                 {
                   actions,
-                  rightButtons,
+                  actionsPlacement,
                   color: snackbarProps.color,
-                  padding: snackbarProps.padding,
+                  rounded: snackbarProps.rounded,
                 },
                 () => api.close(entryId),
               )}

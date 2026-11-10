@@ -29,12 +29,12 @@ function layoutClasses(
   const rootClass = {
     trailing: "mr-4 shrink-0",
     "right-accept": cn({
-      "w-full rounded-none": true,
+      "w-full h-full rounded-none": true,
       [topRightClass ?? ""]: true,
       [bottomRightClass ?? ""]: !hasReject,
     }),
     "right-reject": cn({
-      "w-full rounded-none": true,
+      "w-full h-full rounded-none": true,
       [bottomRightClass ?? ""]: true,
       [topRightClass ?? ""]: !hasAccept,
     }),
@@ -53,7 +53,7 @@ export function SnackbarActionControl({
   snackbarColor,
   snackbarRounded = "lg",
 }: SnackbarActionControlProps) {
-  const buttonColor = role === "accept" ? snackbarColor : "secondary";
+  const buttonColor = role === "accept" ? snackbarColor : "dark";
 
   const linkColor = buttonColor as keyof LinkColor;
 
@@ -88,7 +88,7 @@ export function SnackbarActionControl({
     <Button
       size="sm"
       color={buttonColor}
-      variant={action.solid ? "outline" : "flat"}
+      variant={action.variant ?? "flat"}
       {...mergeNestedComponentProps(action.button, {
         classes: {
           root: cn({

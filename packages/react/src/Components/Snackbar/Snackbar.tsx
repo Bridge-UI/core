@@ -67,15 +67,18 @@ function SnackbarPanel({
       <div {...contentBind(hasRight)}>
         <div
           className={cn({
-            "flex items-start": !hasRight,
             "w-full flex": hasRight,
+            "flex items-start": !hasRight && !slots?.trailing,
+            "flex items-center": !hasRight && Boolean(slots?.trailing),
           })}
         >
           {hasIcon && (
             <div
               className={cn("shrink-0", {
-                "w-6": Boolean(resolvedIcon || slots?.icon),
                 "pt-0.5": Boolean(merged.img),
+                "w-6":
+                  Boolean(slots?.icon) ||
+                  (!merged.img && Boolean(resolvedIcon)),
               })}
             >
               {slots?.icon}
@@ -84,7 +87,7 @@ function SnackbarPanel({
                 <img
                   alt=""
                   src={merged.img}
-                  className="w-10 h-10 rounded-full"
+                  className="w-10 h-10 rounded-full object-cover"
                 />
               )}
 
@@ -114,15 +117,9 @@ function SnackbarPanel({
             )}
 
             {children}
-
-            {slots?.actions && (
-              <div className={cn("flex mt-3 gap-x-3", merged.classes?.actions)}>
-                {slots.actions}
-              </div>
-            )}
           </div>
 
-          <div className="flex ml-4 shrink-0">
+          <div className="flex items-center ml-4 shrink-0">
             {slots?.trailing}
 
             {merged.closeButton !== false && (
@@ -137,6 +134,12 @@ function SnackbarPanel({
             )}
           </div>
         </div>
+
+        {slots?.actions && (
+          <div className={cn("flex mt-3 gap-x-3", merged.classes?.actions)}>
+            {slots.actions}
+          </div>
+        )}
       </div>
 
       {slots?.right}

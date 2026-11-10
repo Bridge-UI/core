@@ -30,6 +30,24 @@ test("it should not render when show is false", () => {
   ).toBeNull();
 });
 
+test("it should not squeeze the avatar image into the icon width", () => {
+  render(
+    <Snackbar
+      show
+      icon="info"
+      title="Avatar"
+      duration={false}
+      img="/avatar.png"
+      transition="none"
+    />,
+  );
+
+  const img = document.body.querySelector("img");
+
+  expect(img?.className).toContain("w-10");
+  expect(img?.parentElement?.className).not.toContain("w-6");
+});
+
 test("it should render in a portal when show is true", () => {
   render(
     <Snackbar show title="Toast" duration={false} transition="none">
