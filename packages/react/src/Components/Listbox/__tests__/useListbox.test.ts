@@ -182,7 +182,7 @@ test("it should bump size classes on dialog overlays", () => {
   );
 
   expect(result.current.merged.size).toBe("md");
-  expect(result.current.sizeClasses?.option).toContain("py-2");
+  expect(result.current.sizeClasses?.option).toContain("min-h-9");
   expect(result.current.sizeClasses?.primary).toContain("text-sm");
 });
 
