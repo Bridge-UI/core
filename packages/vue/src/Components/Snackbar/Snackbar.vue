@@ -118,7 +118,9 @@ const teleportTarget = computed(() => {
                 v-if="hasIcon"
                 class="shrink-0"
                 :class="{
-                  'w-6': Boolean(resolvedIcon || slots.icon),
+                  'w-6':
+                    Boolean(slots.icon) ||
+                    (!merged.img && Boolean(resolvedIcon)),
                   'pt-0.5': Boolean(merged.img),
                 }"
               >
@@ -127,7 +129,7 @@ const teleportTarget = computed(() => {
                 <img
                   alt=""
                   :src="merged.img"
-                  class="w-10 h-10 rounded-full"
+                  class="w-10 h-10 rounded-full object-cover"
                   v-if="!slots.icon && merged.img"
                 />
 
@@ -203,7 +205,8 @@ const teleportTarget = computed(() => {
           v-if="hasIcon"
           class="shrink-0"
           :class="{
-            'w-6': Boolean(resolvedIcon || slots.icon),
+            'w-6':
+              Boolean(slots.icon) || (!merged.img && Boolean(resolvedIcon)),
             'pt-0.5': Boolean(merged.img),
           }"
         >
@@ -212,7 +215,7 @@ const teleportTarget = computed(() => {
           <img
             alt=""
             :src="merged.img"
-            class="w-10 h-10 rounded-full"
+            class="w-10 h-10 rounded-full object-cover"
             v-if="!slots.icon && merged.img"
           />
 

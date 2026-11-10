@@ -74,7 +74,9 @@ function SnackbarPanel({
           {hasIcon && (
             <div
               className={cn("shrink-0", {
-                "w-6": Boolean(resolvedIcon || slots?.icon),
+                "w-6":
+                  Boolean(slots?.icon) ||
+                  (!merged.img && Boolean(resolvedIcon)),
                 "pt-0.5": Boolean(merged.img),
               })}
             >
@@ -84,7 +86,7 @@ function SnackbarPanel({
                 <img
                   alt=""
                   src={merged.img}
-                  className="w-10 h-10 rounded-full"
+                  className="w-10 h-10 rounded-full object-cover"
                 />
               )}
 
