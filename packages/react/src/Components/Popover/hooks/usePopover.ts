@@ -52,6 +52,7 @@ const popoverBridgeKeys = [
   "customProps",
   "keepMounted",
   "closeOnEscape",
+  "closeOnFocusOut",
   "closeOnClickAway",
   "disableAutoFocus",
   "disableScrollLock",
@@ -67,6 +68,7 @@ type PopoverLibDefaults = LibDefaultsShape<
   | "placement"
   | "teleportTo"
   | "closeOnEscape"
+  | "closeOnFocusOut"
   | "closeOnClickAway"
   | "disableScrollLock"
 >;
@@ -134,7 +136,11 @@ export function usePopover(
   });
 
   const hasTitle = derived(() => {
-    return merged.title !== undefined && merged.title !== null;
+    const title = merged.title;
+
+    return (
+      title !== undefined && title !== null && title !== false && title !== ""
+    );
   });
 
   const anchorEl = derived(() => {
@@ -191,6 +197,7 @@ export function usePopover(
     setShow,
     anchorEl,
     id: popoverId,
+    restoreFocus: true,
     arrow: merged.arrow,
     onOpen: closeOpenMenu,
     offset: merged.offset,
@@ -201,6 +208,7 @@ export function usePopover(
     persistent: merged.persistent,
     keepMounted: merged.keepMounted,
     closeOnEscape: merged.closeOnEscape,
+    closeOnFocusOut: merged.closeOnFocusOut,
     closeOnClickAway: merged.closeOnClickAway,
     disableAutoFocus: merged.disableAutoFocus,
     disableScrollLock: merged.disableScrollLock,
@@ -238,17 +246,7 @@ export function usePopover(
   }
 
   function handleContentBlur(event: FocusEvent<HTMLDivElement>) {
-    const next = event.relatedTarget;
-
-    if (!(next instanceof Node) || overlay.isInsideOverlay(next)) {
-      return;
-    }
-
-    if (merged.closeOnClickAway === false) {
-      return;
-    }
-
-    overlay.requestClose();
+    overlay.handleContentFocusOut(event.relatedTarget);
   }
 
   const rootBind = derived(() => {

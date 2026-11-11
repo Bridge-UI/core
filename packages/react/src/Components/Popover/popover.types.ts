@@ -103,8 +103,7 @@ export interface PopoverOwnProps {
   classes?: PopoverClasses;
 
   /**
-   * Whether the popover closes when clicking outside the trigger and content,
-   * or when focus moves outside them.
+   * Whether the popover closes when clicking outside the trigger and content.
    *
    * @default true
    */
@@ -116,6 +115,14 @@ export interface PopoverOwnProps {
    * @default true
    */
   closeOnEscape?: boolean;
+
+  /**
+   * Whether the popover closes when focus moves outside the trigger and
+   * content (Tab past the last field, for example).
+   *
+   * @default true
+   */
+  closeOnFocusOut?: boolean;
 
   /**
    * Props forwarded to each popover part.

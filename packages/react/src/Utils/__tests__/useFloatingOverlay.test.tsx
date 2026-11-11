@@ -82,6 +82,32 @@ test("it should call onOpen each time it opens", () => {
   expect(onOpen).toHaveBeenCalledTimes(2);
 });
 
+test("it should not call onOpen again when keepMounted changes while open", () => {
+  const onOpen = vi.fn();
+  const { rerender } = renderOverlay({ onOpen });
+
+  rerender({ onOpen, show: true });
+  rerender({ onOpen, show: true, keepMounted: true });
+
+  expect(onOpen).toHaveBeenCalledOnce();
+});
+
+test("it should release the claim when unmounted while open", async () => {
+  const release = vi.fn();
+  const claimOpen = vi.fn(() => release);
+  const { unmount, rerender } = renderOverlay({ claimOpen });
+
+  rerender({ claimOpen, show: true });
+
+  await act(async () => {
+    await Promise.resolve();
+  });
+
+  unmount();
+
+  expect(release).toHaveBeenCalledOnce();
+});
+
 test("it should claim and release the open slot", async () => {
   const release = vi.fn();
   const claimOpen = vi.fn(() => release);

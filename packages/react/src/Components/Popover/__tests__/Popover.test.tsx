@@ -325,3 +325,82 @@ test("it should anchor to anchorEl without a trigger slot", () => {
   expect(screen.getByRole("dialog").textContent).toContain("Anchored body");
   expect(document.querySelector('[aria-haspopup="dialog"]')).toBeNull();
 });
+
+test("it should keep the parent menu open when opened from inside it", async () => {
+  function Host() {
+    const [menuOpen, setMenuOpen] = useState(true);
+    const [open, setOpen] = useState(false);
+
+    return (
+      <Menu
+        show={menuOpen}
+        onShowChange={setMenuOpen}
+        slots={{ trigger: <Button>Menu</Button> }}
+      >
+        <Popover
+          show={open}
+          onShowChange={setOpen}
+          slots={{ trigger: <Button>Nested</Button> }}
+        >
+          Nested popover
+        </Popover>
+      </Menu>
+    );
+  }
+
+  render(<Host />);
+
+  await flushFrame();
+
+  fireEvent.click(screen.getByText("Nested"));
+  await flushFrame();
+
+  expect(screen.getByRole("menu")).toBeTruthy();
+  expect(screen.getByRole("dialog").textContent).toContain("Nested popover");
+});
+
+test("it should return focus to the trigger when closed from the content", () => {
+  render(
+    <ControlledPopover initialOpen>
+      {({ close }) => (
+        <button type="button" onClick={close}>
+          Done
+        </button>
+      )}
+    </ControlledPopover>,
+  );
+
+  const done = screen.getByText("Done");
+
+  done.focus();
+  fireEvent.click(done);
+
+  expect(screen.queryByRole("dialog")).toBeNull();
+  expect(document.activeElement).toBe(
+    document.querySelector('[aria-haspopup="dialog"]'),
+  );
+});
+
+test("it should stay open when focus moves outside and closeOnFocusOut is false", () => {
+  render(
+    <div>
+      <ControlledPopover initialOpen closeOnFocusOut={false} />
+      <button type="button">After</button>
+    </div>,
+  );
+
+  fireEvent.blur(screen.getByRole("dialog"), {
+    relatedTarget: screen.getByText("After"),
+  });
+
+  expect(screen.getByRole("dialog")).toBeTruthy();
+});
+
+test("it should not label the dialog when the title is falsy", () => {
+  render(<ControlledPopover initialOpen title={false} />);
+
+  const dialog = screen.getByRole("dialog");
+
+  expect(dialog.getAttribute("aria-labelledby")).toBeNull();
+  expect(dialog.querySelector(".mb-2")).toBeNull();
+});

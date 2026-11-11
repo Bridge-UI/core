@@ -53,7 +53,11 @@ export type UseFloatingOverlayOptions = {
   /**
    * Registers the overlay as the single open menu. Returns a release callback.
    */
-  claimOpen?: (claim: { id: string; requestClose: () => void }) => () => void;
+  claimOpen?: (claim: {
+    contains: (node: Node) => boolean;
+    id: string;
+    requestClose: () => void;
+  }) => () => void;
 
   /**
    * Whether a pointer down outside the trigger and content closes the overlay.
@@ -64,6 +68,12 @@ export type UseFloatingOverlayOptions = {
    * Whether Escape closes the overlay (top-most layer only).
    */
   closeOnEscape?: boolean;
+
+  /**
+   * Whether focus moving outside the trigger and content closes the overlay
+   * (wire `handleContentFocusOut` on the content).
+   */
+  closeOnFocusOut?: boolean;
 
   /**
    * When true, opening does not move focus into the content.
@@ -101,9 +111,9 @@ export type UseFloatingOverlayOptions = {
   offset?: number;
 
   /**
-   * Called once each time the overlay opens.
+   * Called once each time the overlay opens, with the anchor element.
    */
-  onOpen?: () => void;
+  onOpen?: (reference: null | HTMLElement) => void;
 
   /**
    * When true, Escape, click-away and reference-hidden do not close.
@@ -114,6 +124,12 @@ export type UseFloatingOverlayOptions = {
    * Preferred placement relative to the anchor.
    */
   placement?: PositionPlacement;
+
+  /**
+   * When true, closing while focus is inside the content moves focus back
+   * to the anchor (instead of letting it fall to `<body>`).
+   */
+  restoreFocus?: boolean;
 
   /**
    * Requests a visibility change (controlled state).
@@ -151,7 +167,9 @@ export function useFloatingOverlay(options: UseFloatingOverlayOptions) {
     matchWidth,
     persistent,
     keepMounted,
+    restoreFocus,
     closeOnEscape,
+    closeOnFocusOut,
     autoFocusContent,
     closeOnClickAway,
     disableAutoFocus,
@@ -180,6 +198,8 @@ export function useFloatingOverlay(options: UseFloatingOverlayOptions) {
   const releaseClaimRef = useRef<null | (() => void)>(null);
 
   const allowReferenceHiddenCloseRef = useRef(false);
+
+  const openedRef = useRef(false);
 
   if (show && stackOrderRef.current === null) {
     stackOrderRef.current = acquireLayerStackOrder();
@@ -241,6 +261,22 @@ export function useFloatingOverlay(options: UseFloatingOverlayOptions) {
     setShow(false);
   }
 
+  /**
+   * Closes when focus leaves the trigger and content (`closeOnFocusOut`).
+   * Pass the focus event's `relatedTarget`.
+   */
+  function handleContentFocusOut(next: null | EventTarget) {
+    if (closeOnFocusOut !== true) {
+      return;
+    }
+
+    if (!(next instanceof Node) || isInsideOverlay(next)) {
+      return;
+    }
+
+    requestClose();
+  }
+
   function toggle() {
     if (persistent && show) {
       return;
@@ -290,10 +326,19 @@ export function useFloatingOverlay(options: UseFloatingOverlayOptions) {
     });
   }
 
+  function releaseClaim() {
+    releaseClaimRef.current?.();
+    releaseClaimRef.current = null;
+  }
+
   useLayoutEffect(() => {
     if (show) {
       setMounted(true);
-      onOpen?.();
+
+      if (!openedRef.current) {
+        openedRef.current = true;
+        onOpen?.(getReferenceElement());
+      }
 
       if (!claimOpen) {
         return;
@@ -302,25 +347,43 @@ export function useFloatingOverlay(options: UseFloatingOverlayOptions) {
       let cancelled = false;
 
       queueMicrotask(() => {
-        if (cancelled || !show) {
+        if (cancelled) {
           return;
         }
 
-        releaseClaimRef.current = claimOpen({ id, requestClose });
+        releaseClaimRef.current = claimOpen({
+          id,
+          requestClose,
+          contains: isInsideOverlay,
+        });
       });
 
       return () => {
         cancelled = true;
+        releaseClaim();
       };
     }
 
-    releaseClaimRef.current?.();
-    releaseClaimRef.current = null;
+    openedRef.current = false;
+    releaseClaim();
 
     if (!keepMounted) {
       setMounted(false);
     }
   }, [show, id, keepMounted]);
+
+  useLayoutEffect(() => {
+    if (show || !restoreFocus) {
+      return;
+    }
+
+    const content = contentRef.current;
+    const active = document.activeElement;
+
+    if (content && active && content.contains(active)) {
+      focusReference();
+    }
+  }, [show, restoreFocus]);
 
   useLayoutEffect(() => {
     if (!show || !mounted) {
@@ -482,5 +545,6 @@ export function useFloatingOverlay(options: UseFloatingOverlayOptions) {
     isInsideOverlay,
     isInsideReference,
     isHiddenWhileMounted,
+    handleContentFocusOut,
   };
 }

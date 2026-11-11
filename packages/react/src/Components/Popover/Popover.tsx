@@ -20,6 +20,7 @@ const popoverLibDefaults = {
   strategy: "fixed",
   teleportTo: "body",
   closeOnEscape: true,
+  closeOnFocusOut: true,
   closeOnClickAway: true,
   disableScrollLock: true,
   placement: "bottom-start",
