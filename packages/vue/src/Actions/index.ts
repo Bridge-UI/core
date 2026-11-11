@@ -60,4 +60,5 @@ export type {
   BridgeSnackbarUpdateOptions,
   SnackbarAction,
   SnackbarActions,
+  SnackbarActionsPlacement,
 } from "@/Actions/Snackbar";

@@ -39,9 +39,11 @@ export interface SnackbarAction {
   onClick?: () => void;
 
   /**
-   * Whether the action renders as a solid bordered button.
+   * Button variant (ignored when `link` is set).
+   *
+   * @default "flat"
    */
-  solid?: boolean;
+  variant?: ButtonOwnProps["variant"];
 }
 
 export interface SnackbarActions {
@@ -51,7 +53,7 @@ export interface SnackbarActions {
   accept?: SnackbarAction;
 
   /**
-   * Secondary action (e.g. Dismiss, Cancel). Uses `secondary` by default.
+   * Secondary action (e.g. Dismiss, Cancel). Uses the neutral `dark` color by default.
    */
   reject?: SnackbarAction;
 }
@@ -59,6 +61,8 @@ export interface SnackbarActions {
 export type BridgeSnackbarShellProps = Partial<
   Omit<SnackbarOwnProps, "stackId">
 >;
+
+export type SnackbarActionsPlacement = "right" | "bottom" | "trailing";
 
 export type SnackbarActionLayout =
   "inline" | "trailing" | "right-accept" | "right-reject";
@@ -118,16 +122,20 @@ export type BridgeSnackbarItemProps = {
 
 export type BridgeSnackbarContentProps = BridgeSnackbarShellProps & {
   /**
-   * Preset inline or trailing actions (mapped to slots by the host).
+   * Preset actions (mapped to slots by the host according to `actionsPlacement`).
    */
   actions?: SnackbarActions;
 
   /**
-   * Renders `actions` as a vertical column on the right edge.
+   * Where `actions` render:
+   * - `bottom`: a row below the title / description.
+   * - `trailing`: the accept action next to the close button (`reject` is ignored).
+   * - `right`: a vertical column on the right edge (hides the close button
+   *   unless `closeButton` is set explicitly).
    *
-   * @default false
+   * @default "bottom"
    */
-  rightButtons?: boolean;
+  actionsPlacement?: SnackbarActionsPlacement;
 };
 
 export type BridgeSnackbarEntry = {

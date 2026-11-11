@@ -209,7 +209,7 @@ test("it should bump size classes on dialog overlays", () => {
   const { merged, sizeClasses } = mountUseListbox({ overlay: "drawer" });
 
   expect(merged.value.size).toBe("md");
-  expect(sizeClasses.value?.option).toContain("py-2");
+  expect(sizeClasses.value?.option).toContain("min-h-9");
   expect(sizeClasses.value?.primary).toContain("text-sm");
 });
 

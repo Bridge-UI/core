@@ -65,6 +65,5 @@ export {
   getSnackbarTransitionClass,
   hasSnackbarTransition,
   resolveEffectiveSnackbarTransition,
-  usesTrailingSnackbarActions,
 } from "@/Layer/snackbar";
 export type { LayerId } from "@/Layer/types";

@@ -1,6 +1,3 @@
-// ** Core Imports
-import { usesTrailingSnackbarActions } from "@bridge-ui/core/Layer";
-
 // ** Local Imports
 import type {
   BridgeSnackbarContentProps,
@@ -12,30 +9,27 @@ import type { SnackbarSlots } from "@/Components/Snackbar/snackbar.types";
 export function resolveBridgeSnackbarSlots(
   props: Pick<
     BridgeSnackbarContentProps,
-    "color" | "actions" | "padding" | "rounded" | "rightButtons"
+    "color" | "actions" | "rounded" | "actionsPlacement"
   >,
   close: () => void,
 ): undefined | SnackbarSlots {
   const {
     actions,
-    rightButtons,
     rounded = "lg",
     color = "primary",
-    padding = "medium",
+    actionsPlacement = "bottom",
   } = props;
 
-  const trailingActions = usesTrailingSnackbarActions(padding);
-
-  if (!actions?.accept && !actions?.reject) {
+  if (!actions?.accept?.label && !actions?.reject?.label) {
     return undefined;
   }
 
-  const snackbarColor = color as SnackbarActionColor;
   const slots: SnackbarSlots = {};
+  const snackbarColor = color as SnackbarActionColor;
 
-  if (rightButtons) {
+  if (actionsPlacement === "right") {
     slots.right = (
-      <div className="flex flex-col border-l border-dark-200 dark:border-dark-700">
+      <div className="flex flex-col min-w-20 border-l border-dark-200 dark:border-dark-700">
         {actions.accept?.label && (
           <div
             className={
@@ -81,7 +75,7 @@ export function resolveBridgeSnackbarSlots(
     return slots;
   }
 
-  if (trailingActions && actions.accept?.label) {
+  if (actionsPlacement === "trailing" && actions.accept?.label) {
     slots.trailing = (
       <SnackbarActionControl
         role="accept"
@@ -96,9 +90,9 @@ export function resolveBridgeSnackbarSlots(
     );
   }
 
-  if (!trailingActions && (actions.accept || actions.reject)) {
+  if (actionsPlacement === "bottom") {
     slots.actions = (
-      <>
+      <div className="flex items-center gap-x-2">
         {actions.accept?.label && (
           <SnackbarActionControl
             role="accept"
@@ -124,7 +118,7 @@ export function resolveBridgeSnackbarSlots(
             }}
           />
         )}
-      </>
+      </div>
     );
   }
 

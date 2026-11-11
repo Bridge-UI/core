@@ -3,11 +3,7 @@
 import { computed } from "vue";
 
 // ** Core Imports
-import {
-  completeLayerHide,
-  mergeLayerShellProps,
-  usesTrailingSnackbarActions,
-} from "@bridge-ui/core/Layer";
+import { completeLayerHide, mergeLayerShellProps } from "@bridge-ui/core/Layer";
 import type { SnackbarColor } from "@bridge-ui/core/Tokens";
 
 // ** Local Imports
@@ -17,10 +13,30 @@ import { Snackbar } from "@/Components/Snackbar";
 
 const props = defineProps<BridgeSnackbarItemProps>();
 
-const { actions, rightButtons, ...entrySnackbar } = props.entry.props;
+const {
+  actions,
+  actionsPlacement = "bottom",
+  ...entrySnackbar
+} = props.entry.props;
+
+const hasActions = computed(() => {
+  return Boolean(actions?.accept?.label || actions?.reject?.label);
+});
+
+const hasRight = computed(() => {
+  return hasActions.value && actionsPlacement === "right";
+});
 
 const snackbarProps = computed(() => {
-  return mergeLayerShellProps(props.hostSnackbar, entrySnackbar);
+  const merged = mergeLayerShellProps(props.hostSnackbar, entrySnackbar);
+
+  // Right-column actions already dismiss the snackbar, so the close
+  // button is hidden unless the entry asks for it explicitly.
+  if (hasRight.value && entrySnackbar.closeButton === undefined) {
+    return { ...merged, closeButton: false };
+  }
+
+  return merged;
 });
 
 const snackbarColor = computed(() => {
@@ -40,24 +56,12 @@ function runAction(handler?: () => void) {
   props.api.close(props.entry.id);
 }
 
-const hasRight = computed(() => {
-  return Boolean(rightButtons && (actions?.accept || actions?.reject));
-});
-
-const trailingActions = computed(() => {
-  return usesTrailingSnackbarActions(snackbarProps.value.padding);
-});
-
 const hasInlineActions = computed(() => {
-  return (
-    !rightButtons &&
-    !trailingActions.value &&
-    Boolean(actions?.accept || actions?.reject)
-  );
+  return hasActions.value && actionsPlacement === "bottom";
 });
 
 const hasTrailing = computed(() => {
-  return Boolean(trailingActions.value && actions?.accept?.label);
+  return actionsPlacement === "trailing" && Boolean(actions?.accept?.label);
 });
 </script>
 
@@ -75,25 +79,27 @@ const hasTrailing = computed(() => {
     "
   >
     <template #actions v-if="hasInlineActions">
-      <BridgeSnackbarAction
-        role="accept"
-        layout="inline"
-        :action="actions.accept"
-        v-if="actions?.accept?.label"
-        :snackbar-color="snackbarColor"
-        :snackbar-rounded="snackbarRounded"
-        v-on:run="runAction(actions?.accept?.onClick)"
-      />
+      <div class="flex items-center gap-x-2">
+        <BridgeSnackbarAction
+          role="accept"
+          layout="inline"
+          :action="actions.accept"
+          v-if="actions?.accept?.label"
+          :snackbar-color="snackbarColor"
+          :snackbar-rounded="snackbarRounded"
+          v-on:run="runAction(actions?.accept?.onClick)"
+        />
 
-      <BridgeSnackbarAction
-        role="reject"
-        layout="inline"
-        :action="actions.reject"
-        v-if="actions?.reject?.label"
-        :snackbar-color="snackbarColor"
-        :snackbar-rounded="snackbarRounded"
-        v-on:run="runAction(actions?.reject?.onClick)"
-      />
+        <BridgeSnackbarAction
+          role="reject"
+          layout="inline"
+          :action="actions.reject"
+          v-if="actions?.reject?.label"
+          :snackbar-color="snackbarColor"
+          :snackbar-rounded="snackbarRounded"
+          v-on:run="runAction(actions?.reject?.onClick)"
+        />
+      </div>
     </template>
 
     <template #trailing v-if="hasTrailing">
@@ -108,7 +114,9 @@ const hasTrailing = computed(() => {
     </template>
 
     <template #right v-if="hasRight">
-      <div class="flex flex-col border-l border-dark-200 dark:border-dark-700">
+      <div
+        class="flex flex-col min-w-20 border-l border-dark-200 dark:border-dark-700"
+      >
         <div
           class="flex flex-1 h-0"
           v-if="actions?.accept?.label"

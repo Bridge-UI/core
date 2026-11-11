@@ -6,7 +6,6 @@ import {
   getSnackbarTransitionClass,
   hasSnackbarTransition,
   resolveEffectiveSnackbarTransition,
-  usesTrailingSnackbarActions,
 } from "@/Layer/snackbar";
 
 describe("getSnackbarTransitionClass", () => {
@@ -28,15 +27,5 @@ describe("hasSnackbarTransition", () => {
 describe("resolveEffectiveSnackbarTransition", () => {
   test("it should return none when transition is none", () => {
     expect(resolveEffectiveSnackbarTransition("none")).toBe("none");
-  });
-});
-
-describe("usesTrailingSnackbarActions", () => {
-  test("it should return true for small padding", () => {
-    expect(usesTrailingSnackbarActions("small")).toBe(true);
-  });
-
-  test("it should return false for medium padding", () => {
-    expect(usesTrailingSnackbarActions("medium")).toBe(false);
   });
 });

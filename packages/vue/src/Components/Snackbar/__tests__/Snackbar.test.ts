@@ -75,6 +75,25 @@ test("it should teleport to body when modelValue is true", async () => {
   expect(document.body.querySelector("[data-snackbar-layer]")).not.toBeNull();
 });
 
+test("it should not squeeze the avatar image into the icon width", async () => {
+  mountSnackbar({
+    props: {
+      icon: "info",
+      title: "Avatar",
+      duration: false,
+      modelValue: true,
+      img: "/avatar.png",
+    },
+  });
+
+  await flushPromises();
+
+  const img = document.body.querySelector("img");
+
+  expect(img?.className).toContain("w-10");
+  expect(img?.parentElement?.className).not.toContain("w-6");
+});
+
 test("it should emit update:modelValue when the close button is clicked", async () => {
   const wrapper = mountSnackbar({
     props: {

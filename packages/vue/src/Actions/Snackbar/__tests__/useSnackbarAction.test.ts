@@ -128,11 +128,83 @@ test("it should use the snackbar color, not primary", async () => {
   await flushPromises();
   await nextTick();
 
-  const action = document.body.querySelector("button");
+  const action = buttonByText("Undo");
 
   expect(action).toBeTruthy();
   expect(action?.className).toContain("text-success-600");
   expect(action?.className).not.toContain("text-primary-600");
+});
+
+function buttonByText(text: string) {
+  return Array.from(document.body.querySelectorAll("button")).find(
+    (button) => button.textContent?.trim() === text,
+  );
+}
+
+function openWithPlacement(options: Record<string, unknown>) {
+  const Consumer = defineHeadlessComponent(() => {
+    const snackbar = useSnackbarAction();
+
+    snackbar.open({
+      title: "Saved",
+      duration: false,
+      color: "warning",
+      transition: "none",
+      actions: {
+        accept: { label: "Retry" },
+        reject: { label: "Cancel" },
+      },
+      ...options,
+    });
+  });
+
+  mountWithSnackbarHost(Consumer);
+}
+
+test("it should render the reject action in the neutral dark color", async () => {
+  openWithPlacement({});
+  await flushPromises();
+  await nextTick();
+
+  expect(buttonByText("Cancel")?.className).toContain("text-dark-600");
+  expect(buttonByText("Cancel")?.className).not.toContain("secondary");
+});
+
+test("it should render both actions below the content by default", async () => {
+  openWithPlacement({});
+  await flushPromises();
+  await nextTick();
+
+  expect(buttonByText("Retry")).toBeTruthy();
+  expect(buttonByText("Cancel")).toBeTruthy();
+  expect(document.body.querySelector('[aria-label="Close"]')).toBeTruthy();
+});
+
+test("it should render only the accept action when placement is trailing", async () => {
+  openWithPlacement({ actionsPlacement: "trailing" });
+  await flushPromises();
+  await nextTick();
+
+  expect(buttonByText("Retry")).toBeTruthy();
+  expect(buttonByText("Cancel")).toBeUndefined();
+});
+
+test("it should hide the close button when placement is right", async () => {
+  openWithPlacement({ actionsPlacement: "right" });
+  await flushPromises();
+  await nextTick();
+
+  expect(buttonByText("Retry")).toBeTruthy();
+  expect(buttonByText("Cancel")).toBeTruthy();
+  expect(document.body.querySelector('[aria-label="Close"]')).toBeNull();
+});
+
+test("it should keep the close button when placement is right and closeButton is set", async () => {
+  openWithPlacement({ closeButton: true, actionsPlacement: "right" });
+  await flushPromises();
+  await nextTick();
+
+  expect(document.body.querySelector('[aria-label="Close"]')).toBeTruthy();
 });
 
 test("it should grow downward with newest below oldest", async () => {

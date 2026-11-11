@@ -20,7 +20,7 @@ const emit = defineEmits<{
 }>();
 
 const buttonColor = computed(() => {
-  return props.role === "accept" ? props.snackbarColor : "secondary";
+  return props.role === "accept" ? props.snackbarColor : "dark";
 });
 
 const linkColor = computed(() => {
@@ -46,12 +46,12 @@ const layoutClass = computed(() => {
   const rootClass = {
     trailing: "mr-4 shrink-0",
     "right-accept": cn({
-      "w-full rounded-none": true,
+      "w-full h-full rounded-none": true,
       [topRightClass ?? ""]: true,
       [bottomRightClass ?? ""]: !props.hasReject,
     }),
     "right-reject": cn({
-      "w-full rounded-none": true,
+      "w-full h-full rounded-none": true,
       [bottomRightClass ?? ""]: true,
       [topRightClass ?? ""]: !props.hasAccept,
     }),
@@ -114,7 +114,7 @@ function onLinkClick(event: PointerEvent) {
     v-on:click="onRun"
     :color="buttonColor"
     v-bind="buttonBind"
-    :variant="action.solid ? 'outline' : 'flat'"
+    :variant="action.variant ?? 'flat'"
   >
     {{ action.label }}
   </Button>
