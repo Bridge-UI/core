@@ -1,7 +1,7 @@
 // ** External Imports
 import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test, vi } from "vitest";
-import { defineComponent, h, ref } from "vue";
+import { defineComponent, h, nextTick, ref } from "vue";
 
 // ** Core Imports
 import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
@@ -51,9 +51,11 @@ function mountOverlay(
     },
   });
 
-  mountedWrappers.push(mount(Wrapper, { attachTo: document.body }));
+  const wrapper = mount(Wrapper, { attachTo: document.body });
 
-  return { show, result, setShow };
+  mountedWrappers.push(wrapper);
+
+  return { show, result, setShow, wrapper };
 }
 
 test("it should mount when shown and unmount when hidden", async () => {
@@ -170,4 +172,39 @@ test("it should lock body scroll unless disableScrollLock is set", async () => {
   free.show.value = true;
   await flushPromises();
   expect(document.body.style.overflow).not.toBe("hidden");
+});
+
+test("it should drop deferred open work when unmounted before it runs", async () => {
+  const claimOpen = vi.fn(() => vi.fn());
+  const onOpen = vi.fn();
+  const { show, wrapper } = mountOverlay({}, { onOpen, claimOpen });
+  const addSpy = vi.spyOn(document, "addEventListener");
+
+  show.value = true;
+  await nextTick();
+  wrapper.unmount();
+  mountedWrappers.pop();
+  await flushPromises();
+
+  const pointerListeners = addSpy.mock.calls.filter(
+    ([type]) => type === "pointerdown",
+  );
+
+  addSpy.mockRestore();
+
+  expect(pointerListeners).toHaveLength(0);
+  expect(claimOpen).not.toHaveBeenCalled();
+  expect(onOpen).not.toHaveBeenCalled();
+});
+
+test("it should run open work once per open", async () => {
+  const onOpen = vi.fn();
+  const claimOpen = vi.fn(() => vi.fn());
+  const { show } = mountOverlay({}, { onOpen, claimOpen });
+
+  show.value = true;
+  await flushPromises();
+
+  expect(onOpen).toHaveBeenCalledOnce();
+  expect(claimOpen).toHaveBeenCalledOnce();
 });

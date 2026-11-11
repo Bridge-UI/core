@@ -354,3 +354,91 @@ test("it should anchor to anchorEl without a trigger slot", async () => {
   expect(getDialog()?.textContent).toContain("Anchored body");
   expect(getTrigger()).toBeNull();
 });
+
+test("it should keep the parent menu open when opened from inside it", async () => {
+  const menuOpen = ref(true);
+  const popoverOpen = ref(false);
+
+  const Host = defineComponent({
+    setup() {
+      return () =>
+        h(
+          Menu,
+          {
+            modelValue: menuOpen.value,
+            "onUpdate:modelValue": (value: boolean) => {
+              menuOpen.value = value;
+            },
+          },
+          {
+            trigger: () => h(Button, null, () => "Menu"),
+            default: () =>
+              h(
+                Popover,
+                {
+                  modelValue: popoverOpen.value,
+                  "onUpdate:modelValue": (value: boolean) => {
+                    popoverOpen.value = value;
+                  },
+                },
+                {
+                  default: () => "Nested popover",
+                  trigger: () => h(Button, null, () => "Nested"),
+                },
+              ),
+          },
+        );
+    },
+  });
+
+  const wrapper = mount(Host, { attachTo: document.body });
+
+  mountedWrappers.push(wrapper);
+  await flushFrame();
+
+  const nested = Array.from(document.body.querySelectorAll("button")).find(
+    (button) => button.textContent === "Nested",
+  );
+
+  nested?.click();
+  await flushFrame();
+
+  expect(menuOpen.value).toBe(true);
+  expect(getDialog()?.textContent).toContain("Nested popover");
+});
+
+test("it should return focus to the trigger when closed from the content", async () => {
+  mountPopover({
+    props: { modelValue: true },
+    slots: {
+      default: ({ close }: { close: () => void }) =>
+        h("button", { id: "done", type: "button", onClick: close }, "Done"),
+    },
+  });
+  await flushPromises();
+
+  const done = document.getElementById("done");
+
+  done?.focus();
+  done?.click();
+  await flushPromises();
+
+  expect(getDialog()).toBeNull();
+  expect(document.activeElement).toBe(getTrigger());
+});
+
+test("it should stay open when focus moves outside and closeOnFocusOut is false", async () => {
+  const outside = document.createElement("button");
+
+  document.body.appendChild(outside);
+
+  mountPopover({ props: { modelValue: true, closeOnFocusOut: false } });
+  await flushPromises();
+
+  getDialog()?.dispatchEvent(
+    new FocusEvent("focusout", { bubbles: true, relatedTarget: outside }),
+  );
+  await flushPromises();
+
+  expect(getDialog()).not.toBeNull();
+});

@@ -155,8 +155,9 @@ Escape, click-away and focus leaving do not close it; close from the content.
 | `anchorEl`          | `HTMLElement \| null`     | —              | Element that anchors the popover. When set, it is used for positioning and click-away instead of the `trigger` slot wrapper. Not merged into Bridge defaults.      |
 | `arrow`             | `boolean`                 | `false`        | Whether to show an arrow pointing at the anchor.                                                                                                                   |
 | `classes`           | `PopoverClasses`          | —              | Part classes: `root`, `trigger`, `content`, `title`, `arrow`.                                                                                                      |
-| `closeOnClickAway`  | `boolean`                 | `true`         | Whether the popover closes when clicking outside the trigger and content, or when focus moves outside them.                                                        |
+| `closeOnClickAway`  | `boolean`                 | `true`         | Whether the popover closes when clicking outside the trigger and content.                                                                                          |
 | `closeOnEscape`     | `boolean`                 | `true`         | Whether the popover closes on escape key press.                                                                                                                    |
+| `closeOnFocusOut`   | `boolean`                 | `true`         | Whether the popover closes when focus moves outside the trigger and content.                                                                                       |
 | `customProps`       | `PopoverCustomProps`      | —              | Props forwarded to each part (`root`, `trigger`, `content`, `title`, `arrow`).                                                                                     |
 | `disableAutoFocus`  | `boolean`                 | `false`        | When true, the popover does not move focus into the content on open.                                                                                               |
 | `disableScrollLock` | `boolean`                 | `true`         | When true, body scroll is not locked while the popover is open.                                                                                                    |
@@ -196,7 +197,7 @@ Escape, click-away and focus leaving do not close it; close from the content.
 ## Accessibility
 
 - Content is `role="dialog"` (non-modal: no focus trap, no scroll lock by default). The trigger wrapper has `aria-haspopup="dialog"`, `aria-expanded` and `aria-controls`.
-- Opening moves focus to the first focusable element (or the content itself). Escape closes the top-most layer and returns focus to the trigger.
+- Opening moves focus to the first focusable element (or the content itself). Escape closes the top-most layer. Closing while focus is inside the content (Escape, `close`, click-away) returns focus to the trigger.
 - Clicks inside layers opened from the content (a `Select` list, a nested `Menu`) do not close the popover.
 - Opening a popover closes any open `Menu`.
 

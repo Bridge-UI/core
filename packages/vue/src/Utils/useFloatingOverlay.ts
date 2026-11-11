@@ -51,6 +51,12 @@ export type FloatingOverlayConfig = {
   closeOnEscape?: boolean;
 
   /**
+   * Whether focus moving outside the trigger and content closes the overlay
+   * (wire `handleContentFocusOut` on the content).
+   */
+  closeOnFocusOut?: boolean;
+
+  /**
    * When true, opening does not move focus into the content.
    */
   disableAutoFocus?: boolean;
@@ -108,7 +114,11 @@ export type UseFloatingOverlayOptions = {
   /**
    * Registers the overlay as the single open menu. Returns a release callback.
    */
-  claimOpen?: (claim: { id: string; requestClose: () => void }) => () => void;
+  claimOpen?: (claim: {
+    contains: (node: Node) => boolean;
+    id: string;
+    requestClose: () => void;
+  }) => () => void;
 
   /**
    * Reactive behavior settings (usually the merged component props).
@@ -126,9 +136,15 @@ export type UseFloatingOverlayOptions = {
   isClickAwayIgnored?: (target: Element) => boolean;
 
   /**
-   * Called once each time the overlay opens.
+   * Called once each time the overlay opens, with the anchor element.
    */
-  onOpen?: () => void;
+  onOpen?: (reference: null | HTMLElement) => void;
+
+  /**
+   * When true, closing while focus is inside the content moves focus back
+   * to the anchor (instead of letting it fall to `<body>`).
+   */
+  restoreFocus?: boolean;
 
   /**
    * Requests a visibility change (controlled state).
@@ -167,6 +183,20 @@ export function useFloatingOverlay(options: UseFloatingOverlayOptions) {
   let removePointerListener: null | (() => void) = null;
   let releaseClaim: null | (() => void) = null;
   let allowReferenceHiddenClose = false;
+  let stackOrder: null | number = null;
+  let disposed = false;
+
+  /**
+   * Work deferred to the next tick (after the content renders). Coalesced so
+   * each open runs it once, and dropped on close or unmount.
+   */
+  type PendingSync = {
+    focus: boolean;
+    open: boolean;
+    position: boolean;
+  };
+
+  let pendingSync: null | PendingSync = null;
 
   const show = computed(() => {
     return toValue(options.show);
@@ -224,6 +254,22 @@ export function useFloatingOverlay(options: UseFloatingOverlayOptions) {
     }
 
     setShow(false);
+  }
+
+  /**
+   * Closes when focus leaves the trigger and content (`closeOnFocusOut`).
+   * Pass the focus event's `relatedTarget`.
+   */
+  function handleContentFocusOut(next: null | EventTarget) {
+    if (config.value.closeOnFocusOut !== true) {
+      return;
+    }
+
+    if (!(next instanceof Node) || isInsideOverlay(next)) {
+      return;
+    }
+
+    requestClose();
   }
 
   function toggle() {
@@ -331,6 +377,94 @@ export function useFloatingOverlay(options: UseFloatingOverlayOptions) {
     stackHandle?.setContainer(contentRef.value);
   }
 
+  function runOpenTasks() {
+    options.onOpen?.(getReferenceElement());
+
+    if (claimOpen) {
+      releaseClaim = claimOpen({
+        id,
+        requestClose,
+        contains: isInsideOverlay,
+      });
+    }
+
+    attachPointerListener();
+  }
+
+  function scheduleSync(parts: Partial<PendingSync>) {
+    if (pendingSync) {
+      pendingSync.open ||= parts.open === true;
+      pendingSync.focus ||= parts.focus === true;
+      pendingSync.position ||= parts.position === true;
+
+      return;
+    }
+
+    const task: PendingSync = {
+      open: parts.open === true,
+      focus: parts.focus === true,
+      position: parts.position === true,
+    };
+
+    pendingSync = task;
+
+    void nextTick(() => {
+      if (pendingSync !== task) {
+        return;
+      }
+
+      pendingSync = null;
+
+      if (disposed || !show.value) {
+        return;
+      }
+
+      syncLayerContainer();
+
+      if (task.open) {
+        runOpenTasks();
+      }
+
+      if (task.position) {
+        syncPositionable();
+      }
+
+      if (task.focus) {
+        syncAutoFocus();
+      }
+    });
+  }
+
+  function pushLayer() {
+    stackHandle?.release();
+
+    stackOrder ??= acquireLayerStackOrder();
+
+    stackHandle = pushLayerStack({
+      order: stackOrder,
+      onEscape: handleEscape,
+      container: contentRef.value ?? undefined,
+      lockScroll: config.value.disableScrollLock !== true,
+    });
+
+    layerStackId.value = stackHandle.id;
+    stackZIndex.value = stackHandle.zIndex;
+    syncZIndex();
+  }
+
+  function restoreFocusIfInside() {
+    if (!options.restoreFocus) {
+      return;
+    }
+
+    const content = contentRef.value;
+    const active = document.activeElement;
+
+    if (content && active && content.contains(active)) {
+      focusReference();
+    }
+  }
+
   function setTriggerRef(element: null | Element | ComponentPublicInstance) {
     const next = resolveVnodeRefElement(element);
 
@@ -340,13 +474,11 @@ export function useFloatingOverlay(options: UseFloatingOverlayOptions) {
 
     triggerRef.value = next;
 
-    if (!next) {
+    if (!next || !show.value) {
       return;
     }
 
-    void nextTick(() => {
-      syncPositionable();
-    });
+    scheduleSync({ position: true });
   }
 
   function setContentRef(element: null | Element | ComponentPublicInstance) {
@@ -359,14 +491,11 @@ export function useFloatingOverlay(options: UseFloatingOverlayOptions) {
     contentRef.value = next;
     syncLayerContainer();
 
-    if (!next) {
+    if (!next || !show.value) {
       return;
     }
 
-    void nextTick(() => {
-      syncPositionable();
-      syncAutoFocus();
-    });
+    scheduleSync({ focus: true, position: true });
   }
 
   function setArrowRef(element: null | Element | ComponentPublicInstance) {
@@ -395,6 +524,8 @@ export function useFloatingOverlay(options: UseFloatingOverlayOptions) {
   }
 
   function teardownOpenState() {
+    pendingSync = null;
+    stackOrder = null;
     releaseClaim?.();
     releaseClaim = null;
     removePointerListener?.();
@@ -413,40 +544,14 @@ export function useFloatingOverlay(options: UseFloatingOverlayOptions) {
     (isShown) => {
       if (isShown) {
         mounted.value = true;
-        options.onOpen?.();
-
-        if (claimOpen) {
-          void nextTick(() => {
-            if (!show.value) {
-              return;
-            }
-
-            releaseClaim = claimOpen({ id, requestClose });
-          });
-        }
-
-        stackHandle = pushLayerStack({
-          onEscape: handleEscape,
-          order: acquireLayerStackOrder(),
-          container: contentRef.value ?? undefined,
-          lockScroll: config.value.disableScrollLock !== true,
-        });
-
-        layerStackId.value = stackHandle.id;
-        stackZIndex.value = stackHandle.zIndex;
-        syncZIndex();
+        pushLayer();
         unsubscribeLayerStack = subscribeLayerStack(syncZIndex);
-
-        void nextTick(() => {
-          syncLayerContainer();
-          syncPositionable();
-          syncAutoFocus();
-          attachPointerListener();
-        });
+        scheduleSync({ open: true, focus: true, position: true });
 
         return;
       }
 
+      restoreFocusIfInside();
       teardownOpenState();
 
       if (!config.value.keepMounted) {
@@ -457,8 +562,16 @@ export function useFloatingOverlay(options: UseFloatingOverlayOptions) {
   );
 
   watch(
+    () => config.value.disableScrollLock,
+    () => {
+      if (show.value && stackHandle) {
+        pushLayer();
+      }
+    },
+  );
+
+  watch(
     [
-      show,
       anchorEl,
       () => config.value.arrow,
       () => config.value.offset,
@@ -467,19 +580,23 @@ export function useFloatingOverlay(options: UseFloatingOverlayOptions) {
       () => config.value.matchWidth,
     ],
     () => {
-      void nextTick(() => {
-        syncPositionable();
-      });
+      if (show.value) {
+        scheduleSync({ position: true });
+      }
     },
   );
 
-  watch([show, () => config.value.disableAutoFocus], () => {
-    void nextTick(() => {
-      syncAutoFocus();
-    });
-  });
+  watch(
+    () => config.value.disableAutoFocus,
+    () => {
+      if (show.value) {
+        scheduleSync({ focus: true });
+      }
+    },
+  );
 
   onBeforeUnmount(() => {
+    disposed = true;
     teardownOpenState();
   });
 
@@ -498,5 +615,6 @@ export function useFloatingOverlay(options: UseFloatingOverlayOptions) {
     isInsideOverlay,
     isInsideReference,
     isHiddenWhileMounted,
+    handleContentFocusOut,
   };
 }

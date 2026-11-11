@@ -43,6 +43,7 @@ const popoverBridgeKeys = [
   "customProps",
   "keepMounted",
   "closeOnEscape",
+  "closeOnFocusOut",
   "closeOnClickAway",
   "disableAutoFocus",
   "disableScrollLock",
@@ -58,6 +59,7 @@ type PopoverLibDefaults = LibDefaultsShape<
   | "placement"
   | "teleportTo"
   | "closeOnEscape"
+  | "closeOnFocusOut"
   | "closeOnClickAway"
   | "disableScrollLock"
 >;
@@ -180,6 +182,7 @@ export function usePopover(
     setShow,
     id: popoverId,
     config: merged,
+    restoreFocus: true,
     onOpen: closeOpenMenu,
     autoFocusContent: true,
     anchorEl: () => props.anchorEl,
@@ -211,17 +214,7 @@ export function usePopover(
   }
 
   function handleContentFocusOut(event: FocusEvent) {
-    const next = event.relatedTarget;
-
-    if (!(next instanceof Node) || overlay.isInsideOverlay(next)) {
-      return;
-    }
-
-    if (merged.value.closeOnClickAway === false) {
-      return;
-    }
-
-    overlay.requestClose();
+    overlay.handleContentFocusOut(event.relatedTarget);
   }
 
   const rootBind = computed(() => {
