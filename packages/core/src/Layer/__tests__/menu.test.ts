@@ -47,3 +47,21 @@ test("it should close the open menu without claiming the slot", () => {
 test("it should do nothing when no menu is open", () => {
   expect(() => closeOpenMenu()).not.toThrow();
 });
+
+test("it should keep the open menu when the origin is inside it", () => {
+  const closeA = vi.fn();
+  const inside = {} as Node;
+
+  claimOpenMenu({
+    id: "menu-a",
+    requestClose: closeA,
+    contains: (node) => node === inside,
+  });
+  closeOpenMenu(inside);
+
+  expect(closeA).not.toHaveBeenCalled();
+
+  closeOpenMenu({} as Node);
+
+  expect(closeA).toHaveBeenCalledOnce();
+});
