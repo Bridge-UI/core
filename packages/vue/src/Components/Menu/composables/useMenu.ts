@@ -89,9 +89,8 @@ export function useMenu(
   libDefaults: MenuLibDefaults,
   options: MenuOptions = {},
 ) {
-  const attrs = useAttrs();
-
   const menuId = useId();
+  const attrs = useAttrs();
 
   const show = computed(() => {
     return toValue(options.show ?? false);

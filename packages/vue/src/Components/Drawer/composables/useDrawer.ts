@@ -131,39 +131,22 @@ export function useDrawer(
 ) {
   const attrs = useAttrs();
 
-  let pendingLeave = false;
-
   const active = ref(false);
-
   const mounted = ref(false);
-
   const layerStackId = ref("");
-
-  let leaveTransitionEndsPending = 0;
-
-  let stackOrder: null | number = null;
-
-  let focusTrap: null | FocusTrap = null;
-
-  const panelRef = ref<null | HTMLElement>(null);
-
-  /**
-   * Root element (backdrop included): the layer's container on the stack, so
-   * a press on the backdrop counts as inside this layer for the overlays it
-   * was opened from.
-   */
-  const rootRef = ref<null | HTMLElement>(null);
-
-  let stackHandle: null | LayerStackHandle = null;
-
-  let enterPaintCancel: null | (() => void) = null;
-
   const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
-
-  let unsubscribeLayerStack: null | (() => void) = null;
-
   const transitionState = ref<"open" | "closed">("closed");
 
+  const rootRef = ref<null | HTMLElement>(null);
+  const panelRef = ref<null | HTMLElement>(null);
+
+  let pendingLeave = false;
+  let leaveTransitionEndsPending = 0;
+  let stackOrder: null | number = null;
+  let focusTrap: null | FocusTrap = null;
+  let stackHandle: null | LayerStackHandle = null;
+  let enterPaintCancel: null | (() => void) = null;
+  let unsubscribeLayerStack: null | (() => void) = null;
   let leaveFallbackTimeout: null | ReturnType<typeof setTimeout> = null;
 
   const show = computed(() => {

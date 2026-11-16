@@ -170,39 +170,25 @@ export type UsePopoverBaseOptions = {
 export function usePopoverBase(options: UsePopoverBaseOptions) {
   const { id, setShow, claimOpen, isClickAwayDeferred } = options;
 
-  let disposed = false;
-
   const mounted = ref(false);
-
   const layerStackId = ref("");
-
-  let stackOrder: null | number = null;
-
-  let allowReferenceHiddenClose = false;
-
-  let releaseClaim: null | (() => void) = null;
-
-  const arrowRef = ref<null | HTMLElement>(null);
-
-  let stackHandle: null | LayerStackHandle = null;
-
-  const triggerRef = ref<null | HTMLElement>(null);
-
-  const contentRef = ref<null | HTMLElement>(null);
-
-  let positionHandle: null | PositionHandle = null;
-
   const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
 
+  const arrowRef = ref<null | HTMLElement>(null);
+  const triggerRef = ref<null | HTMLElement>(null);
+  const contentRef = ref<null | HTMLElement>(null);
+
+  let disposed = false;
+  let stackOrder: null | number = null;
+  let allowReferenceHiddenClose = false;
+  let releaseClaim: null | (() => void) = null;
+  let stackHandle: null | LayerStackHandle = null;
+  let positionHandle: null | PositionHandle = null;
   let unsubscribeLayerStack: null | (() => void) = null;
-
   let removePointerListener: null | (() => void) = null;
-
   let removeDeferredListener: null | (() => void) = null;
-
-  let deferredTimeoutId: null | ReturnType<typeof setTimeout> = null;
-
   let removeFocusOutListener: null | (() => void) = null;
+  let deferredTimeoutId: null | ReturnType<typeof setTimeout> = null;
 
   /**
    * Set when a pointer down outside closed the overlay: focus follows the

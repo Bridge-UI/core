@@ -102,7 +102,6 @@ export function usePopover(
   options: PopoverOptions = {},
 ) {
   const attrs = useAttrs();
-
   const popoverId = useId();
 
   const titleId = `${popoverId}-title`;
