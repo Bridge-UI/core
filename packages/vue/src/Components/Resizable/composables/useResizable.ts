@@ -80,18 +80,18 @@ export function useResizable(
   libDefaults: ResizableLibDefaults,
   emit?: SetupContext<ResizableEmits>["emit"],
 ) {
-  const attrs = useAttrs();
   const vueId = useId();
+  const attrs = useAttrs();
   const groupId = `bridge-resizable${vueId}`;
 
-  const rootRef = ref<null | HTMLElement>(null);
   const items = ref<ResizableItem[]>([]);
+  const rootRef = ref<null | HTMLElement>(null);
   const layout = ref<Record<string, number>>({});
   const draggingHandleId = ref<null | string>(null);
 
+  const expanded: Record<string, number> = {};
   const panels = new Map<string, () => ResizablePanelEntry>();
   const handles = new Map<string, () => ResizableHandleEntry>();
-  const expanded: Record<string, number> = {};
 
   let stopDrag: null | (() => void) = null;
 

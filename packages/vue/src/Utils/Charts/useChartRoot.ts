@@ -145,7 +145,6 @@ export function useChartRoot<Merged extends ChartRootMerged>({
   const rootRef = shallowRef<null | HTMLDivElement>(null);
   const plotRef = shallowRef<null | HTMLDivElement>(null);
   const hostRef = shallowRef<null | HTMLDivElement>(null);
-
   const handleRef = shallowRef<null | ChartHandle<ChartBaseRenderOptions>>(
     null,
   );
