@@ -30,7 +30,7 @@ import {
 } from "@bridge-ui/core/Runtime";
 
 // ** Local Imports
-import { resolveVnodeRefElement } from "@/Utils/vnodeRef";
+import { resolveVnodeRefElement } from "@/Utils";
 
 /**
  * Behavior settings read reactively by {@link usePopoverBase}.

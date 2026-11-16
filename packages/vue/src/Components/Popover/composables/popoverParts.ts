@@ -6,7 +6,7 @@ import type { HTMLAttributes, Ref } from "vue";
 import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { mergePartBind } from "@/Utils/mergePartBind";
+import { mergePartBind } from "@/Utils";
 
 /**
  * Root and trigger parts shared by Popover and Menu (the anchored panels

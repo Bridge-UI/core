@@ -18,12 +18,14 @@ import {
 
 // ** Local Imports
 import type { MenuOwnProps, MenuProps } from "@/Components/Menu/menu.types";
-import { usePopoverBase } from "@/Components/Popover/composables/usePopoverBase";
 import {
   createPopoverSetShow,
   getPopoverPanelTokenClass,
   getPopoverRootBind,
   getPopoverTriggerBind,
+} from "@/Components/Popover/composables/popoverParts";
+import { usePopoverBase } from "@/Components/Popover/composables/usePopoverBase";
+import {
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,

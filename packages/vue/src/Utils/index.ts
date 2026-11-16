@@ -5,6 +5,7 @@ import {
   defineComponent,
   toValue,
   unref,
+  type ComponentPublicInstance,
   type ComputedRef,
   type MaybeRefOrGetter,
 } from "vue";
@@ -20,6 +21,7 @@ import {
 import type { FormFieldSize, IconSize } from "@bridge-ui/core/Tokens";
 import {
   createMergeNestedComponentProps,
+  createMergePartBind,
   getBridgeUIRegistryDefaultProp,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
@@ -27,7 +29,6 @@ import {
 
 // ** Local Imports
 import { useBridgeUI } from "@/Provider/useBridgeUI";
-import { mergePartBind } from "@/Utils/mergePartBind";
 
 type RegistryEntryFor<K extends keyof BridgeUIComponentsConfig> = NonNullable<
   BridgeUIComponentsConfig[K]
@@ -63,6 +64,11 @@ export function defineHeadlessComponent(setup: () => void) {
     },
   });
 }
+
+/**
+ * Merges Vue-specific classes into the `class` attribute.
+ */
+export const mergePartBind = createMergePartBind("class");
 
 /**
  * Merges consumer nested-component props with package defaults (consumer wins).
@@ -254,14 +260,26 @@ export function resolveFieldAdornmentIconSize(
   ) as keyof IconSize;
 }
 
+/**
+ * Resolves a Vue template ref callback value to an HTMLElement.
+ */
+export function resolveVnodeRefElement(
+  element: null | Element | ComponentPublicInstance,
+): null | HTMLElement {
+  if (element instanceof HTMLElement) {
+    return element;
+  }
+
+  if (element && "$el" in element) {
+    const el = element.$el;
+
+    return el instanceof HTMLElement ? el : null;
+  }
+
+  return null;
+}
+
 // ** Exports
-export { mergePartBind } from "@/Utils/mergePartBind";
-export {
-  createPopoverSetShow,
-  getPopoverPanelTokenClass,
-  getPopoverRootBind,
-  getPopoverTriggerBind,
-} from "@/Utils/popoverParts";
 export {
   hasNamedSlot,
   hasSlotOrProp,
@@ -277,4 +295,3 @@ export type {
   UseHoldRepeatOptions,
 } from "@/Utils/useHoldRepeat";
 export { useOptionalModel } from "@/Utils/useOptionalModel";
-export { resolveVnodeRefElement } from "@/Utils/vnodeRef";
