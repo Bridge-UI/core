@@ -13,6 +13,7 @@ import {
 
 // ** Local Imports
 import { Button } from "@/Components/Button";
+import { DateField } from "@/Components/DateField";
 import { Menu } from "@/Components/Menu";
 import { Modal } from "@/Components/Modal";
 import { Popover } from "@/Components/Popover";
@@ -1130,4 +1131,30 @@ test("it should close on Escape in the content under an unrelated layer", async 
   expect(onEscape).not.toHaveBeenCalled();
 
   tooltip.release();
+});
+
+test("it should stay open when Escape closes a date picker inside it", async () => {
+  const wrapper = mountPopover({
+    props: { modelValue: true },
+    slots: { default: () => h(DateField, { "aria-label": "Date" }) },
+  });
+
+  await flushFrame();
+
+  const input = document.body.querySelector<HTMLInputElement>(
+    '[role="dialog"] input',
+  );
+
+  input?.dispatchEvent(new FocusEvent("focus"));
+  await flushPromises();
+  input?.dispatchEvent(
+    new KeyboardEvent("keydown", {
+      key: "Escape",
+      bubbles: true,
+      cancelable: true,
+    }),
+  );
+  await flushPromises();
+
+  expect(wrapper.props("modelValue")).toBe(true);
 });
