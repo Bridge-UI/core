@@ -15,6 +15,7 @@ import { pushLayerStack, resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
 import { Button } from "@/Components/Button";
+import { DateField } from "@/Components/DateField";
 import { Menu } from "@/Components/Menu";
 import { Modal } from "@/Components/Modal";
 import { Popover, type PopoverProps } from "@/Components/Popover";
@@ -1093,4 +1094,25 @@ test("it should close on Escape in the content under an unrelated layer", () => 
   expect(onEscape).not.toHaveBeenCalled();
 
   tooltip.release();
+});
+
+test("it should stay open when Escape closes a date picker inside it", async () => {
+  render(
+    <ControlledPopover initialOpen>
+      <DateField aria-label="Date" />
+    </ControlledPopover>,
+  );
+
+  await flushFrame();
+
+  const input = screen.getByRole("textbox");
+
+  fireEvent.focus(input);
+  fireEvent.keyDown(input, { key: "Escape" });
+
+  expect(
+    document
+      .querySelector('[aria-haspopup="dialog"]')
+      ?.getAttribute("aria-expanded"),
+  ).toBe("true");
 });
