@@ -149,10 +149,13 @@ function getTopStackEntry(): undefined | LayerStackEntry {
 }
 
 /**
- * Handles the global escape key.
+ * Handles the global escape key: closes the top-most layer. An Escape already
+ * handled where it was pressed (default prevented, by a Select closing its
+ * listbox for example) is left alone: the layer it closed may already be off
+ * the stack, and the next one down would close too.
  */
 function handleGlobalEscape(event: KeyboardEvent) {
-  if (event.key !== "Escape") {
+  if (event.key !== "Escape" || event.defaultPrevented) {
     return;
   }
 

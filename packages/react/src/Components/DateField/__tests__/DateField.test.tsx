@@ -318,3 +318,26 @@ test("it should format the input at year granularity", () => {
 
   expect((screen.getByRole("textbox") as HTMLInputElement).value).toBe("2021");
 });
+
+test("it should mark Escape handled only while the picker is open", () => {
+  render(<DateField aria-label="Date" />);
+
+  const input = screen.getByRole("textbox");
+  const handled: boolean[] = [];
+
+  // Read before the layer stack's window listener, which would close the
+  // picker (and prevent the default) on its own.
+  function record(event: KeyboardEvent) {
+    handled.push(event.defaultPrevented);
+  }
+
+  document.addEventListener("keydown", record);
+
+  fireEvent.keyDown(input, { key: "Escape" });
+  fireEvent.focus(input);
+  fireEvent.keyDown(input, { key: "Escape" });
+
+  document.removeEventListener("keydown", record);
+
+  expect(handled).toEqual([false, true]);
+});
