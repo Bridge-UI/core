@@ -183,29 +183,20 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
     isClickAwayDeferred,
   } = options;
 
-  const openedRef = useRef(false);
-
-  const layerStackIdRef = useRef("");
-
   const [mounted, setMounted] = useState(show);
+  const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
 
   const arrowRef = useRef<HTMLDivElement>(null);
-
   const triggerRef = useRef<HTMLDivElement>(null);
-
   const contentRef = useRef<HTMLDivElement>(null);
 
+  const openedRef = useRef(false);
+  const layerStackIdRef = useRef("");
   const stackOrderRef = useRef<null | number>(null);
-
   const allowReferenceHiddenCloseRef = useRef(false);
-
   const releaseClaimRef = useRef<null | (() => void)>(null);
-
   const stackHandleRef = useRef<null | LayerStackHandle>(null);
-
   const positionHandleRef = useRef<null | PositionHandle>(null);
-
-  const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
 
   /**
    * Set when a pointer down outside closed the overlay: focus follows the

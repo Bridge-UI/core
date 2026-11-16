@@ -92,9 +92,8 @@ export function useMenu(
   libDefaults: MenuLibDefaults,
   options: MenuOptions = {},
 ) {
-  const { onClose, onShowChange, show = false } = options;
-
   const menuId = useId();
+  const { onClose, onShowChange, show = false } = options;
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     MenuProps,

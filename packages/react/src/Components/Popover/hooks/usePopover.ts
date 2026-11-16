@@ -99,9 +99,8 @@ export function usePopover(
   libDefaults: PopoverLibDefaults,
   options: PopoverOptions = {},
 ) {
-  const { onClose, onShowChange, show = false } = options;
-
   const popoverId = useId();
+  const { onClose, onShowChange, show = false } = options;
 
   const titleId = `${popoverId}-title`;
 

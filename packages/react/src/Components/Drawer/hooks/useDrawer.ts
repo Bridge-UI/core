@@ -129,43 +129,6 @@ export function useDrawer(
 ) {
   const { onClose, stackId, onShowChange, show = false } = options;
 
-  const layerStackIdRef = useRef("");
-
-  const pendingLeaveRef = useRef(false);
-
-  const [active, setActive] = useState(show);
-
-  const [mounted, setMounted] = useState(show);
-
-  const panelRef = useRef<HTMLDivElement>(null);
-
-  /**
-   * Root element (backdrop included): the layer's container on the stack, so
-   * a press on the backdrop counts as inside this layer for the overlays it
-   * was opened from.
-   */
-  const rootRef = useRef<HTMLDivElement>(null);
-
-  const leaveTransitionEndsPendingRef = useRef(0);
-
-  const stackOrderRef = useRef<null | number>(null);
-
-  const focusTrapRef = useRef<null | FocusTrap>(null);
-
-  const stackHandleRef = useRef<null | LayerStackHandle>(null);
-
-  const enterPaintCancelRef = useRef<null | (() => void)>(null);
-
-  const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
-
-  const leaveFallbackTimeoutRef = useRef<null | ReturnType<typeof setTimeout>>(
-    null,
-  );
-
-  const [transitionState, setTransitionState] = useState<"open" | "closed">(
-    "closed",
-  );
-
   const { componentProps, inheritedAttrs } = splitComponentProps<
     DrawerProps,
     typeof drawerBridgeKeys
@@ -182,6 +145,29 @@ export function useDrawer(
     props: componentProps,
     componentName: "Drawer",
   });
+
+  const [active, setActive] = useState(show);
+  const [mounted, setMounted] = useState(show);
+  const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
+
+  const [transitionState, setTransitionState] = useState<"open" | "closed">(
+    "closed",
+  );
+
+  const rootRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  const layerStackIdRef = useRef("");
+  const pendingLeaveRef = useRef(false);
+  const leaveTransitionEndsPendingRef = useRef(0);
+  const stackOrderRef = useRef<null | number>(null);
+  const focusTrapRef = useRef<null | FocusTrap>(null);
+  const stackHandleRef = useRef<null | LayerStackHandle>(null);
+  const enterPaintCancelRef = useRef<null | (() => void)>(null);
+
+  const leaveFallbackTimeoutRef = useRef<null | ReturnType<typeof setTimeout>>(
+    null,
+  );
 
   const customProps = derived(() => {
     return merged.customProps;
