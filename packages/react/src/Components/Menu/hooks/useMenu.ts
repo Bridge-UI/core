@@ -19,13 +19,13 @@ import {
 
 // ** Local Imports
 import type { MenuOwnProps, MenuProps } from "@/Components/Menu/menu.types";
+import { usePopoverBase } from "@/Components/Popover/hooks/usePopoverBase";
 import {
   derived,
   hasNamedSlot,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
-  useFloatingOverlay,
 } from "@/Utils";
 
 const menuBridgeKeys = [
@@ -173,7 +173,7 @@ export function useMenu(
     onShowChange?.(next);
   }
 
-  const overlay = useFloatingOverlay({
+  const overlay = usePopoverBase({
     show,
     setShow,
     anchorEl,

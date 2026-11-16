@@ -7,9 +7,9 @@ import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
 import {
-  useFloatingOverlay,
-  type UseFloatingOverlayOptions,
-} from "@/Utils/useFloatingOverlay";
+  usePopoverBase,
+  type UsePopoverBaseOptions,
+} from "@/Components/Popover/hooks/usePopoverBase";
 
 afterEach(() => {
   resetLayerStackForTests();
@@ -17,12 +17,12 @@ afterEach(() => {
   document.body.style.overflow = "";
 });
 
-function renderOverlay(options: Partial<UseFloatingOverlayOptions> = {}) {
+function renderOverlay(options: Partial<UsePopoverBaseOptions> = {}) {
   const setShow = vi.fn();
 
   const hook = renderHook(
-    (props: Partial<UseFloatingOverlayOptions>) =>
-      useFloatingOverlay({ setShow, show: false, id: "overlay", ...props }),
+    (props: Partial<UsePopoverBaseOptions>) =>
+      usePopoverBase({ setShow, show: false, id: "overlay", ...props }),
     { initialProps: options },
   );
 

@@ -23,6 +23,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
+import { usePopoverBase } from "@/Components/Popover/hooks/usePopoverBase";
 import type {
   PopoverOwnProps,
   PopoverProps,
@@ -33,7 +34,6 @@ import {
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
-  useFloatingOverlay,
 } from "@/Utils";
 
 const popoverBridgeKeys = [
@@ -192,7 +192,7 @@ export function usePopover(
     onShowChange?.(next);
   }
 
-  const overlay = useFloatingOverlay({
+  const overlay = usePopoverBase({
     show,
     setShow,
     anchorEl,

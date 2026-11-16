@@ -8,10 +8,10 @@ import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
 import {
-  useFloatingOverlay,
-  type FloatingOverlayConfig,
-  type UseFloatingOverlayOptions,
-} from "@/Utils/useFloatingOverlay";
+  usePopoverBase,
+  type PopoverBaseConfig,
+  type UsePopoverBaseOptions,
+} from "@/Components/Popover/composables/usePopoverBase";
 
 const mountedWrappers: Array<ReturnType<typeof mount>> = [];
 
@@ -27,19 +27,19 @@ afterEach(async () => {
 });
 
 function mountOverlay(
-  config: FloatingOverlayConfig = {},
-  options: Partial<UseFloatingOverlayOptions> = {},
+  config: PopoverBaseConfig = {},
+  options: Partial<UsePopoverBaseOptions> = {},
 ) {
   const show = ref(false);
   const setShow = vi.fn((next: boolean) => {
     show.value = next;
   });
 
-  let result!: ReturnType<typeof useFloatingOverlay>;
+  let result!: ReturnType<typeof usePopoverBase>;
 
   const Wrapper = defineComponent({
     setup() {
-      result = useFloatingOverlay({
+      result = usePopoverBase({
         show,
         config,
         setShow,

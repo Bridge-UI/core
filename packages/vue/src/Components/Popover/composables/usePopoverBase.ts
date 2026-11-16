@@ -32,9 +32,9 @@ import {
 import { resolveVnodeRefElement } from "@/Utils/vnodeRef";
 
 /**
- * Behavior settings read reactively by {@link useFloatingOverlay}.
+ * Behavior settings read reactively by {@link usePopoverBase}.
  */
-export type FloatingOverlayConfig = {
+export type PopoverBaseConfig = {
   /**
    * When true, positions the element set with `setArrowRef` against the anchor.
    */
@@ -98,9 +98,9 @@ export type FloatingOverlayConfig = {
 };
 
 /**
- * Options for {@link useFloatingOverlay}.
+ * Options for {@link usePopoverBase}.
  */
-export type UseFloatingOverlayOptions = {
+export type UsePopoverBaseOptions = {
   /**
    * Anchor used instead of the trigger wrapper.
    */
@@ -123,7 +123,7 @@ export type UseFloatingOverlayOptions = {
   /**
    * Reactive behavior settings (usually the merged component props).
    */
-  config: MaybeRefOrGetter<FloatingOverlayConfig>;
+  config: MaybeRefOrGetter<PopoverBaseConfig>;
 
   /**
    * Stable id for the overlay (used for the open-menu claim).
@@ -158,11 +158,12 @@ export type UseFloatingOverlayOptions = {
 };
 
 /**
- * Shared floating-overlay behavior for anchored panels (Menu, Popover):
- * mount state, layer stack (Escape, scroll lock, z-index), positioning,
- * click-away and auto-focus. Roles and keyboard navigation stay in the caller.
+ * Popover base: the anchored-panel behavior shared by Popover and Menu
+ * (mount state, layer stack for Escape / scroll lock / z-index, positioning,
+ * click-away and auto-focus). Roles, ARIA and keyboard navigation stay in
+ * the caller.
  */
-export function useFloatingOverlay(options: UseFloatingOverlayOptions) {
+export function usePopoverBase(options: UsePopoverBaseOptions) {
   const { id, setShow, claimOpen, isClickAwayIgnored } = options;
 
   const mounted = ref(false);

@@ -28,17 +28,17 @@ import {
 /**
  * Element (or ref) that anchors a floating overlay.
  */
-export type FloatingOverlayAnchor =
+export type PopoverBaseAnchor =
   null | HTMLElement | RefObject<null | HTMLElement>;
 
 /**
- * Options for {@link useFloatingOverlay}.
+ * Options for {@link usePopoverBase}.
  */
-export type UseFloatingOverlayOptions = {
+export type UsePopoverBaseOptions = {
   /**
    * Anchor used instead of the trigger wrapper.
    */
-  anchorEl?: FloatingOverlayAnchor;
+  anchorEl?: PopoverBaseAnchor;
 
   /**
    * When true, positions the element in `arrowRef` against the anchor.
@@ -148,11 +148,12 @@ export type UseFloatingOverlayOptions = {
 };
 
 /**
- * Shared floating-overlay behavior for anchored panels (Menu, Popover):
- * mount state, layer stack (Escape, scroll lock, z-index), positioning,
- * click-away and auto-focus. Roles and keyboard navigation stay in the caller.
+ * Popover base: the anchored-panel behavior shared by Popover and Menu
+ * (mount state, layer stack for Escape / scroll lock / z-index, positioning,
+ * click-away and auto-focus). Roles, ARIA and keyboard navigation stay in
+ * the caller.
  */
-export function useFloatingOverlay(options: UseFloatingOverlayOptions) {
+export function usePopoverBase(options: UsePopoverBaseOptions) {
   const {
     id,
     show,
