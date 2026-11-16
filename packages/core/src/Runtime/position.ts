@@ -131,6 +131,12 @@ export function createPositionable(options: PositionOptions): PositionHandle {
     });
 
     if (arrowEl && result.middlewareData.arrow) {
+      /**
+       * Exposes the resolved side (after flip) so arrows can style their
+       * outer edges, e.g. a border that continues the panel outline.
+       */
+      arrowEl.dataset.side = result.placement.split("-")[0];
+
       Object.assign(
         arrowEl.style,
         getArrowStyles({

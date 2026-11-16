@@ -136,6 +136,7 @@ test("it should position the arrow element when provided", async () => {
 
   expect(floating.style.top).not.toBe("");
   expect(floating.style.left).not.toBe("");
+  expect(arrowEl!.dataset.side).toBe("top");
   expect(arrowEl!.style.bottom).toBe("-4px");
 });
 

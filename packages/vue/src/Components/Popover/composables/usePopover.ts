@@ -276,7 +276,8 @@ export function usePopover(
       {
         "aria-hidden": true,
         class: cn({
-          "pointer-events-none absolute size-2 rotate-45 bg-white dark:bg-dark-800": true,
+          "pointer-events-none absolute size-2 rotate-45 bg-white dark:bg-dark-800 border-black/5 dark:border-white/10": true,
+          "data-[side=top]:border-r data-[side=top]:border-b data-[side=bottom]:border-l data-[side=bottom]:border-t data-[side=left]:border-t data-[side=left]:border-r data-[side=right]:border-b data-[side=right]:border-l": true,
           [get(mergedClasses.value, "arrow") ?? ""]: true,
         }),
       },
