@@ -501,3 +501,36 @@ test("it should format the input at year granularity", () => {
     "2021",
   );
 });
+
+test("it should mark Escape handled only while the picker is open", async () => {
+  const wrapper = mountDateField();
+  const input = wrapper.find("input").element;
+  const handled: boolean[] = [];
+
+  // Read before the layer stack's window listener, which would close the
+  // picker (and prevent the default) on its own.
+  function record(event: KeyboardEvent) {
+    handled.push(event.defaultPrevented);
+  }
+
+  function pressEscape() {
+    input.dispatchEvent(
+      new KeyboardEvent("keydown", {
+        key: "Escape",
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+  }
+
+  document.addEventListener("keydown", record);
+
+  pressEscape();
+  await wrapper.find("input").trigger("focus");
+  await flushPromises();
+  pressEscape();
+
+  document.removeEventListener("keydown", record);
+
+  expect(handled).toEqual([false, true]);
+});
