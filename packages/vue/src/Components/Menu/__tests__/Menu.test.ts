@@ -674,8 +674,8 @@ test("it should not move focus on a key already handled inside the menu", async 
   field?.focus();
   field?.dispatchEvent(
     new KeyboardEvent("keydown", {
-      key: "ArrowDown",
       bubbles: true,
+      key: "ArrowDown",
       cancelable: true,
     }),
   );
