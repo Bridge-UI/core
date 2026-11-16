@@ -10,6 +10,7 @@ import {
   getLayerStackSnapshot,
   hasHigherFocusTrap,
   isFocusInHigherLayer,
+  isInsideNestedLayer,
   isLayerStackTop,
   LAYER_STACK_BASE_Z_INDEX,
   pushLayerStack,
@@ -346,4 +347,230 @@ test("it should detect a higher trapping layer", () => {
 
   inner.release();
   outer.release();
+});
+
+test("it should treat only layers opened from a layer as nested in it", () => {
+  const outerPanel = document.createElement("div");
+  const anchor = document.createElement("button");
+  const childPanel = document.createElement("div");
+  const childField = document.createElement("input");
+  const unrelatedOpener = document.createElement("button");
+  const unrelatedPanel = document.createElement("div");
+  const unrelatedField = document.createElement("input");
+
+  outerPanel.append(anchor);
+  childPanel.append(childField);
+  unrelatedPanel.append(unrelatedField);
+  document.body.append(outerPanel, childPanel, unrelatedOpener, unrelatedPanel);
+
+  const outer = pushLayerStack({ origin: () => null, container: outerPanel });
+  const child = pushLayerStack({ origin: () => anchor, container: childPanel });
+  const unrelated = pushLayerStack({
+    container: unrelatedPanel,
+    origin: () => unrelatedOpener,
+  });
+
+  expect(isInsideNestedLayer(childField, outer.id)).toBe(true);
+  expect(isInsideNestedLayer(unrelatedField, outer.id)).toBe(false);
+  expect(isFocusInHigherLayer(unrelatedField, outer.id)).toBe(true);
+
+  unrelated.release();
+  child.release();
+  outer.release();
+  document.body.innerHTML = "";
+});
+
+test("it should follow nesting through intermediate layers", () => {
+  const outerPanel = document.createElement("div");
+  const middleAnchor = document.createElement("button");
+  const middlePanel = document.createElement("div");
+  const innerAnchor = document.createElement("button");
+  const innerPanel = document.createElement("div");
+  const innerField = document.createElement("input");
+
+  outerPanel.append(middleAnchor);
+  middlePanel.append(innerAnchor);
+  innerPanel.append(innerField);
+  document.body.append(outerPanel, middlePanel, innerPanel);
+
+  const outer = pushLayerStack({ container: outerPanel });
+  const middle = pushLayerStack({
+    container: middlePanel,
+    origin: () => middleAnchor,
+  });
+  const inner = pushLayerStack({
+    container: innerPanel,
+    origin: () => innerAnchor,
+  });
+
+  expect(isInsideNestedLayer(innerField, outer.id)).toBe(true);
+
+  inner.release();
+  middle.release();
+  outer.release();
+  document.body.innerHTML = "";
+});
+
+test("it should use the focused element as the default origin", () => {
+  const opener = document.createElement("button");
+  const outerPanel = document.createElement("div");
+  const panel = document.createElement("div");
+  const field = document.createElement("input");
+
+  panel.append(field);
+  document.body.append(opener, outerPanel, panel);
+
+  const outer = pushLayerStack({ container: outerPanel });
+
+  opener.focus();
+
+  const modal = pushLayerStack({ container: panel });
+
+  expect(isInsideNestedLayer(field, outer.id)).toBe(false);
+
+  modal.release();
+  outer.release();
+  document.body.innerHTML = "";
+});
+
+test("it should not treat a layer with an unknown origin as nested", () => {
+  const outerPanel = document.createElement("div");
+  const panel = document.createElement("div");
+  const field = document.createElement("input");
+
+  panel.append(field);
+  document.body.append(outerPanel, panel);
+
+  const outer = pushLayerStack({ container: outerPanel });
+  const inner = pushLayerStack({ container: panel, origin: () => null });
+
+  expect(isInsideNestedLayer(field, outer.id)).toBe(false);
+  expect(isFocusInHigherLayer(field, outer.id)).toBe(true);
+
+  inner.release();
+  outer.release();
+  document.body.innerHTML = "";
+});
+
+test("it should resolve nesting again when a container changes", () => {
+  const outerPanel = document.createElement("div");
+  const anchor = document.createElement("button");
+  const childPanel = document.createElement("div");
+  const childField = document.createElement("input");
+
+  outerPanel.append(anchor);
+  childPanel.append(childField);
+  document.body.append(outerPanel, childPanel);
+
+  const outer = pushLayerStack({ origin: () => null });
+  const child = pushLayerStack({ origin: () => anchor, container: childPanel });
+
+  expect(isInsideNestedLayer(childField, outer.id)).toBe(false);
+
+  outer.setContainer(outerPanel);
+
+  expect(isInsideNestedLayer(childField, outer.id)).toBe(true);
+
+  child.release();
+  outer.release();
+  document.body.innerHTML = "";
+});
+
+test("it should toggle the scroll lock without leaving the stack", () => {
+  const handle = pushLayerStack({ lockScroll: false });
+
+  expect(document.body.style.overflow).toBe("");
+
+  handle.setLockScroll(true);
+
+  expect(document.body.style.overflow).toBe("hidden");
+  expect(isLayerStackTop(handle.id)).toBe(true);
+
+  handle.setLockScroll(false);
+
+  expect(document.body.style.overflow).toBe("");
+
+  handle.setLockScroll(true);
+  handle.release();
+
+  expect(document.body.style.overflow).toBe("");
+});
+
+test("it should only record the scroll lock setting once it was released", () => {
+  const handle = pushLayerStack();
+
+  handle.releaseScrollLock();
+  handle.setLockScroll(false);
+  handle.setLockScroll(true);
+
+  expect(document.body.style.overflow).toBe("");
+
+  handle.release();
+
+  expect(document.body.style.overflow).toBe("");
+});
+
+test("it should resolve nesting again when the origin changes", () => {
+  const outerPanel = document.createElement("div");
+  const inside = document.createElement("button");
+  const outside = document.createElement("button");
+  const childPanel = document.createElement("div");
+  const childField = document.createElement("input");
+
+  let origin: Node = outside;
+
+  outerPanel.append(inside);
+  childPanel.append(childField);
+  document.body.append(outerPanel, outside, childPanel);
+
+  const outer = pushLayerStack({ container: outerPanel });
+  const child = pushLayerStack({ origin: () => origin, container: childPanel });
+
+  expect(isInsideNestedLayer(childField, outer.id)).toBe(false);
+
+  origin = inside;
+
+  expect(isInsideNestedLayer(childField, outer.id)).toBe(true);
+
+  child.release();
+  outer.release();
+  document.body.innerHTML = "";
+});
+
+test("it should lock scroll again when restored after a release", () => {
+  const handle = pushLayerStack();
+
+  handle.releaseScrollLock();
+
+  expect(document.body.style.overflow).toBe("");
+
+  handle.restoreScrollLock();
+  handle.restoreScrollLock();
+
+  expect(document.body.style.overflow).toBe("hidden");
+
+  handle.release();
+
+  expect(document.body.style.overflow).toBe("");
+});
+
+test("it should leave an Escape already handled where it was pressed", () => {
+  const onEscape = vi.fn();
+  const handle = pushLayerStack({ onEscape, lockScroll: false });
+
+  const handled = new KeyboardEvent("keydown", {
+    key: "Escape",
+    cancelable: true,
+  });
+
+  handled.preventDefault();
+  window.dispatchEvent(handled);
+
+  expect(onEscape).not.toHaveBeenCalled();
+
+  window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+
+  expect(onEscape).toHaveBeenCalledOnce();
+
+  handle.release();
 });

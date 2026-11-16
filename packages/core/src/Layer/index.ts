@@ -17,13 +17,19 @@ export {
   findLayerEntry,
   invokeLayerDismiss,
 } from "@/Layer/host";
-export { claimOpenMenu, resetOpenMenuLayersForTests } from "@/Layer/menu";
+export {
+  claimOpenMenu,
+  closeOpenMenu,
+  isMenuClickAwayDeferred,
+  resetOpenMenuLayersForTests,
+} from "@/Layer/menu";
 export {
   LAYER_STACK_BASE_Z_INDEX,
   MODAL_LEAVE_FALLBACK_MS,
   SCROLLBAR_COMPENSATION_VAR,
   acquireLayerStackOrder,
   countModalTransitionLayers,
+  getFocusedOrigin,
   getLayerFocusTrapGuards,
   getLayerStackEntry,
   getLayerStackSnapshot,
@@ -32,6 +38,7 @@ export {
   hasHigherFocusTrap,
   hasModalTransition,
   isFocusInHigherLayer,
+  isInsideNestedLayer,
   isLayerStackTop,
   pushLayerStack,
   resetLayerStackForTests,
