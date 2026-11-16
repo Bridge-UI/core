@@ -5,7 +5,7 @@ import { afterEach, expect, test, vi } from "vitest";
 import {
   claimOpenMenu,
   closeOpenMenu,
-  isMenuClickAwayDeferred,
+  isMenuClickAwayIgnored,
   resetOpenMenuLayersForTests,
 } from "@/Layer/menu";
 
@@ -62,7 +62,7 @@ test("it should keep the claim of a menu that ignores the close request", () => 
   expect(closeA).toHaveBeenCalledTimes(2);
 });
 
-test("it should defer click-away only on other overlay triggers", () => {
+test("it should ignore click-away only on other menu triggers", () => {
   const menuTrigger = document.createElement("div");
   const icon = document.createElement("span");
   const toggle = document.createElement("button");
@@ -71,17 +71,8 @@ test("it should defer click-away only on other overlay triggers", () => {
   menuTrigger.append(icon);
   toggle.setAttribute("aria-expanded", "true");
 
-  expect(isMenuClickAwayDeferred(icon)).toBe(true);
-  expect(isMenuClickAwayDeferred(toggle)).toBe(false);
-
-  const popoverTrigger = document.createElement("div");
-  const plain = document.createElement("div");
-
-  popoverTrigger.setAttribute("aria-haspopup", "dialog");
-  plain.setAttribute("aria-haspopup", "false");
-
-  expect(isMenuClickAwayDeferred(popoverTrigger)).toBe(true);
-  expect(isMenuClickAwayDeferred(plain)).toBe(false);
+  expect(isMenuClickAwayIgnored(icon)).toBe(true);
+  expect(isMenuClickAwayIgnored(toggle)).toBe(false);
 });
 
 test("it should do nothing when no menu is open", () => {

@@ -3,7 +3,7 @@ import { get, isFunction, isNil, omit } from "es-toolkit/compat";
 import { useId, type KeyboardEvent, type ReactNode } from "react";
 
 // ** Core Imports
-import { closeOpenMenu, isMenuClickAwayDeferred } from "@bridge-ui/core/Layer";
+import { closeOpenMenu } from "@bridge-ui/core/Layer";
 import {
   popoverRoundedProps as roundedProps,
   popoverShadowProps as shadowProps,
@@ -193,7 +193,6 @@ export function usePopover(
     closeOnClickAway: merged.closeOnClickAway,
     disableAutoFocus: merged.disableAutoFocus,
     disableScrollLock: merged.disableScrollLock,
-    isClickAwayDeferred: isMenuClickAwayDeferred,
   });
 
   /**
@@ -257,7 +256,6 @@ export function usePopover(
         tabIndex: -1,
         id: popoverId,
         role: "dialog",
-        onKeyDown: overlay.handleContentEscape,
         "aria-labelledby": hasTitle ? titleId : undefined,
         style: {
           zIndex: overlay.stackZIndex,

@@ -23,7 +23,6 @@ import { Card } from "@/Components/Card";
 import { Drawer } from "@/Components/Drawer";
 import { Menu } from "@/Components/Menu";
 import { Modal } from "@/Components/Modal";
-import { Select } from "@/Components/Select";
 
 afterEach(() => {
   cleanup();
@@ -561,24 +560,4 @@ test("it should lock scroll again when reopened while leaving", () => {
   rerender(<Modal show>Open</Modal>);
 
   expect(document.body.style.overflow).toBe("hidden");
-});
-
-test("it should close on Escape while focus is on a closed Select", () => {
-  const onShowChange = vi.fn();
-
-  render(
-    <Modal show transition="none" onShowChange={onShowChange}>
-      <Select
-        aria-label="Fruit"
-        options={[{ label: "Apple", value: "apple" }]}
-      />
-    </Modal>,
-  );
-
-  const select = screen.getByRole("combobox");
-
-  select.focus();
-  fireEvent.keyDown(select, { key: "Escape" });
-
-  expect(onShowChange).toHaveBeenCalledWith(false);
 });

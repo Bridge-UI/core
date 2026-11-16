@@ -149,13 +149,10 @@ function getTopStackEntry(): undefined | LayerStackEntry {
 }
 
 /**
- * Handles the global escape key: closes the top-most layer. An Escape already
- * handled where it was pressed (default prevented, by a Menu in its content
- * for example) is left alone: that layer may already be closing, and the
- * next one down would close too.
+ * Handles the global escape key.
  */
 function handleGlobalEscape(event: KeyboardEvent) {
-  if (event.key !== "Escape" || event.defaultPrevented) {
+  if (event.key !== "Escape") {
     return;
   }
 
@@ -477,34 +474,13 @@ export function isFocusInHigherLayer(target: Node, layerId: LayerId): boolean {
 }
 
 /**
- * Parent of each entry (see {@link findParentEntry}) with the origin it was
- * resolved from. Resolved on first use, again when the origin changes (an
- * `anchorEl` swapped while open), and dropped whenever the stack or a
- * container changes, so the pointer and focus handlers that query nesting
- * on every event do not walk the stack each time.
- */
-const parentCache = new Map<
-  LayerId,
-  { origin: Node | null; parent: null | LayerStackEntry }
->();
-
-/**
- * Drops the cached parents. Called on every push, release and container
- * change.
- */
-function invalidateParentCache() {
-  parentCache.clear();
-}
-
-/**
  * Layer `entry` was opened from: the highest layer below it whose container
  * holds its origin. `null` when it was opened from outside every layer, or
  * when its origin is unknown.
  */
-function findParentEntry(
-  entry: LayerStackEntry,
-  origin: Node | null,
-): null | LayerStackEntry {
+function findParentEntry(entry: LayerStackEntry): null | LayerStackEntry {
+  const origin = entry.getOrigin();
+
   if (!origin) {
     return null;
   }
@@ -519,24 +495,6 @@ function findParentEntry(
 }
 
 /**
- * Cached {@link findParentEntry}.
- */
-function getParentEntry(entry: LayerStackEntry): null | LayerStackEntry {
-  const origin = entry.getOrigin();
-  const cached = parentCache.get(entry.id);
-
-  if (cached && cached.origin === origin) {
-    return cached.parent;
-  }
-
-  const parent = findParentEntry(entry, origin);
-
-  parentCache.set(entry.id, { origin, parent });
-
-  return parent;
-}
-
-/**
  * Whether `entry` was opened (directly or through other layers) from the
  * `ancestor` layer. A layer whose origin is unknown (opened from code while
  * nothing had focus, for example) is not nested in anything.
@@ -545,14 +503,14 @@ function isDescendantEntry(
   entry: LayerStackEntry,
   ancestor: LayerStackEntry,
 ): boolean {
-  let current = getParentEntry(entry);
+  let current = findParentEntry(entry);
 
   while (current && current.order >= ancestor.order) {
     if (current.id === ancestor.id) {
       return true;
     }
 
-    current = getParentEntry(current);
+    current = findParentEntry(current);
   }
 
   return false;
@@ -673,8 +631,6 @@ export function pushLayerStack(
     getOrigin: options.origin ?? (() => focusedOrigin),
   });
 
-  invalidateParentCache();
-
   const level = getLayerStackOrderRank(id);
 
   if (lockScroll) {
@@ -703,14 +659,12 @@ export function pushLayerStack(
 
       if (entry) {
         entry.container = container ?? undefined;
-        invalidateParentCache();
       }
     },
     release: () => {
       const entry = stack.find((item) => item.id === id);
 
       remove(stack, (item) => item.id === id);
-      invalidateParentCache();
 
       if (entry?.lockScroll !== false && !entry?.scrollLockReleased) {
         unlockBodyScroll();
@@ -730,7 +684,6 @@ export function pushLayerStack(
  */
 export function resetLayerStackForTests() {
   stack.length = 0;
-  invalidateParentCache();
   savedScrollX = 0;
   savedScrollY = 0;
   nextStackOrder = 0;

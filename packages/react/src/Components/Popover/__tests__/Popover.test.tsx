@@ -1078,24 +1078,6 @@ test("it should stay open when the backdrop of a modal opened from it is pressed
   ).toBe("true");
 });
 
-test("it should close on Escape in the content under an unrelated layer", () => {
-  render(<ControlledPopover initialOpen />);
-
-  const onEscape = vi.fn();
-  const tooltip = pushLayerStack({
-    onEscape,
-    lockScroll: false,
-    origin: () => null,
-  });
-
-  fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
-
-  expect(screen.queryByRole("dialog")).toBeNull();
-  expect(onEscape).not.toHaveBeenCalled();
-
-  tooltip.release();
-});
-
 test("it should stay open when Escape closes a date picker inside it", async () => {
   render(
     <ControlledPopover initialOpen>
@@ -1115,44 +1097,4 @@ test("it should stay open when Escape closes a date picker inside it", async () 
       .querySelector('[aria-haspopup="dialog"]')
       ?.getAttribute("aria-expanded"),
   ).toBe("true");
-});
-
-test("it should leave Escape to a layer above when it stays open", () => {
-  render(<ControlledPopover persistent initialOpen />);
-
-  const onEscape = vi.fn();
-  const tooltip = pushLayerStack({
-    onEscape,
-    lockScroll: false,
-    origin: () => null,
-  });
-
-  fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
-
-  expect(screen.getByRole("dialog")).toBeTruthy();
-  expect(onEscape).toHaveBeenCalledOnce();
-
-  tooltip.release();
-});
-
-test("it should close only once the press on another overlay trigger ends", async () => {
-  render(
-    <div>
-      <ControlledPopover initialOpen />
-      <div aria-haspopup="menu">Other menu</div>
-    </div>,
-  );
-
-  await flushFrame();
-
-  const other = screen.getByText("Other menu");
-
-  fireEvent.pointerDown(other);
-  expect(screen.getByRole("dialog")).toBeTruthy();
-
-  fireEvent.pointerUp(other);
-
-  await waitFor(() => {
-    expect(screen.queryByRole("dialog")).toBeNull();
-  });
 });

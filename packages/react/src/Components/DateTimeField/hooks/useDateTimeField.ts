@@ -320,12 +320,6 @@ export function useDateTimeField(props: DateTimeFieldProps) {
           formField.inputBind.onKeyDown?.(event as never);
 
           if (event.key === "Escape") {
-            // Closing the picker handles the key: an overlay this field sits
-            // in (Popover, Menu, Modal) must not close with it.
-            if (open) {
-              event.preventDefault();
-            }
-
             handleOpenChange(false);
           }
         },

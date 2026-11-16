@@ -79,22 +79,16 @@ export function closeOpenMenu(origin?: Node | null) {
 }
 
 /**
- * Click-away targets that close an open menu only once the press ends:
- * another overlay's trigger (a Menu or a Popover). When it opens its
- * overlay, that overlay closes this menu in the same click, so the page does
- * not shift (scroll lock released) between the press and the click. When
- * nothing opens (a disabled trigger, a press dragged off), the menu still
- * closes.
+ * Click-away targets that must not close an open menu: another menu's
+ * trigger, whose menu takes over the open-menu claim and closes this one.
  */
-const MENU_CLICK_AWAY_DEFERRED_SELECTOR =
-  '[aria-haspopup]:not([aria-haspopup="false"])';
+const MENU_CLICK_AWAY_IGNORED_SELECTOR = '[aria-haspopup="menu"]';
 
 /**
- * Whether a pointer down on `target` should close an open menu only after
- * the press ends, instead of right away.
+ * Whether a pointer down on `target` should leave an open menu open.
  */
-export function isMenuClickAwayDeferred(target: Element): boolean {
-  return target.closest(MENU_CLICK_AWAY_DEFERRED_SELECTOR) !== null;
+export function isMenuClickAwayIgnored(target: Element): boolean {
+  return target.closest(MENU_CLICK_AWAY_IGNORED_SELECTOR) !== null;
 }
 
 /**

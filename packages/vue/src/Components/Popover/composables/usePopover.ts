@@ -3,7 +3,7 @@ import { get, isEmpty, isNil, omit } from "es-toolkit/compat";
 import { computed, toValue, useAttrs, useId, type Ref } from "vue";
 
 // ** Core Imports
-import { closeOpenMenu, isMenuClickAwayDeferred } from "@bridge-ui/core/Layer";
+import { closeOpenMenu } from "@bridge-ui/core/Layer";
 import {
   popoverRoundedProps as roundedProps,
   popoverShadowProps as shadowProps,
@@ -178,7 +178,6 @@ export function usePopover(
     onOpen: closeOpenMenu,
     autoFocusContent: true,
     anchorEl: () => props.anchorEl,
-    isClickAwayDeferred: isMenuClickAwayDeferred,
   });
 
   /**
@@ -234,7 +233,6 @@ export function usePopover(
         tabindex: -1,
         id: popoverId,
         role: "dialog",
-        onKeydown: overlay.handleContentEscape,
         "aria-labelledby": hasTitle.value ? titleId : undefined,
         style: {
           zIndex: overlay.stackZIndex.value,

@@ -20,7 +20,7 @@ export {
 export {
   claimOpenMenu,
   closeOpenMenu,
-  isMenuClickAwayDeferred,
+  isMenuClickAwayIgnored,
   resetOpenMenuLayersForTests,
 } from "@/Layer/menu";
 export {

@@ -132,11 +132,9 @@ export type UsePopoverBaseOptions = {
   id: string;
 
   /**
-   * Click-away targets that close the overlay only once the press ends
-   * (pointer up), instead of on pointer down: another menu's trigger, whose
-   * menu then takes over in the same click.
+   * Extra click-away targets that must not close the overlay.
    */
-  isClickAwayDeferred?: (target: Element) => boolean;
+  isClickAwayIgnored?: (target: Element) => boolean;
 
   /**
    * Called once each time the overlay opens, with the element it opened
@@ -168,7 +166,7 @@ export type UsePopoverBaseOptions = {
  * the caller.
  */
 export function usePopoverBase(options: UsePopoverBaseOptions) {
-  const { id, setShow, claimOpen, isClickAwayDeferred } = options;
+  const { id, setShow, claimOpen, isClickAwayIgnored } = options;
 
   const mounted = ref(false);
   const layerStackId = ref("");
@@ -186,9 +184,7 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
   let positionHandle: null | PositionHandle = null;
   let unsubscribeLayerStack: null | (() => void) = null;
   let removePointerListener: null | (() => void) = null;
-  let removeDeferredListener: null | (() => void) = null;
   let removeFocusOutListener: null | (() => void) = null;
-  let deferredTimeoutId: null | ReturnType<typeof setTimeout> = null;
 
   /**
    * Set when a pointer down outside closed the overlay: focus follows the
@@ -306,35 +302,6 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
     }, 0);
 
     setShow(false);
-
-    return true;
-  }
-
-  /**
-   * Escape pressed in the content (not in a layer opened from it): closes
-   * this overlay here and marks the key handled, so the layer stack does not
-   * close the layer below too, nor a layer above that was not opened from
-   * this one (a Tooltip). Returns whether the key was handled: not when
-   * this overlay stays open.
-   */
-  function handleContentEscape(event: KeyboardEvent): boolean {
-    const target = event.target as Node;
-
-    if (event.key !== "Escape" || event.defaultPrevented) {
-      return false;
-    }
-
-    if (!contentRef.value?.contains(target) || isInsideNestedLayer(target)) {
-      return false;
-    }
-
-    // An overlay that stays open (persistent, `closeOnEscape` off) leaves
-    // the key to the layer stack, so a layer above it can still close.
-    if (!closeFromEscape()) {
-      return false;
-    }
-
-    event.preventDefault();
 
     return true;
   }
@@ -510,39 +477,6 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
     }, 0);
   }
 
-  function clearDeferredClickAway() {
-    removeDeferredListener?.();
-    removeDeferredListener = null;
-
-    if (deferredTimeoutId !== null) {
-      clearTimeout(deferredTimeoutId);
-      deferredTimeoutId = null;
-    }
-  }
-
-  /**
-   * Closes once the press that started on a deferred target ends. The click
-   * (if any) runs first, so a menu it opens closes this one itself.
-   */
-  function deferClickAway(event: PointerEvent) {
-    function handlePressEnd() {
-      removeDeferredListener?.();
-      removeDeferredListener = null;
-
-      deferredTimeoutId = setTimeout(() => {
-        deferredTimeoutId = null;
-        closeFromClickAway(event);
-      }, 0);
-    }
-
-    document.addEventListener("pointerup", handlePressEnd, true);
-    document.addEventListener("pointercancel", handlePressEnd, true);
-    removeDeferredListener = () => {
-      document.removeEventListener("pointerup", handlePressEnd, true);
-      document.removeEventListener("pointercancel", handlePressEnd, true);
-    };
-  }
-
   function attachPointerListener() {
     removePointerListener?.();
 
@@ -555,10 +489,6 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
     function handlePointerDown(event: PointerEvent) {
       const target = event.target as Node;
 
-      // A new press decides again: the last deferred one may have ended
-      // outside the window, with no pointer up.
-      clearDeferredClickAway();
-
       // Cheap checks first: this runs on every pointer down in the page.
       if (!canClose.value || config.value.closeOnClickAway === false) {
         return;
@@ -568,9 +498,7 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
         return;
       }
 
-      if (target instanceof Element && isClickAwayDeferred?.(target)) {
-        deferClickAway(event);
-
+      if (target instanceof Element && isClickAwayIgnored?.(target)) {
         return;
       }
 
@@ -725,18 +653,13 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
 
   /**
    * Closes on Escape (honoring `closeOnEscape` and `persistent`) and moves
-   * focus back to the anchor. Returns whether a close was requested. Called
-   * by the layer stack when this is the top-most layer, and by
-   * {@link handleContentEscape}.
+   * focus back to the anchor. Called by the layer stack when this is the
+   * top-most layer.
    */
-  function closeFromEscape(): boolean {
-    if (config.value.closeOnEscape === false || !requestClose()) {
-      return false;
+  function closeFromEscape() {
+    if (config.value.closeOnEscape !== false && requestClose()) {
+      focusReference();
     }
-
-    focusReference();
-
-    return true;
   }
 
   function syncZIndex() {
@@ -754,7 +677,6 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
     releaseClaim = null;
     removePointerListener?.();
     removePointerListener = null;
-    clearDeferredClickAway();
     removeFocusOutListener?.();
     removeFocusOutListener = null;
     unsubscribeLayerStack?.();
@@ -868,10 +790,8 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
     setTriggerRef,
     setContentRef,
     focusReference,
-    closeFromEscape,
     isInsideOverlay,
     isInsideReference,
-    handleContentEscape,
     isInsideNestedLayer,
     isHiddenWhileMounted,
   };

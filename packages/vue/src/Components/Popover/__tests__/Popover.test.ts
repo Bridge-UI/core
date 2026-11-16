@@ -1106,33 +1106,6 @@ test("it should stay open when the backdrop of a modal opened from it is pressed
   expect(popover.value).toBe(true);
 });
 
-test("it should close on Escape in the content under an unrelated layer", async () => {
-  const wrapper = mountPopover({ props: { modelValue: true } });
-
-  await flushFrame();
-
-  const onEscape = vi.fn();
-  const tooltip = pushLayerStack({
-    onEscape,
-    lockScroll: false,
-    origin: () => null,
-  });
-
-  getDialog()?.dispatchEvent(
-    new KeyboardEvent("keydown", {
-      key: "Escape",
-      bubbles: true,
-      cancelable: true,
-    }),
-  );
-  await flushPromises();
-
-  expect(wrapper.props("modelValue")).toBe(false);
-  expect(onEscape).not.toHaveBeenCalled();
-
-  tooltip.release();
-});
-
 test("it should stay open when Escape closes a date picker inside it", async () => {
   const wrapper = mountPopover({
     props: { modelValue: true },
@@ -1157,75 +1130,4 @@ test("it should stay open when Escape closes a date picker inside it", async () 
   await flushPromises();
 
   expect(wrapper.props("modelValue")).toBe(true);
-});
-
-test("it should leave Escape to a layer above when it stays open", async () => {
-  const wrapper = mountPopover({
-    props: { modelValue: true, persistent: true },
-  });
-
-  await flushFrame();
-
-  const onEscape = vi.fn();
-  const tooltip = pushLayerStack({
-    onEscape,
-    lockScroll: false,
-    origin: () => null,
-  });
-
-  getDialog()?.dispatchEvent(
-    new KeyboardEvent("keydown", {
-      key: "Escape",
-      bubbles: true,
-      cancelable: true,
-    }),
-  );
-  await flushPromises();
-
-  expect(wrapper.props("modelValue")).toBe(true);
-  expect(onEscape).toHaveBeenCalledOnce();
-
-  tooltip.release();
-});
-
-test("it should close only once the press on another overlay trigger ends", async () => {
-  const open = ref(true);
-
-  const Host = defineComponent({
-    setup() {
-      return () =>
-        h("div", [
-          h(
-            Popover,
-            {
-              modelValue: open.value,
-              "onUpdate:modelValue": (value: boolean) => {
-                open.value = value;
-              },
-            },
-            {
-              default: () => "Popover body",
-              trigger: () => h(Button, null, () => "Open"),
-            },
-          ),
-          h("div", { "aria-haspopup": "menu" }, "Other menu"),
-        ]);
-    },
-  });
-
-  mountedWrappers.push(mount(Host, { attachTo: document.body }));
-  await flushFrame();
-
-  const other = document.body.querySelector('div[aria-haspopup="menu"]');
-
-  other?.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
-  await flushPromises();
-
-  expect(open.value).toBe(true);
-
-  other?.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
-  await new Promise((resolve) => setTimeout(resolve, 0));
-  await flushPromises();
-
-  expect(open.value).toBe(false);
 });

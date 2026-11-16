@@ -1,11 +1,5 @@
 // ** External Imports
-import {
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  type KeyboardEvent,
-} from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 // ** Core Imports
 import {
@@ -93,11 +87,9 @@ export type UsePopoverBaseOptions = {
   id: string;
 
   /**
-   * Click-away targets that close the overlay only once the press ends
-   * (pointer up), instead of on pointer down: another menu's trigger, whose
-   * menu then takes over in the same click.
+   * Extra click-away targets that must not close the overlay.
    */
-  isClickAwayDeferred?: (target: Element) => boolean;
+  isClickAwayIgnored?: (target: Element) => boolean;
 
   /**
    * Keeps the content mounted (hidden) after closing.
@@ -180,7 +172,7 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
     closeOnClickAway,
     disableAutoFocus,
     disableScrollLock,
-    isClickAwayDeferred,
+    isClickAwayIgnored,
   } = options;
 
   const [mounted, setMounted] = useState(show);
@@ -303,47 +295,13 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
 
   /**
    * Closes on Escape (honoring `closeOnEscape` and `persistent`) and moves
-   * focus back to the anchor. Returns whether a close was requested. Called
-   * by the layer stack when this is the top-most layer, and by
-   * {@link handleContentEscape}.
+   * focus back to the anchor. Called by the layer stack when this is the
+   * top-most layer.
    */
-  function closeFromEscape(): boolean {
-    if (closeOnEscape === false || !requestClose()) {
-      return false;
+  function closeFromEscape() {
+    if (closeOnEscape !== false && requestClose()) {
+      focusReference();
     }
-
-    focusReference();
-
-    return true;
-  }
-
-  /**
-   * Escape pressed in the content (not in a layer opened from it): closes
-   * this overlay here and marks the key handled, so the layer stack does not
-   * close the layer below too, nor a layer above that was not opened from
-   * this one (a Tooltip). Returns whether the key was handled: not when
-   * this overlay stays open.
-   */
-  function handleContentEscape(event: KeyboardEvent<HTMLElement>): boolean {
-    const target = event.target as Node;
-
-    if (event.key !== "Escape" || event.defaultPrevented) {
-      return false;
-    }
-
-    if (!contentRef.current?.contains(target) || isInsideNestedLayer(target)) {
-      return false;
-    }
-
-    // An overlay that stays open (persistent, `closeOnEscape` off) leaves
-    // the key to the layer stack, so a layer above it can still close.
-    if (!closeFromEscape()) {
-      return false;
-    }
-
-    event.preventDefault();
-
-    return true;
   }
 
   /**
@@ -442,7 +400,7 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
     autoFocusContent,
     getOpenerElement,
     disableScrollLock,
-    isClickAwayDeferred,
+    isClickAwayIgnored,
     getReferenceElement,
   };
 
@@ -729,53 +687,10 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
 
     let removePointerListener: null | (() => void) = null;
 
-    let removeDeferredListener: null | (() => void) = null;
-
-    let deferredTimeoutId: null | ReturnType<typeof setTimeout> = null;
-
-    /**
-     * Drops a pending deferred close: a new press decides again (the last
-     * one may have ended outside the window, with no pointer up).
-     */
-    function clearDeferredClickAway() {
-      removeDeferredListener?.();
-      removeDeferredListener = null;
-
-      if (deferredTimeoutId !== null) {
-        clearTimeout(deferredTimeoutId);
-        deferredTimeoutId = null;
-      }
-    }
-
-    /**
-     * Closes once the press that started on a deferred target ends. The
-     * click (if any) runs first, so a menu it opens closes this one itself.
-     */
-    function deferClickAway(event: PointerEvent) {
-      function handlePressEnd() {
-        removeDeferredListener?.();
-        removeDeferredListener = null;
-
-        deferredTimeoutId = setTimeout(() => {
-          deferredTimeoutId = null;
-          closeFromClickAway(event);
-        }, 0);
-      }
-
-      document.addEventListener("pointerup", handlePressEnd, true);
-      document.addEventListener("pointercancel", handlePressEnd, true);
-      removeDeferredListener = () => {
-        document.removeEventListener("pointerup", handlePressEnd, true);
-        document.removeEventListener("pointercancel", handlePressEnd, true);
-      };
-    }
-
     const frameId = requestAnimationFrame(() => {
       function handlePointerDown(event: PointerEvent) {
         const latest = latestRef.current;
         const target = event.target as Node;
-
-        clearDeferredClickAway();
 
         // Cheap checks first: this runs on every pointer down in the page.
         if (latest.persistent || latest.closeOnClickAway === false) {
@@ -786,9 +701,7 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
           return;
         }
 
-        if (target instanceof Element && latest.isClickAwayDeferred?.(target)) {
-          deferClickAway(event);
-
+        if (target instanceof Element && latest.isClickAwayIgnored?.(target)) {
           return;
         }
 
@@ -804,7 +717,6 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
     return () => {
       cancelAnimationFrame(frameId);
       removePointerListener?.();
-      clearDeferredClickAway();
     };
   }, [show]);
 
@@ -817,10 +729,8 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
     stackZIndex,
     requestClose,
     focusReference,
-    closeFromEscape,
     isInsideOverlay,
     isInsideReference,
-    handleContentEscape,
     isInsideNestedLayer,
     isHiddenWhileMounted,
   };

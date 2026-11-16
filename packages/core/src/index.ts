@@ -610,7 +610,7 @@ export {
   isInsideNestedLayer,
   isLayerMounted,
   isLayerStackTop,
-  isMenuClickAwayDeferred,
+  isMenuClickAwayIgnored,
   mergeLayerShellProps,
   pushLayerStack,
   removeLayer,

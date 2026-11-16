@@ -3,7 +3,7 @@ import { get, omit } from "es-toolkit/compat";
 import { computed, toValue, useAttrs, useId, type Ref } from "vue";
 
 // ** Core Imports
-import { claimOpenMenu, isMenuClickAwayDeferred } from "@bridge-ui/core/Layer";
+import { claimOpenMenu, isMenuClickAwayIgnored } from "@bridge-ui/core/Layer";
 import { createFocusable } from "@bridge-ui/core/Runtime";
 import {
   menuRoundedProps as roundedProps,
@@ -154,7 +154,7 @@ export function useMenu(
     config: merged,
     claimOpen: claimOpenMenu,
     anchorEl: () => props.anchorEl,
-    isClickAwayDeferred: isMenuClickAwayDeferred,
+    isClickAwayIgnored: isMenuClickAwayIgnored,
   });
 
   function handleTriggerKeyDown(event: KeyboardEvent) {
@@ -180,9 +180,9 @@ export function useMenu(
       return;
     }
 
-    // Escape is handled here; a key already handled by a field inside the
-    // menu (a Select opening its listbox on ArrowDown) does not move focus.
-    if (overlay.handleContentEscape(event) || event.defaultPrevented) {
+    // A key already handled by a field inside the menu (a Select opening its
+    // listbox on ArrowDown) does not move focus.
+    if (event.defaultPrevented) {
       return;
     }
 
@@ -196,6 +196,8 @@ export function useMenu(
 
     const focusable = createFocusable(container);
 
+    // Escape goes through the layer stack, which honors `closeOnEscape` and
+    // `persistent` and only closes the top-most layer.
     switch (event.key) {
       case "ArrowDown":
         event.preventDefault();

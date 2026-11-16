@@ -14,7 +14,6 @@ import { Card } from "@/Components/Card";
 import { Drawer } from "@/Components/Drawer";
 import { Menu } from "@/Components/Menu";
 import { Modal } from "@/Components/Modal";
-import { Select } from "@/Components/Select";
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {
@@ -639,33 +638,4 @@ test("it should lock scroll again when reopened while leaving", async () => {
   await wrapper.setProps({ modelValue: true });
 
   expect(document.body.style.overflow).toBe("hidden");
-});
-
-test("it should close on Escape while focus is on a closed Select", async () => {
-  const wrapper = mountModal({
-    props: { modelValue: true, transition: "none" },
-    slots: {
-      default: () =>
-        h(Select, {
-          "aria-label": "Fruit",
-          options: [{ label: "Apple", value: "apple" }],
-        }),
-    },
-  });
-
-  await flushPromises();
-
-  const select = document.body.querySelector<HTMLElement>('[role="combobox"]');
-
-  select?.focus();
-  select?.dispatchEvent(
-    new KeyboardEvent("keydown", {
-      key: "Escape",
-      bubbles: true,
-      cancelable: true,
-    }),
-  );
-  await flushPromises();
-
-  expect(wrapper.emitted("update:modelValue")?.at(-1)).toEqual([false]);
 });

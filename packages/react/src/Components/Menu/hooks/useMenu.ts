@@ -3,7 +3,7 @@ import { get, omit } from "es-toolkit/compat";
 import { useId, type KeyboardEvent } from "react";
 
 // ** Core Imports
-import { claimOpenMenu, isMenuClickAwayDeferred } from "@bridge-ui/core/Layer";
+import { claimOpenMenu, isMenuClickAwayIgnored } from "@bridge-ui/core/Layer";
 import { createFocusable } from "@bridge-ui/core/Runtime";
 import {
   menuRoundedProps as roundedProps,
@@ -177,8 +177,8 @@ export function useMenu(
     closeOnEscape: merged.closeOnEscape,
     closeOnClickAway: merged.closeOnClickAway,
     disableAutoFocus: merged.disableAutoFocus,
+    isClickAwayIgnored: isMenuClickAwayIgnored,
     disableScrollLock: merged.disableScrollLock,
-    isClickAwayDeferred: isMenuClickAwayDeferred,
   });
 
   function handleTriggerKeyDown(event: KeyboardEvent<HTMLDivElement>) {
@@ -204,9 +204,9 @@ export function useMenu(
       return;
     }
 
-    // Escape is handled here; a key already handled by a field inside the
-    // menu (a Select opening its listbox on ArrowDown) does not move focus.
-    if (overlay.handleContentEscape(event) || event.defaultPrevented) {
+    // A key already handled by a field inside the menu (a Select opening its
+    // listbox on ArrowDown) does not move focus.
+    if (event.defaultPrevented) {
       return;
     }
 
@@ -220,6 +220,8 @@ export function useMenu(
 
     const focusable = createFocusable(container);
 
+    // Escape goes through the layer stack, which honors `closeOnEscape` and
+    // `persistent` and only closes the top-most layer.
     switch (event.key) {
       case "ArrowDown":
         event.preventDefault();

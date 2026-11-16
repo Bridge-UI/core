@@ -553,24 +553,3 @@ test("it should lock scroll again when restored after a release", () => {
 
   expect(document.body.style.overflow).toBe("");
 });
-
-test("it should leave an Escape already handled where it was pressed", () => {
-  const onEscape = vi.fn();
-  const handle = pushLayerStack({ onEscape, lockScroll: false });
-
-  const handled = new KeyboardEvent("keydown", {
-    key: "Escape",
-    cancelable: true,
-  });
-
-  handled.preventDefault();
-  window.dispatchEvent(handled);
-
-  expect(onEscape).not.toHaveBeenCalled();
-
-  window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
-
-  expect(onEscape).toHaveBeenCalledOnce();
-
-  handle.release();
-});

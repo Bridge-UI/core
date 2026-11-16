@@ -310,12 +310,6 @@ export function useDateField(
           formField.inputBind.value.onKeydown?.(event);
 
           if (event.key === "Escape") {
-            // Closing the picker handles the key: an overlay this field sits
-            // in (Popover, Menu, Modal) must not close with it.
-            if (open.value) {
-              event.preventDefault();
-            }
-
             handleOpenChange(false);
           }
         },
