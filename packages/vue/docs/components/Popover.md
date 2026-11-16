@@ -36,7 +36,7 @@ The default slot receives `close`.
 
   <template #default="{ close }">
     <div class="flex flex-col gap-3">
-      <TextField v-model="name" label="Name" />
+      <TextField label="Name" v-model="name" />
 
       <div class="flex justify-end gap-2">
         <ActionFooter
