@@ -62,7 +62,7 @@ test("it should keep the claim of a menu that ignores the close request", () => 
   expect(closeA).toHaveBeenCalledTimes(2);
 });
 
-test("it should defer click-away only on other menu triggers", () => {
+test("it should defer click-away only on other overlay triggers", () => {
   const menuTrigger = document.createElement("div");
   const icon = document.createElement("span");
   const toggle = document.createElement("button");
@@ -73,6 +73,15 @@ test("it should defer click-away only on other menu triggers", () => {
 
   expect(isMenuClickAwayDeferred(icon)).toBe(true);
   expect(isMenuClickAwayDeferred(toggle)).toBe(false);
+
+  const popoverTrigger = document.createElement("div");
+  const plain = document.createElement("div");
+
+  popoverTrigger.setAttribute("aria-haspopup", "dialog");
+  plain.setAttribute("aria-haspopup", "false");
+
+  expect(isMenuClickAwayDeferred(popoverTrigger)).toBe(true);
+  expect(isMenuClickAwayDeferred(plain)).toBe(false);
 });
 
 test("it should do nothing when no menu is open", () => {
