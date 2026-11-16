@@ -1118,7 +1118,7 @@ test("it should stay open when Escape closes a date picker inside it", async () 
 });
 
 test("it should leave Escape to a layer above when it stays open", () => {
-  render(<ControlledPopover initialOpen persistent />);
+  render(<ControlledPopover persistent initialOpen />);
 
   const onEscape = vi.fn();
   const tooltip = pushLayerStack({

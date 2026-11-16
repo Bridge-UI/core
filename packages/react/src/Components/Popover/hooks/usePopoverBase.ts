@@ -517,7 +517,7 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
       cancelled = true;
       releaseClaim();
     };
-  }, [show, id]);
+  }, [id, show]);
 
   useLayoutEffect(() => {
     if (show) {

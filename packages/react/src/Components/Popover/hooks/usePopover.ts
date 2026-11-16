@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isFunction, omit } from "es-toolkit/compat";
+import { get, isFunction, isNil, omit } from "es-toolkit/compat";
 import { useId, type KeyboardEvent, type ReactNode } from "react";
 
 // ** Core Imports
@@ -136,9 +136,7 @@ export function usePopover(
   const hasTitle = derived(() => {
     const title = merged.title;
 
-    return (
-      title !== undefined && title !== null && title !== false && title !== ""
-    );
+    return !isNil(title) && title !== false && title !== "";
   });
 
   const anchorEl = derived(() => {
