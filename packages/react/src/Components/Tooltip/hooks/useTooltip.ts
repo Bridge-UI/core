@@ -46,6 +46,7 @@ import {
   hasNamedSlot,
   isPropPresent,
   mergePartBind,
+  resolveAnchorElement,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -252,15 +253,7 @@ export function useTooltip(
   }
 
   function getReferenceElement(): null | HTMLElement {
-    if (anchorEl instanceof HTMLElement) {
-      return anchorEl;
-    }
-
-    if (anchorEl && "current" in anchorEl) {
-      return anchorEl.current;
-    }
-
-    return triggerRef.current;
+    return resolveAnchorElement(anchorEl) ?? triggerRef.current;
   }
 
   function requestOpen() {

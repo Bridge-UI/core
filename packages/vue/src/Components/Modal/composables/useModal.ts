@@ -125,32 +125,22 @@ export function useModal(
 ) {
   const attrs = useAttrs();
 
-  let pendingLeave = false;
-
   const active = ref(false);
-
   const mounted = ref(false);
-
   const layerStackId = ref("");
-
-  let leaveTransitionEndsPending = 0;
-
-  let stackOrder: null | number = null;
-
-  let focusTrap: null | FocusTrap = null;
-
-  const panelRef = ref<null | HTMLElement>(null);
-
-  let stackHandle: null | LayerStackHandle = null;
-
-  let enterPaintCancel: null | (() => void) = null;
-
   const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
-
-  let unsubscribeLayerStack: null | (() => void) = null;
-
   const transitionState = ref<"open" | "closed">("closed");
 
+  const rootRef = ref<null | HTMLElement>(null);
+  const panelRef = ref<null | HTMLElement>(null);
+
+  let pendingLeave = false;
+  let leaveTransitionEndsPending = 0;
+  let stackOrder: null | number = null;
+  let focusTrap: null | FocusTrap = null;
+  let stackHandle: null | LayerStackHandle = null;
+  let enterPaintCancel: null | (() => void) = null;
+  let unsubscribeLayerStack: null | (() => void) = null;
   let leaveFallbackTimeout: null | ReturnType<typeof setTimeout> = null;
 
   const show = computed(() => {
@@ -337,7 +327,7 @@ export function useModal(
       return;
     }
 
-    stackHandle?.setContainer(panelRef.value);
+    stackHandle?.setContainer(rootRef.value);
     releaseFocusTrap();
     focusTrap = createFocusTrap({
       container: panelRef.value,
@@ -346,6 +336,11 @@ export function useModal(
       disableRestoreFocus: merged.value.disableRestoreFocus,
       ...getLayerFocusTrapGuards(() => layerStackId.value),
     });
+  }
+
+  function setRootRef(element: null | Element | ComponentPublicInstance) {
+    rootRef.value = resolveVnodeRefElement(element);
+    stackHandle?.setContainer(rootRef.value);
   }
 
   function setPanelRef(element: null | Element | ComponentPublicInstance) {
@@ -423,6 +418,8 @@ export function useModal(
   }
 
   function scheduleOpen() {
+    // Reopened while leaving: the leave released the scroll lock.
+    stackHandle?.restoreScrollLock();
     pendingLeave = false;
     clearLeaveFallback();
     leaveTransitionEndsPending = 0;
@@ -566,7 +563,7 @@ export function useModal(
           order: stackOrder,
           id: options.stackId,
           onEscape: handleEscape,
-          container: panelRef.value ?? undefined,
+          container: rootRef.value ?? undefined,
           lockScroll: merged.value.disableScrollLock !== true,
         });
 
@@ -587,6 +584,15 @@ export function useModal(
     { immediate: true },
   );
 
+  // Updates the open layer: pushing it again would give it a new id and
+  // drop the layers nested in it.
+  watch(
+    () => merged.value.disableScrollLock,
+    (disableScrollLock) => {
+      stackHandle?.setLockScroll(disableScrollLock !== true);
+    },
+  );
+
   onBeforeUnmount(() => {
     clearLeaveFallback();
     cancelEnterPaint();
@@ -602,6 +608,7 @@ export function useModal(
     mounted,
     rootBind,
     panelBind,
+    setRootRef,
     overlayBind,
     wrapperBind,
     setPanelRef,

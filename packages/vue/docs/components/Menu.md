@@ -58,6 +58,10 @@ import { Menu } from "@bridge-ui/vue/Components/Menu";
 </Menu>
 ```
 
+Without a `trigger` slot no root element renders, so extra attributes are not applied: use `classes.content` / `customProps.content` to style or tag the menu panel.
+
+Put an external button that toggles the menu inside the `anchorEl` element: pressing it then closes the menu instead of closing and reopening it.
+
 ## Props
 
 | Prop                | Type                      | Default        | Description                                                                                                                                                                                                                                                                          |

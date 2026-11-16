@@ -40,6 +40,7 @@ export const SCROLLBAR_COMPENSATION_VAR = "--bridge-scrollbar-compensation";
 
 type LayerStackEntry = {
   container?: HTMLElement;
+  getOrigin: () => Node | null;
   id: LayerId;
   lockScroll?: boolean;
   onEscape?: () => void;
@@ -83,7 +84,9 @@ export type LayerStackHandle = {
   order: number;
   release: () => void;
   releaseScrollLock: () => void;
+  restoreScrollLock: () => void;
   setContainer: (container: null | HTMLElement) => void;
+  setLockScroll: (lockScroll: boolean) => void;
   zIndex: number;
 };
 
@@ -289,6 +292,45 @@ function releaseLayerScrollLock(id: LayerId) {
 }
 
 /**
+ * Locks body scroll again for a layer whose lock was released while leaving.
+ */
+function restoreLayerScrollLock(id: LayerId) {
+  const entry = stack.find((item) => item.id === id);
+
+  if (!entry || !entry.scrollLockReleased || entry.lockScroll === false) {
+    return;
+  }
+
+  entry.scrollLockReleased = false;
+  lockBodyScroll();
+}
+
+/**
+ * Turns the body scroll lock of a layer on or off without removing it from
+ * the stack. A layer whose lock was already released (leaving) only records
+ * the new setting.
+ */
+function setLayerLockScroll(id: LayerId, lockScroll: boolean) {
+  const entry = stack.find((item) => item.id === id);
+
+  if (!entry || entry.lockScroll === lockScroll) {
+    return;
+  }
+
+  entry.lockScroll = lockScroll;
+
+  if (entry.scrollLockReleased) {
+    return;
+  }
+
+  if (lockScroll) {
+    lockBodyScroll();
+  } else {
+    unlockBodyScroll();
+  }
+}
+
+/**
  * Maps a stack entry to a public snapshot shape.
  */
 function toStackSnapshotEntry(entry: LayerStackEntry): LayerStackSnapshotEntry {
@@ -432,6 +474,88 @@ export function isFocusInHigherLayer(target: Node, layerId: LayerId): boolean {
 }
 
 /**
+ * Layer `entry` was opened from: the highest layer below it whose container
+ * holds its origin. `null` when it was opened from outside every layer, or
+ * when its origin is unknown.
+ */
+function findParentEntry(entry: LayerStackEntry): null | LayerStackEntry {
+  const origin = entry.getOrigin();
+
+  if (!origin) {
+    return null;
+  }
+
+  const candidates = stack.filter((item) => {
+    return (
+      item.order < entry.order && Boolean(item.container?.contains(origin))
+    );
+  });
+
+  return maxBy(candidates, (item) => item.order) ?? null;
+}
+
+/**
+ * Whether `entry` was opened (directly or through other layers) from the
+ * `ancestor` layer. A layer whose origin is unknown (opened from code while
+ * nothing had focus, for example) is not nested in anything.
+ */
+function isDescendantEntry(
+  entry: LayerStackEntry,
+  ancestor: LayerStackEntry,
+): boolean {
+  let current = findParentEntry(entry);
+
+  while (current && current.order >= ancestor.order) {
+    if (current.id === ancestor.id) {
+      return true;
+    }
+
+    current = findParentEntry(current);
+  }
+
+  return false;
+}
+
+/**
+ * Whether `target` is inside a layer opened from `layerId` (directly or
+ * through other layers). Unlike {@link isFocusInHigherLayer}, a layer opened
+ * from elsewhere (an unrelated Modal, for example) does not count.
+ */
+export function isInsideNestedLayer(target: Node, layerId: LayerId): boolean {
+  const current = stack.find((item) => item.id === layerId);
+
+  if (!current) {
+    return false;
+  }
+
+  return stack.some((entry) => {
+    if (entry.order <= current.order) {
+      return false;
+    }
+
+    if (!entry.container?.contains(target)) {
+      return false;
+    }
+
+    return isDescendantEntry(entry, current);
+  });
+}
+
+/**
+ * Element focused when a layer opens: the usual origin of a Modal or Drawer.
+ * `null` when nothing in particular has focus.
+ */
+export function getFocusedOrigin(): Node | null {
+  if (!hasDocument()) {
+    return null;
+  }
+
+  const active = document.activeElement;
+
+  return active && active !== document.body ? active : null;
+}
+
+/**
  * Whether a focus-trapping layer is stacked above `layerId`.
  */
 export function hasHigherFocusTrap(layerId: LayerId): boolean {
@@ -480,12 +604,22 @@ export function pushLayerStack(
     lockScroll?: boolean;
     onEscape?: () => void;
     order?: number;
+
+    /**
+     * Element the layer was opened from (an anchor or trigger), read when
+     * checking nesting. Defaults to the element focused when it is pushed,
+     * so a layer that stays open should update its handle (`setContainer`,
+     * `setLockScroll`) rather than push again once focus is inside it.
+     */
+    origin?: () => Node | null;
     trapsFocus?: boolean;
   } = {},
 ): LayerStackHandle {
   const id = createLayerId(options.id);
   const lockScroll = options.lockScroll !== false;
   const order = options.order ?? acquireLayerStackOrder();
+
+  const focusedOrigin = options.origin ? null : getFocusedOrigin();
 
   stack.push({
     id,
@@ -494,6 +628,7 @@ export function pushLayerStack(
     onEscape: options.onEscape,
     container: options.container,
     trapsFocus: options.trapsFocus,
+    getOrigin: options.origin ?? (() => focusedOrigin),
   });
 
   const level = getLayerStackOrderRank(id);
@@ -512,6 +647,12 @@ export function pushLayerStack(
     zIndex: LAYER_STACK_BASE_Z_INDEX + level,
     releaseScrollLock: () => {
       releaseLayerScrollLock(id);
+    },
+    restoreScrollLock: () => {
+      restoreLayerScrollLock(id);
+    },
+    setLockScroll: (nextLockScroll) => {
+      setLayerLockScroll(id, nextLockScroll);
     },
     setContainer: (container) => {
       const entry = stack.find((item) => item.id === id);

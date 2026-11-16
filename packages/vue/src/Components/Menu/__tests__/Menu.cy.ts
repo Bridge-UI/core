@@ -1,5 +1,5 @@
 // ** External Imports
-import { h } from "vue";
+import { defineComponent, h, ref } from "vue";
 
 // ** Local Imports
 import { Button } from "@/Components/Button";
@@ -94,4 +94,43 @@ test("it should render List and ListItem inside the menu panel", () => {
   cy.get('[role="menu"]').should("be.visible");
   cy.get('[role="menuitem"]').should("be.visible");
   cy.contains("Item one").should("be.visible");
+});
+
+const TwoMenus = defineComponent({
+  setup() {
+    const open = ref<"a" | "b" | null>("a");
+
+    return () =>
+      h("div", { class: "flex gap-2" }, [
+        ...(["a", "b"] as const).map((name) =>
+          h(
+            Menu,
+            {
+              key: name,
+              modelValue: open.value === name,
+              "onUpdate:modelValue": (show: boolean) => {
+                if (show) {
+                  open.value = name;
+                } else if (open.value === name) {
+                  open.value = null;
+                }
+              },
+            },
+            {
+              default: () => `Menu ${name.toUpperCase()}`,
+              trigger: () => h(Button, null, () => name.toUpperCase()),
+            },
+          ),
+        ),
+      ]);
+  },
+});
+
+test("it should switch to another menu in one click", () => {
+  cy.mount(TwoMenus);
+
+  cy.contains("Menu A").should("be.visible");
+  cy.contains("button", "B").click();
+  cy.contains("Menu B").should("be.visible");
+  cy.contains("Menu A").should("not.exist");
 });

@@ -1,7 +1,7 @@
 ---
 name: bridge-ui-overlays
 description: >-
-  Bridge UI Vue overlays and imperative actions — Modal, Drawer, Menu, Tooltip,
+  Bridge UI Vue overlays and imperative actions — Modal, Drawer, Menu, Popover, Tooltip,
   Snackbar, useModalAction, useDialogAction, useDrawerAction, useSnackbarAction,
   BridgeUIHosts. Use when opening layers or toast/dialog flows.
 ---
@@ -21,6 +21,7 @@ Overlays: **`v-model`**. Modal/Drawer body: **`Card`** (no `ModalCard`).
 | Modal             | `.ai/docs/components/Modal.md`             |
 | Drawer            | `.ai/docs/components/Drawer.md`            |
 | Menu              | `.ai/docs/components/Menu.md`              |
+| Popover           | `.ai/docs/components/Popover.md`           |
 | Tooltip           | `.ai/docs/components/Tooltip.md`           |
 | Snackbar          | `.ai/docs/components/Snackbar.md`          |
 | useModalAction    | `.ai/docs/components/useModalAction.md`    |
@@ -34,4 +35,5 @@ Overlays: **`v-model`**. Modal/Drawer body: **`Card`** (no `ModalCard`).
 1. Mount `BridgeUIHosts` before using action hooks.
 2. `align` on Modal applies on all breakpoints — use `useBreakpoint` for mobile bottom sheets (keep the reactive object; do not destructure helpers).
 3. Menu panel children are real components (`List` / `ListItem`, etc.). Docs may show a local `MenuContent` helper — that is **not** a Bridge export.
-4. Match action `open` option shapes to the `use*Action` docs. Escape closes the top nested layer only.
+4. Use `Popover` (not `Menu`) for forms, filters or rich content in a floating panel — `Menu` is for action lists and captures arrow keys.
+5. Match action `open` option shapes to the `use*Action` docs. Escape closes the top nested layer only.

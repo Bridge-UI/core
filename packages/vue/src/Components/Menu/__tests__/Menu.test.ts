@@ -494,3 +494,66 @@ test("it should lock body scroll when disableScrollLock is false", async () => {
 
   expect(document.body.style.overflow).toBe("hidden");
 });
+
+test("it should stay open on Escape in the menu when closeOnEscape is false", async () => {
+  const wrapper = mountMenu({
+    props: { modelValue: true, closeOnEscape: false },
+    slots: {
+      default: () => "Menu body",
+      trigger: () => h(Button, null, () => "Open"),
+    },
+  });
+
+  await flushPromises();
+
+  document.body.querySelector('[role="menu"]')?.dispatchEvent(
+    new KeyboardEvent("keydown", {
+      key: "Escape",
+      bubbles: true,
+      cancelable: true,
+    }),
+  );
+  await flushPromises();
+
+  expect(wrapper.props("modelValue")).toBe(true);
+});
+
+test("it should not move focus on a key already handled inside the menu", async () => {
+  mountMenu({
+    props: { modelValue: true },
+    slots: {
+      trigger: () => h(Button, null, () => "Open"),
+      default: () => [
+        h(
+          "button",
+          {
+            type: "button",
+            onKeydown: (event: KeyboardEvent) => {
+              event.preventDefault();
+            },
+          },
+          "Field",
+        ),
+        h("button", { type: "button" }, "Next"),
+      ],
+    },
+  });
+
+  await flushPromises();
+
+  const field = Array.from(document.body.querySelectorAll("button")).find(
+    (button) => button.textContent === "Field",
+  );
+
+  field?.focus();
+  field?.dispatchEvent(
+    new KeyboardEvent("keydown", {
+      bubbles: true,
+      key: "ArrowDown",
+      cancelable: true,
+    }),
+  );
+  await flushPromises();
+
+  expect(document.activeElement).toBe(field);
+});

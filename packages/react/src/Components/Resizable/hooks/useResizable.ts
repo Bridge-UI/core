@@ -82,17 +82,25 @@ export function useResizable(
   libDefaults: ResizableLibDefaults,
 ) {
   const reactId = useId();
+
   const groupId = `bridge-resizable${reactId.replace(/:/g, "")}`;
 
   const rootRef = useRef<HTMLDivElement>(null);
-  const expandedRef = useRef<Record<string, number>>({});
-  const stopDragRef = useRef<null | (() => void)>(null);
+
   const layoutRef = useRef<Record<string, number>>({});
-  const panelsRef = useRef(new Map<string, RefObject<ResizablePanelEntry>>());
-  const handlesRef = useRef(new Map<string, RefObject<ResizableHandleEntry>>());
+
+  const stopDragRef = useRef<null | (() => void)>(null);
+
+  const expandedRef = useRef<Record<string, number>>({});
 
   const [items, setItems] = useState<ResizableItem[]>([]);
+
   const [layout, setLayout] = useState<Record<string, number>>({});
+
+  const panelsRef = useRef(new Map<string, RefObject<ResizablePanelEntry>>());
+
+  const handlesRef = useRef(new Map<string, RefObject<ResizableHandleEntry>>());
+
   const [draggingHandleId, setDraggingHandleId] = useState<null | string>(null);
 
   const { componentProps, inheritedAttrs } = splitComponentProps<

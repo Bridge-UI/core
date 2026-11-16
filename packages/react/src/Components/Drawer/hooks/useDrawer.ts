@@ -129,36 +129,6 @@ export function useDrawer(
 ) {
   const { onClose, stackId, onShowChange, show = false } = options;
 
-  const layerStackIdRef = useRef("");
-
-  const pendingLeaveRef = useRef(false);
-
-  const [active, setActive] = useState(show);
-
-  const [mounted, setMounted] = useState(show);
-
-  const panelRef = useRef<HTMLDivElement>(null);
-
-  const leaveTransitionEndsPendingRef = useRef(0);
-
-  const stackOrderRef = useRef<null | number>(null);
-
-  const focusTrapRef = useRef<null | FocusTrap>(null);
-
-  const stackHandleRef = useRef<null | LayerStackHandle>(null);
-
-  const enterPaintCancelRef = useRef<null | (() => void)>(null);
-
-  const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
-
-  const leaveFallbackTimeoutRef = useRef<null | ReturnType<typeof setTimeout>>(
-    null,
-  );
-
-  const [transitionState, setTransitionState] = useState<"open" | "closed">(
-    "closed",
-  );
-
   const { componentProps, inheritedAttrs } = splitComponentProps<
     DrawerProps,
     typeof drawerBridgeKeys
@@ -175,6 +145,29 @@ export function useDrawer(
     props: componentProps,
     componentName: "Drawer",
   });
+
+  const [active, setActive] = useState(show);
+  const [mounted, setMounted] = useState(show);
+  const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
+
+  const [transitionState, setTransitionState] = useState<"open" | "closed">(
+    "closed",
+  );
+
+  const rootRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  const layerStackIdRef = useRef("");
+  const pendingLeaveRef = useRef(false);
+  const leaveTransitionEndsPendingRef = useRef(0);
+  const stackOrderRef = useRef<null | number>(null);
+  const focusTrapRef = useRef<null | FocusTrap>(null);
+  const stackHandleRef = useRef<null | LayerStackHandle>(null);
+  const enterPaintCancelRef = useRef<null | (() => void)>(null);
+
+  const leaveFallbackTimeoutRef = useRef<null | ReturnType<typeof setTimeout>>(
+    null,
+  );
 
   const customProps = derived(() => {
     return merged.customProps;
@@ -346,6 +339,8 @@ export function useDrawer(
   }
 
   function scheduleOpen() {
+    // Reopened while leaving: the leave released the scroll lock.
+    stackHandleRef.current?.restoreScrollLock();
     pendingLeaveRef.current = false;
     clearLeaveFallback();
     leaveTransitionEndsPendingRef.current = 0;
@@ -439,6 +434,29 @@ export function useDrawer(
     startLeave();
   }, [show]);
 
+  /**
+   * Latest Escape handler and scroll-lock setting. The layer is pushed once
+   * per open (its origin is the element focused then) and only updated
+   * afterwards, so these are read from here instead of pushing it again.
+   */
+  const layerOptionsRef = useRef({
+    handleEscape: () => {},
+    lockScroll: merged.disableScrollLock !== true,
+  });
+
+  useLayoutEffect(() => {
+    layerOptionsRef.current = {
+      lockScroll: merged.disableScrollLock !== true,
+      handleEscape: () => {
+        if (!show || merged.closeOnEscape === false || merged.persistent) {
+          return;
+        }
+
+        requestClose();
+      },
+    };
+  });
+
   useLayoutEffect(() => {
     if (!active || stackOrderRef.current === null) {
       stackHandleRef.current?.release();
@@ -448,21 +466,15 @@ export function useDrawer(
       return;
     }
 
-    function handleEscape() {
-      if (!show || merged.closeOnEscape === false || merged.persistent) {
-        return;
-      }
-
-      requestClose();
-    }
-
     const handle = pushLayerStack({
       id: stackId,
       trapsFocus: true,
-      onEscape: handleEscape,
       order: stackOrderRef.current,
-      container: panelRef.current ?? undefined,
-      lockScroll: merged.disableScrollLock !== true,
+      container: rootRef.current ?? undefined,
+      lockScroll: layerOptionsRef.current.lockScroll,
+      onEscape: () => {
+        layerOptionsRef.current.handleEscape();
+      },
     });
 
     stackHandleRef.current = handle;
@@ -476,14 +488,11 @@ export function useDrawer(
       stackHandleRef.current = null;
       layerStackIdRef.current = "";
     };
-  }, [
-    show,
-    active,
-    stackId,
-    merged.persistent,
-    merged.closeOnEscape,
-    merged.disableScrollLock,
-  ]);
+  }, [active, stackId]);
+
+  useLayoutEffect(() => {
+    stackHandleRef.current?.setLockScroll(merged.disableScrollLock !== true);
+  }, [merged.disableScrollLock]);
 
   useLayoutEffect(() => {
     if (!active || transitionState !== "open" || !panelRef.current) {
@@ -492,7 +501,7 @@ export function useDrawer(
       return;
     }
 
-    stackHandleRef.current?.setContainer(panelRef.current);
+    stackHandleRef.current?.setContainer(rootRef.current);
     releaseFocusTrap();
     focusTrapRef.current = createFocusTrap({
       container: panelRef.current,
@@ -546,6 +555,7 @@ export function useDrawer(
 
   const rootBind = derived(() => {
     return mergePartBind(customProps?.root, rootInheritedAttrs, {
+      ref: rootRef,
       onTransitionEnd: handleShellTransitionEnd,
       style: {
         zIndex: stackZIndex,

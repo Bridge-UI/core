@@ -231,3 +231,38 @@ test("it should release scroll lock when the menu closes", () => {
   fireEvent.click(screen.getByText("Open"));
   expect(document.body.style.overflow).not.toBe("hidden");
 });
+
+test("it should stay open on Escape in the menu when closeOnEscape is false", () => {
+  render(
+    <Menu show closeOnEscape={false} slots={{ trigger: <Button>Open</Button> }}>
+      Menu body
+    </Menu>,
+  );
+
+  fireEvent.keyDown(screen.getByRole("menu"), { key: "Escape" });
+
+  expect(screen.getByRole("menu")).toBeTruthy();
+});
+
+test("it should not move focus on a key already handled inside the menu", () => {
+  render(
+    <ControlledMenu initialOpen>
+      <button
+        type="button"
+        onKeyDown={(event) => {
+          event.preventDefault();
+        }}
+      >
+        Field
+      </button>
+      <button type="button">Next</button>
+    </ControlledMenu>,
+  );
+
+  const field = screen.getByText("Field");
+
+  field.focus();
+  fireEvent.keyDown(field, { key: "ArrowDown" });
+
+  expect(document.activeElement).toBe(field);
+});

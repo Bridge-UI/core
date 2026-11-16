@@ -269,6 +269,10 @@ export function resolveFieldAdornmentIconSize(
 }
 
 // ** Exports
+export {
+  resolveAnchorElement,
+  type AnchorElement,
+} from "@/Utils/resolveAnchorElement";
 export { hasNamedSlot, hasSlotOrProp, isPropPresent } from "@/Utils/slotOrProp";
 export type { SlotMap } from "@/Utils/slotOrProp";
 export { useBreakpoint } from "@/Utils/useBreakpoint";

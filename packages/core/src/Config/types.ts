@@ -177,6 +177,7 @@ import type {
   PaginationVariant,
   PaginationVariantItem,
 } from "@/Tokens/Pagination";
+import type { PopoverRounded, PopoverShadow } from "@/Tokens/Popover";
 import type {
   ProgressColor,
   ProgressColorItem,
@@ -491,6 +492,7 @@ export interface NumberFieldConfigOverrides {}
 export interface OtpFieldConfigOverrides {}
 export interface PaginationConfigOverrides {}
 export interface PasswordFieldConfigOverrides {}
+export interface PopoverConfigOverrides {}
 export interface ProgressConfigOverrides {}
 export interface RadioConfigOverrides {}
 export interface RatingConfigOverrides {}
@@ -1369,6 +1371,18 @@ export interface PasswordFieldConfigBase {
   }>;
 }
 
+export interface PopoverConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    rounded: keyof PopoverRounded;
+    shadow: keyof PopoverShadow;
+  }>;
+  tokens: Partial<{
+    rounded: Record<string, string>;
+    shadow: Record<string, string>;
+  }>;
+}
+
 export interface ProgressConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -1959,6 +1973,7 @@ export interface BridgeUIComponentsRegistry {
   PasswordField: Partial<
     Overwrite<PasswordFieldConfigBase, PasswordFieldConfigOverrides>
   >;
+  Popover: Partial<Overwrite<PopoverConfigBase, PopoverConfigOverrides>>;
   Progress: Partial<Overwrite<ProgressConfigBase, ProgressConfigOverrides>>;
   Radio: Partial<Overwrite<RadioConfigBase, RadioConfigOverrides>>;
   Rating: Partial<Overwrite<RatingConfigBase, RatingConfigOverrides>>;
