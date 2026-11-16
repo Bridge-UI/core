@@ -1,37 +1,16 @@
 // ** External Imports
 import { get, omit } from "es-toolkit/compat";
-import {
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-  type KeyboardEvent,
-} from "react";
+import { useId, type KeyboardEvent } from "react";
 
 // ** Core Imports
-import {
-  acquireLayerStackOrder,
-  claimOpenMenu,
-  getLayerStackEntry,
-  LAYER_STACK_BASE_Z_INDEX,
-  pushLayerStack,
-  subscribeLayerStack,
-  type LayerStackHandle,
-} from "@bridge-ui/core/Layer";
-import {
-  createFocusable,
-  createPositionable,
-  type PositionHandle,
-} from "@bridge-ui/core/Runtime";
+import { claimOpenMenu, isMenuClickAwayDeferred } from "@bridge-ui/core/Layer";
+import { createFocusable } from "@bridge-ui/core/Runtime";
 import {
   menuRoundedProps as roundedProps,
   menuShadowProps as shadowProps,
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
-  mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
@@ -39,12 +18,17 @@ import {
 
 // ** Local Imports
 import type { MenuOwnProps, MenuProps } from "@/Components/Menu/menu.types";
+import { usePopoverBase } from "@/Components/Popover/hooks/usePopoverBase";
 import {
+  createPopoverSetShow,
   derived,
+  getPopoverRootBind,
+  getPopoverTriggerBind,
   hasNamedSlot,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
+  usePopoverPanelClasses,
 } from "@/Utils";
 
 const menuBridgeKeys = [
@@ -110,26 +94,6 @@ export function useMenu(
 
   const menuId = useId();
 
-  const layerStackIdRef = useRef("");
-
-  const [mounted, setMounted] = useState(show);
-
-  const triggerRef = useRef<HTMLDivElement>(null);
-
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  const stackOrderRef = useRef<null | number>(null);
-
-  const stackHandleRef = useRef<null | LayerStackHandle>(null);
-
-  const positionHandleRef = useRef<null | PositionHandle>(null);
-
-  const releaseOpenMenuClaimRef = useRef<null | (() => void)>(null);
-
-  const allowReferenceHiddenCloseRef = useRef(false);
-
-  const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
-
   const { componentProps, inheritedAttrs } = splitComponentProps<
     MenuProps,
     typeof menuBridgeKeys
@@ -182,107 +146,39 @@ export function useMenu(
     props: componentProps,
   });
 
-  const isHiddenWhileMounted = derived(() => {
-    return Boolean(merged.keepMounted && !show);
-  });
-
   const isPortaled = derived(() => {
     return merged.teleportTo !== false;
   });
 
-  if (show && stackOrderRef.current === null) {
-    stackOrderRef.current = acquireLayerStackOrder();
-  }
+  const { shadowClass, roundedClass } = usePopoverPanelClasses({
+    shadowProps,
+    roundedProps,
+    shadow: merged.shadow,
+    rounded: merged.rounded,
+    shadowOverrides: bridgeMenu?.tokens?.shadow,
+    roundedOverrides: bridgeMenu?.tokens?.rounded,
+  });
 
-  if (!show && !mounted && stackOrderRef.current !== null) {
-    stackOrderRef.current = null;
-  }
+  const setShow = createPopoverSetShow({ onClose, onShowChange });
 
-  const roundedClass = useMemo(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      roundedProps,
-      bridgeMenu?.tokens?.rounded,
-    );
-
-    return get(classes, merged.rounded);
-  }, [merged.rounded, bridgeMenu?.tokens?.rounded]);
-
-  const shadowClass = useMemo(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      shadowProps,
-      bridgeMenu?.tokens?.shadow,
-    );
-
-    return get(classes, merged.shadow);
-  }, [merged.shadow, bridgeMenu?.tokens?.shadow]);
-
-  function setShow(next: boolean) {
-    if (!next) {
-      onClose?.();
-    }
-
-    onShowChange?.(next);
-  }
-
-  function getReferenceElement(): null | HTMLElement {
-    if (anchorEl instanceof HTMLElement) {
-      return anchorEl;
-    }
-
-    if (anchorEl && "current" in anchorEl) {
-      return anchorEl.current;
-    }
-
-    return triggerRef.current;
-  }
-
-  function focusReference() {
-    const reference = getReferenceElement();
-
-    if (reference instanceof HTMLElement) {
-      reference.focus({ preventScroll: true });
-    }
-  }
-
-  function isInsideReference(target: Node) {
-    const reference = getReferenceElement();
-
-    return reference?.contains(target) ?? false;
-  }
-
-  function isAnotherMenuOpener(target: Node) {
-    if (!(target instanceof Element)) {
-      return false;
-    }
-
-    if (isInsideReference(target)) {
-      return false;
-    }
-
-    if (contentRef.current?.contains(target)) {
-      return false;
-    }
-
-    return Boolean(
-      target.closest('[aria-haspopup="menu"], button, [role="button"]'),
-    );
-  }
-
-  function requestClose() {
-    if (merged.persistent || !show) {
-      return;
-    }
-
-    setShow(false);
-  }
-
-  function handleTriggerClick() {
-    if (merged.persistent && show) {
-      return;
-    }
-
-    setShow(!show);
-  }
+  const overlay = usePopoverBase({
+    show,
+    setShow,
+    anchorEl,
+    id: menuId,
+    offset: merged.offset,
+    claimOpen: claimOpenMenu,
+    strategy: merged.strategy,
+    placement: merged.placement,
+    matchWidth: merged.matchWidth,
+    persistent: merged.persistent,
+    keepMounted: merged.keepMounted,
+    closeOnEscape: merged.closeOnEscape,
+    closeOnClickAway: merged.closeOnClickAway,
+    disableAutoFocus: merged.disableAutoFocus,
+    disableScrollLock: merged.disableScrollLock,
+    isClickAwayDeferred: isMenuClickAwayDeferred,
+  });
 
   function handleTriggerKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     if (
@@ -301,20 +197,27 @@ export function useMenu(
   }
 
   function handleContentKeyDown(event: KeyboardEvent<HTMLDivElement>) {
-    const container = contentRef.current;
+    const container = overlay.contentRef.current;
 
     if (!container) {
+      return;
+    }
+
+    if (overlay.handleContentEscape(event)) {
+      return;
+    }
+
+    const target = event.target as Node;
+
+    // Keys from an overlay opened inside the menu (a portaled Popover still
+    // bubbles through the React tree) belong to that overlay.
+    if (!container.contains(target) || overlay.isInsideNestedLayer(target)) {
       return;
     }
 
     const focusable = createFocusable(container);
 
     switch (event.key) {
-      case "Escape":
-        event.preventDefault();
-        requestClose();
-        focusReference();
-        break;
       case "ArrowDown":
         event.preventDefault();
         focusable.next()?.focus({ preventScroll: true });
@@ -334,266 +237,45 @@ export function useMenu(
     }
   }
 
-  function destroyPositionable() {
-    allowReferenceHiddenCloseRef.current = false;
-    positionHandleRef.current?.destroy();
-    positionHandleRef.current = null;
-  }
-
-  function syncPositionable() {
-    destroyPositionable();
-
-    const reference = getReferenceElement();
-    const floating = contentRef.current;
-
-    if (!show || !reference || !floating) {
-      return;
-    }
-
-    const handle = createPositionable({
-      floating,
-      reference,
-      offset: merged.offset,
-      strategy: merged.strategy,
-      placement: merged.placement,
-      matchWidth: merged.matchWidth === true,
-      onReferenceHidden: () => {
-        if (
-          !allowReferenceHiddenCloseRef.current ||
-          merged.persistent ||
-          !show
-        ) {
-          return;
-        }
-
-        requestClose();
-      },
-    });
-
-    positionHandleRef.current = handle;
-    handle.start();
-
-    queueMicrotask(() => {
-      allowReferenceHiddenCloseRef.current = true;
-    });
-  }
-
-  useLayoutEffect(() => {
-    if (show) {
-      setMounted(true);
-
-      let cancelled = false;
-
-      queueMicrotask(() => {
-        if (cancelled || !show) {
-          return;
-        }
-
-        releaseOpenMenuClaimRef.current = claimOpenMenu({
-          id: menuId,
-          requestClose,
-        });
-      });
-
-      return () => {
-        cancelled = true;
-      };
-    }
-
-    releaseOpenMenuClaimRef.current?.();
-    releaseOpenMenuClaimRef.current = null;
-
-    if (!merged.keepMounted) {
-      setMounted(false);
-    }
-  }, [show, menuId, merged.keepMounted]);
-
-  useLayoutEffect(() => {
-    if (!show || !mounted) {
-      destroyPositionable();
-
-      return;
-    }
-
-    syncPositionable();
-
-    return () => {
-      destroyPositionable();
-    };
-  }, [
-    show,
-    mounted,
-    anchorEl,
-    merged.offset,
-    merged.strategy,
-    merged.placement,
-    merged.persistent,
-  ]);
-
-  useLayoutEffect(() => {
-    if (!show || stackOrderRef.current === null) {
-      stackHandleRef.current?.release();
-      stackHandleRef.current = null;
-      setStackZIndex(LAYER_STACK_BASE_Z_INDEX);
-
-      return;
-    }
-
-    function handleEscape() {
-      if (!show || merged.closeOnEscape === false || merged.persistent) {
-        return;
-      }
-
-      requestClose();
-      focusReference();
-    }
-
-    const handle = pushLayerStack({
-      onEscape: handleEscape,
-      order: stackOrderRef.current,
-      container: contentRef.current ?? undefined,
-      lockScroll: merged.disableScrollLock !== true,
-    });
-
-    stackHandleRef.current = handle;
-    layerStackIdRef.current = handle.id;
-    setStackZIndex((previous) => {
-      return previous === handle.zIndex ? previous : handle.zIndex;
-    });
-
-    return () => {
-      handle.release();
-      stackHandleRef.current = null;
-      layerStackIdRef.current = "";
-    };
-  }, [show, merged.persistent, merged.closeOnEscape, merged.disableScrollLock]);
-
-  useLayoutEffect(() => {
-    if (!show || !mounted) {
-      return;
-    }
-
-    stackHandleRef.current?.setContainer(contentRef.current);
-
-    if (merged.disableAutoFocus || !contentRef.current) {
-      return;
-    }
-
-    createFocusable(contentRef.current).focusFirst();
-  }, [show, mounted, merged.disableAutoFocus]);
-
-  useEffect(() => {
-    if (!show) {
-      return;
-    }
-
-    function syncZIndex() {
-      const snapshot = getLayerStackEntry(layerStackIdRef.current);
-
-      if (!snapshot) {
-        return;
-      }
-
-      setStackZIndex((previous) => {
-        return previous === snapshot.zIndex ? previous : snapshot.zIndex;
-      });
-    }
-
-    syncZIndex();
-
-    return subscribeLayerStack(syncZIndex);
-  }, [show]);
-
-  useEffect(() => {
-    if (!show) {
-      return;
-    }
-
-    let removePointerListener: null | (() => void) = null;
-
-    const frameId = requestAnimationFrame(() => {
-      function handlePointerDown(event: PointerEvent) {
-        const target = event.target as Node;
-
-        if (isInsideReference(target)) {
-          return;
-        }
-
-        if (contentRef.current?.contains(target)) {
-          return;
-        }
-
-        if (merged.closeOnClickAway === false || merged.persistent) {
-          return;
-        }
-
-        if (isAnotherMenuOpener(target)) {
-          return;
-        }
-
-        requestClose();
-      }
-
-      document.addEventListener("pointerdown", handlePointerDown, true);
-      removePointerListener = () => {
-        document.removeEventListener("pointerdown", handlePointerDown, true);
-      };
-    });
-
-    return () => {
-      cancelAnimationFrame(frameId);
-      removePointerListener?.();
-    };
-  }, [show, anchorEl, merged.persistent, merged.closeOnClickAway]);
-
   const rootBind = derived(() => {
-    return mergePartBind(
-      customProps?.root,
-      rootInheritedAttrs,
-      cn({
-        "relative inline-flex": hasTrigger,
-        [get(mergedClasses, "root") ?? ""]: true,
-      }),
-    );
+    return getPopoverRootBind({
+      hasTrigger,
+      classes: mergedClasses,
+      customProps: customProps?.root,
+      inheritedAttrs: rootInheritedAttrs,
+    });
   });
 
   const triggerBind = derived(() => {
-    return mergePartBind(
-      customProps?.trigger,
-      { ref: triggerRef },
-      {
-        tabIndex: 0,
-        role: "button",
-        "aria-expanded": show,
-        onKeyDown: handleTriggerKeyDown,
-        "aria-haspopup": "menu" as const,
-        onClickCapture: handleTriggerClick,
-        "aria-controls": show ? menuId : undefined,
-        className: cn({
-          "inline-flex w-fit max-w-full cursor-pointer outline-hidden": true,
-          [get(mergedClasses, "trigger") ?? ""]: true,
-        }),
-      },
-    );
+    return getPopoverTriggerBind({
+      show,
+      hasPopup: "menu",
+      controlsId: menuId,
+      toggle: overlay.toggle,
+      classes: mergedClasses,
+      triggerRef: overlay.triggerRef,
+      onKeyDown: handleTriggerKeyDown,
+      customProps: customProps?.trigger,
+    });
   });
 
   const contentBind = derived(() => {
     return mergePartBind(
       customProps?.content,
-      { ref: contentRef },
+      { ref: overlay.contentRef },
       {
         id: menuId,
         role: "menu",
         onKeyDown: handleContentKeyDown,
         style: {
-          zIndex: stackZIndex,
+          zIndex: overlay.stackZIndex,
         },
-        "aria-hidden": isHiddenWhileMounted ? true : undefined,
+        "aria-hidden": overlay.isHiddenWhileMounted ? true : undefined,
         className: cn({
           "bg-white text-dark-900 dark:bg-dark-800 dark:text-dark-100 ring-1 ring-black/5 dark:ring-white/10 outline-hidden overflow-hidden max-w-[calc(100vw-16px)]": true,
           "min-w-0 w-full": merged.matchWidth === true,
           "min-w-32 w-max": merged.matchWidth !== true,
-          "invisible pointer-events-none": isHiddenWhileMounted,
+          "invisible pointer-events-none": overlay.isHiddenWhileMounted,
           [roundedClass ?? ""]: true,
           [shadowClass ?? ""]: true,
           [get(mergedClasses, "content") ?? ""]: true,
@@ -606,12 +288,12 @@ export function useMenu(
     slots,
     merged,
     menuId,
-    mounted,
     children,
     rootBind,
     hasTrigger,
     isPortaled,
     triggerBind,
     contentBind,
+    mounted: overlay.mounted,
   };
 }

@@ -7,14 +7,14 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { useRef, useState, type ReactNode } from "react";
-import { afterEach, expect, test } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
 import { Button } from "@/Components/Button";
 import { List } from "@/Components/List";
 import { ListItem } from "@/Components/ListItem";
 import { Menu } from "@/Components/Menu";
-import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
+import { pushLayerStack, resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 afterEach(() => {
   cleanup();
@@ -230,4 +230,88 @@ test("it should release scroll lock when the menu closes", () => {
 
   fireEvent.click(screen.getByText("Open"));
   expect(document.body.style.overflow).not.toBe("hidden");
+});
+
+function nextFrame() {
+  return new Promise((resolve) => {
+    requestAnimationFrame(() => resolve(undefined));
+  });
+}
+
+test("it should close when a press on another menu trigger opens nothing", async () => {
+  render(
+    <div>
+      <ControlledMenu initialOpen />
+      <div aria-haspopup="menu" aria-disabled="true">
+        Disabled menu
+      </div>
+    </div>,
+  );
+
+  await nextFrame();
+
+  const other = screen.getByText("Disabled menu");
+
+  fireEvent.pointerDown(other);
+  expect(screen.getByRole("menu")).toBeTruthy();
+
+  fireEvent.pointerUp(other);
+
+  await waitFor(() => {
+    expect(screen.queryByRole("menu")).toBeNull();
+  });
+});
+
+test("it should close on Escape in the menu under an unrelated layer", () => {
+  render(<ControlledMenu initialOpen />);
+
+  const onEscape = vi.fn();
+  const tooltip = pushLayerStack({
+    onEscape,
+    lockScroll: false,
+    origin: () => null,
+  });
+
+  fireEvent.keyDown(screen.getByRole("menu"), { key: "Escape" });
+
+  expect(screen.queryByRole("menu")).toBeNull();
+  expect(onEscape).not.toHaveBeenCalled();
+
+  tooltip.release();
+});
+
+test("it should stay open on Escape in the menu when closeOnEscape is false", () => {
+  render(
+    <Menu show closeOnEscape={false} slots={{ trigger: <Button>Open</Button> }}>
+      Menu body
+    </Menu>,
+  );
+
+  fireEvent.keyDown(screen.getByRole("menu"), { key: "Escape" });
+
+  expect(screen.getByRole("menu")).toBeTruthy();
+});
+
+test("it should drop a deferred close when a new press starts", async () => {
+  render(
+    <div>
+      <ControlledMenu initialOpen>
+        <button type="button">Item</button>
+      </ControlledMenu>
+      <div aria-haspopup="menu">Other menu</div>
+    </div>,
+  );
+
+  await nextFrame();
+
+  // The press on the other trigger ends outside the window: no pointer up.
+  fireEvent.pointerDown(screen.getByText("Other menu"));
+
+  const item = screen.getByText("Item");
+
+  fireEvent.pointerDown(item);
+  fireEvent.pointerUp(item);
+  await new Promise((resolve) => setTimeout(resolve, 0));
+
+  expect(screen.getByRole("menu")).toBeTruthy();
 });

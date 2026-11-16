@@ -12,7 +12,9 @@ import { afterEach, expect, test, vi } from "vitest";
 
 // ** Core Imports
 import {
+  isInsideNestedLayer,
   LAYER_STACK_BASE_Z_INDEX,
+  pushLayerStack,
   resetLayerStackForTests,
 } from "@bridge-ui/core/Layer";
 
@@ -510,4 +512,52 @@ test("it should keep focus inside a nested drawer overlay", () => {
   inner.focus();
 
   expect(document.activeElement).toBe(inner);
+});
+
+test("it should keep its opener when props change while open", () => {
+  const outerPanel = document.createElement("div");
+  const opener = document.createElement("button");
+
+  outerPanel.append(opener);
+  document.body.append(outerPanel);
+
+  const outer = pushLayerStack({ lockScroll: false, container: outerPanel });
+
+  opener.focus();
+
+  const { rerender } = render(
+    <Modal show transition="none">
+      <input aria-label="Field" />
+    </Modal>,
+  );
+
+  const field = screen.getByLabelText("Field");
+
+  expect(isInsideNestedLayer(field, outer.id)).toBe(true);
+  expect(document.body.style.overflow).toBe("hidden");
+
+  rerender(
+    <Modal show persistent disableScrollLock transition="none">
+      <input aria-label="Field" />
+    </Modal>,
+  );
+
+  expect(isInsideNestedLayer(field, outer.id)).toBe(true);
+  expect(document.body.style.overflow).not.toBe("hidden");
+
+  outer.release();
+});
+
+test("it should lock scroll again when reopened while leaving", () => {
+  const { rerender } = render(<Modal show>Open</Modal>);
+
+  expect(document.body.style.overflow).toBe("hidden");
+
+  rerender(<Modal show={false}>Open</Modal>);
+
+  expect(document.body.style.overflow).not.toBe("hidden");
+
+  rerender(<Modal show>Open</Modal>);
+
+  expect(document.body.style.overflow).toBe("hidden");
 });

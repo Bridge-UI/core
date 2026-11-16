@@ -13,7 +13,6 @@ import {
 import type { FormFieldSize, IconSize } from "@bridge-ui/core/Tokens";
 import {
   createMergeNestedComponentProps,
-  createMergePartBind,
   getBridgeUIRegistryDefaultProp,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
@@ -21,6 +20,7 @@ import {
 
 // ** Local Imports
 import { useBridgeUI } from "@/Provider/useBridgeUI";
+import { mergePartBind } from "@/Utils/mergePartBind";
 
 type RegistryEntryFor<K extends keyof BridgeUIComponentsConfig> = NonNullable<
   BridgeUIComponentsConfig[K]
@@ -84,11 +84,6 @@ function useShallowStable<T extends object>(value: T): T {
 
   return ref.current;
 }
-
-/**
- * Merges React-specific classes into the `className` attribute.
- */
-export const mergePartBind = createMergePartBind("className");
 
 /**
  * Merges consumer nested-component props with package defaults (consumer wins).
@@ -269,6 +264,17 @@ export function resolveFieldAdornmentIconSize(
 }
 
 // ** Exports
+export { mergePartBind } from "@/Utils/mergePartBind";
+export {
+  createPopoverSetShow,
+  getPopoverRootBind,
+  getPopoverTriggerBind,
+  usePopoverPanelClasses,
+} from "@/Utils/popoverParts";
+export {
+  resolveAnchorElement,
+  type AnchorElement,
+} from "@/Utils/resolveAnchorElement";
 export { hasNamedSlot, hasSlotOrProp, isPropPresent } from "@/Utils/slotOrProp";
 export type { SlotMap } from "@/Utils/slotOrProp";
 export { useBreakpoint } from "@/Utils/useBreakpoint";

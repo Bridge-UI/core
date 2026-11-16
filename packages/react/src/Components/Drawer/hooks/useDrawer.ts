@@ -139,6 +139,13 @@ export function useDrawer(
 
   const panelRef = useRef<HTMLDivElement>(null);
 
+  /**
+   * Root element (backdrop included): the layer's container on the stack, so
+   * a press on the backdrop counts as inside this layer for the overlays it
+   * was opened from.
+   */
+  const rootRef = useRef<HTMLDivElement>(null);
+
   const leaveTransitionEndsPendingRef = useRef(0);
 
   const stackOrderRef = useRef<null | number>(null);
@@ -346,6 +353,8 @@ export function useDrawer(
   }
 
   function scheduleOpen() {
+    // Reopened while leaving: the leave released the scroll lock.
+    stackHandleRef.current?.restoreScrollLock();
     pendingLeaveRef.current = false;
     clearLeaveFallback();
     leaveTransitionEndsPendingRef.current = 0;
@@ -439,6 +448,29 @@ export function useDrawer(
     startLeave();
   }, [show]);
 
+  /**
+   * Latest Escape handler and scroll-lock setting. The layer is pushed once
+   * per open (its origin is the element focused then) and only updated
+   * afterwards, so these are read from here instead of pushing it again.
+   */
+  const layerOptionsRef = useRef({
+    handleEscape: () => {},
+    lockScroll: merged.disableScrollLock !== true,
+  });
+
+  useLayoutEffect(() => {
+    layerOptionsRef.current = {
+      lockScroll: merged.disableScrollLock !== true,
+      handleEscape: () => {
+        if (!show || merged.closeOnEscape === false || merged.persistent) {
+          return;
+        }
+
+        requestClose();
+      },
+    };
+  });
+
   useLayoutEffect(() => {
     if (!active || stackOrderRef.current === null) {
       stackHandleRef.current?.release();
@@ -448,21 +480,15 @@ export function useDrawer(
       return;
     }
 
-    function handleEscape() {
-      if (!show || merged.closeOnEscape === false || merged.persistent) {
-        return;
-      }
-
-      requestClose();
-    }
-
     const handle = pushLayerStack({
       id: stackId,
       trapsFocus: true,
-      onEscape: handleEscape,
       order: stackOrderRef.current,
-      container: panelRef.current ?? undefined,
-      lockScroll: merged.disableScrollLock !== true,
+      container: rootRef.current ?? undefined,
+      lockScroll: layerOptionsRef.current.lockScroll,
+      onEscape: () => {
+        layerOptionsRef.current.handleEscape();
+      },
     });
 
     stackHandleRef.current = handle;
@@ -476,14 +502,11 @@ export function useDrawer(
       stackHandleRef.current = null;
       layerStackIdRef.current = "";
     };
-  }, [
-    show,
-    active,
-    stackId,
-    merged.persistent,
-    merged.closeOnEscape,
-    merged.disableScrollLock,
-  ]);
+  }, [active, stackId]);
+
+  useLayoutEffect(() => {
+    stackHandleRef.current?.setLockScroll(merged.disableScrollLock !== true);
+  }, [merged.disableScrollLock]);
 
   useLayoutEffect(() => {
     if (!active || transitionState !== "open" || !panelRef.current) {
@@ -492,7 +515,7 @@ export function useDrawer(
       return;
     }
 
-    stackHandleRef.current?.setContainer(panelRef.current);
+    stackHandleRef.current?.setContainer(rootRef.current);
     releaseFocusTrap();
     focusTrapRef.current = createFocusTrap({
       container: panelRef.current,
@@ -546,6 +569,7 @@ export function useDrawer(
 
   const rootBind = derived(() => {
     return mergePartBind(customProps?.root, rootInheritedAttrs, {
+      ref: rootRef,
       onTransitionEnd: handleShellTransitionEnd,
       style: {
         zIndex: stackZIndex,

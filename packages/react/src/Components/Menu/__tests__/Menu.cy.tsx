@@ -1,3 +1,6 @@
+// ** External Imports
+import { useState } from "react";
+
 // ** Local Imports
 import { Button } from "@/Components/Button";
 import { List } from "@/Components/List";
@@ -69,4 +72,36 @@ test("it should render List and ListItem inside the menu panel", () => {
   cy.get('[role="menu"]').should("be.visible");
   cy.get('[role="menuitem"]').should("be.visible");
   cy.contains("Item one").should("be.visible");
+});
+
+function TwoMenus() {
+  const [open, setOpen] = useState<"a" | "b" | null>("a");
+
+  return (
+    <div className="flex gap-2">
+      {(["a", "b"] as const).map((name) => (
+        <Menu
+          key={name}
+          show={open === name}
+          slots={{ trigger: <Button>{name.toUpperCase()}</Button> }}
+          onShowChange={(show) => {
+            setOpen((current) =>
+              show ? name : current === name ? null : current,
+            );
+          }}
+        >
+          {`Menu ${name.toUpperCase()}`}
+        </Menu>
+      ))}
+    </div>
+  );
+}
+
+test("it should switch to another menu in one click", () => {
+  cy.mount(<TwoMenus />);
+
+  cy.contains("Menu A").should("be.visible");
+  cy.contains("button", "B").click();
+  cy.contains("Menu B").should("be.visible");
+  cy.contains("Menu A").should("not.exist");
 });

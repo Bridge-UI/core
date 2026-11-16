@@ -540,6 +540,18 @@ export type {
   PasswordFieldProps,
   PasswordFieldSlots,
 } from "@/Components/PasswordField";
+export { Popover, usePopover } from "@/Components/Popover";
+export type {
+  PopoverClasses,
+  PopoverCustomProps,
+  PopoverOptions,
+  PopoverOwnProps,
+  PopoverProps,
+  PopoverRenderProps,
+  PopoverRoundedOverrides,
+  PopoverShadowOverrides,
+  PopoverSlots,
+} from "@/Components/Popover";
 export { Progress, useProgress } from "@/Components/Progress";
 export type {
   ProgressClasses,
