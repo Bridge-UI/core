@@ -785,14 +785,16 @@ export function handleSelectTriggerKeyDown(
 
       return true;
     case "Escape":
-      // Closed: not handled, so the overlay the field sits in (Modal,
-      // Popover, Menu) still closes on Escape.
+      handlers.dismiss();
+
+      // Closed: dismissing only resets the query, so the key is left
+      // unhandled and the overlay the field sits in (Modal, Popover, Menu)
+      // still closes on Escape.
       if (!state.open) {
         return false;
       }
 
       event.preventDefault();
-      handlers.dismiss();
       return true;
     case "Home":
     case "End":

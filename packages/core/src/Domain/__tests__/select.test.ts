@@ -623,13 +623,13 @@ describe("handleSelectTriggerKeyDown", () => {
     expect(tab.preventDefault).not.toHaveBeenCalled();
   });
 
-  test("it should leave Escape unhandled on a closed menu", () => {
+  test("it should dismiss but leave Escape unhandled on a closed menu", () => {
     const handlers = createHandlers();
     const event = createEvent("Escape");
 
     expect(handleSelectTriggerKeyDown(event, closed, handlers)).toBe(false);
     expect(event.preventDefault).not.toHaveBeenCalled();
-    expect(handlers.dismiss).not.toHaveBeenCalled();
+    expect(handlers.dismiss).toHaveBeenCalledOnce();
   });
 
   test("it should ignore other keys", () => {
