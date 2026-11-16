@@ -555,12 +555,18 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
     stackHandleRef.current?.setLockScroll(disableScrollLock !== true);
   }, [disableScrollLock]);
 
+  /**
+   * Keeps the layer container on the current content element, which changes
+   * when the content remounts while open (a `teleportTo` change).
+   */
+  useLayoutEffect(() => {
+    stackHandleRef.current?.setContainer(contentRef.current);
+  });
+
   useLayoutEffect(() => {
     if (!show || !mounted) {
       return;
     }
-
-    stackHandleRef.current?.setContainer(contentRef.current);
 
     const content = contentRef.current;
 

@@ -365,16 +365,8 @@ export function useDrawer(
   }
 
   function setRootRef(element: null | Element | ComponentPublicInstance) {
-    const next = resolveVnodeRefElement(element);
-
-    // Function refs run on every patch: only a new element changes the
-    // layer container (and drops the cached nesting).
-    if (rootRef.value === next) {
-      return;
-    }
-
-    rootRef.value = next;
-    stackHandle?.setContainer(next);
+    rootRef.value = resolveVnodeRefElement(element);
+    stackHandle?.setContainer(rootRef.value);
   }
 
   function setPanelRef(element: null | Element | ComponentPublicInstance) {

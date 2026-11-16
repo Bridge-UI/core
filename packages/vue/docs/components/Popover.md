@@ -201,7 +201,7 @@ A Popover (or Menu) opened from inside a Menu keeps that menu open when its open
 ## Accessibility
 
 - Content is `role="dialog"` (non-modal: no focus trap, no scroll lock by default). The trigger wrapper has `aria-haspopup="dialog"`, `aria-expanded` and `aria-controls`.
-- Opening moves focus to the first focusable element (or the content itself). Escape closes the top-most layer. Closing while focus is inside the content (Escape, `close`, click-away) returns focus to the trigger.
+- Opening moves focus to the first focusable element (or the content itself). Escape closes the top-most layer. Closing while focus is inside the content (Escape or `close`) returns focus to the trigger; a click outside leaves focus where the pointer put it.
 - Clicks inside layers opened from the content (a `Select` list, a nested `Menu`) do not close the popover.
 - Opening a popover closes any open `Menu`.
 
