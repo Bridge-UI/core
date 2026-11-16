@@ -643,3 +643,43 @@ test("it should drop a deferred close when a new press starts", async () => {
 
   expect(open.value).toBe(true);
 });
+
+test("it should not move focus on a key already handled inside the menu", async () => {
+  mountMenu({
+    props: { modelValue: true },
+    slots: {
+      trigger: () => h(Button, null, () => "Open"),
+      default: () => [
+        h(
+          "button",
+          {
+            type: "button",
+            onKeydown: (event: KeyboardEvent) => {
+              event.preventDefault();
+            },
+          },
+          "Field",
+        ),
+        h("button", { type: "button" }, "Next"),
+      ],
+    },
+  });
+
+  await flushPromises();
+
+  const field = Array.from(document.body.querySelectorAll("button")).find(
+    (button) => button.textContent === "Field",
+  );
+
+  field?.focus();
+  field?.dispatchEvent(
+    new KeyboardEvent("keydown", {
+      key: "ArrowDown",
+      bubbles: true,
+      cancelable: true,
+    }),
+  );
+  await flushPromises();
+
+  expect(document.activeElement).toBe(field);
+});
