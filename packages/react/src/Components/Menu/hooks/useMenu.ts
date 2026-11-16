@@ -204,7 +204,9 @@ export function useMenu(
       return;
     }
 
-    if (overlay.handleContentEscape(event)) {
+    // Escape is handled here; a key already handled by a field inside the
+    // menu (a Select opening its listbox on ArrowDown) does not move focus.
+    if (overlay.handleContentEscape(event) || event.defaultPrevented) {
       return;
     }
 

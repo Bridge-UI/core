@@ -3,7 +3,7 @@ import { get, isFunction, omit } from "es-toolkit/compat";
 import { useId, type KeyboardEvent, type ReactNode } from "react";
 
 // ** Core Imports
-import { closeOpenMenu } from "@bridge-ui/core/Layer";
+import { closeOpenMenu, isMenuClickAwayDeferred } from "@bridge-ui/core/Layer";
 import {
   popoverRoundedProps as roundedProps,
   popoverShadowProps as shadowProps,
@@ -195,6 +195,7 @@ export function usePopover(
     closeOnClickAway: merged.closeOnClickAway,
     disableAutoFocus: merged.disableAutoFocus,
     disableScrollLock: merged.disableScrollLock,
+    isClickAwayDeferred: isMenuClickAwayDeferred,
   });
 
   /**

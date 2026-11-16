@@ -303,20 +303,26 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
 
   /**
    * Closes on Escape (honoring `closeOnEscape` and `persistent`) and moves
-   * focus back to the anchor. Called by the layer stack when this is the
-   * top-most layer, and by callers that handle Escape in their content.
+   * focus back to the anchor. Returns whether a close was requested. Called
+   * by the layer stack when this is the top-most layer, and by
+   * {@link handleContentEscape}.
    */
-  function closeFromEscape() {
-    if (closeOnEscape !== false && requestClose()) {
-      focusReference();
+  function closeFromEscape(): boolean {
+    if (closeOnEscape === false || !requestClose()) {
+      return false;
     }
+
+    focusReference();
+
+    return true;
   }
 
   /**
    * Escape pressed in the content (not in a layer opened from it): closes
    * this overlay here and marks the key handled, so the layer stack does not
    * close the layer below too, nor a layer above that was not opened from
-   * this one (a Tooltip). Returns whether the key was handled.
+   * this one (a Tooltip). Returns whether the key was handled: not when
+   * this overlay stays open.
    */
   function handleContentEscape(event: KeyboardEvent<HTMLElement>): boolean {
     const target = event.target as Node;
@@ -329,8 +335,13 @@ export function usePopoverBase(options: UsePopoverBaseOptions) {
       return false;
     }
 
+    // An overlay that stays open (persistent, `closeOnEscape` off) leaves
+    // the key to the layer stack, so a layer above it can still close.
+    if (!closeFromEscape()) {
+      return false;
+    }
+
     event.preventDefault();
-    closeFromEscape();
 
     return true;
   }

@@ -315,3 +315,26 @@ test("it should drop a deferred close when a new press starts", async () => {
 
   expect(screen.getByRole("menu")).toBeTruthy();
 });
+
+test("it should not move focus on a key already handled inside the menu", () => {
+  render(
+    <ControlledMenu initialOpen>
+      <button
+        type="button"
+        onKeyDown={(event) => {
+          event.preventDefault();
+        }}
+      >
+        Field
+      </button>
+      <button type="button">Next</button>
+    </ControlledMenu>,
+  );
+
+  const field = screen.getByText("Field");
+
+  field.focus();
+  fireEvent.keyDown(field, { key: "ArrowDown" });
+
+  expect(document.activeElement).toBe(field);
+});
