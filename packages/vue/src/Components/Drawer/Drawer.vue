@@ -38,6 +38,7 @@ const {
   mounted,
   rootBind,
   panelBind,
+  setRootRef,
   overlayBind,
   wrapperBind,
   setPanelRef,
@@ -88,7 +89,7 @@ const showBackdrop = computed(() => {
 
 <template>
   <Teleport v-if="mounted" :to="teleportTarget" :disabled="teleportDisabled">
-    <div v-bind="rootBind">
+    <div :ref="setRootRef" v-bind="rootBind">
       <div aria-hidden="true" v-if="showBackdrop" v-bind="overlayBind" />
 
       <div v-bind="wrapperBind">

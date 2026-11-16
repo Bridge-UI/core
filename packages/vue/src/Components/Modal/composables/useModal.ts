@@ -141,6 +141,13 @@ export function useModal(
 
   const panelRef = ref<null | HTMLElement>(null);
 
+  /**
+   * Root element (backdrop included): the layer's container on the stack, so
+   * a press on the backdrop counts as inside this layer for the overlays it
+   * was opened from.
+   */
+  const rootRef = ref<null | HTMLElement>(null);
+
   let stackHandle: null | LayerStackHandle = null;
 
   let enterPaintCancel: null | (() => void) = null;
@@ -337,7 +344,7 @@ export function useModal(
       return;
     }
 
-    stackHandle?.setContainer(panelRef.value);
+    stackHandle?.setContainer(rootRef.value);
     releaseFocusTrap();
     focusTrap = createFocusTrap({
       container: panelRef.value,
@@ -346,6 +353,11 @@ export function useModal(
       disableRestoreFocus: merged.value.disableRestoreFocus,
       ...getLayerFocusTrapGuards(() => layerStackId.value),
     });
+  }
+
+  function setRootRef(element: null | Element | ComponentPublicInstance) {
+    rootRef.value = resolveVnodeRefElement(element);
+    stackHandle?.setContainer(rootRef.value);
   }
 
   function setPanelRef(element: null | Element | ComponentPublicInstance) {
@@ -423,6 +435,8 @@ export function useModal(
   }
 
   function scheduleOpen() {
+    // Reopened while leaving: the leave released the scroll lock.
+    stackHandle?.restoreScrollLock();
     pendingLeave = false;
     clearLeaveFallback();
     leaveTransitionEndsPending = 0;
@@ -566,7 +580,7 @@ export function useModal(
           order: stackOrder,
           id: options.stackId,
           onEscape: handleEscape,
-          container: panelRef.value ?? undefined,
+          container: rootRef.value ?? undefined,
           lockScroll: merged.value.disableScrollLock !== true,
         });
 
@@ -587,6 +601,15 @@ export function useModal(
     { immediate: true },
   );
 
+  // Updates the open layer: pushing it again would give it a new id and
+  // drop the layers nested in it.
+  watch(
+    () => merged.value.disableScrollLock,
+    (disableScrollLock) => {
+      stackHandle?.setLockScroll(disableScrollLock !== true);
+    },
+  );
+
   onBeforeUnmount(() => {
     clearLeaveFallback();
     cancelEnterPaint();
@@ -602,6 +625,7 @@ export function useModal(
     mounted,
     rootBind,
     panelBind,
+    setRootRef,
     overlayBind,
     wrapperBind,
     setPanelRef,

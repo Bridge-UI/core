@@ -1,10 +1,10 @@
 // ** External Imports
 import { flushPromises, mount } from "@vue/test-utils";
-import { afterEach, expect, test } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
 // ** Core Imports
-import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
+import { pushLayerStack, resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
 import { Button } from "@/Components/Button";
@@ -493,4 +493,153 @@ test("it should lock body scroll when disableScrollLock is false", async () => {
   });
 
   expect(document.body.style.overflow).toBe("hidden");
+});
+
+test("it should close when a press on another menu trigger opens nothing", async () => {
+  const open = ref(true);
+
+  const Host = defineComponent({
+    setup() {
+      return () =>
+        h("div", [
+          h(
+            Menu,
+            {
+              modelValue: open.value,
+              "onUpdate:modelValue": (value: boolean) => {
+                open.value = value;
+              },
+            },
+            {
+              default: () => "Menu A",
+              trigger: () => h(Button, null, () => "A"),
+            },
+          ),
+          h(
+            "div",
+            { "aria-haspopup": "menu", "aria-disabled": "true" },
+            "Disabled menu",
+          ),
+        ]);
+    },
+  });
+
+  const wrapper = mount(Host, { attachTo: document.body });
+
+  mountedWrappers.push(wrapper);
+  await flushPromises();
+
+  const other = wrapper.find('[aria-disabled="true"]');
+
+  await other.trigger("pointerdown");
+  await flushPromises();
+
+  expect(open.value).toBe(true);
+
+  await other.trigger("pointerup");
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  await flushPromises();
+
+  expect(open.value).toBe(false);
+});
+
+test("it should close on Escape in the menu under an unrelated layer", async () => {
+  const wrapper = mountMenu({
+    props: { modelValue: true },
+    slots: {
+      default: () => "Menu body",
+      trigger: () => h(Button, null, () => "Open"),
+    },
+  });
+
+  await flushPromises();
+
+  const onEscape = vi.fn();
+  const tooltip = pushLayerStack({
+    onEscape,
+    lockScroll: false,
+    origin: () => null,
+  });
+
+  document.body.querySelector('[role="menu"]')?.dispatchEvent(
+    new KeyboardEvent("keydown", {
+      key: "Escape",
+      bubbles: true,
+      cancelable: true,
+    }),
+  );
+  await flushPromises();
+
+  expect(wrapper.props("modelValue")).toBe(false);
+  expect(onEscape).not.toHaveBeenCalled();
+
+  tooltip.release();
+});
+
+test("it should stay open on Escape in the menu when closeOnEscape is false", async () => {
+  const wrapper = mountMenu({
+    props: { modelValue: true, closeOnEscape: false },
+    slots: {
+      default: () => "Menu body",
+      trigger: () => h(Button, null, () => "Open"),
+    },
+  });
+
+  await flushPromises();
+
+  document.body.querySelector('[role="menu"]')?.dispatchEvent(
+    new KeyboardEvent("keydown", {
+      key: "Escape",
+      bubbles: true,
+      cancelable: true,
+    }),
+  );
+  await flushPromises();
+
+  expect(wrapper.props("modelValue")).toBe(true);
+});
+
+test("it should drop a deferred close when a new press starts", async () => {
+  const open = ref(true);
+
+  const Host = defineComponent({
+    setup() {
+      return () =>
+        h("div", [
+          h(
+            Menu,
+            {
+              modelValue: open.value,
+              "onUpdate:modelValue": (value: boolean) => {
+                open.value = value;
+              },
+            },
+            {
+              trigger: () => h(Button, null, () => "A"),
+              default: () => h("button", { type: "button" }, "Item"),
+            },
+          ),
+          h("div", { "aria-haspopup": "menu" }, "Other menu"),
+        ]);
+    },
+  });
+
+  mountedWrappers.push(mount(Host, { attachTo: document.body }));
+  await flushPromises();
+
+  // The press on the other trigger ends outside the window: no pointer up.
+  document.body
+    .querySelector('div[aria-haspopup="menu"]:not([role])')
+    ?.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+
+  const item = Array.from(document.body.querySelectorAll("button")).find(
+    (button) => button.textContent === "Item",
+  );
+
+  item?.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+  item?.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  await flushPromises();
+
+  expect(open.value).toBe(true);
 });

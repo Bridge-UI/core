@@ -623,3 +623,19 @@ test("it should keep focus inside a nested drawer overlay", async () => {
 
   expect(document.activeElement).toBe(inner);
 });
+
+test("it should lock scroll again when reopened while leaving", async () => {
+  const wrapper = mountModal({ props: { modelValue: true } });
+
+  await flushPromises();
+
+  expect(document.body.style.overflow).toBe("hidden");
+
+  await wrapper.setProps({ modelValue: false });
+
+  expect(document.body.style.overflow).not.toBe("hidden");
+
+  await wrapper.setProps({ modelValue: true });
+
+  expect(document.body.style.overflow).toBe("hidden");
+});
