@@ -16,21 +16,23 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
+import {
+  createPopoverSetShow,
+  getPopoverRootBind,
+  getPopoverTriggerBind,
+  usePopoverPanelClasses,
+} from "@/Components/Popover/hooks/popoverParts";
 import { usePopoverBase } from "@/Components/Popover/hooks/usePopoverBase";
 import type {
   PopoverOwnProps,
   PopoverProps,
 } from "@/Components/Popover/popover.types";
 import {
-  createPopoverSetShow,
   derived,
-  getPopoverRootBind,
-  getPopoverTriggerBind,
   hasNamedSlot,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
-  usePopoverPanelClasses,
 } from "@/Utils";
 
 const popoverBridgeKeys = [

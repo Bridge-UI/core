@@ -18,17 +18,19 @@ import {
 
 // ** Local Imports
 import type { MenuOwnProps, MenuProps } from "@/Components/Menu/menu.types";
-import { usePopoverBase } from "@/Components/Popover/hooks/usePopoverBase";
 import {
   createPopoverSetShow,
-  derived,
   getPopoverRootBind,
   getPopoverTriggerBind,
+  usePopoverPanelClasses,
+} from "@/Components/Popover/hooks/popoverParts";
+import { usePopoverBase } from "@/Components/Popover/hooks/usePopoverBase";
+import {
+  derived,
   hasNamedSlot,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
-  usePopoverPanelClasses,
 } from "@/Utils";
 
 const menuBridgeKeys = [
