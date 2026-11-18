@@ -55,24 +55,24 @@ import { Alert } from "@bridge-ui/react/Components/Alert";
 ### Footer slot
 
 ```tsx
+const footer = (
+  <div className="mt-2 flex justify-between">
+    <Button size="sm" color="secondary">
+      Cancel
+    </Button>
+
+    <Button size="sm" color="secondary">
+      Confirm
+    </Button>
+  </div>
+);
+
 <Alert
   variant="solid"
   color="secondary"
+  slots={{ footer }}
   title="Alert Message!"
-  slots={{
-    footer: (
-      <div className="mt-2 flex justify-between">
-        <Button size="sm" color="secondary">
-          Cancel
-        </Button>
-
-        <Button size="sm" color="secondary">
-          Confirm
-        </Button>
-      </div>
-    ),
-  }}
-/>
+/>;
 ```
 
 ### customProps

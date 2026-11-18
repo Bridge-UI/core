@@ -175,30 +175,35 @@ Card content and the title inherit the surrounding text color (the base color fr
 
 ### Full composition
 
+Keep larger slot content in variables and pass them to `slots` by name.
+
 ```tsx
+const action = (
+  <Button size="sm" variant="outline">
+    Edit
+  </Button>
+);
+
+const footer = (
+  <div className="flex justify-end gap-2">
+    <Button size="sm" color="error" variant="flat">
+      Delete
+    </Button>
+
+    <Button size="sm" color="primary">
+      Save changes
+    </Button>
+  </div>
+);
+
 <Card
   shadow="lg"
   rounded="2xl"
   title="Project settings"
-  slots={{
-    action: (
-      <Button size="sm" variant="outline">
-        Edit
-      </Button>
-    ),
-    footer: (
-      <Button size="sm" color="error" variant="flat">
-          Delete
-        </Button>
-
-        <Button size="sm" color="primary">
-          Save changes
-        </Button>
-    ),
-  }}
+  slots={{ action, footer }}
 >
   Title, action, body, and footer together with elevated styling.
-</Card>
+</Card>;
 ```
 
 ### Partial layouts
