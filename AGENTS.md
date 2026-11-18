@@ -4,10 +4,10 @@ This repository builds `@bridge-ui/core`, `@bridge-ui/react`, and `@bridge-ui/vu
 
 ## Which instructions to follow
 
-| You are…                             | Read                                                                                                                                                               |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Building an app that uses Bridge** | Package AI + docs: [`packages/react/ai`](./packages/react/ai/) / [`packages/react/docs`](./packages/react/docs/) (or vue). Or run `npx --package=@bridge-ui/<react | vue> bridge-ui-<react | vue>-ai install` in the app |
-| **Contributing to this monorepo**    | [`.cursor/rules/`](./.cursor/rules/) (patterns, docs examples, commits)                                                                                            |
+| You are…                             | Read                                                                                                                                                                                                              |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Building an app that uses Bridge** | Package AI + docs: [`packages/react/ai`](./packages/react/ai/) / [`packages/react/docs`](./packages/react/docs/) (or vue). Or run `npx --package=@bridge-ui/react bridge-ui-react-ai install` (or vue) in the app |
+| **Contributing to this monorepo**    | [`.cursor/rules/`](./.cursor/rules/) (patterns, docs examples, commits)                                                                                                                                           |
 
 Do not mix the two.
 
