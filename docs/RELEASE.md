@@ -52,14 +52,10 @@ When a core release changes `@bridge-ui/core/Adapters` contracts or a `bridge-*`
    | Organization or user | `Bridge-UI`                  |
    | Repository           | `core`                       |
    | Workflow filename    | `release.yml`                |
-   | Environment name     | `npm`                        |
    | Allowed actions      | **Allow `npm publish`** only |
 
-3. A GitHub **environment** named `npm` exists (Settings → Environments), with:
-   - **Required reviewers**: the maintainers allowed to approve a release.
-   - **Deployment branches and tags**: only tags matching `v*`.
-4. A tag ruleset protects `v*` (Settings → Rules → Rulesets → New tag ruleset): restrict creation, update and deletion to maintainers.
-5. Each npm package has **Settings → Publishing access → Require two-factor authentication and disallow tokens** enabled, so only the OIDC workflow can publish.
+3. A tag ruleset protects `v*` (Settings → Rules → Rulesets → New tag ruleset): restrict creation, update and deletion to maintainers.
+4. Each npm package has **Settings → Publishing access → Require two-factor authentication and disallow tokens** enabled, so only the OIDC workflow can publish.
 
 ## Publish a new version
 
@@ -101,9 +97,7 @@ The tag push starts **Actions → Bridge UI Release**, which runs two jobs:
 1. **Build and pack** (no publish rights):
    - Verifies `package.json` versions and `dependencies.@bridge-ui/core` match the tag.
    - Runs `npm run build` and `npm run test:run`, then `npm pack` for each package.
-2. **Publish packages to npm** (environment `npm`): waits for a maintainer to approve the deployment, then publishes the packed tarballs with provenance, in order `core` → `react` → `vue` (same npm dist-tag). This job does not check out the repo or install dependencies.
-
-Approve the pending deployment in the workflow run page (**Review deployments**).
+2. **Publish packages to npm**: publishes the packed tarballs with provenance, in order `core` → `react` → `vue` (same npm dist-tag). This job does not check out the repo or install dependencies.
 
 ### 5. Verify
 

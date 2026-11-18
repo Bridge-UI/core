@@ -106,13 +106,11 @@ jobs:
           retention-days: 7
 
   # Only publishes the tarballs built above. No checkout, no install, no
-  # third-party code. The `npm` environment can require a manual approval, and
-  # the npm Trusted Publisher should be restricted to it.
+  # third-party code.
   publish:
     needs: build
     runs-on: ubuntu-latest
     name: Publish packages to npm
-    environment: npm
     permissions:
       id-token: write
     steps:
