@@ -14,7 +14,7 @@ Markdown reference for **React** and **Vue**. Docs live **inside each package** 
 
 ```bash
 npm install @bridge-ui/react
-npx bridge-ui-react-ai install
+npx --package=@bridge-ui/react bridge-ui-react-ai install
 ```
 
 Docs are linked into the app as `.ai/docs/` (including `components/`).
@@ -27,7 +27,7 @@ Docs are linked into the app as `.ai/docs/` (including `components/`).
 
 ```bash
 npm install @bridge-ui/vue
-npx bridge-ui-vue-ai install
+npx --package=@bridge-ui/vue bridge-ui-vue-ai install
 ```
 
 Docs are linked into the app as `.ai/docs/` (including `components/`).

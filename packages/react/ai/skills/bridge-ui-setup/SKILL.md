@@ -14,7 +14,7 @@ Do **not** invent APIs. Read the package docs (after install: `.ai/docs/`; in th
 
 ```bash
 npm install @bridge-ui/react
-npx bridge-ui-react-ai install
+npx --package=@bridge-ui/react bridge-ui-react-ai install
 ```
 
 ## Required reading

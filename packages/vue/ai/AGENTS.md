@@ -6,7 +6,7 @@ Use **`@bridge-ui/vue`**. Prefer Bridge components over ad-hoc markup.
 
 ```bash
 npm install @bridge-ui/vue
-npx bridge-ui-vue-ai install
+npx --package=@bridge-ui/vue bridge-ui-vue-ai install
 ```
 
 ## Always follow

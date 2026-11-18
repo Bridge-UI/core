@@ -5,7 +5,7 @@ Consumer guidelines and Agent Skills for `@bridge-ui/react`.
 Component **examples live in** [`../docs/components/`](../docs/components/). Adapter factories: `@bridge-ui/adapters/react/{date,icon,i18n}-*`. Skills only route agents to those pages.
 
 ```bash
-npx bridge-ui-react-ai install
+npx --package=@bridge-ui/react bridge-ui-react-ai install
 ```
 
 ## What gets installed
@@ -21,12 +21,11 @@ npx bridge-ui-react-ai install
 
 ## `npx` / bin link
 
-`npx bridge-ui-react-ai` resolves the bin from `node_modules/.bin`. After upgrading Bridge (especially with local `file:` installs), run `npm install` again so the bin link exists.
+Always pass `--package=@bridge-ui/react`. `bridge-ui-react-ai` is only the **bin** name — there is no npm package with that name. Without `--package`, `npx` falls back to the registry when the bin is not linked locally, and would run whatever package someone publishes under that name.
 
-Fallbacks if `npx` hits the registry (404):
+After upgrading Bridge (especially with local `file:` installs), run `npm install` again so the bin link exists. Offline alternative:
 
 ```bash
-npx --package=@bridge-ui/react bridge-ui-react-ai install
 node node_modules/@bridge-ui/react/bin/ai.mjs install
 ```
 

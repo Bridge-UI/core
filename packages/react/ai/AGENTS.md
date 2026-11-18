@@ -6,7 +6,7 @@ Use **`@bridge-ui/react`**. Prefer Bridge components over ad-hoc markup.
 
 ```bash
 npm install @bridge-ui/react
-npx bridge-ui-react-ai install
+npx --package=@bridge-ui/react bridge-ui-react-ai install
 ```
 
 ## Always follow

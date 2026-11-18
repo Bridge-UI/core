@@ -25,8 +25,8 @@ Ready-made adapters: `@bridge-ui/adapters` (separate repo: https://github.com/Br
 Consumer install:
 
 ```bash
-npx bridge-ui-react-ai install
-npx bridge-ui-vue-ai install
+npx --package=@bridge-ui/react bridge-ui-react-ai install
+npx --package=@bridge-ui/vue bridge-ui-vue-ai install
 ```
 
 ## Monorepo agent entry

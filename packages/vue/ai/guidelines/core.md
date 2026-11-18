@@ -6,7 +6,7 @@ Use these rules when writing application code with `@bridge-ui/vue`. Do **not** 
 
 ```bash
 npm install @bridge-ui/vue
-npx bridge-ui-vue-ai install
+npx --package=@bridge-ui/vue bridge-ui-vue-ai install
 ```
 
 `@bridge-ui/core` is transitive. Peer: Vue ^3.4.

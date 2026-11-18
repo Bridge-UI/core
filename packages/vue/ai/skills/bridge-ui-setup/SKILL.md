@@ -15,7 +15,7 @@ Do **not** invent APIs. Read the package docs (after install: `.ai/docs/`; in th
 
 ```bash
 npm install @bridge-ui/vue
-npx bridge-ui-vue-ai install
+npx --package=@bridge-ui/vue bridge-ui-vue-ai install
 ```
 
 ## Required reading

@@ -3,7 +3,7 @@
  * Install Bridge UI agent guidelines, docs, and skills into a consumer app.
  *
  * Usage:
- *   npx bridge-ui-vue-ai install|remove [--copy] [--cwd <dir>]
+ *   npx --package=@bridge-ui/vue bridge-ui-vue-ai install|remove [--copy] [--cwd <dir>]
  */
 
 import {
@@ -241,7 +241,7 @@ This app uses **${packageName}**. Full agent guide: \`.ai/AGENTS.md\` (also see 
 - Skills (on demand):
 ${skillList}
 
-Install/update: \`npx ${binName} install\`
+Install/update: \`npx --package=${packageName} ${binName} install\`
 ${MARK_END}
 `;
 }

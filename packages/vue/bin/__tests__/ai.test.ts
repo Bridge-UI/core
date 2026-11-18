@@ -163,7 +163,9 @@ describe("bridge-ui-ai CLI", () => {
     expect(content).toContain(packageName);
     expect(isSymlink(agentsPath)).toBe(false);
     expect(content).toContain("# My app agents");
-    expect(content).toContain(`npx ${binName} install`);
+    expect(content).toContain(
+      `npx --package=${packageName} ${binName} install`,
+    );
   });
 
   test("it should replace an existing Bridge block on reinstall", () => {

@@ -6,7 +6,7 @@ Use these rules when writing application code with `@bridge-ui/react`. Do **not*
 
 ```bash
 npm install @bridge-ui/react
-npx bridge-ui-react-ai install
+npx --package=@bridge-ui/react bridge-ui-react-ai install
 ```
 
 `@bridge-ui/core` is transitive. Peer: React 18 or 19.
