@@ -83,7 +83,7 @@
   "dependencies": {
     "@floating-ui/dom": "^1.8.0",
     "clsx": "^2.1.1",
-    "es-toolkit": "^1.52.0",
+    "es-toolkit": "^1.53.2",
     "tailwind-merge": "^3.7.0"
   },
   "peerDependencies": {
@@ -117,10 +117,10 @@
     "test:run": "vitest run"
   },
   "devDependencies": {
-    "@tiptap/core": "^3.31.3",
-    "@tiptap/extension-placeholder": "^3.31.3",
+    "@tiptap/core": "^3.33.1",
+    "@tiptap/extension-placeholder": "^3.33.1",
     "@tiptap/pm": "^3.31.3",
-    "@tiptap/starter-kit": "^3.31.3",
+    "@tiptap/starter-kit": "^3.33.1",
     "@types/node": "^24.19.1",
     "echarts": "^6.1.0",
     "typescript": "^6.0.3"
