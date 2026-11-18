@@ -121,7 +121,7 @@
     "@tiptap/extension-placeholder": "^3.31.3",
     "@tiptap/pm": "^3.31.3",
     "@tiptap/starter-kit": "^3.31.3",
-    "@types/node": "^24.19.1",
+    "@types/node": "^26.6.6",
     "echarts": "^6.1.0",
     "typescript": "^6.0.3"
   }
