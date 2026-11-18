@@ -9,21 +9,27 @@ concurrency:
   cancel-in-progress: false
   group: release-${{ github.ref }}
 
-permissions:
-  contents: read
-  id-token: write
+permissions: {}
 
 defaults:
   run:
     shell: bash
 
 jobs:
-  publish:
+  # Installs dependencies, builds, tests and packs. Has no publish rights: a
+  # compromised dependency running here cannot mint an npm OIDC token.
+  build:
     runs-on: ubuntu-latest
-    name: Publish packages to npm
+    name: Build and pack
     if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: read
+    outputs:
+      npm_tag: ${{ steps.release.outputs.npm_tag }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
 
       - name: Resolve version
         id: release
@@ -52,18 +58,18 @@ jobs:
           echo "npm_tag=$NPM_TAG" >> "$GITHUB_OUTPUT"
           echo "Publishing $TAG (npm dist-tag: $NPM_TAG)"
 
-      - uses: actions/setup-node@v4
+      # No dependency cache on the release path: a poisoned cache would ship.
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          cache: npm
           node-version: 24
 
       - name: Install dependencies
         run: npm ci
 
       - name: Verify package versions
+        env:
+          VERSION: ${{ steps.release.outputs.value }}
         run: |
-          VERSION="${{ steps.release.outputs.value }}"
-
           for pkg in core react vue; do
             PKG_VERSION=$(node -p "require('./packages/${pkg}/package.json').version")
             if [ "$PKG_VERSION" != "$VERSION" ]; then
@@ -84,9 +90,46 @@ jobs:
       - run: npm run build
       - run: npm run test:run
 
-      - name: Publish packages
+      - name: Pack packages
         run: |
-          NPM_TAG="${{ steps.release.outputs.npm_tag }}"
-          npm publish -w @bridge-ui/core --tag "$NPM_TAG"
-          npm publish -w @bridge-ui/react --tag "$NPM_TAG"
-          npm publish -w @bridge-ui/vue --tag "$NPM_TAG"
+          mkdir -p packed
+          for pkg in core react vue; do
+            npm pack -w "@bridge-ui/${pkg}" --pack-destination packed
+          done
+          ls -l packed
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: packages
+          path: packed/*.tgz
+          if-no-files-found: error
+          retention-days: 7
+
+  # Only publishes the tarballs built above. No checkout, no install, no
+  # third-party code. The `npm` environment can require a manual approval, and
+  # the npm Trusted Publisher should be restricted to it.
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    name: Publish packages to npm
+    environment: npm
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: packages
+          path: packed
+
+      - name: Publish packages
+        env:
+          NPM_TAG: ${{ needs.build.outputs.npm_tag }}
+        run: |
+          # core first: react and vue depend on it.
+          for pkg in core react vue; do
+            npm publish packed/bridge-ui-${pkg}-*.tgz --tag "$NPM_TAG" --access public --provenance --ignore-scripts
+          done

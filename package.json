@@ -6,6 +6,7 @@
   ],
   "scripts": {
     "deps": "npm install",
+    "setup:cypress": "cypress install",
     "install:react": "npm install -w @bridge-ui/react",
     "install:vue": "npm install -w @bridge-ui/vue",
     "build": "npm run build -w @bridge-ui/core && npm run build -w @bridge-ui/vue && npm run build -w @bridge-ui/react",
@@ -31,7 +32,8 @@
     "lint:fix": "eslint packages/core/src packages/react/src packages/vue/src --fix",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "bump-version": "bash scripts/bump-version.sh"
+    "bump-version": "bash scripts/bump-version.sh",
+    "check:supply-chain": "node scripts/check-lockfile.mjs && node scripts/check-install-commands.mjs && npm audit signatures"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

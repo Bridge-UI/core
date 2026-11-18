@@ -36,7 +36,7 @@ Ready-made date, icon, and i18n adapters ship separately in [`@bridge-ui/adapter
 
 ```bash
 npm install @bridge-ui/react   # or @bridge-ui/vue
-npx bridge-ui-react-ai install # optional: agent guidelines/skills
+npx --package=@bridge-ui/react bridge-ui-react-ai install # optional: agent guidelines/skills
 ```
 
 ### 📚 Documentation
@@ -48,7 +48,7 @@ Component reference for React and Vue lives in each package: [`packages/react/do
 Consumer guidelines and skills ship inside `@bridge-ui/react` and `@bridge-ui/vue` (`ai/`). Component docs and examples live in each package’s `docs/` folder. Skills point agents at those docs. Root [`AGENTS.md`](./AGENTS.md) / [`llms.txt`](./llms.txt) are for this monorepo only.
 
 ```bash
-npx bridge-ui-react-ai install   # symlink into the app (or --copy)
+npx --package=@bridge-ui/react bridge-ui-react-ai install   # symlink into the app (or --copy)
 ```
 
 Monorepo contribution rules for Cursor stay in `.cursor/rules/` and are separate from consumer guidance.
@@ -56,6 +56,8 @@ Monorepo contribution rules for Cursor stay in `.cursor/rules/` and are separate
 ### 🔧 Contributing
 
 Thank you for considering contributing to Bridge UI! Open an issue or pull request on [GitHub](https://github.com/Bridge-UI/core). React and Vue components should stay in parity, and shared logic belongs in `@bridge-ui/core`.
+
+Dependency install scripts are disabled (`.npmrc`). After `npm install`, run `npm run setup:cypress` once to download the Cypress binary. Security issues: see [SECURITY.md](SECURITY.md).
 
 ### 💡 Philosophy
 

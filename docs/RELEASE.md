@@ -23,9 +23,9 @@ npm install @bridge-ui/vue
 Optional agent setup after install:
 
 ```bash
-npx bridge-ui-react-ai install
+npx --package=@bridge-ui/react bridge-ui-react-ai install
 # or
-npx bridge-ui-vue-ai install
+npx --package=@bridge-ui/vue bridge-ui-vue-ai install
 ```
 
 Component docs live in `packages/react/docs/components/` and `packages/vue/docs/components/`. This folder only keeps the [docs index](./README.md) and this release guide.
@@ -52,7 +52,14 @@ When a core release changes `@bridge-ui/core/Adapters` contracts or a `bridge-*`
    | Organization or user | `Bridge-UI`                  |
    | Repository           | `core`                       |
    | Workflow filename    | `release.yml`                |
+   | Environment name     | `npm`                        |
    | Allowed actions      | **Allow `npm publish`** only |
+
+3. A GitHub **environment** named `npm` exists (Settings → Environments), with:
+   - **Required reviewers**: the maintainers allowed to approve a release.
+   - **Deployment branches and tags**: only tags matching `v*`.
+4. A tag ruleset protects `v*` (Settings → Rules → Rulesets → New tag ruleset): restrict creation, update and deletion to maintainers.
+5. Each npm package has **Settings → Publishing access → Require two-factor authentication and disallow tokens** enabled, so only the OIDC workflow can publish.
 
 ## Publish a new version
 
@@ -89,11 +96,14 @@ The git tag must match these versions (`v0.1.0` → `"version": "0.1.0"`). CI fa
 
 ### 4. CI publishes to npm
 
-The tag push starts **Actions → Bridge UI Release**, which:
+The tag push starts **Actions → Bridge UI Release**, which runs two jobs:
 
-1. Verifies `package.json` versions and `dependencies.@bridge-ui/core` match the tag.
-2. Runs `npm run build` and `npm run test:run`.
-3. Publishes in order: `core` → `react` → `vue` (same npm dist-tag).
+1. **Build and pack** (no publish rights):
+   - Verifies `package.json` versions and `dependencies.@bridge-ui/core` match the tag.
+   - Runs `npm run build` and `npm run test:run`, then `npm pack` for each package.
+2. **Publish packages to npm** (environment `npm`): waits for a maintainer to approve the deployment, then publishes the packed tarballs with provenance, in order `core` → `react` → `vue` (same npm dist-tag). This job does not check out the repo or install dependencies.
+
+Approve the pending deployment in the workflow run page (**Review deployments**).
 
 ### 5. Verify
 
@@ -103,7 +113,7 @@ The tag push starts **Actions → Bridge UI Release**, which:
 
   ```bash
   npm install @bridge-ui/react@0.1.0
-  npx bridge-ui-react-ai install
+  npx --package=@bridge-ui/react bridge-ui-react-ai install
   ```
 
 ## Tag naming and npm dist-tags
@@ -142,10 +152,11 @@ You cannot republish the same version. Options:
 
 **Unpublish** is only possible within 72 hours and if the version has no dependents.
 
-## Security (optional)
+## Supply chain
 
-After Trusted Publishing is working, consider enabling on each package:
-
-**Package settings → Publishing access → Require two-factor authentication and disallow tokens**
-
-This blocks token-based publishes while OIDC continues to work.
+- Only the `publish` job can mint an npm OIDC token, and it only runs `npm publish` on tarballs built in the previous job.
+- Actions are pinned by commit SHA; Dependabot bumps them (and npm dependencies) after a 7-day cooldown.
+- `.npmrc` sets `ignore-scripts=true`: dependency install scripts never run. Contributors run `npm run setup:cypress` once to download the Cypress binary.
+- CI checks that `package-lock.json` only resolves from `registry.npmjs.org`, that docs/AI resources only install known packages (`scripts/check-install-commands.mjs`), and runs `npm audit signatures`.
+- Pull requests run [dependency review](../.github/workflows/dependencies.yml); workflow changes are audited by [zizmor](../.github/workflows/zizmor.yml).
+- Always document the AI CLI as `npx --package=@bridge-ui/<react|vue> bridge-ui-<react|vue>-ai`. The bin name alone is not a package and would resolve from the registry.
