@@ -75,6 +75,17 @@ import { Drawer } from "@bridge-ui/react/Components/Drawer";
 ### Full composition (Card)
 
 ```tsx
+const footer = (
+  <div className="flex justify-end gap-2">
+    <ActionFooter
+      applyLabel="Save"
+      cancelLabel="Discard"
+      onApply={() => setOpen(false)}
+      onCancel={() => setOpen(false)}
+    />
+  </div>
+);
+
 <Drawer
   blur="md"
   size="lg"
@@ -87,30 +98,13 @@ import { Drawer } from "@bridge-ui/react/Components/Drawer";
     shadow="lg"
     rounded="none"
     padding="large"
+    slots={{ footer }}
     variant="elevated"
     title="Edit profile"
-    slots={{
-      footer: (
-        <>
-          <Button
-            size="sm"
-            color="error"
-            variant="flat"
-            onClick={() => setOpen(false)}
-          >
-            Discard
-          </Button>
-
-          <Button size="sm" color="primary" onClick={() => setOpen(false)}>
-            Save
-          </Button>
-        </>
-      ),
-    }}
   >
     Large right-docked drawer with Card title, body, and footer slots.
   </Card>
-</Drawer>
+</Drawer>;
 ```
 
 ### customProps

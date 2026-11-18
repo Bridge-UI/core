@@ -86,11 +86,14 @@ const breakpoint = useBreakpoint();
     Large modal with Card title, body, and footer slots.
 
     <template #footer>
-      <Button size="sm" color="error" variant="flat" v-on:click="open = false">
-        Discard
-      </Button>
-
-      <Button size="sm" color="primary" v-on:click="open = false">Save</Button>
+      <div class="flex justify-end gap-2">
+        <ActionFooter
+          apply-label="Save"
+          cancel-label="Discard"
+          v-on:apply="open = false"
+          v-on:cancel="open = false"
+        />
+      </div>
     </template>
   </Card>
 </Modal>

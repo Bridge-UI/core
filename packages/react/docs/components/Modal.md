@@ -73,6 +73,17 @@ const breakpoint = useBreakpoint();
 ### Full composition (Card)
 
 ```tsx
+const footer = (
+  <div className="flex justify-end gap-2">
+    <ActionFooter
+      applyLabel="Save"
+      cancelLabel="Discard"
+      onApply={() => setOpen(false)}
+      onCancel={() => setOpen(false)}
+    />
+  </div>
+);
+
 <Modal
   blur="md"
   size="lg"
@@ -85,30 +96,13 @@ const breakpoint = useBreakpoint();
     shadow="lg"
     rounded="2xl"
     padding="large"
+    slots={{ footer }}
     variant="elevated"
     title="Edit profile"
-    slots={{
-      footer: (
-        <>
-          <Button
-            size="sm"
-            color="error"
-            variant="flat"
-            onClick={() => setOpen(false)}
-          >
-            Discard
-          </Button>
-
-          <Button size="sm" color="primary" onClick={() => setOpen(false)}>
-            Save
-          </Button>
-        </>
-      ),
-    }}
   >
     Large modal with Card title, body, and footer slots.
   </Card>
-</Modal>
+</Modal>;
 ```
 
 ### customProps
