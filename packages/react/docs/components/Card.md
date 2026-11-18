@@ -80,11 +80,13 @@ Card content and the title inherit the surrounding text color (the base color fr
     title="Borderless"
     slots={{
       footer: (
-        <Button size="sm" variant="flat">
+        <div className="flex justify-end gap-2">
+          <Button size="sm" variant="flat">
             Cancel
           </Button>
 
           <Button size="sm">Save</Button>
+        </div>
       ),
     }}
   >
@@ -133,13 +135,15 @@ Card content and the title inherit the surrounding text color (the base color fr
   title="Confirm changes"
   slots={{
     footer: (
-      <Button size="sm" variant="flat">
+      <div className="flex justify-end gap-2">
+        <Button size="sm" variant="flat">
           Cancel
         </Button>
 
         <Button size="sm" color="primary">
           Confirm
         </Button>
+      </div>
     ),
   }}
 >
