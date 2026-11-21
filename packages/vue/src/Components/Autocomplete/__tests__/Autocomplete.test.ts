@@ -445,3 +445,38 @@ test("it should keep the placeholder next to the chips when persistentPlaceholde
     "Pick one",
   );
 });
+
+test("it should forward fallthrough attrs only to the combobox input", () => {
+  const wrapper = mountAutocomplete({
+    attrs: {
+      id: "field-attrs",
+      name: "field-attrs",
+      "data-test": "field-attrs",
+      "aria-describedby": "field-help",
+    },
+  });
+
+  const control = wrapper.find('input[role="combobox"]');
+  const tagged = wrapper.findAll('[data-test="field-attrs"]');
+
+  expect(tagged).toHaveLength(1);
+  expect(tagged[0]?.element).toBe(control.element);
+  expect(control.attributes("id")).toBe("field-attrs");
+  expect(control.attributes("name")).toBe("field-attrs");
+  expect(wrapper.findAll("#field-attrs")).toHaveLength(1);
+  expect(control.attributes("aria-describedby")).toBe("field-help");
+});
+
+test("it should apply class and style to the root, not the combobox input", () => {
+  const wrapper = mountAutocomplete({
+    attrs: { class: "field-root", style: "width: 240px" },
+  });
+
+  const root = wrapper.find(".field-root");
+  const control = wrapper.find('input[role="combobox"]');
+
+  expect(control.attributes("style")).toBeUndefined();
+  expect(control.classes()).not.toContain("field-root");
+  expect(root.element.contains(control.element)).toBe(true);
+  expect(root.attributes("style")).toContain("width: 240px");
+});

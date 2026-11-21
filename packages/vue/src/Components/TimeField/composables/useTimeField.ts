@@ -176,6 +176,7 @@ export function useTimeField(
     } = (timeOnly.value.customProps ?? {}) as TimeFieldCustomProps;
 
     return {
+      ...attrs,
       ...formFieldCustom,
       endIcon,
       classes: timeOnly.value.classes,

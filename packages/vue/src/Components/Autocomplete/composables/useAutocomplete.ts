@@ -468,6 +468,7 @@ export function useAutocomplete(
       (formFieldCustom.customProps ?? {}) as AutocompleteCustomProps;
 
     return {
+      ...attrs,
       ...formFieldCustom,
       endIcon,
       classes: mergedClasses.value,

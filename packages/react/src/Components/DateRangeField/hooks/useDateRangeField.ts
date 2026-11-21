@@ -143,22 +143,17 @@ export function useDateRangeField(props: DateRangeFieldProps) {
   );
 
   const inherited = derived(() => {
-    return omit(inheritedAttrs, [
-      "onOpen",
-      "onClose",
-      "onClear",
-      "onChange",
-      "className",
-    ]);
+    return omit(inheritedAttrs, ["onOpen", "onClose", "onClear", "onChange"]);
   });
 
-  const { componentProps: formFieldCustom } = splitComponentProps<
-    Omit<FormFieldOwnProps, "field">,
-    typeof formFieldBridgeKeys
-  >({
-    bridgeKeys: formFieldBridgeKeys,
-    props: inherited as Omit<FormFieldOwnProps, "field">,
-  });
+  const { inheritedAttrs: formFieldAttrs, componentProps: formFieldCustom } =
+    splitComponentProps<
+      Omit<FormFieldOwnProps, "field">,
+      typeof formFieldBridgeKeys
+    >({
+      bridgeKeys: formFieldBridgeKeys,
+      props: inherited as Omit<FormFieldOwnProps, "field">,
+    });
 
   const {
     menu: _menu,
@@ -169,6 +164,7 @@ export function useDateRangeField(props: DateRangeFieldProps) {
 
   const formField = useFormField(
     {
+      ...formFieldAttrs,
       ...formFieldCustom,
       slots: formFieldSlots,
       classes: dateOnly.classes,

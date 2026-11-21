@@ -162,6 +162,7 @@ export function useTimeRangeField(
     } = (timeOnly.value.customProps ?? {}) as TimeRangeFieldCustomProps;
 
     return {
+      ...attrs,
       ...formFieldCustom,
       endIcon,
       classes: timeOnly.value.classes,

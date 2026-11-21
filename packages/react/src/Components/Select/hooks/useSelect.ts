@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil, omit } from "es-toolkit/compat";
+import { get, isNil } from "es-toolkit/compat";
 import type { FormEvent, KeyboardEvent, MouseEvent, RefObject } from "react";
 import {
   useCallback,
@@ -817,15 +817,14 @@ export function useSelect(
   }, [slots]);
 
   const formFieldInput = useMemo((): Omit<FormFieldOwnProps, "field"> => {
-    const inherited = omit(inheritedAttrs, ["className"]);
-
-    const { componentProps: formFieldCustom } = splitComponentProps<
-      Omit<FormFieldOwnProps, "field">,
-      typeof formFieldBridgeKeys
-    >({
-      bridgeKeys: formFieldBridgeKeys,
-      props: inherited as Omit<FormFieldOwnProps, "field">,
-    });
+    const { inheritedAttrs: formFieldAttrs, componentProps: formFieldCustom } =
+      splitComponentProps<
+        Omit<FormFieldOwnProps, "field">,
+        typeof formFieldBridgeKeys
+      >({
+        bridgeKeys: formFieldBridgeKeys,
+        props: inheritedAttrs as Omit<FormFieldOwnProps, "field">,
+      });
 
     const endIcon =
       formFieldCustom.endIcon ??
@@ -835,6 +834,7 @@ export function useSelect(
       (formFieldCustom.customProps ?? {}) as SelectCustomProps;
 
     return {
+      ...formFieldAttrs,
       ...formFieldCustom,
       endIcon,
       slots: formFieldSlots,

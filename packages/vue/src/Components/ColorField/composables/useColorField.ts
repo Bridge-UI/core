@@ -188,6 +188,7 @@ export function useColorField(
     } = (colorOnly.value.customProps ?? {}) as ColorFieldCustomProps;
 
     return {
+      ...attrs,
       ...formFieldCustom,
       endIcon,
       classes: colorOnly.value.classes,
