@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { get, omit, pick } from "es-toolkit/compat";
 import type { InputHTMLAttributes } from "react";
 import { useId } from "react";
 
@@ -109,6 +109,7 @@ export function useFormControl(
 
   const inputInheritedAttrs = derived(() => {
     return omit(inheritedAttrs, [
+      "style",
       "slots",
       "children",
       "className",
@@ -165,6 +166,14 @@ export function useFormControl(
       ids.push(`${controlId}-error`);
     }
 
+    const inheritedDescribedBy = (
+      inheritedAttrs as InputHTMLAttributes<HTMLInputElement>
+    )["aria-describedby"];
+
+    if (inheritedDescribedBy) {
+      ids.push(inheritedDescribedBy);
+    }
+
     return ids.length > 0 ? ids.join(" ") : undefined;
   });
 
@@ -177,6 +186,7 @@ export function useFormControl(
       customProps?.root,
       {
         className: cn(inheritedAttrs.className),
+        ...pick(inheritedAttrs, ["style"]),
       },
       cn({
         "group/form-control relative w-full": true,

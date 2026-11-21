@@ -315,3 +315,17 @@ test("it should remove an active link from the toolbar", async () => {
 
   wrapper.unmount();
 });
+
+test("it should forward fallthrough attrs to the root once", async () => {
+  const wrapper = mount(RichTextEditor, {
+    attrs: { class: "field-root", "data-test": "field-attrs" },
+  });
+
+  await flushPromises();
+
+  const tagged = wrapper.findAll('[data-test="field-attrs"]');
+
+  expect(tagged).toHaveLength(1);
+  expect(tagged[0]?.classes()).toContain("field-root");
+  expect(tagged[0]?.find('[role="textbox"]').exists()).toBe(true);
+});

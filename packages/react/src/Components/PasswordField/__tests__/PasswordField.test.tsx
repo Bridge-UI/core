@@ -44,3 +44,38 @@ test("it should render a label when label prop is provided", () => {
 
   expect(screen.getByText("Password")).toBeTruthy();
 });
+
+test("it should forward extra HTML props only to the input", () => {
+  const { container } = render(
+    <PasswordField
+      id="field-attrs"
+      name="field-attrs"
+      data-test="field-attrs"
+      aria-describedby="field-help"
+    />,
+  );
+
+  const control = container.querySelector("input");
+  const tagged = container.querySelectorAll('[data-test="field-attrs"]');
+
+  expect(tagged).toHaveLength(1);
+  expect(tagged[0]).toBe(control);
+  expect(control?.getAttribute("id")).toBe("field-attrs");
+  expect(control?.getAttribute("name")).toBe("field-attrs");
+  expect(container.querySelectorAll("#field-attrs")).toHaveLength(1);
+  expect(control?.getAttribute("aria-describedby")).toBe("field-help");
+});
+
+test("it should apply className and style to the root, not the input", () => {
+  const { container } = render(
+    <PasswordField className="field-root" style={{ width: 240 }} />,
+  );
+
+  const root = container.querySelector<HTMLElement>(".field-root");
+  const control = container.querySelector("input");
+
+  expect(root?.style.width).toBe("240px");
+  expect(root?.contains(control)).toBe(true);
+  expect(control?.getAttribute("style")).toBeNull();
+  expect(control?.classList.contains("field-root")).toBe(false);
+});

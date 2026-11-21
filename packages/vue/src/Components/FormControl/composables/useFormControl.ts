@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { get, pick } from "es-toolkit/compat";
 import {
   computed,
   toValue,
@@ -168,6 +168,14 @@ export function useFormControl(
       ids.push(`${controlId.value}-error`);
     }
 
+    const inheritedDescribedBy = (split.value.inheritedAttrs as HTMLAttributes)[
+      "aria-describedby"
+    ];
+
+    if (inheritedDescribedBy) {
+      ids.push(inheritedDescribedBy);
+    }
+
     return ids.length > 0 ? ids.join(" ") : undefined;
   });
 
@@ -178,7 +186,7 @@ export function useFormControl(
   const rootBind = computed(() => {
     return mergePartBind(
       customProps.value?.root,
-      omit(split.value.inheritedAttrs, ["class"]),
+      pick(split.value.inheritedAttrs, ["style"]),
       cn({
         "group/form-control relative w-full": true,
         "aria-disabled:pointer-events-none aria-disabled:select-none aria-disabled:opacity-60 aria-disabled:cursor-not-allowed": true,
