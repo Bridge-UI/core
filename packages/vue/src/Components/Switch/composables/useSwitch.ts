@@ -135,7 +135,7 @@ export function useSwitch(
         role: "switch",
         type: "checkbox",
       },
-      omit(split.value.inheritedAttrs, ["class"]),
+      omit(split.value.inheritedAttrs, ["class", "style"]),
       cn({
         "sr-only": true,
         [mergedClasses.value.input ?? ""]: true,

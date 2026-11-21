@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { get, omit, pick } from "es-toolkit/compat";
 import type { InputHTMLAttributes } from "react";
 import { useId, useMemo } from "react";
 
@@ -43,6 +43,17 @@ export type FormFieldReservedSlotName = Exclude<
 >;
 
 export type FormFieldOptions = {
+  /**
+   * Where extra HTML props (`id`, `name`, `data-*`, `aria-*`, handlers…) land.
+   * `className` and `style` always stay on the root.
+   *
+   * - `"input"` — the native control via `inputBind` (fields with an `<input>`).
+   * - `"root"` — the field root via `rootBind` (fields without a native control).
+   *
+   * @default "input"
+   */
+  attrsTarget?: "root" | "input";
+
   /**
    * Public registry key that owns FormField chrome defaults/tokens.
    * Defaults to `FormField`; public fields pass their own key so chrome
@@ -99,6 +110,7 @@ export const formFieldBridgeKeys = [
   "disabled",
   "readonly",
   "required",
+  "controlId",
   "errorIcon",
   "startIcon",
   "customProps",
@@ -164,8 +176,11 @@ export function useFormField(
     return options.control?.() ?? "input";
   });
 
+  const attrsOnRoot = options.attrsTarget === "root";
+
   const inputInheritedAttrs = derived(() => {
     return omit(inheritedAttrs, [
+      "style",
       "slots",
       "children",
       "className",
@@ -280,6 +295,14 @@ export function useFormField(
       ids.push(`${controlId}-error`);
     }
 
+    const inheritedDescribedBy = (
+      inheritedAttrs as InputHTMLAttributes<HTMLInputElement>
+    )["aria-describedby"];
+
+    if (inheritedDescribedBy) {
+      ids.push(inheritedDescribedBy);
+    }
+
     return ids.length > 0 ? ids.join(" ") : undefined;
   });
 
@@ -382,7 +405,9 @@ export function useFormField(
       customProps?.root,
       {
         className: cn(inheritedAttrs.className),
-        ...omit(inheritedAttrs, ["className", "slots", "children"]),
+        ...(attrsOnRoot
+          ? omit(inheritedAttrs, ["className", "slots", "children"])
+          : pick(inheritedAttrs, ["style"])),
       },
       cn({
         "group w-full relative": true,
@@ -419,7 +444,7 @@ export function useFormField(
         "aria-describedby": ariaDescribedBy,
         "aria-invalid": invalidated || undefined,
       },
-      inputInheritedAttrs,
+      attrsOnRoot ? {} : inputInheritedAttrs,
       cn({
         "flex-1 min-w-0 min-h-0 bg-transparent border-0 shadow-none": true,
         "h-full": !isTextareaControl && !isStacked,

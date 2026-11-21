@@ -110,7 +110,7 @@ export function useRichTextEditor(props: RichTextEditorProps) {
   });
 
   const inherited = derived(() => {
-    return omit(inheritedAttrs, ["className", "onChange"]);
+    return omit(inheritedAttrs, ["onChange"]);
   });
 
   const {
@@ -218,6 +218,7 @@ export function useRichTextEditor(props: RichTextEditorProps) {
       showErrorIcon: true,
     },
     {
+      attrsTarget: "root",
       control: () => "textarea",
       componentName: "RichTextEditor",
     },

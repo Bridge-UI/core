@@ -140,7 +140,7 @@ export function useRadio(
         name: merged.value.name,
         value: merged.value.value,
       },
-      omit(split.value.inheritedAttrs, ["class"]),
+      omit(split.value.inheritedAttrs, ["class", "style"]),
       cn({
         "sr-only": true,
         [mergedClasses.value.input ?? ""]: true,
