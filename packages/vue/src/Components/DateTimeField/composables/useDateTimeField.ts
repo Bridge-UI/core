@@ -186,6 +186,7 @@ export function useDateTimeField(
     } = (dateTimeOnly.value.customProps ?? {}) as DateTimeFieldCustomProps;
 
     return {
+      ...attrs,
       ...formFieldCustom,
       endIcon,
       classes: dateTimeOnly.value.classes,

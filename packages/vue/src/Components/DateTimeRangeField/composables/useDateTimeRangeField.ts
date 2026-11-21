@@ -179,6 +179,7 @@ export function useDateTimeRangeField(
     } = (dateTimeOnly.value.customProps ?? {}) as DateTimeRangeFieldCustomProps;
 
     return {
+      ...attrs,
       ...formFieldCustom,
       endIcon,
       classes: dateTimeOnly.value.classes,
