@@ -185,6 +185,10 @@ Set `components.Listbox.defaultProps.matchWidth` on `createBridgeUI` to apply th
 | `modelValue`        | `SelectValue \| SelectValue[] \| null`                  | —       | Bound with `v-model`.                                                        |
 | `update:modelValue` | `(value: SelectValue \| SelectValue[] \| null) => void` | —       | Emitted when `v-model` should update. Listen with `v-on:update:model-value`. |
 
+### Form submission
+
+Pass `name` (and optionally `form`) to submit the field with a native `<form>`. The visible input shows display text, so the value goes through hidden inputs instead: one entry per selected value (several with `multiple`), not the visible label. Nothing is sent while the field is empty or `disabled`. The entries share one `name`; backends that keep only the last value per name (PHP, Laravel) need a `[]` suffix, like `name="items[]"`.
+
 ### Inherited from FormField
 
 See [FormField](./FormField.md) (building-block chrome). Field tokens live on `components.Select` (`size`, `color`, `rounded`, `variant`, …). Dropdown option tokens live on `components.Listbox`.

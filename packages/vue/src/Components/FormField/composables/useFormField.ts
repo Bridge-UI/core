@@ -1,11 +1,12 @@
 // ** External Imports
-import { get, omit, pick } from "es-toolkit/compat";
+import { get, isNil, omit, pick } from "es-toolkit/compat";
 import {
   computed,
   toValue,
   useId,
   useSlots,
   type HTMLAttributes,
+  type InputHTMLAttributes,
   type MaybeRefOrGetter,
 } from "vue";
 
@@ -86,6 +87,14 @@ export type FormFieldOptions = {
    * @default "input"
    */
   control?: () => string | undefined;
+
+  /**
+   * Values a native `<form>` submits for this field, for fields whose visible
+   * control shows display text (Select labels, formatted dates) instead of the
+   * value. When set, `name` / `form` move off the control onto one hidden
+   * input per entry; an empty list submits nothing.
+   */
+  formValues?: () => readonly string[];
 
   /**
    * When the control is a `<textarea>`, use compact TextField-like sizing tokens.
@@ -412,6 +421,13 @@ export function useFormField(
     return options.attrsTarget === "root";
   });
 
+  const submitsHiddenInputs = !isNil(options.formValues);
+
+  /**
+   * `name` / `form` move onto the hidden inputs when the field has them.
+   */
+  const submitAttrKeys = submitsHiddenInputs ? ["form", "name"] : [];
+
   const rootBind = computed(() => {
     const inherited = split.value.inheritedAttrs as HTMLAttributes;
 
@@ -420,7 +436,7 @@ export function useFormField(
       {
         class: cn(inherited.class),
         ...(attrsOnRoot.value
-          ? omit(inherited, ["class"])
+          ? omit(inherited, ["class", ...submitAttrKeys])
           : pick(inherited, ["style"])),
       },
       cn({
@@ -448,6 +464,24 @@ export function useFormField(
     );
   });
 
+  const hiddenInputBinds = computed((): InputHTMLAttributes[] => {
+    const { name, form } = split.value.inheritedAttrs as InputHTMLAttributes;
+
+    if (!submitsHiddenInputs || !name) {
+      return [];
+    }
+
+    return (options.formValues?.() ?? []).map((value) => {
+      return {
+        name,
+        form,
+        value,
+        type: "hidden",
+        disabled: isDisabled.value || undefined,
+      };
+    });
+  });
+
   const inputBind = computed(() => {
     return mergePartBind(
       {
@@ -465,6 +499,7 @@ export function useFormField(
             "style",
             "modelValue",
             "onUpdate:modelValue",
+            ...submitAttrKeys,
           ]),
       cn({
         "flex-1 min-w-0 min-h-0 bg-transparent border-0 shadow-none": true,
@@ -706,6 +741,7 @@ export function useFormField(
     stackedBodyBind,
     fieldCornerProps,
     hasInsetLabelRow,
+    hiddenInputBinds,
     insetLabelRowBind,
     stackedInputRowBind,
     showErrorMessageRow,

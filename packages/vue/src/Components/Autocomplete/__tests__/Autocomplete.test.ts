@@ -1,5 +1,6 @@
 // ** External Imports
 import { flushPromises, mount } from "@vue/test-utils";
+import { isNil } from "es-toolkit/compat";
 import { afterEach, expect, test, vi } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
@@ -461,8 +462,8 @@ test("it should forward fallthrough attrs only to the combobox input", () => {
 
   expect(tagged).toHaveLength(1);
   expect(tagged[0]?.element).toBe(control.element);
+  expect(control.attributes("name")).toBeUndefined();
   expect(control.attributes("id")).toBe("field-attrs");
-  expect(control.attributes("name")).toBe("field-attrs");
   expect(wrapper.findAll("#field-attrs")).toHaveLength(1);
   expect(control.attributes("aria-describedby")).toBe("field-help");
 });
@@ -479,4 +480,23 @@ test("it should apply class and style to the root, not the combobox input", () =
   expect(control.classes()).not.toContain("field-root");
   expect(root.element.contains(control.element)).toBe(true);
   expect(root.attributes("style")).toContain("width: 240px");
+});
+
+function hiddenValues(wrapper: ReturnType<typeof mount>, name: string) {
+  return wrapper
+    .findAll(`input[type="hidden"][name="${name}"]`)
+    .filter((input) => isNil(input.attributes("disabled")))
+    .map((input) => (input.element as HTMLInputElement).value);
+}
+
+test("it should submit the selected value through a hidden input", () => {
+  const wrapper = mountAutocomplete({
+    attrs: { name: "status" },
+    props: { modelValue: "pending" },
+  });
+
+  const combobox = wrapper.find('[role="combobox"]');
+
+  expect(combobox.attributes("name")).toBeUndefined();
+  expect(hiddenValues(wrapper, "status")).toEqual(["pending"]);
 });

@@ -55,6 +55,12 @@ const shell = computed(() => {
   <component :api="api" :is="shell">
     <slot />
 
+    <input
+      :key="index"
+      v-bind="bind"
+      v-for="(bind, index) in api.hiddenInputBinds.value"
+    />
+
     <template
       #[name]="slotData"
       v-for="name in presentSlotNames(FORM_FIELD_CHROME_SLOT_NAMES, $slots)"

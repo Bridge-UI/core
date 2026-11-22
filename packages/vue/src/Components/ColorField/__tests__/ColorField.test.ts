@@ -1,5 +1,6 @@
 // ** External Imports
 import { flushPromises, mount } from "@vue/test-utils";
+import { isNil } from "es-toolkit/compat";
 import { afterEach, expect, test, vi } from "vitest";
 import { defineComponent, h } from "vue";
 
@@ -299,8 +300,8 @@ test("it should forward fallthrough attrs only to the input", () => {
 
   expect(tagged).toHaveLength(1);
   expect(tagged[0]?.element).toBe(control.element);
+  expect(control.attributes("name")).toBeUndefined();
   expect(control.attributes("id")).toBe("field-attrs");
-  expect(control.attributes("name")).toBe("field-attrs");
   expect(wrapper.findAll("#field-attrs")).toHaveLength(1);
   expect(control.attributes("aria-describedby")).toBe("field-help");
 });
@@ -317,4 +318,20 @@ test("it should apply class and style to the root, not the input", () => {
   expect(control.classes()).not.toContain("field-root");
   expect(root.element.contains(control.element)).toBe(true);
   expect(root.attributes("style")).toContain("width: 240px");
+});
+
+function hiddenValues(wrapper: ReturnType<typeof mount>, name: string) {
+  return wrapper
+    .findAll(`input[type="hidden"][name="${name}"]`)
+    .filter((input) => isNil(input.attributes("disabled")))
+    .map((input) => (input.element as HTMLInputElement).value);
+}
+
+test("it should submit the color value through a hidden input", () => {
+  const wrapper = mount(ColorField, {
+    attrs: { name: "brand" },
+    props: { modelValue: "#ff0000" },
+  });
+
+  expect(hiddenValues(wrapper, "brand")).toEqual(["#ff0000"]);
 });

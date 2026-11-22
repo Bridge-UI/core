@@ -9,6 +9,7 @@ import {
   resolveFieldOverlay,
   resolveFieldPickerClassName,
   resolveRangePickerOrientation,
+  toDateFormValues,
   type DateRangeValue,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
@@ -203,6 +204,12 @@ export function useDateRangeField(props: DateRangeFieldProps) {
     },
     {
       componentName: "DateRangeField",
+      formValues: () => {
+        return toDateFormValues(adapter, modelValue, {
+          timeZone,
+          granularity: dateOnly.granularity ?? "day",
+        });
+      },
     },
   );
 

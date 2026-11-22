@@ -7,6 +7,7 @@ import { useCallback, useRef, useState } from "react";
 import {
   resolveFieldOverlay,
   resolveFieldPickerClassName,
+  toDateTimeFormValues,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
@@ -232,6 +233,12 @@ export function useDateTimeField(props: DateTimeFieldProps) {
     },
     {
       componentName: "DateTimeField",
+      formValues: () => {
+        return toDateTimeFormValues(adapter, modelValue, {
+          timeZone,
+          showSeconds: dateTimeOnly.showSeconds,
+        });
+      },
     },
   );
 
