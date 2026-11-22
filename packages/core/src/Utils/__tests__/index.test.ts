@@ -9,6 +9,7 @@ import {
   createMergePartBind,
   getBridgeUIRegistryDefaultProp,
   getColorToken,
+  joinIdRefs,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
 } from "@/Utils";
@@ -755,4 +756,10 @@ test("it should merge top-level className defaults", () => {
     id: "chip",
     className: "pkg user",
   });
+});
+
+test("it should join id reference lists without duplicates", () => {
+  expect(joinIdRefs()).toBeUndefined();
+  expect(joinIdRefs("a", undefined, "  ")).toBe("a");
+  expect(joinIdRefs("a b", "b  c", null, "a")).toBe("a b c");
 });
