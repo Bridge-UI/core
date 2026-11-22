@@ -121,7 +121,7 @@ Replaces Cancel / Apply on the nested picker. `apply()` commits and closes; `can
 
 ### Form submission
 
-Pass `name` (and optionally `form`) to submit the field with a native `<form>`. The visible input shows display text, so the value goes through hidden inputs instead: `YYYY-MM-DD` per date (`YYYY-MM` / `YYYY` with `granularity` `month` / `year`), read in `timeZone`. `multiple` and `range` send one entry per date. Nothing is sent while the field is empty or `disabled`.
+Pass `name` (and optionally `form`) to submit the field with a native `<form>`. The visible input shows display text, so the value goes through hidden inputs instead: `YYYY-MM-DD` per date (`YYYY-MM` / `YYYY` with `granularity` `month` / `year`), read in `timeZone`. `multiple` and `range` send one entry per date. Nothing is sent while the field is empty or `disabled`. The entries share one `name`; backends that keep only the last value per name (PHP, Laravel) need a `[]` suffix, like `name="items[]"`.
 
 ### Inherited from FormField
 
