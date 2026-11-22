@@ -18,7 +18,10 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useFormControl } from "@/Components/FormControl";
+import {
+  formControlBridgeKeys,
+  useFormControl,
+} from "@/Components/FormControl";
 import type {
   SwitchClasses,
   SwitchOwnProps,
@@ -135,7 +138,11 @@ export function useSwitch(
         role: "switch",
         type: "checkbox",
       },
-      omit(split.value.inheritedAttrs, ["class", "style"]),
+      omit(split.value.inheritedAttrs, [
+        "class",
+        "style",
+        ...formControlBridgeKeys,
+      ]),
       cn({
         "sr-only": true,
         [mergedClasses.value.input ?? ""]: true,

@@ -141,3 +141,16 @@ test("it should apply class and style to the root, not the switch input", () => 
   expect(root.element.contains(control.element)).toBe(true);
   expect(root.attributes("style")).toContain("width: 240px");
 });
+
+test("it should not render FormControl props as attributes on the switch input", () => {
+  const wrapper = mount(Switch, {
+    props: { error: true, endLabel: "Accept", description: "Helper" },
+  });
+
+  const control = wrapper.find('input[role="switch"]');
+
+  expect(control.attributes("error")).toBeUndefined();
+  expect(control.attributes("endlabel")).toBeUndefined();
+  expect(control.attributes("description")).toBeUndefined();
+  expect(control.attributes("hideerrormessage")).toBeUndefined();
+});

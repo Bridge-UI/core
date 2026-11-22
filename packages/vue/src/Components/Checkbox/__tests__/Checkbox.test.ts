@@ -199,3 +199,16 @@ test("it should keep a consumer aria-describedby next to the description id", ()
     wrapper.find('input[type="checkbox"]').attributes("aria-describedby"),
   ).toBe("field-id-description field-help");
 });
+
+test("it should not render FormControl props as attributes on the checkbox input", () => {
+  const wrapper = mount(Checkbox, {
+    props: { error: true, endLabel: "Accept", description: "Helper" },
+  });
+
+  const control = wrapper.find('input[type="checkbox"]');
+
+  expect(control.attributes("error")).toBeUndefined();
+  expect(control.attributes("endlabel")).toBeUndefined();
+  expect(control.attributes("description")).toBeUndefined();
+  expect(control.attributes("hideerrormessage")).toBeUndefined();
+});
