@@ -184,7 +184,7 @@ export function useDateField(props: DateFieldProps) {
   );
 
   const inherited = derived(() => {
-    return omit(inheritedAttrs, ["onChange", "onClear", "onOpen", "onClose"]);
+    return omit(inheritedAttrs, ["onOpen", "onClear", "onClose", "onChange"]);
   });
 
   const { inheritedAttrs: formFieldAttrs, componentProps: formFieldCustom } =
