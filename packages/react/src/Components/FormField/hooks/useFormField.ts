@@ -13,6 +13,7 @@ import {
 import {
   cn,
   getColorToken,
+  joinIdRefs,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -295,15 +296,12 @@ export function useFormField(
       ids.push(`${controlId}-error`);
     }
 
-    const inheritedDescribedBy = (
-      inheritedAttrs as InputHTMLAttributes<HTMLInputElement>
-    )["aria-describedby"];
-
-    if (inheritedDescribedBy) {
-      ids.push(inheritedDescribedBy);
-    }
-
-    return ids.length > 0 ? ids.join(" ") : undefined;
+    return joinIdRefs(
+      ...ids,
+      (inheritedAttrs as InputHTMLAttributes<HTMLInputElement>)[
+        "aria-describedby"
+      ],
+    );
   });
 
   const sizeClasses = useMemo(() => {

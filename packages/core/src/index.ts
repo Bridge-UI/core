@@ -1167,6 +1167,7 @@ export {
   createMergePartBind,
   getBridgeUIRegistryDefaultProp,
   getColorToken,
+  joinIdRefs,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
   resolveBridgeUIDefaultColor,
