@@ -329,3 +329,25 @@ test("it should forward fallthrough attrs to the root once", async () => {
   expect(tagged[0]?.classes()).toContain("field-root");
   expect(tagged[0]?.find('[role="textbox"]').exists()).toBe(true);
 });
+
+test("it should call focus and blur listeners when the editable focuses", async () => {
+  const onBlur = vi.fn();
+  const onFocus = vi.fn();
+
+  const wrapper = mount(RichTextEditor, {
+    attachTo: document.body,
+    attrs: { onBlur, onFocus },
+  });
+
+  await flushPromises();
+
+  const textbox = wrapper.find('[role="textbox"]');
+
+  await textbox.trigger("focus");
+  await textbox.trigger("blur");
+
+  expect(onBlur).toHaveBeenCalledTimes(1);
+  expect(onFocus).toHaveBeenCalledTimes(1);
+
+  wrapper.unmount();
+});
