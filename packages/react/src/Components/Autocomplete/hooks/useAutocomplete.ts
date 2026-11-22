@@ -1000,7 +1000,6 @@ export function useAutocomplete(
         "aria-expanded": open,
         readOnly: triggerReadonly,
         "aria-controls": listboxId,
-        onKeyDown: handleTriggerKeyDown,
         "aria-autocomplete": isSearchEnabled ? "list" : undefined,
         "aria-activedescendant": open
           ? navigation.activeDescendantId
@@ -1009,16 +1008,26 @@ export function useAutocomplete(
           multiple && hasValue && !autocompleteMerged.persistentPlaceholder
             ? undefined
             : autocompleteMerged.placeholder,
+        onKeyDown: (
+          event: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
+        ) => {
+          formField.inputBind.onKeyDown?.(event as never);
+          handleTriggerKeyDown(event);
+        },
         ...(multiple
           ? {
               rows: 1,
               onInput: (event: FormEvent<HTMLTextAreaElement>) => {
+                formField.inputBind.onInput?.(event as never);
                 handleTriggerInput(event);
                 adjustHeight(event.currentTarget);
               },
             }
           : {
-              onInput: handleTriggerInput,
+              onInput: (event: FormEvent<HTMLInputElement>) => {
+                formField.inputBind.onInput?.(event as never);
+                handleTriggerInput(event);
+              },
             }),
       },
       formField.inputBind,

@@ -32,6 +32,7 @@ import type {
   TimeFieldOwnProps,
 } from "@/Components/TimeField/timeField.types";
 import {
+  callListener,
   hasNamedSlot,
   mergePartBind,
   resolveFieldAdornmentIconSize,
@@ -293,11 +294,11 @@ export function useTimeField(
           ? formField.inputBind.value.readonly
           : true,
         onFocus: (event: FocusEvent) => {
-          formField.inputBind.value.onFocus?.(event);
+          callListener(formField.inputBind.value.onFocus, event);
           handleOpenChange(true);
         },
         onKeydown: (event: KeyboardEvent) => {
-          formField.inputBind.value.onKeydown?.(event);
+          callListener(formField.inputBind.value.onKeydown, event);
 
           if (event.key === "Escape") {
             // Closing the picker handles the key: an overlay this field sits

@@ -498,3 +498,30 @@ test("it should use controlId as the combobox id", () => {
     "status-control",
   );
 });
+
+test("it should call consumer keyboard and input handlers on the combobox", async () => {
+  const onInput = vi.fn();
+  const onKeyDown = vi.fn();
+
+  render(
+    <Select
+      searchable
+      options={options}
+      onInput={onInput}
+      aria-label="Fruit"
+      onKeyDown={onKeyDown}
+    />,
+  );
+
+  const combobox = screen.getByRole("combobox");
+
+  fireEvent.keyDown(combobox, { key: "ArrowDown" });
+  fireEvent.input(combobox, { target: { value: "ban" } });
+
+  await waitFor(() => {
+    expect(combobox.getAttribute("aria-expanded")).toBe("true");
+  });
+
+  expect(onInput).toHaveBeenCalledTimes(1);
+  expect(onKeyDown).toHaveBeenCalledTimes(1);
+});
