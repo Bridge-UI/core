@@ -329,3 +329,22 @@ test("it should forward fallthrough attrs to the root once", async () => {
   expect(tagged[0]?.classes()).toContain("field-root");
   expect(tagged[0]?.find('[role="textbox"]').exists()).toBe(true);
 });
+
+test("it should submit the document through a hidden input", async () => {
+  const wrapper = mount(RichTextEditor, {
+    props: { modelValue: "<p>Hi</p>" },
+    attrs: { name: "bio", "data-test": "field-attrs" },
+  });
+
+  await flushPromises();
+
+  const hidden = wrapper.find('input[type="hidden"][name="bio"]');
+
+  expect(hidden.exists()).toBe(true);
+  expect((hidden.element as HTMLInputElement).value).toBe("<p>Hi</p>");
+  expect(wrapper.find('[data-test="field-attrs"]').attributes("name")).toBe(
+    undefined,
+  );
+
+  wrapper.unmount();
+});
