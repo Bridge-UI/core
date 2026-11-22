@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil, omit } from "es-toolkit/compat";
+import { get, isNil, omit, pickBy } from "es-toolkit/compat";
 import {
   computed,
   onBeforeUnmount,
@@ -131,6 +131,16 @@ export function useRichTextEditor(
 
   const formFieldInherited = computed(() => {
     return formFieldSplit.value.inheritedAttrs;
+  });
+
+  /**
+   * `aria-*` attrs stay off the root (`attrsTarget: "root"`) and land on the
+   * editable instead.
+   */
+  const editableAria = computed(() => {
+    return pickBy(formFieldInherited.value, (_value, key) => {
+      return key.startsWith("aria-");
+    });
   });
 
   const formFieldOnlyCustom = computed(() => {
@@ -378,6 +388,7 @@ export function useRichTextEditor(
       id: formField.controlId.value,
       ariaReadonly: isReadOnly.value,
       onSelectionChange: bumpSelection,
+      ariaAttributes: editableAria.value,
       disabled: formField.isDisabled.value,
       placeholder: rteOnly.value.placeholder,
       ariaDisabled: formField.isDisabled.value,
@@ -426,6 +437,7 @@ export function useRichTextEditor(
   watch(
     [
       isReadOnly,
+      editableAria,
       () => rteOnly.value.placeholder,
       () => formField.controlId.value,
       () => formField.isDisabled.value,
@@ -436,6 +448,7 @@ export function useRichTextEditor(
       handleRef.value?.setA11y({
         id: formField.controlId.value,
         ariaReadonly: isReadOnly.value,
+        ariaAttributes: editableAria.value,
         placeholder: rteOnly.value.placeholder,
         ariaDisabled: formField.isDisabled.value,
         ariaInvalid: formField.invalidated.value,

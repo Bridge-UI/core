@@ -1,5 +1,5 @@
 // ** External Imports
-import { isNil, isString } from "es-toolkit/compat";
+import { filter, forEach, isNil, isString, keys } from "es-toolkit/compat";
 
 /**
  * Toolbar actions Bridge knows about (v1).
@@ -59,6 +59,13 @@ export type RichTextToolPayload = {
  * Accessibility and placeholder updates applied after mount.
  */
 export type RichTextA11yOptions = {
+  /**
+   * Consumer `aria-*` attributes for the editable root (`aria-label`,
+   * `aria-required`, …). Bridge-managed ones (`aria-describedby`,
+   * `aria-invalid`, …) win; `null` / `undefined` remove the attribute.
+   */
+  ariaAttributes?: Record<string, unknown>;
+
   /**
    * `aria-describedby` on the editable root.
    */
@@ -155,6 +162,8 @@ export function applyRichTextEditableA11y(
     editable.id = options.id;
   }
 
+  applyConsumerAriaAttributes(editable, options.ariaAttributes ?? {});
+
   editable.setAttribute("role", "textbox");
   editable.setAttribute("aria-multiline", "true");
 
@@ -181,6 +190,37 @@ export function applyRichTextEditableA11y(
   } else {
     editable.removeAttribute("aria-describedby");
   }
+}
+
+/**
+ * Consumer `aria-*` names applied per editable, so a later call can drop the
+ * ones that went away.
+ */
+const consumerAriaNames = new WeakMap<HTMLElement, readonly string[]>();
+
+/**
+ * Sets the consumer `aria-*` attributes and removes the ones from the previous
+ * call that are no longer passed.
+ */
+function applyConsumerAriaAttributes(
+  editable: HTMLElement,
+  attributes: Record<string, unknown>,
+): void {
+  const names = filter(keys(attributes), (name) => {
+    return name.startsWith("aria-") && !isNil(attributes[name]);
+  });
+
+  forEach(consumerAriaNames.get(editable) ?? [], (name) => {
+    if (!names.includes(name)) {
+      editable.removeAttribute(name);
+    }
+  });
+
+  forEach(names, (name) => {
+    editable.setAttribute(name, String(attributes[name]));
+  });
+
+  consumerAriaNames.set(editable, names);
 }
 
 /**
