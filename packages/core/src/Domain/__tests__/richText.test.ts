@@ -70,20 +70,38 @@ describe("applyRichTextEditableA11y", () => {
     expect(editable.getAttribute("aria-invalid")).toBeNull();
   });
 
-  test("it should set and clear aria-label and aria-labelledby", () => {
+  test("it should set consumer aria attrs and clear the ones removed later", () => {
     const editable = document.createElement("div");
 
     applyRichTextEditableA11y(editable, {
-      ariaLabel: "Bio",
-      ariaLabelledBy: "bio-heading",
+      ariaAttributes: {
+        "aria-label": "Bio",
+        "aria-required": true,
+        "aria-errormessage": "bio-error",
+      },
     });
 
     expect(editable.getAttribute("aria-label")).toBe("Bio");
-    expect(editable.getAttribute("aria-labelledby")).toBe("bio-heading");
+    expect(editable.getAttribute("aria-required")).toBe("true");
+    expect(editable.getAttribute("aria-errormessage")).toBe("bio-error");
 
-    applyRichTextEditableA11y(editable, {});
+    applyRichTextEditableA11y(editable, {
+      ariaAttributes: { "aria-label": "Bio" },
+    });
 
-    expect(editable.getAttribute("aria-label")).toBeNull();
-    expect(editable.getAttribute("aria-labelledby")).toBeNull();
+    expect(editable.getAttribute("aria-label")).toBe("Bio");
+    expect(editable.getAttribute("aria-required")).toBeNull();
+    expect(editable.getAttribute("aria-errormessage")).toBeNull();
+  });
+
+  test("it should let Bridge-managed aria attrs win over consumer ones", () => {
+    const editable = document.createElement("div");
+
+    applyRichTextEditableA11y(editable, {
+      ariaDescribedBy: "bio-help",
+      ariaAttributes: { "aria-describedby": "other" },
+    });
+
+    expect(editable.getAttribute("aria-describedby")).toBe("bio-help");
   });
 });

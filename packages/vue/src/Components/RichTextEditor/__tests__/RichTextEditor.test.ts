@@ -356,3 +356,65 @@ test("it should keep id and aria attrs on the editable, not the root", async () 
 
   wrapper.unmount();
 });
+
+test("it should put every consumer aria attr on the editable", async () => {
+  const wrapper = mount(RichTextEditor, {
+    attrs: {
+      "aria-required": "true",
+      "data-test": "field-attrs",
+      "aria-errormessage": "bio-error",
+    },
+  });
+
+  await flushPromises();
+
+  const root = wrapper.find('[data-test="field-attrs"]');
+  const textbox = wrapper.find('[role="textbox"]');
+
+  expect(root.attributes("aria-required")).toBeUndefined();
+  expect(textbox.attributes("aria-required")).toBe("true");
+  expect(textbox.attributes("aria-errormessage")).toBe("bio-error");
+
+  wrapper.unmount();
+});
+
+test("it should call focus and blur listeners when the editable focuses", async () => {
+  const onBlur = vi.fn();
+  const onFocus = vi.fn();
+
+  const wrapper = mount(RichTextEditor, {
+    attachTo: document.body,
+    attrs: { onBlur, onFocus },
+  });
+
+  await flushPromises();
+
+  const textbox = wrapper.find('[role="textbox"]');
+
+  await textbox.trigger("focus");
+  await textbox.trigger("blur");
+
+  expect(onBlur).toHaveBeenCalledTimes(1);
+  expect(onFocus).toHaveBeenCalledTimes(1);
+
+  wrapper.unmount();
+});
+
+test("it should submit the document through a hidden input", async () => {
+  const wrapper = mount(RichTextEditor, {
+    props: { modelValue: "<p>Hi</p>" },
+    attrs: { name: "bio", "data-test": "field-attrs" },
+  });
+
+  await flushPromises();
+
+  const hidden = wrapper.find('input[type="hidden"][name="bio"]');
+
+  expect(hidden.exists()).toBe(true);
+  expect((hidden.element as HTMLInputElement).value).toBe("<p>Hi</p>");
+  expect(wrapper.find('[data-test="field-attrs"]').attributes("name")).toBe(
+    undefined,
+  );
+
+  wrapper.unmount();
+});

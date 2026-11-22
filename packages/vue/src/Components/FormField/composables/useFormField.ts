@@ -429,6 +429,13 @@ export function useFormField(
     return options.attrsTarget === "root";
   });
 
+  const submitsHiddenInputs = !isNil(options.formValues);
+
+  /**
+   * `name` / `form` move onto the hidden inputs when the field has them.
+   */
+  const submitAttrKeys = submitsHiddenInputs ? ["form", "name"] : [];
+
   const rootBind = computed(() => {
     const inherited = split.value.inheritedAttrs as HTMLAttributes;
 
@@ -437,7 +444,7 @@ export function useFormField(
       {
         class: cn(inherited.class),
         ...(attrsOnRoot.value
-          ? omitControlAttrs(omit(inherited, ["class"]))
+          ? omitControlAttrs(omit(inherited, ["class", ...submitAttrKeys]))
           : pick(inherited, ["style"])),
       },
       cn({
@@ -464,8 +471,6 @@ export function useFormField(
       }),
     );
   });
-
-  const submitsHiddenInputs = !isNil(options.formValues);
 
   const hiddenInputBinds = computed((): InputHTMLAttributes[] => {
     const { name, form } = split.value.inheritedAttrs as InputHTMLAttributes;
@@ -502,7 +507,7 @@ export function useFormField(
             "style",
             "modelValue",
             "onUpdate:modelValue",
-            ...(submitsHiddenInputs ? ["form", "name"] : []),
+            ...submitAttrKeys,
           ]),
       cn({
         "flex-1 min-w-0 min-h-0 bg-transparent border-0 shadow-none": true,

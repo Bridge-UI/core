@@ -1,5 +1,5 @@
 // ** External Imports
-import { isNil, isString } from "es-toolkit/compat";
+import { filter, forEach, isNil, isString, keys } from "es-toolkit/compat";
 
 /**
  * Toolbar actions Bridge knows about (v1).
@@ -60,6 +60,13 @@ export type RichTextToolPayload = {
  */
 export type RichTextA11yOptions = {
   /**
+   * Consumer `aria-*` attributes for the editable root (`aria-label`,
+   * `aria-required`, …). Bridge-managed ones (`aria-describedby`,
+   * `aria-invalid`, …) win; `null` / `undefined` remove the attribute.
+   */
+  ariaAttributes?: Record<string, unknown>;
+
+  /**
    * `aria-describedby` on the editable root.
    */
   ariaDescribedBy?: string;
@@ -73,16 +80,6 @@ export type RichTextA11yOptions = {
    * `aria-invalid` on the editable root.
    */
   ariaInvalid?: boolean;
-
-  /**
-   * `aria-label` on the editable root.
-   */
-  ariaLabel?: string;
-
-  /**
-   * `aria-labelledby` on the editable root.
-   */
-  ariaLabelledBy?: string;
 
   /**
    * `aria-readonly` on the editable root.
@@ -165,6 +162,8 @@ export function applyRichTextEditableA11y(
     editable.id = options.id;
   }
 
+  applyConsumerAriaAttributes(editable, options.ariaAttributes ?? {});
+
   editable.setAttribute("role", "textbox");
   editable.setAttribute("aria-multiline", "true");
 
@@ -186,24 +185,42 @@ export function applyRichTextEditableA11y(
     editable.removeAttribute("aria-invalid");
   }
 
-  setOptionalAttribute(editable, "aria-label", options.ariaLabel);
-  setOptionalAttribute(editable, "aria-labelledby", options.ariaLabelledBy);
-  setOptionalAttribute(editable, "aria-describedby", options.ariaDescribedBy);
+  if (!isNil(options.ariaDescribedBy) && options.ariaDescribedBy.length > 0) {
+    editable.setAttribute("aria-describedby", options.ariaDescribedBy);
+  } else {
+    editable.removeAttribute("aria-describedby");
+  }
 }
 
 /**
- * Sets `name` when `value` is non-empty, otherwise removes it.
+ * Consumer `aria-*` names applied per editable, so a later call can drop the
+ * ones that went away.
  */
-function setOptionalAttribute(
-  element: HTMLElement,
-  name: string,
-  value: string | undefined,
+const consumerAriaNames = new WeakMap<HTMLElement, readonly string[]>();
+
+/**
+ * Sets the consumer `aria-*` attributes and removes the ones from the previous
+ * call that are no longer passed.
+ */
+function applyConsumerAriaAttributes(
+  editable: HTMLElement,
+  attributes: Record<string, unknown>,
 ): void {
-  if (!isNil(value) && value.length > 0) {
-    element.setAttribute(name, value);
-  } else {
-    element.removeAttribute(name);
-  }
+  const names = filter(keys(attributes), (name) => {
+    return name.startsWith("aria-") && !isNil(attributes[name]);
+  });
+
+  forEach(consumerAriaNames.get(editable) ?? [], (name) => {
+    if (!names.includes(name)) {
+      editable.removeAttribute(name);
+    }
+  });
+
+  forEach(names, (name) => {
+    editable.setAttribute(name, String(attributes[name]));
+  });
+
+  consumerAriaNames.set(editable, names);
 }
 
 /**

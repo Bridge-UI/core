@@ -335,3 +335,34 @@ test("it should keep id and aria attrs on the editable, not the root", () => {
   expect(textbox.getAttribute("aria-describedby")).toBe("bio-help");
   expect(textbox.getAttribute("aria-labelledby")).toBe("bio-heading");
 });
+
+test("it should put every consumer aria attr on the editable", () => {
+  const { container } = render(
+    <RichTextEditor
+      aria-required="true"
+      data-test="field-attrs"
+      aria-errormessage="bio-error"
+    />,
+  );
+
+  const root = container.querySelector('[data-test="field-attrs"]');
+  const textbox = screen.getByRole("textbox");
+
+  expect(root?.getAttribute("aria-required")).toBeNull();
+  expect(textbox.getAttribute("aria-required")).toBe("true");
+  expect(textbox.getAttribute("aria-errormessage")).toBe("bio-error");
+});
+
+test("it should submit the document through a hidden input", () => {
+  const { container } = render(
+    <RichTextEditor name="bio" value="<p>Hi</p>" data-test="field-attrs" />,
+  );
+
+  const root = container.querySelector('[data-test="field-attrs"]');
+  const hidden = container.querySelector<HTMLInputElement>(
+    'input[type="hidden"][name="bio"]',
+  );
+
+  expect(hidden?.value).toBe("<p>Hi</p>");
+  expect(root?.getAttribute("name")).toBeNull();
+});

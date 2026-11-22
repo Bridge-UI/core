@@ -6,6 +6,7 @@ import { createNativeDateAdapter } from "@/Adapters/date";
 import {
   toDateFormValues,
   toDateTimeFormValues,
+  toRichTextFormValues,
   toTimeFormValues,
 } from "@/Domain/formValue";
 
@@ -55,5 +56,15 @@ describe("toDateTimeFormValues", () => {
     expect(
       toDateTimeFormValues(adapter, end, { timeZone, showSeconds: true }),
     ).toEqual(["2024-12-25T18:30:45"]);
+  });
+});
+
+describe("toRichTextFormValues", () => {
+  test("it should submit HTML as is and JSON as a string", () => {
+    const doc = { type: "doc", content: [] };
+
+    expect(toRichTextFormValues(null)).toEqual([]);
+    expect(toRichTextFormValues("<p>Hi</p>")).toEqual(["<p>Hi</p>"]);
+    expect(toRichTextFormValues(doc)).toEqual([JSON.stringify(doc)]);
   });
 });

@@ -424,6 +424,7 @@ export {
   toDateFormValues,
   toDateTimeFormValues,
   toMeridiem,
+  toRichTextFormValues,
   toTimeFormValues,
   toggleAccordionItem,
   toggleDataTableColumnVisibility,

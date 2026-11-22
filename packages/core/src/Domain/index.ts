@@ -388,6 +388,7 @@ export type {
 export {
   toDateFormValues,
   toDateTimeFormValues,
+  toRichTextFormValues,
   toTimeFormValues,
 } from "@/Domain/formValue";
 export type {

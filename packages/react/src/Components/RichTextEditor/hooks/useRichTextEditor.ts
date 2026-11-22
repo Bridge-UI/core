@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil, omit } from "es-toolkit/compat";
+import { get, isNil, omit, pickBy } from "es-toolkit/compat";
 import {
   useCallback,
   useEffect,
@@ -17,8 +17,10 @@ import {
   RICH_TEXT_TOOL_ICONS,
   RICH_TEXT_TOOL_LABELS,
   richTextValuesEqual,
+  toRichTextFormValues,
   type RichTextFormat,
   type RichTextTool,
+  type RichTextValue,
 } from "@bridge-ui/core/Domain";
 import {
   mountTiptapEditor,
@@ -86,6 +88,7 @@ export function useRichTextEditor(props: RichTextEditorProps) {
   const [, setSelectionTick] = useState(0);
   const onChangeRef = useRef(props.onChange);
   const [linkHref, setLinkHref] = useState("");
+  const [typedValue, setTypedValue] = useState<RichTextValue>();
   const hostRef = useRef<null | HTMLDivElement>(null);
   const surfaceRef = useRef<null | HTMLDivElement>(null);
   const handleRef = useRef<null | TiptapEditorHandle>(null);
@@ -201,9 +204,13 @@ export function useRichTextEditor(props: RichTextEditorProps) {
     return get(classes, formFieldCustom.size ?? rteMerged.size ?? "md");
   });
 
-  const editableAria = formFieldInherited as HTMLAttributes<HTMLDivElement>;
-  const ariaLabel = editableAria["aria-label"];
-  const ariaLabelledBy = editableAria["aria-labelledby"];
+  // `aria-*` props stay off the root (`attrsTarget: "root"`) and land on the
+  // editable instead.
+  const ariaAttributes = pickBy(formFieldInherited, (_value, key) => {
+    return key.startsWith("aria-");
+  });
+
+  const ariaSignature = JSON.stringify(ariaAttributes);
 
   const formField = useFormField(
     {
@@ -225,6 +232,12 @@ export function useRichTextEditor(props: RichTextEditorProps) {
       attrsTarget: "root",
       control: () => "textarea",
       componentName: "RichTextEditor",
+      formValues: () => {
+        // Uncontrolled editors only hold the document in TipTap.
+        return toRichTextFormValues(
+          valueProp === undefined ? typedValue : valueProp,
+        );
+      },
     },
   );
 
@@ -300,9 +313,8 @@ export function useRichTextEditor(props: RichTextEditorProps) {
 
     const handle = mountTiptapEditor({
       format,
-      ariaLabel,
       element: host,
-      ariaLabelledBy,
+      ariaAttributes,
       value: valueProp,
       readOnly: isReadOnly,
       id: formField.controlId,
@@ -314,6 +326,7 @@ export function useRichTextEditor(props: RichTextEditorProps) {
       ariaInvalid: formField.invalidated,
       ariaDescribedBy: formField.ariaDescribedBy,
       onChange: (next) => {
+        setTypedValue(next);
         onChangeRef.current?.(next);
       },
     });
@@ -351,19 +364,17 @@ export function useRichTextEditor(props: RichTextEditorProps) {
 
   useEffect(() => {
     handleRef.current?.setA11y({
-      ariaLabel,
-      ariaLabelledBy,
       id: formField.controlId,
       ariaReadonly: isReadOnly,
       placeholder: rteOnly.placeholder,
       ariaDisabled: formField.isDisabled,
       ariaInvalid: formField.invalidated,
       ariaDescribedBy: formField.ariaDescribedBy,
+      ariaAttributes: JSON.parse(ariaSignature) as Record<string, unknown>,
     });
   }, [
-    ariaLabel,
     isReadOnly,
-    ariaLabelledBy,
+    ariaSignature,
     formField.controlId,
     rteOnly.placeholder,
     formField.isDisabled,

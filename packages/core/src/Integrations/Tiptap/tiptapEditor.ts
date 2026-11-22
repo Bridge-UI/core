@@ -29,6 +29,13 @@ const TIPTAP_EDITABLE_CLASS = "bridge-rich-text-editable";
  */
 export type TiptapMountOptions = {
   /**
+   * Consumer `aria-*` attributes for the editable root (`aria-label`,
+   * `aria-required`, …). Bridge-managed ones (`aria-describedby`,
+   * `aria-invalid`, …) win; `null` / `undefined` remove the attribute.
+   */
+  ariaAttributes?: Record<string, unknown>;
+
+  /**
    * `aria-describedby` on the editable root.
    */
   ariaDescribedBy?: string;
@@ -42,16 +49,6 @@ export type TiptapMountOptions = {
    * `aria-invalid` on the editable root.
    */
   ariaInvalid?: boolean;
-
-  /**
-   * `aria-label` on the editable root.
-   */
-  ariaLabel?: string;
-
-  /**
-   * `aria-labelledby` on the editable root.
-   */
-  ariaLabelledBy?: string;
 
   /**
    * `aria-readonly` on the editable root.
@@ -79,9 +76,19 @@ export type TiptapMountOptions = {
   id?: string;
 
   /**
+   * Called when the editable loses focus.
+   */
+  onBlur?: (event: FocusEvent) => void;
+
+  /**
    * Called whenever the document changes.
    */
   onChange: (value: RichTextValue) => void;
+
+  /**
+   * Called when the editable receives focus.
+   */
+  onFocus?: (event: FocusEvent) => void;
 
   /**
    * Called when the selection changes (toolbar active state).
@@ -296,6 +303,12 @@ export function mountTiptapEditor(
     autofocus: false,
     element: options.element,
     editable: !disabled && !readOnly,
+    onBlur: ({ event }) => {
+      options.onBlur?.(event);
+    },
+    onFocus: ({ event }) => {
+      options.onFocus?.(event);
+    },
     onSelectionUpdate: () => {
       options.onSelectionChange?.();
     },

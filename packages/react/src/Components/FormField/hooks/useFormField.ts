@@ -201,13 +201,16 @@ export function useFormField(
 
   const submitsHiddenInputs = !isNil(options.formValues);
 
+  // `name` / `form` move onto the hidden inputs when the field has them.
+  const submitAttrKeys = submitsHiddenInputs ? ["form", "name"] : [];
+
   const inputInheritedAttrs = derived(() => {
     return omit(inheritedAttrs, [
       "style",
       "slots",
       "children",
       "className",
-      ...(submitsHiddenInputs ? ["form", "name"] : []),
+      ...submitAttrKeys,
     ]) as InputHTMLAttributes<HTMLInputElement>;
   });
 
@@ -428,7 +431,12 @@ export function useFormField(
         className: cn(inheritedAttrs.className),
         ...(attrsOnRoot
           ? omitControlAttrs(
-              omit(inheritedAttrs, ["className", "slots", "children"]),
+              omit(inheritedAttrs, [
+                "slots",
+                "children",
+                "className",
+                ...submitAttrKeys,
+              ]),
             )
           : pick(inheritedAttrs, ["style"])),
       },

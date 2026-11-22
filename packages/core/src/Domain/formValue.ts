@@ -1,9 +1,10 @@
 // ** External Imports
-import { isArray, isNil, padStart } from "es-toolkit/compat";
+import { isArray, isNil, isString, padStart } from "es-toolkit/compat";
 
 // ** Local Imports
 import type { DateAdapter } from "@/Adapters/date";
 import type { CalendarGranularity } from "@/Domain/date";
+import type { RichTextValue } from "@/Domain/richText";
 
 /**
  * A value, a list of values (multiple / range), or nothing.
@@ -142,4 +143,18 @@ export function toDateTimeFormValues<TDate>(
 
     return `${day}T${formatTimePart(adapter, date, options)}`;
   });
+}
+
+/**
+ * Serializes a rich-text document for a native form: HTML as is, JSON
+ * documents as a JSON string. Nothing is submitted while there is no value.
+ */
+export function toRichTextFormValues(
+  value: null | undefined | RichTextValue,
+): string[] {
+  if (isNil(value)) {
+    return [];
+  }
+
+  return [isString(value) ? value : JSON.stringify(value)];
 }

@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil, omit } from "es-toolkit/compat";
+import { get, isNil, omit, pickBy } from "es-toolkit/compat";
 import {
   computed,
   onBeforeUnmount,
@@ -7,7 +7,6 @@ import {
   useAttrs,
   useSlots,
   watch,
-  type HTMLAttributes,
   type Ref,
   type SetupContext,
 } from "vue";
@@ -18,6 +17,7 @@ import {
   RICH_TEXT_TOOL_ICONS,
   RICH_TEXT_TOOL_LABELS,
   richTextValuesEqual,
+  toRichTextFormValues,
   type RichTextFormat,
   type RichTextTool,
   type RichTextValue,
@@ -49,6 +49,7 @@ import type {
   RichTextEditorOwnProps,
 } from "@/Components/RichTextEditor/richTextEditor.types";
 import {
+  callListener,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -134,13 +135,14 @@ export function useRichTextEditor(
     return formFieldSplit.value.inheritedAttrs;
   });
 
+  /**
+   * `aria-*` attrs stay off the root (`attrsTarget: "root"`) and land on the
+   * editable instead.
+   */
   const editableAria = computed(() => {
-    const inherited = formFieldInherited.value as HTMLAttributes;
-
-    return {
-      ariaLabel: inherited["aria-label"],
-      ariaLabelledBy: inherited["aria-labelledby"],
-    };
+    return pickBy(formFieldInherited.value, (_value, key) => {
+      return key.startsWith("aria-");
+    });
   });
 
   const formFieldOnlyCustom = computed(() => {
@@ -230,7 +232,8 @@ export function useRichTextEditor(
 
   const formField = useFormField(
     () => ({
-      ...formFieldInherited.value,
+      // Focus does not bubble out of the editable, so these go to the editor.
+      ...omit(formFieldInherited.value, ["onFocus", "onBlur"]),
       ...formFieldCustom.value,
       classes: mergedClasses.value,
       customProps: formFieldOnlyCustom.value,
@@ -247,6 +250,9 @@ export function useRichTextEditor(
       attrsTarget: "root",
       control: () => "textarea",
       componentName: "RichTextEditor",
+      formValues: () => {
+        return toRichTextFormValues(model.value);
+      },
     },
   );
 
@@ -388,14 +394,20 @@ export function useRichTextEditor(
       id: formField.controlId.value,
       ariaReadonly: isReadOnly.value,
       onSelectionChange: bumpSelection,
+      ariaAttributes: editableAria.value,
       disabled: formField.isDisabled.value,
       placeholder: rteOnly.value.placeholder,
       ariaDisabled: formField.isDisabled.value,
       ariaInvalid: formField.invalidated.value,
-      ...editableAria.value,
       ariaDescribedBy: formField.ariaDescribedBy.value,
       onChange: (next) => {
         model.value = next;
+      },
+      onBlur: (event) => {
+        callListener(get(formFieldInherited.value, "onBlur"), event);
+      },
+      onFocus: (event) => {
+        callListener(get(formFieldInherited.value, "onFocus"), event);
       },
     });
   }
@@ -446,9 +458,9 @@ export function useRichTextEditor(
     ],
     () => {
       handleRef.value?.setA11y({
-        ...editableAria.value,
         id: formField.controlId.value,
         ariaReadonly: isReadOnly.value,
+        ariaAttributes: editableAria.value,
         placeholder: rteOnly.value.placeholder,
         ariaDisabled: formField.isDisabled.value,
         ariaInvalid: formField.invalidated.value,
