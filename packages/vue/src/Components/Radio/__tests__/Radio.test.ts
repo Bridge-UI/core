@@ -170,3 +170,21 @@ test("it should apply class and style to the root, not the radio input", () => {
   expect(root.element.contains(control.element)).toBe(true);
   expect(root.attributes("style")).toContain("width: 240px");
 });
+
+test("it should not render FormControl props as attributes on the radio input", () => {
+  const wrapper = mount(Radio, {
+    props: {
+      value: "a",
+      error: true,
+      endLabel: "Accept",
+      description: "Helper",
+    },
+  });
+
+  const control = wrapper.find('input[type="radio"]');
+
+  expect(control.attributes("error")).toBeUndefined();
+  expect(control.attributes("endlabel")).toBeUndefined();
+  expect(control.attributes("description")).toBeUndefined();
+  expect(control.attributes("hideerrormessage")).toBeUndefined();
+});
