@@ -119,6 +119,10 @@ Replaces Cancel / Apply on the nested picker. `apply()` commits and closes; `can
 | `modelValue`        | `DatePickerModel`                  | —       | Bound with `v-model`.                 |
 | `update:modelValue` | `(value: DatePickerModel) => void` | —       | Emitted when `v-model` should update. |
 
+### Form submission
+
+Pass `name` (and optionally `form`) to submit the field with a native `<form>`. The visible input shows display text, so the value goes through hidden inputs instead: `YYYY-MM-DD` per date (`YYYY-MM` / `YYYY` with `granularity` `month` / `year`), read in `timeZone`. `multiple` and `range` send one entry per date. Nothing is sent while the field is empty or `disabled`.
+
 ### Inherited from FormField
 
 See [FormField](./FormField.md).

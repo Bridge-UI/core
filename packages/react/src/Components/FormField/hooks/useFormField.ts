@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, omit, omitBy, pick } from "es-toolkit/compat";
+import { get, isNil, omit, omitBy, pick } from "es-toolkit/compat";
 import type { InputHTMLAttributes } from "react";
 import { useId, useMemo } from "react";
 
@@ -85,6 +85,14 @@ export type FormFieldOptions = {
    * @default "input"
    */
   control?: () => string | undefined;
+
+  /**
+   * Values a native `<form>` submits for this field, for fields whose visible
+   * control shows display text (Select labels, formatted dates) instead of the
+   * value. When set, `name` / `form` move off the control onto one hidden
+   * input per entry; an empty list submits nothing.
+   */
+  formValues?: () => readonly string[];
 
   /**
    * When the control is a `<textarea>`, use compact TextField-like sizing tokens.
@@ -191,12 +199,15 @@ export function useFormField(
 
   const attrsOnRoot = options.attrsTarget === "root";
 
+  const submitsHiddenInputs = !isNil(options.formValues);
+
   const inputInheritedAttrs = derived(() => {
     return omit(inheritedAttrs, [
       "style",
       "slots",
       "children",
       "className",
+      ...(submitsHiddenInputs ? ["form", "name"] : []),
     ]) as InputHTMLAttributes<HTMLInputElement>;
   });
 
@@ -472,6 +483,27 @@ export function useFormField(
     );
   });
 
+  const hiddenInputBinds = derived(
+    (): InputHTMLAttributes<HTMLInputElement>[] => {
+      const { name, form } =
+        inheritedAttrs as InputHTMLAttributes<HTMLInputElement>;
+
+      if (!submitsHiddenInputs || !name) {
+        return [];
+      }
+
+      return (options.formValues?.() ?? []).map((value) => {
+        return {
+          name,
+          form,
+          value,
+          type: "hidden",
+          disabled: isDisabled || undefined,
+        };
+      });
+    },
+  );
+
   const fieldLabelProps = derived((): LabelProps => {
     return mergeNestedComponentProps(customProps?.label, {
       size: merged.size,
@@ -694,6 +726,7 @@ export function useFormField(
     stackedBodyBind,
     fieldCornerProps,
     hasInsetLabelRow,
+    hiddenInputBinds,
     insetLabelRowBind,
     stackedInputRowBind,
     showErrorMessageRow,

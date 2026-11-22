@@ -465,8 +465,8 @@ test("it should forward extra HTML props only to the combobox input", () => {
 
   expect(tagged).toHaveLength(1);
   expect(tagged[0]).toBe(control);
+  expect(control?.getAttribute("name")).toBeNull();
   expect(control?.getAttribute("id")).toBe("field-attrs");
-  expect(control?.getAttribute("name")).toBe("field-attrs");
   expect(container.querySelectorAll("#field-attrs")).toHaveLength(1);
   expect(control?.getAttribute("aria-describedby")).toBe("field-help");
 });
@@ -524,4 +524,47 @@ test("it should call consumer keyboard and input handlers on the combobox", asyn
 
   expect(onInput).toHaveBeenCalledTimes(1);
   expect(onKeyDown).toHaveBeenCalledTimes(1);
+});
+
+function submittedValues(form: null | HTMLFormElement, name: string) {
+  return new FormData(form ?? undefined).getAll(name);
+}
+
+test("it should submit the selected values through hidden inputs", () => {
+  const { container } = render(
+    <form>
+      <Select
+        multiple
+        name="fruits"
+        options={options}
+        aria-label="Fruit"
+        value={["apple", "cherry"]}
+      />
+    </form>,
+  );
+
+  const form = container.querySelector("form");
+
+  expect(screen.getByRole("combobox").getAttribute("name")).toBeNull();
+  expect(submittedValues(form, "fruits")).toEqual(["apple", "cherry"]);
+});
+
+test("it should not submit a disabled or empty Select", () => {
+  const { container } = render(
+    <form>
+      <Select name="empty" options={options} aria-label="Empty" />
+      <Select
+        disabled
+        value="apple"
+        name="disabled"
+        options={options}
+        aria-label="Disabled"
+      />
+    </form>,
+  );
+
+  const form = container.querySelector("form");
+
+  expect(submittedValues(form, "empty")).toEqual([]);
+  expect(submittedValues(form, "disabled")).toEqual([]);
 });

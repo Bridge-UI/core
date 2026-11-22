@@ -207,6 +207,10 @@ Set `components.Listbox.defaultProps.matchWidth` on `BridgeUIProvider` to apply 
 | `value`    | `SelectModel \| null`          | —       | The selected value (controlled). Use with `onChange` for controlled state. |
 | `onChange` | `(value: SelectModel) => void` | —       | Called when the selection changes.                                         |
 
+### Form submission
+
+Pass `name` (and optionally `form`) to submit the field with a native `<form>`. The visible input shows display text, so the value goes through hidden inputs instead: one entry per selected value (several with `multiple`), not the visible label. Nothing is sent while the field is empty or `disabled`.
+
 ### Inherited from FormField
 
 See [FormField](./FormField.md) (building-block chrome). Field tokens live on `components.Autocomplete` (`size`, `color`, `rounded`, `variant`, …). Dropdown option tokens live on `components.Listbox`.

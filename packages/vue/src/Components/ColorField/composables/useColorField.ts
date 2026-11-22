@@ -230,6 +230,7 @@ export function useColorField(
     },
     {
       componentName: "ColorField",
+      formValues: () => (modelValue.value ? [modelValue.value] : []),
     },
   );
 

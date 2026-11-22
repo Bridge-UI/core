@@ -69,6 +69,10 @@ The input is read-only by default (picker only). Set `editable` to unlock typing
 | `modelValue`        | `TimeRangeValue \| null`                  | —       | Bound with `v-model`.                 |
 | `update:modelValue` | `(value: TimeRangeValue \| null) => void` | —       | Emitted when `v-model` should update. |
 
+### Form submission
+
+Pass `name` (and optionally `form`) to submit the field with a native `<form>`. The visible input shows display text, so the value goes through hidden inputs instead: two entries, start then end, as `HH:mm` (`:ss` with `showSeconds`), read in `timeZone`. Nothing is sent while the field is empty or `disabled`.
+
 ### Inherited from FormField
 
 See [FormField](./FormField.md).

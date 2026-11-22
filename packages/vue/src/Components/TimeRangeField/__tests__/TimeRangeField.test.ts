@@ -150,8 +150,8 @@ test("it should forward fallthrough attrs only to the input", () => {
 
   expect(tagged).toHaveLength(1);
   expect(tagged[0]?.element).toBe(control.element);
+  expect(control.attributes("name")).toBeUndefined();
   expect(control.attributes("id")).toBe("field-attrs");
-  expect(control.attributes("name")).toBe("field-attrs");
   expect(wrapper.findAll("#field-attrs")).toHaveLength(1);
   expect(control.attributes("aria-describedby")).toBe("field-help");
 });

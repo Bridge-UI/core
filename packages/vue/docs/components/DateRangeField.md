@@ -82,6 +82,10 @@ The input is read-only by default (picker only). Set `editable` to unlock typing
 | `modelValue`        | `DateRangeValue \| null`                  | —       | Bound with `v-model`.                 |
 | `update:modelValue` | `(value: DateRangeValue \| null) => void` | —       | Emitted when `v-model` should update. |
 
+### Form submission
+
+Pass `name` (and optionally `form`) to submit the field with a native `<form>`. The visible input shows display text, so the value goes through hidden inputs instead: two entries, start then end, as `YYYY-MM-DD` (`YYYY-MM` / `YYYY` with `granularity` `month` / `year`), read in `timeZone`. Nothing is sent while the field is empty or `disabled`.
+
 ### Inherited from FormField
 
 See [FormField](./FormField.md).
