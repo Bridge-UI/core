@@ -44,6 +44,16 @@ export type TiptapMountOptions = {
   ariaInvalid?: boolean;
 
   /**
+   * `aria-label` on the editable root.
+   */
+  ariaLabel?: string;
+
+  /**
+   * `aria-labelledby` on the editable root.
+   */
+  ariaLabelledBy?: string;
+
+  /**
    * `aria-readonly` on the editable root.
    */
   ariaReadonly?: boolean;

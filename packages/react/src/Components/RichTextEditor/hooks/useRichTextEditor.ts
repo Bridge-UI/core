@@ -201,6 +201,10 @@ export function useRichTextEditor(props: RichTextEditorProps) {
     return get(classes, formFieldCustom.size ?? rteMerged.size ?? "md");
   });
 
+  const editableAria = formFieldInherited as HTMLAttributes<HTMLDivElement>;
+  const ariaLabel = editableAria["aria-label"];
+  const ariaLabelledBy = editableAria["aria-labelledby"];
+
   const formField = useFormField(
     {
       ...formFieldInherited,
@@ -296,7 +300,9 @@ export function useRichTextEditor(props: RichTextEditorProps) {
 
     const handle = mountTiptapEditor({
       format,
+      ariaLabel,
       element: host,
+      ariaLabelledBy,
       value: valueProp,
       readOnly: isReadOnly,
       id: formField.controlId,
@@ -345,6 +351,8 @@ export function useRichTextEditor(props: RichTextEditorProps) {
 
   useEffect(() => {
     handleRef.current?.setA11y({
+      ariaLabel,
+      ariaLabelledBy,
       id: formField.controlId,
       ariaReadonly: isReadOnly,
       placeholder: rteOnly.placeholder,
@@ -353,10 +361,12 @@ export function useRichTextEditor(props: RichTextEditorProps) {
       ariaDescribedBy: formField.ariaDescribedBy,
     });
   }, [
+    ariaLabel,
     isReadOnly,
+    ariaLabelledBy,
     formField.controlId,
-    formField.isDisabled,
     rteOnly.placeholder,
+    formField.isDisabled,
     formField.invalidated,
     formField.ariaDescribedBy,
   ]);

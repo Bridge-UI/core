@@ -69,4 +69,21 @@ describe("applyRichTextEditableA11y", () => {
 
     expect(editable.getAttribute("aria-invalid")).toBeNull();
   });
+
+  test("it should set and clear aria-label and aria-labelledby", () => {
+    const editable = document.createElement("div");
+
+    applyRichTextEditableA11y(editable, {
+      ariaLabel: "Bio",
+      ariaLabelledBy: "bio-heading",
+    });
+
+    expect(editable.getAttribute("aria-label")).toBe("Bio");
+    expect(editable.getAttribute("aria-labelledby")).toBe("bio-heading");
+
+    applyRichTextEditableA11y(editable, {});
+
+    expect(editable.getAttribute("aria-label")).toBeNull();
+    expect(editable.getAttribute("aria-labelledby")).toBeNull();
+  });
 });

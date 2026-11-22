@@ -75,6 +75,16 @@ export type RichTextA11yOptions = {
   ariaInvalid?: boolean;
 
   /**
+   * `aria-label` on the editable root.
+   */
+  ariaLabel?: string;
+
+  /**
+   * `aria-labelledby` on the editable root.
+   */
+  ariaLabelledBy?: string;
+
+  /**
    * `aria-readonly` on the editable root.
    */
   ariaReadonly?: boolean;
@@ -176,10 +186,23 @@ export function applyRichTextEditableA11y(
     editable.removeAttribute("aria-invalid");
   }
 
-  if (!isNil(options.ariaDescribedBy) && options.ariaDescribedBy.length > 0) {
-    editable.setAttribute("aria-describedby", options.ariaDescribedBy);
+  setOptionalAttribute(editable, "aria-label", options.ariaLabel);
+  setOptionalAttribute(editable, "aria-labelledby", options.ariaLabelledBy);
+  setOptionalAttribute(editable, "aria-describedby", options.ariaDescribedBy);
+}
+
+/**
+ * Sets `name` when `value` is non-empty, otherwise removes it.
+ */
+function setOptionalAttribute(
+  element: HTMLElement,
+  name: string,
+  value: string | undefined,
+): void {
+  if (!isNil(value) && value.length > 0) {
+    element.setAttribute(name, value);
   } else {
-    editable.removeAttribute("aria-describedby");
+    element.removeAttribute(name);
   }
 }
 

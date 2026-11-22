@@ -7,6 +7,7 @@ import {
   useAttrs,
   useSlots,
   watch,
+  type HTMLAttributes,
   type Ref,
   type SetupContext,
 } from "vue";
@@ -131,6 +132,15 @@ export function useRichTextEditor(
 
   const formFieldInherited = computed(() => {
     return formFieldSplit.value.inheritedAttrs;
+  });
+
+  const editableAria = computed(() => {
+    const inherited = formFieldInherited.value as HTMLAttributes;
+
+    return {
+      ariaLabel: inherited["aria-label"],
+      ariaLabelledBy: inherited["aria-labelledby"],
+    };
   });
 
   const formFieldOnlyCustom = computed(() => {
@@ -382,6 +392,7 @@ export function useRichTextEditor(
       placeholder: rteOnly.value.placeholder,
       ariaDisabled: formField.isDisabled.value,
       ariaInvalid: formField.invalidated.value,
+      ...editableAria.value,
       ariaDescribedBy: formField.ariaDescribedBy.value,
       onChange: (next) => {
         model.value = next;
@@ -426,6 +437,7 @@ export function useRichTextEditor(
   watch(
     [
       isReadOnly,
+      editableAria,
       () => rteOnly.value.placeholder,
       () => formField.controlId.value,
       () => formField.isDisabled.value,
@@ -434,6 +446,7 @@ export function useRichTextEditor(
     ],
     () => {
       handleRef.value?.setA11y({
+        ...editableAria.value,
         id: formField.controlId.value,
         ariaReadonly: isReadOnly.value,
         placeholder: rteOnly.value.placeholder,
