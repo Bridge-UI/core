@@ -579,3 +579,23 @@ test("it should use controlId as the combobox id", () => {
   expect(combobox.attributes("controlid")).toBeUndefined();
   expect(wrapper.find('label[for="status-control"]').exists()).toBe(true);
 });
+
+test("it should call consumer keydown and input listeners on the combobox", async () => {
+  const onInput = vi.fn();
+  const onKeydown = vi.fn();
+
+  const wrapper = mountSelect({
+    props: { searchable: true },
+    attrs: { onInput, onKeydown },
+  });
+
+  const combobox = wrapper.find('input[role="combobox"]');
+
+  await combobox.trigger("keydown", { key: "ArrowDown" });
+  await combobox.setValue("pe");
+  await flushPromises();
+
+  expect(onInput).toHaveBeenCalledTimes(1);
+  expect(onKeydown).toHaveBeenCalledTimes(1);
+  expect(combobox.attributes("aria-expanded")).toBe("true");
+});
