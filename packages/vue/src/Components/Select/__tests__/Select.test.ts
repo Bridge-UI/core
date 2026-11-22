@@ -601,6 +601,23 @@ test("it should call consumer keydown and input listeners on the combobox", asyn
   expect(combobox.attributes("aria-expanded")).toBe("true");
 });
 
+test("it should call every keydown listener when several are attached", async () => {
+  const first = vi.fn();
+  const second = vi.fn();
+
+  const wrapper = mountSelect({
+    attrs: { onKeydown: [first, second] },
+  });
+
+  const combobox = wrapper.find('input[role="combobox"]');
+
+  await combobox.trigger("keydown", { key: "ArrowDown" });
+
+  expect(first).toHaveBeenCalledTimes(1);
+  expect(second).toHaveBeenCalledTimes(1);
+  expect(combobox.attributes("aria-expanded")).toBe("true");
+});
+
 function hiddenValues(wrapper: ReturnType<typeof mount>, name: string) {
   return wrapper
     .findAll(`input[type="hidden"][name="${name}"]`)

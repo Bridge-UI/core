@@ -32,6 +32,7 @@ import {
 } from "@/Components/FormField/composables/useFormField";
 import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
 import {
+  callListener,
   hasNamedSlot,
   mergePartBind,
   resolveFieldAdornmentIconSize,
@@ -310,11 +311,11 @@ export function useDateTimeField(
           ? formField.inputBind.value.readonly
           : true,
         onFocus: (event: FocusEvent) => {
-          formField.inputBind.value.onFocus?.(event);
+          callListener(formField.inputBind.value.onFocus, event);
           handleOpenChange(true);
         },
         onKeydown: (event: KeyboardEvent) => {
-          formField.inputBind.value.onKeydown?.(event);
+          callListener(formField.inputBind.value.onKeydown, event);
 
           if (event.key === "Escape") {
             // Closing the picker handles the key: an overlay this field sits
