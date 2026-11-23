@@ -15,6 +15,7 @@ import {
   isTimeRangeValue,
   resolveFieldOverlay,
   resolveFieldPickerClassName,
+  toTimeFormValues,
   type TimeRangeValue,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
@@ -205,6 +206,12 @@ export function useTimeRangeField(
     },
     {
       componentName: "TimeRangeField",
+      formValues: () => {
+        return toTimeFormValues(adapter.value, modelValue.value, {
+          timeZone: timeZone.value,
+          showSeconds: timeOnly.value.showSeconds,
+        });
+      },
     },
   );
 

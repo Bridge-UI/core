@@ -961,6 +961,7 @@ export function useAutocomplete(
     {
       likeInput: () => multiple,
       componentName: "Autocomplete",
+      formValues: () => selectedValues.map(String),
       control: () => (multiple ? "textarea" : "input"),
     },
   );

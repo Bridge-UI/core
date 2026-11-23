@@ -86,8 +86,8 @@ test("it should forward extra HTML props only to the input", () => {
 
   expect(tagged).toHaveLength(1);
   expect(tagged[0]).toBe(control);
+  expect(control?.getAttribute("name")).toBeNull();
   expect(control?.getAttribute("id")).toBe("field-attrs");
-  expect(control?.getAttribute("name")).toBe("field-attrs");
   expect(container.querySelectorAll("#field-attrs")).toHaveLength(1);
   expect(control?.getAttribute("aria-describedby")).toBe("field-help");
 });

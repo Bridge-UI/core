@@ -351,3 +351,22 @@ test("it should call focus and blur listeners when the editable focuses", async 
 
   wrapper.unmount();
 });
+
+test("it should submit the document through a hidden input", async () => {
+  const wrapper = mount(RichTextEditor, {
+    props: { modelValue: "<p>Hi</p>" },
+    attrs: { name: "bio", "data-test": "field-attrs" },
+  });
+
+  await flushPromises();
+
+  const hidden = wrapper.find('input[type="hidden"][name="bio"]');
+
+  expect(hidden.exists()).toBe(true);
+  expect((hidden.element as HTMLInputElement).value).toBe("<p>Hi</p>");
+  expect(wrapper.find('[data-test="field-attrs"]').attributes("name")).toBe(
+    undefined,
+  );
+
+  wrapper.unmount();
+});

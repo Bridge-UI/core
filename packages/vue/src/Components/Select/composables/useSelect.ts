@@ -501,6 +501,7 @@ export function useSelect(
     {
       componentName: "Select",
       likeInput: () => multiple.value,
+      formValues: () => selectedValues.value.map(String),
       control: () => (multiple.value ? "textarea" : "input"),
     },
   );

@@ -408,8 +408,8 @@ test("it should forward extra HTML props only to the combobox input", () => {
 
   expect(tagged).toHaveLength(1);
   expect(tagged[0]).toBe(control);
+  expect(control?.getAttribute("name")).toBeNull();
   expect(control?.getAttribute("id")).toBe("field-attrs");
-  expect(control?.getAttribute("name")).toBe("field-attrs");
   expect(container.querySelectorAll("#field-attrs")).toHaveLength(1);
   expect(control?.getAttribute("aria-describedby")).toBe("field-help");
 });
@@ -456,4 +456,26 @@ test("it should call consumer keyboard and input handlers on the combobox", asyn
 
   expect(onInput).toHaveBeenCalledTimes(1);
   expect(onKeyDown).toHaveBeenCalledTimes(1);
+});
+
+function submittedValues(form: null | HTMLFormElement, name: string) {
+  return new FormData(form ?? undefined).getAll(name);
+}
+
+test("it should submit the selected value through a hidden input", () => {
+  const { container } = render(
+    <form>
+      <Autocomplete
+        name="fruit"
+        value="banana"
+        options={options}
+        aria-label="Fruit"
+      />
+    </form>,
+  );
+
+  const form = container.querySelector("form");
+
+  expect(submittedValues(form, "fruit")).toEqual(["banana"]);
+  expect(screen.getByRole("combobox").getAttribute("name")).toBeNull();
 });

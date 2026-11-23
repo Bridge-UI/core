@@ -312,3 +312,17 @@ test("it should forward extra HTML props to the root once", () => {
   expect(tagged[0]?.classList.contains("field-root")).toBe(true);
   expect(tagged[0]?.querySelector('[role="textbox"]')).not.toBeNull();
 });
+
+test("it should submit the document through a hidden input", () => {
+  const { container } = render(
+    <RichTextEditor name="bio" value="<p>Hi</p>" data-test="field-attrs" />,
+  );
+
+  const root = container.querySelector('[data-test="field-attrs"]');
+  const hidden = container.querySelector<HTMLInputElement>(
+    'input[type="hidden"][name="bio"]',
+  );
+
+  expect(hidden?.value).toBe("<p>Hi</p>");
+  expect(root?.getAttribute("name")).toBeNull();
+});

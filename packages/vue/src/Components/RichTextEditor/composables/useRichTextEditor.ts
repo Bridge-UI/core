@@ -17,6 +17,7 @@ import {
   RICH_TEXT_TOOL_ICONS,
   RICH_TEXT_TOOL_LABELS,
   richTextValuesEqual,
+  toRichTextFormValues,
   type RichTextFormat,
   type RichTextTool,
   type RichTextValue,
@@ -239,6 +240,9 @@ export function useRichTextEditor(
       attrsTarget: "root",
       control: () => "textarea",
       componentName: "RichTextEditor",
+      formValues: () => {
+        return toRichTextFormValues(model.value);
+      },
     },
   );
 
