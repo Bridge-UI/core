@@ -482,6 +482,25 @@ test("it should apply class and style to the root, not the combobox input", () =
   expect(root.attributes("style")).toContain("width: 240px");
 });
 
+test("it should call consumer keydown and input listeners on the combobox", async () => {
+  const onInput = vi.fn();
+  const onKeydown = vi.fn();
+
+  const wrapper = mountAutocomplete({
+    attrs: { onInput, onKeydown },
+  });
+
+  const combobox = wrapper.find('input[role="combobox"]');
+
+  await combobox.trigger("keydown", { key: "ArrowDown" });
+  await combobox.setValue("pe");
+  await flushPromises();
+
+  expect(onInput).toHaveBeenCalledTimes(1);
+  expect(onKeydown).toHaveBeenCalledTimes(1);
+  expect(combobox.attributes("aria-expanded")).toBe("true");
+});
+
 function hiddenValues(wrapper: ReturnType<typeof mount>, name: string) {
   return wrapper
     .findAll(`input[type="hidden"][name="${name}"]`)

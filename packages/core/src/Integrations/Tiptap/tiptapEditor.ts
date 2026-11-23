@@ -69,9 +69,19 @@ export type TiptapMountOptions = {
   id?: string;
 
   /**
+   * Called when the editable loses focus.
+   */
+  onBlur?: (event: FocusEvent) => void;
+
+  /**
    * Called whenever the document changes.
    */
   onChange: (value: RichTextValue) => void;
+
+  /**
+   * Called when the editable receives focus.
+   */
+  onFocus?: (event: FocusEvent) => void;
 
   /**
    * Called when the selection changes (toolbar active state).
@@ -286,6 +296,12 @@ export function mountTiptapEditor(
     autofocus: false,
     element: options.element,
     editable: !disabled && !readOnly,
+    onBlur: ({ event }) => {
+      options.onBlur?.(event);
+    },
+    onFocus: ({ event }) => {
+      options.onFocus?.(event);
+    },
     onSelectionUpdate: () => {
       options.onSelectionChange?.();
     },

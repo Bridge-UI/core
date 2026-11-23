@@ -432,6 +432,32 @@ test("it should apply className and style to the root, not the combobox input", 
   expect(control?.classList.contains("field-root")).toBe(false);
 });
 
+test("it should call consumer keyboard and input handlers on the combobox", async () => {
+  const onInput = vi.fn();
+  const onKeyDown = vi.fn();
+
+  render(
+    <Autocomplete
+      options={options}
+      onInput={onInput}
+      aria-label="Fruit"
+      onKeyDown={onKeyDown}
+    />,
+  );
+
+  const combobox = screen.getByRole("combobox");
+
+  fireEvent.keyDown(combobox, { key: "ArrowDown" });
+  fireEvent.input(combobox, { target: { value: "ban" } });
+
+  await waitFor(() => {
+    expect(combobox.getAttribute("aria-expanded")).toBe("true");
+  });
+
+  expect(onInput).toHaveBeenCalledTimes(1);
+  expect(onKeyDown).toHaveBeenCalledTimes(1);
+});
+
 function submittedValues(form: null | HTMLFormElement, name: string) {
   return new FormData(form ?? undefined).getAll(name);
 }
