@@ -69,6 +69,10 @@ Install `@tiptap/core`, `@tiptap/pm`, `@tiptap/starter-kit`, `@tiptap/extension-
 | `tools`        | `RichTextTool[]`            | all default tools | Which toolbar actions to show.                         |
 | `customProps`  | `RichTextEditorCustomProps` | —                 | Extra props for `content`, `toolbar`, `toolbarButton`. |
 
+### Form submission
+
+Pass `name` (and optionally `form`) to submit the field with a native `<form>`. The editor is not a native control, so the document goes through a hidden input: HTML as is, or the JSON document as a string with `format="json"`. Nothing is sent while there is no value or the field is `disabled`.
+
 ### Inherited from FormField
 
 Flat FormField props (`label`, `description`, `error`, `errorMessage`, `size`, `color`, `rounded`, `variant`, …).

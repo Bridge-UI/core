@@ -123,8 +123,8 @@ test("it should forward extra HTML props only to the input", () => {
 
   expect(tagged).toHaveLength(1);
   expect(tagged[0]).toBe(control);
+  expect(control?.getAttribute("name")).toBeNull();
   expect(control?.getAttribute("id")).toBe("field-attrs");
-  expect(control?.getAttribute("name")).toBe("field-attrs");
   expect(container.querySelectorAll("#field-attrs")).toHaveLength(1);
   expect(control?.getAttribute("aria-describedby")).toBe("field-help");
 });
@@ -141,4 +141,25 @@ test("it should apply className and style to the root, not the input", () => {
   expect(root?.contains(control)).toBe(true);
   expect(control?.getAttribute("style")).toBeNull();
   expect(control?.classList.contains("field-root")).toBe(false);
+});
+
+function submittedValues(form: null | HTMLFormElement, name: string) {
+  return new FormData(form ?? undefined).getAll(name);
+}
+
+test("it should submit the time as HH:mm:ss through a hidden input", () => {
+  const { container } = render(
+    <form>
+      <TimeField
+        name="at"
+        showSeconds
+        timeZone="UTC"
+        value={new Date("2024-03-05T09:07:03Z")}
+      />
+    </form>,
+  );
+
+  const form = container.querySelector("form");
+
+  expect(submittedValues(form, "at")).toEqual(["09:07:03"]);
 });

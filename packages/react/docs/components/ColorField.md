@@ -88,6 +88,10 @@ The input is read-only by default (picker only). Set `editable` to unlock typing
 | `value`    | `string \| null`                  | —       | Controlled value. Use with `onChange`. |
 | `onChange` | `(value: string \| null) => void` | —       | Called when the value changes.         |
 
+### Form submission
+
+Pass `name` (and optionally `form`) to submit the field with a native `<form>`. The visible input shows display text, so the value goes through hidden inputs instead: the color value itself, not the text formatted for display. Nothing is sent while the field is empty or `disabled`.
+
 ### Inherited from FormField
 
 See [FormField](./FormField.md).
