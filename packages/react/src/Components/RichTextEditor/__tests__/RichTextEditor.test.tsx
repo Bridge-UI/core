@@ -352,3 +352,17 @@ test("it should put every consumer aria attr on the editable", () => {
   expect(textbox.getAttribute("aria-required")).toBe("true");
   expect(textbox.getAttribute("aria-errormessage")).toBe("bio-error");
 });
+
+test("it should submit the document through a hidden input", () => {
+  const { container } = render(
+    <RichTextEditor name="bio" value="<p>Hi</p>" data-test="field-attrs" />,
+  );
+
+  const root = container.querySelector('[data-test="field-attrs"]');
+  const hidden = container.querySelector<HTMLInputElement>(
+    'input[type="hidden"][name="bio"]',
+  );
+
+  expect(hidden?.value).toBe("<p>Hi</p>");
+  expect(root?.getAttribute("name")).toBeNull();
+});

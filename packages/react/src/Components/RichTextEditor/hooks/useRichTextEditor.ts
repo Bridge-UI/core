@@ -17,8 +17,10 @@ import {
   RICH_TEXT_TOOL_ICONS,
   RICH_TEXT_TOOL_LABELS,
   richTextValuesEqual,
+  toRichTextFormValues,
   type RichTextFormat,
   type RichTextTool,
+  type RichTextValue,
 } from "@bridge-ui/core/Domain";
 import {
   mountTiptapEditor,
@@ -86,6 +88,7 @@ export function useRichTextEditor(props: RichTextEditorProps) {
   const [, setSelectionTick] = useState(0);
   const onChangeRef = useRef(props.onChange);
   const [linkHref, setLinkHref] = useState("");
+  const [typedValue, setTypedValue] = useState<RichTextValue>();
   const hostRef = useRef<null | HTMLDivElement>(null);
   const surfaceRef = useRef<null | HTMLDivElement>(null);
   const handleRef = useRef<null | TiptapEditorHandle>(null);
@@ -229,6 +232,12 @@ export function useRichTextEditor(props: RichTextEditorProps) {
       attrsTarget: "root",
       control: () => "textarea",
       componentName: "RichTextEditor",
+      formValues: () => {
+        // Uncontrolled editors only hold the document in TipTap.
+        return toRichTextFormValues(
+          valueProp === undefined ? typedValue : valueProp,
+        );
+      },
     },
   );
 
@@ -317,6 +326,7 @@ export function useRichTextEditor(props: RichTextEditorProps) {
       ariaInvalid: formField.invalidated,
       ariaDescribedBy: formField.ariaDescribedBy,
       onChange: (next) => {
+        setTypedValue(next);
         onChangeRef.current?.(next);
       },
     });

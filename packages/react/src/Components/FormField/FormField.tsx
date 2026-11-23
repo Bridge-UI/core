@@ -29,7 +29,17 @@ function FormField(props: FormFieldComponentProps) {
 
   const Shell = get(shells, variant, OutlinedFormField);
 
-  return createElement(Shell, { api }, props.children);
+  return createElement(
+    Shell,
+    { api },
+    <>
+      {props.children}
+
+      {api.hiddenInputBinds.map((bind, index) => (
+        <input key={index} {...bind} />
+      ))}
+    </>,
+  );
 }
 
 export default FormField;

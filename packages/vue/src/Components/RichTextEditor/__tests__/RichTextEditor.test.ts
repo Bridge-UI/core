@@ -377,3 +377,22 @@ test("it should put every consumer aria attr on the editable", async () => {
 
   wrapper.unmount();
 });
+
+test("it should submit the document through a hidden input", async () => {
+  const wrapper = mount(RichTextEditor, {
+    props: { modelValue: "<p>Hi</p>" },
+    attrs: { name: "bio", "data-test": "field-attrs" },
+  });
+
+  await flushPromises();
+
+  const hidden = wrapper.find('input[type="hidden"][name="bio"]');
+
+  expect(hidden.exists()).toBe(true);
+  expect((hidden.element as HTMLInputElement).value).toBe("<p>Hi</p>");
+  expect(wrapper.find('[data-test="field-attrs"]').attributes("name")).toBe(
+    undefined,
+  );
+
+  wrapper.unmount();
+});
