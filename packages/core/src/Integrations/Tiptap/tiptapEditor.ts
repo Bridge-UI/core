@@ -29,6 +29,13 @@ const TIPTAP_EDITABLE_CLASS = "bridge-rich-text-editable";
  */
 export type TiptapMountOptions = {
   /**
+   * Consumer `aria-*` attributes for the editable root (`aria-label`,
+   * `aria-required`, …). Bridge-managed ones (`aria-describedby`,
+   * `aria-invalid`, …) win; `null` / `undefined` remove the attribute.
+   */
+  ariaAttributes?: Record<string, unknown>;
+
+  /**
    * `aria-describedby` on the editable root.
    */
   ariaDescribedBy?: string;

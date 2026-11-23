@@ -401,3 +401,17 @@ test("it should use controlId as the input id without leaking it as an attribute
     "email-control",
   );
 });
+
+test("it should not repeat an id the consumer aria-describedby already has", () => {
+  render(
+    <TextField
+      id="field-id"
+      description="Helper"
+      aria-describedby="field-id-description field-help"
+    />,
+  );
+
+  expect(screen.getByRole("textbox").getAttribute("aria-describedby")).toBe(
+    "field-id-description field-help",
+  );
+});

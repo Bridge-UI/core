@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil, omit, pick } from "es-toolkit/compat";
+import { get, isNil, omit, omitBy, pick } from "es-toolkit/compat";
 import type { InputHTMLAttributes } from "react";
 import { useId, useMemo } from "react";
 
@@ -13,6 +13,7 @@ import {
 import {
   cn,
   getColorToken,
+  joinIdRefs,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -49,6 +50,8 @@ export type FormFieldOptions = {
    *
    * - `"input"` — the native control via `inputBind` (fields with an `<input>`).
    * - `"root"` — the field root via `rootBind` (fields without a native control).
+   *   `id` and `aria-*` stay off the root; the field forwards them to its
+   *   editable element itself (`controlId`, `ariaDescribedBy`, …).
    *
    * @default "input"
    */
@@ -138,6 +141,16 @@ type FormFieldMerged = MergeLibDefaults<
   FormFieldOwnProps,
   FormFieldLibDefaults
 >;
+
+/**
+ * Drops the attrs that name or describe the control (`id`, `aria-*`) so a
+ * root-targeted field does not duplicate them on its wrapper.
+ */
+function omitControlAttrs<T extends object>(attrs: T): Partial<T> {
+  return omitBy(attrs, (_value, key) => {
+    return key === "id" || String(key).startsWith("aria-");
+  }) as Partial<T>;
+}
 
 export function useFormField(
   props: Omit<FormFieldProps, "field">,
@@ -309,15 +322,12 @@ export function useFormField(
       ids.push(`${controlId}-error`);
     }
 
-    const inheritedDescribedBy = (
-      inheritedAttrs as InputHTMLAttributes<HTMLInputElement>
-    )["aria-describedby"];
-
-    if (inheritedDescribedBy) {
-      ids.push(inheritedDescribedBy);
-    }
-
-    return ids.length > 0 ? ids.join(" ") : undefined;
+    return joinIdRefs(
+      ...ids,
+      (inheritedAttrs as InputHTMLAttributes<HTMLInputElement>)[
+        "aria-describedby"
+      ],
+    );
   });
 
   const sizeClasses = useMemo(() => {
@@ -420,12 +430,14 @@ export function useFormField(
       {
         className: cn(inheritedAttrs.className),
         ...(attrsOnRoot
-          ? omit(inheritedAttrs, [
-              "slots",
-              "children",
-              "className",
-              ...submitAttrKeys,
-            ])
+          ? omitControlAttrs(
+              omit(inheritedAttrs, [
+                "slots",
+                "children",
+                "className",
+                ...submitAttrKeys,
+              ]),
+            )
           : pick(inheritedAttrs, ["style"])),
       },
       cn({

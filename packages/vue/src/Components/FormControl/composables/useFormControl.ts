@@ -15,6 +15,7 @@ import {
 import { labelSizeProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
+  joinIdRefs,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
@@ -168,15 +169,10 @@ export function useFormControl(
       ids.push(`${controlId.value}-error`);
     }
 
-    const inheritedDescribedBy = (split.value.inheritedAttrs as HTMLAttributes)[
-      "aria-describedby"
-    ];
-
-    if (inheritedDescribedBy) {
-      ids.push(inheritedDescribedBy);
-    }
-
-    return ids.length > 0 ? ids.join(" ") : undefined;
+    return joinIdRefs(
+      ...ids,
+      (split.value.inheritedAttrs as HTMLAttributes)["aria-describedby"],
+    );
   });
 
   const textSizeClass = computed(() => {

@@ -499,3 +499,17 @@ test("it should use controlId as the input id without leaking it as an attribute
   expect(input.attributes("controlid")).toBeUndefined();
   expect(wrapper.find('label[for="email-control"]').exists()).toBe(true);
 });
+
+test("it should not repeat an id the consumer aria-describedby already has", () => {
+  const wrapper = mount(TextField, {
+    props: { description: "Helper" },
+    attrs: {
+      id: "field-id",
+      "aria-describedby": "field-id-description field-help",
+    },
+  });
+
+  expect(wrapper.find("input").attributes("aria-describedby")).toBe(
+    "field-id-description field-help",
+  );
+});

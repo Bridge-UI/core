@@ -4,6 +4,7 @@ import clsx from "clsx";
 import {
   compact,
   find,
+  flatMap,
   get,
   isNil,
   isString,
@@ -11,6 +12,7 @@ import {
   omit,
   pick,
   reduce,
+  uniq,
 } from "es-toolkit/compat";
 import { toMerged } from "es-toolkit/object";
 import { twMerge } from "tailwind-merge";
@@ -287,6 +289,24 @@ export function adjustAutosizeTextareaHeight(
   element.style.height = "auto";
   element.style.lineHeight = "";
   element.style.height = `${element.scrollHeight}px`;
+}
+
+/**
+ * Joins space-separated ID reference lists (`aria-describedby`, …) in order,
+ * dropping empty tokens and duplicates. Returns `undefined` when nothing is left.
+ */
+export function joinIdRefs(
+  ...lists: (null | string | undefined)[]
+): string | undefined {
+  const ids = uniq(
+    compact(
+      flatMap(lists, (list) => {
+        return (list ?? "").split(/\s+/);
+      }),
+    ),
+  );
+
+  return ids.length > 0 ? ids.join(" ") : undefined;
 }
 
 /**

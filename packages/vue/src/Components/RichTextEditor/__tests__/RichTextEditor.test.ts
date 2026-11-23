@@ -330,6 +330,54 @@ test("it should forward fallthrough attrs to the root once", async () => {
   expect(tagged[0]?.find('[role="textbox"]').exists()).toBe(true);
 });
 
+test("it should keep id and aria attrs on the editable, not the root", async () => {
+  const wrapper = mount(RichTextEditor, {
+    attrs: {
+      id: "bio",
+      "aria-label": "Bio",
+      "data-test": "field-attrs",
+      "aria-describedby": "bio-help",
+      "aria-labelledby": "bio-heading",
+    },
+  });
+
+  await flushPromises();
+
+  const root = wrapper.find('[data-test="field-attrs"]');
+  const textbox = wrapper.find('[role="textbox"]');
+
+  expect(textbox.attributes("id")).toBe("bio");
+  expect(wrapper.findAll("#bio")).toHaveLength(1);
+  expect(textbox.attributes("aria-label")).toBe("Bio");
+  expect(root.attributes("aria-label")).toBeUndefined();
+  expect(root.attributes("aria-describedby")).toBeUndefined();
+  expect(textbox.attributes("aria-describedby")).toBe("bio-help");
+  expect(textbox.attributes("aria-labelledby")).toBe("bio-heading");
+
+  wrapper.unmount();
+});
+
+test("it should put every consumer aria attr on the editable", async () => {
+  const wrapper = mount(RichTextEditor, {
+    attrs: {
+      "aria-required": "true",
+      "data-test": "field-attrs",
+      "aria-errormessage": "bio-error",
+    },
+  });
+
+  await flushPromises();
+
+  const root = wrapper.find('[data-test="field-attrs"]');
+  const textbox = wrapper.find('[role="textbox"]');
+
+  expect(root.attributes("aria-required")).toBeUndefined();
+  expect(textbox.attributes("aria-required")).toBe("true");
+  expect(textbox.attributes("aria-errormessage")).toBe("bio-error");
+
+  wrapper.unmount();
+});
+
 test("it should call focus and blur listeners when the editable focuses", async () => {
   const onBlur = vi.fn();
   const onFocus = vi.fn();

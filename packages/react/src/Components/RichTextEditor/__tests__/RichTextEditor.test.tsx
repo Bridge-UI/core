@@ -313,6 +313,46 @@ test("it should forward extra HTML props to the root once", () => {
   expect(tagged[0]?.querySelector('[role="textbox"]')).not.toBeNull();
 });
 
+test("it should keep id and aria attrs on the editable, not the root", () => {
+  const { container } = render(
+    <RichTextEditor
+      id="bio"
+      aria-label="Bio"
+      data-test="field-attrs"
+      aria-describedby="bio-help"
+      aria-labelledby="bio-heading"
+    />,
+  );
+
+  const root = container.querySelector('[data-test="field-attrs"]');
+  const textbox = screen.getByRole("textbox");
+
+  expect(textbox.getAttribute("id")).toBe("bio");
+  expect(root?.getAttribute("aria-label")).toBeNull();
+  expect(textbox.getAttribute("aria-label")).toBe("Bio");
+  expect(root?.getAttribute("aria-describedby")).toBeNull();
+  expect(container.querySelectorAll("#bio")).toHaveLength(1);
+  expect(textbox.getAttribute("aria-describedby")).toBe("bio-help");
+  expect(textbox.getAttribute("aria-labelledby")).toBe("bio-heading");
+});
+
+test("it should put every consumer aria attr on the editable", () => {
+  const { container } = render(
+    <RichTextEditor
+      aria-required="true"
+      data-test="field-attrs"
+      aria-errormessage="bio-error"
+    />,
+  );
+
+  const root = container.querySelector('[data-test="field-attrs"]');
+  const textbox = screen.getByRole("textbox");
+
+  expect(root?.getAttribute("aria-required")).toBeNull();
+  expect(textbox.getAttribute("aria-required")).toBe("true");
+  expect(textbox.getAttribute("aria-errormessage")).toBe("bio-error");
+});
+
 test("it should submit the document through a hidden input", () => {
   const { container } = render(
     <RichTextEditor name="bio" value="<p>Hi</p>" data-test="field-attrs" />,

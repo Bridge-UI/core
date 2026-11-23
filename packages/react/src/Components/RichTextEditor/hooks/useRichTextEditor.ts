@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil, omit } from "es-toolkit/compat";
+import { get, isNil, omit, pickBy } from "es-toolkit/compat";
 import {
   useCallback,
   useEffect,
@@ -204,6 +204,14 @@ export function useRichTextEditor(props: RichTextEditorProps) {
     return get(classes, formFieldCustom.size ?? rteMerged.size ?? "md");
   });
 
+  // `aria-*` props stay off the root (`attrsTarget: "root"`) and land on the
+  // editable instead.
+  const ariaAttributes = pickBy(formFieldInherited, (_value, key) => {
+    return key.startsWith("aria-");
+  });
+
+  const ariaSignature = JSON.stringify(ariaAttributes);
+
   const formField = useFormField(
     {
       ...formFieldInherited,
@@ -306,6 +314,7 @@ export function useRichTextEditor(props: RichTextEditorProps) {
     const handle = mountTiptapEditor({
       format,
       element: host,
+      ariaAttributes,
       value: valueProp,
       readOnly: isReadOnly,
       id: formField.controlId,
@@ -361,12 +370,14 @@ export function useRichTextEditor(props: RichTextEditorProps) {
       ariaDisabled: formField.isDisabled,
       ariaInvalid: formField.invalidated,
       ariaDescribedBy: formField.ariaDescribedBy,
+      ariaAttributes: JSON.parse(ariaSignature) as Record<string, unknown>,
     });
   }, [
     isReadOnly,
+    ariaSignature,
     formField.controlId,
-    formField.isDisabled,
     rteOnly.placeholder,
+    formField.isDisabled,
     formField.invalidated,
     formField.ariaDescribedBy,
   ]);
