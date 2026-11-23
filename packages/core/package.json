@@ -80,11 +80,26 @@
     "dist",
     "src/utilities.css"
   ],
+  "scripts": {
+    "build": "vite build",
+    "type-check": "tsc --noEmit",
+    "test": "vitest",
+    "test:run": "vitest run"
+  },
   "dependencies": {
     "@floating-ui/dom": "^1.8.0",
     "clsx": "^2.1.1",
-    "es-toolkit": "^1.52.0",
-    "tailwind-merge": "^3.7.0"
+    "es-toolkit": "^1.53.2",
+    "tailwind-merge": "^3.7.1"
+  },
+  "devDependencies": {
+    "@tiptap/core": "^3.35.0",
+    "@tiptap/extension-placeholder": "^3.35.0",
+    "@tiptap/pm": "^3.35.0",
+    "@tiptap/starter-kit": "^3.35.0",
+    "@types/node": "^24.19.2",
+    "echarts": "^6.1.0",
+    "typescript": "^6.0.3"
   },
   "peerDependencies": {
     "@tiptap/core": "^3.0.0",
@@ -109,20 +124,5 @@
     "echarts": {
       "optional": true
     }
-  },
-  "scripts": {
-    "build": "vite build",
-    "type-check": "tsc --noEmit",
-    "test": "vitest",
-    "test:run": "vitest run"
-  },
-  "devDependencies": {
-    "@tiptap/core": "^3.31.3",
-    "@tiptap/extension-placeholder": "^3.31.3",
-    "@tiptap/pm": "^3.31.3",
-    "@tiptap/starter-kit": "^3.31.3",
-    "@types/node": "^24.19.1",
-    "echarts": "^6.1.0",
-    "typescript": "^6.0.3"
   }
 }
