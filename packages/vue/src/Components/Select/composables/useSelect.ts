@@ -59,6 +59,7 @@ import type {
   SelectValue,
 } from "@/Components/Select/select.types";
 import {
+  callListener,
   hasNamedSlot,
   mergePartBind,
   resolveFieldAdornmentIconSize,
@@ -830,11 +831,14 @@ export function useSelect(
         "aria-controls": listboxId,
         "aria-expanded": open.value,
         readonly: triggerReadonly.value,
-        onKeydown: handleTriggerKeyDown,
         "aria-autocomplete": isSearchEnabled.value ? "list" : undefined,
         "aria-activedescendant": open.value
           ? navigation.activeDescendantId.value
           : undefined,
+        onKeydown: (event: KeyboardEvent) => {
+          callListener(formField.inputBind.value.onKeydown, event);
+          handleTriggerKeyDown(event);
+        },
         placeholder:
           multiple.value &&
           hasValue.value &&
@@ -845,12 +849,16 @@ export function useSelect(
           ? {
               rows: 1,
               onInput: (event: Event) => {
+                callListener(formField.inputBind.value.onInput, event);
                 handleTriggerInput(event);
                 adjustHeight(event.target as HTMLTextAreaElement);
               },
             }
           : {
-              onInput: handleTriggerInput,
+              onInput: (event: Event) => {
+                callListener(formField.inputBind.value.onInput, event);
+                handleTriggerInput(event);
+              },
             }),
       },
       formField.inputBind.value,

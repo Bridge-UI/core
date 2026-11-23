@@ -60,6 +60,7 @@ import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
 import { collectComposedListboxOptions } from "@/Components/Listbox/collectComposedListboxOptions";
 import { useListboxNavigation } from "@/Components/Listbox/composables/useListboxNavigation";
 import {
+  callListener,
   hasNamedSlot,
   mergePartBind,
   resolveFieldAdornmentIconSize,
@@ -903,11 +904,14 @@ export function useAutocomplete(
         "aria-controls": listboxId,
         "aria-expanded": open.value,
         readonly: triggerReadonly.value,
-        onKeydown: handleTriggerKeyDown,
         "aria-autocomplete": isSearchEnabled.value ? "list" : undefined,
         "aria-activedescendant": open.value
           ? navigation.activeDescendantId.value
           : undefined,
+        onKeydown: (event: KeyboardEvent) => {
+          callListener(formField.inputBind.value.onKeydown, event);
+          handleTriggerKeyDown(event);
+        },
         placeholder:
           multiple.value &&
           hasValue.value &&
@@ -918,12 +922,16 @@ export function useAutocomplete(
           ? {
               rows: 1,
               onInput: (event: Event) => {
+                callListener(formField.inputBind.value.onInput, event);
                 handleTriggerInput(event);
                 adjustHeight(event.target as HTMLTextAreaElement);
               },
             }
           : {
-              onInput: handleTriggerInput,
+              onInput: (event: Event) => {
+                callListener(formField.inputBind.value.onInput, event);
+                handleTriggerInput(event);
+              },
             }),
       },
       formField.inputBind.value,

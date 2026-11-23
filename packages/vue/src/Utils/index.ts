@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil } from "es-toolkit/compat";
+import { get, isArray, isFunction, isNil } from "es-toolkit/compat";
 import {
   computed,
   defineComponent,
@@ -62,6 +62,23 @@ export function defineHeadlessComponent(setup: () => void) {
 
       return () => null;
     },
+  });
+}
+
+/**
+ * Calls a listener taken from attrs. Vue folds several listeners for the same
+ * event (`@keydown.enter` + `@keydown.esc`) into an array.
+ */
+export function callListener<Args extends unknown[]>(
+  listener: unknown,
+  ...args: Args
+): void {
+  const listeners = isArray(listener) ? listener : [listener];
+
+  listeners.forEach((fn) => {
+    if (isFunction(fn)) {
+      fn(...args);
+    }
   });
 }
 

@@ -378,6 +378,28 @@ test("it should put every consumer aria attr on the editable", async () => {
   wrapper.unmount();
 });
 
+test("it should call focus and blur listeners when the editable focuses", async () => {
+  const onBlur = vi.fn();
+  const onFocus = vi.fn();
+
+  const wrapper = mount(RichTextEditor, {
+    attachTo: document.body,
+    attrs: { onBlur, onFocus },
+  });
+
+  await flushPromises();
+
+  const textbox = wrapper.find('[role="textbox"]');
+
+  await textbox.trigger("focus");
+  await textbox.trigger("blur");
+
+  expect(onBlur).toHaveBeenCalledTimes(1);
+  expect(onFocus).toHaveBeenCalledTimes(1);
+
+  wrapper.unmount();
+});
+
 test("it should submit the document through a hidden input", async () => {
   const wrapper = mount(RichTextEditor, {
     props: { modelValue: "<p>Hi</p>" },

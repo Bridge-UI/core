@@ -49,6 +49,7 @@ import type {
   RichTextEditorOwnProps,
 } from "@/Components/RichTextEditor/richTextEditor.types";
 import {
+  callListener,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -231,7 +232,8 @@ export function useRichTextEditor(
 
   const formField = useFormField(
     () => ({
-      ...formFieldInherited.value,
+      // Focus does not bubble out of the editable, so these go to the editor.
+      ...omit(formFieldInherited.value, ["onFocus", "onBlur"]),
       ...formFieldCustom.value,
       classes: mergedClasses.value,
       customProps: formFieldOnlyCustom.value,
@@ -400,6 +402,12 @@ export function useRichTextEditor(
       ariaDescribedBy: formField.ariaDescribedBy.value,
       onChange: (next) => {
         model.value = next;
+      },
+      onBlur: (event) => {
+        callListener(get(formFieldInherited.value, "onBlur"), event);
+      },
+      onFocus: (event) => {
+        callListener(get(formFieldInherited.value, "onFocus"), event);
       },
     });
   }
