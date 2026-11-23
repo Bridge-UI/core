@@ -131,5 +131,5 @@ jobs:
         run: |
           # core first: react and vue depend on it.
           for pkg in core react vue; do
-            npm publish packed/bridge-ui-${pkg}-*.tgz --tag "$NPM_TAG" --access public --provenance --ignore-scripts
+            npm publish ./packed/bridge-ui-${pkg}-*.tgz --tag "$NPM_TAG" --access public --provenance --ignore-scripts
           done
