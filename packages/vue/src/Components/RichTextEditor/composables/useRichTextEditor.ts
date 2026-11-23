@@ -118,10 +118,10 @@ export function useRichTextEditor(
       typeof formFieldBridgeKeys
     >({
       bridgeKeys: formFieldBridgeKeys,
-      props: omit(split.value.inheritedAttrs, [
-        "class",
-        "onUpdate:modelValue",
-      ]) as Omit<FormFieldOwnProps, "field">,
+      props: omit(split.value.inheritedAttrs, ["onUpdate:modelValue"]) as Omit<
+        FormFieldOwnProps,
+        "field"
+      >,
     });
   });
 
@@ -234,6 +234,7 @@ export function useRichTextEditor(
       showErrorIcon: true,
     },
     {
+      attrsTarget: "root",
       control: () => "textarea",
       componentName: "RichTextEditor",
     },

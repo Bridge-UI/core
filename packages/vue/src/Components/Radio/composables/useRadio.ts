@@ -18,7 +18,10 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useFormControl } from "@/Components/FormControl";
+import {
+  formControlBridgeKeys,
+  useFormControl,
+} from "@/Components/FormControl";
 import type {
   RadioClasses,
   RadioOwnProps,
@@ -140,7 +143,11 @@ export function useRadio(
         name: merged.value.name,
         value: merged.value.value,
       },
-      omit(split.value.inheritedAttrs, ["class"]),
+      omit(split.value.inheritedAttrs, [
+        "class",
+        "style",
+        ...formControlBridgeKeys,
+      ]),
       cn({
         "sr-only": true,
         [mergedClasses.value.input ?? ""]: true,

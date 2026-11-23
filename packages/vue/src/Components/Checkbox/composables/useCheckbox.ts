@@ -29,7 +29,10 @@ import type {
   CheckboxClasses,
   CheckboxOwnProps,
 } from "@/Components/Checkbox/checkbox.types";
-import { useFormControl } from "@/Components/FormControl";
+import {
+  formControlBridgeKeys,
+  useFormControl,
+} from "@/Components/FormControl";
 import {
   mergePartBind,
   useBridgeUIComponent,
@@ -149,7 +152,11 @@ export function useCheckbox(
         ...formControl.controlBind.value,
         type: "checkbox",
       },
-      omit(split.value.inheritedAttrs, ["class"]),
+      omit(split.value.inheritedAttrs, [
+        "class",
+        "style",
+        ...formControlBridgeKeys,
+      ]),
       cn({
         "sr-only": true,
         [mergedClasses.value.input ?? ""]: true,

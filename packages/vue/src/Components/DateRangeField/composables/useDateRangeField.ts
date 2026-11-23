@@ -152,6 +152,7 @@ export function useDateRangeField(
     } = (dateOnly.value.customProps ?? {}) as DateRangeFieldCustomProps;
 
     return {
+      ...attrs,
       ...formFieldCustom,
       endIcon,
       classes: dateOnly.value.classes,

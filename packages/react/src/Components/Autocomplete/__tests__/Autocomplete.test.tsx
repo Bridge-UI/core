@@ -391,3 +391,43 @@ test("it should keep the placeholder next to the chips when persistentPlaceholde
     "Pick fruits",
   );
 });
+
+test("it should forward extra HTML props only to the combobox input", () => {
+  const { container } = render(
+    <Autocomplete
+      id="field-attrs"
+      options={options}
+      name="field-attrs"
+      data-test="field-attrs"
+      aria-describedby="field-help"
+    />,
+  );
+
+  const control = container.querySelector('input[role="combobox"]');
+  const tagged = container.querySelectorAll('[data-test="field-attrs"]');
+
+  expect(tagged).toHaveLength(1);
+  expect(tagged[0]).toBe(control);
+  expect(control?.getAttribute("id")).toBe("field-attrs");
+  expect(control?.getAttribute("name")).toBe("field-attrs");
+  expect(container.querySelectorAll("#field-attrs")).toHaveLength(1);
+  expect(control?.getAttribute("aria-describedby")).toBe("field-help");
+});
+
+test("it should apply className and style to the root, not the combobox input", () => {
+  const { container } = render(
+    <Autocomplete
+      options={options}
+      className="field-root"
+      style={{ width: 240 }}
+    />,
+  );
+
+  const root = container.querySelector<HTMLElement>(".field-root");
+  const control = container.querySelector('input[role="combobox"]');
+
+  expect(root?.style.width).toBe("240px");
+  expect(root?.contains(control)).toBe(true);
+  expect(control?.getAttribute("style")).toBeNull();
+  expect(control?.classList.contains("field-root")).toBe(false);
+});

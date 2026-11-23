@@ -296,3 +296,19 @@ test("it should remove an active link from the toolbar", () => {
     screen.getByRole("button", { name: "Link" }).getAttribute("aria-pressed"),
   ).toBe("false");
 });
+
+test("it should forward extra HTML props to the root once", () => {
+  const { container } = render(
+    <RichTextEditor
+      className="field-root"
+      data-test="field-attrs"
+      aria-label="Description"
+    />,
+  );
+
+  const tagged = container.querySelectorAll('[data-test="field-attrs"]');
+
+  expect(tagged).toHaveLength(1);
+  expect(tagged[0]?.classList.contains("field-root")).toBe(true);
+  expect(tagged[0]?.querySelector('[role="textbox"]')).not.toBeNull();
+});

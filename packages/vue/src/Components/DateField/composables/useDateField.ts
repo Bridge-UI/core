@@ -193,6 +193,7 @@ export function useDateField(
     } = (dateOnly.value.customProps ?? {}) as DateFieldCustomProps;
 
     return {
+      ...attrs,
       ...formFieldCustom,
       endIcon,
       classes: dateOnly.value.classes,

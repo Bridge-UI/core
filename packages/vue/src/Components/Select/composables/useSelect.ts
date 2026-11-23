@@ -462,6 +462,7 @@ export function useSelect(
       (formFieldCustom.customProps ?? {}) as SelectCustomProps;
 
     return {
+      ...attrs,
       ...formFieldCustom,
       endIcon,
       classes: mergedClasses.value,

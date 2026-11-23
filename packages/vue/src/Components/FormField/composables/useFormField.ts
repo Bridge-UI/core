@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { get, omit, pick } from "es-toolkit/compat";
 import {
   computed,
   toValue,
@@ -47,6 +47,17 @@ export type FormFieldReservedSlotName = Exclude<
 >;
 
 export type FormFieldOptions = {
+  /**
+   * Where fallthrough attributes (`id`, `name`, `data-*`, `aria-*`, listeners…)
+   * land. `class` and `style` always stay on the root.
+   *
+   * - `"input"` — the native control via `inputBind` (fields with an `<input>`).
+   * - `"root"` — the field root via `rootBind` (fields without a native control).
+   *
+   * @default "input"
+   */
+  attrsTarget?: "root" | "input";
+
   /**
    * Public registry key that owns FormField chrome defaults/tokens.
    * Defaults to `FormField`; public fields pass their own key so chrome
@@ -103,6 +114,7 @@ export const formFieldBridgeKeys = [
   "disabled",
   "readonly",
   "required",
+  "controlId",
   "errorIcon",
   "startIcon",
   "customProps",
@@ -279,6 +291,14 @@ export function useFormField(
       ids.push(`${controlId.value}-error`);
     }
 
+    const inheritedDescribedBy = (split.value.inheritedAttrs as HTMLAttributes)[
+      "aria-describedby"
+    ];
+
+    if (inheritedDescribedBy) {
+      ids.push(inheritedDescribedBy);
+    }
+
     return ids.length > 0 ? ids.join(" ") : undefined;
   });
 
@@ -388,6 +408,10 @@ export function useFormField(
     );
   });
 
+  const attrsOnRoot = computed(() => {
+    return options.attrsTarget === "root";
+  });
+
   const rootBind = computed(() => {
     const inherited = split.value.inheritedAttrs as HTMLAttributes;
 
@@ -395,7 +419,9 @@ export function useFormField(
       customProps.value?.root,
       {
         class: cn(inherited.class),
-        ...omit(inherited, ["class"]),
+        ...(attrsOnRoot.value
+          ? omit(inherited, ["class"])
+          : pick(inherited, ["style"])),
       },
       cn({
         "group w-full relative": true,
@@ -432,11 +458,14 @@ export function useFormField(
         "aria-describedby": ariaDescribedBy.value,
         "aria-invalid": invalidated.value || undefined,
       },
-      omit(split.value.inheritedAttrs, [
-        "class",
-        "modelValue",
-        "onUpdate:modelValue",
-      ]),
+      attrsOnRoot.value
+        ? {}
+        : omit(split.value.inheritedAttrs, [
+            "class",
+            "style",
+            "modelValue",
+            "onUpdate:modelValue",
+          ]),
       cn({
         "flex-1 min-w-0 min-h-0 bg-transparent border-0 shadow-none": true,
         "h-full": !isTextareaControl.value && !isStacked.value,
