@@ -95,7 +95,7 @@ function chevronClass(open: boolean) {
   const navIconClass = toValue(navIconBind)?.class;
 
   return cn({
-    "size-3 transition-all duration-200 ease-in-out": true,
+    "size-3 shrink-0 transition-all duration-200 ease-in-out": true,
     [isString(navIconClass) ? navIconClass : ""]: true,
     "rotate-180": open,
   });
@@ -111,7 +111,7 @@ function chevronClass(open: boolean) {
       >
         <div class="flex justify-start">
           <button v-if="showYearSelector" v-bind="yearSelectorBind">
-            <span>{{ yearLabel }}</span>
+            <span class="truncate">{{ yearLabel }}</span>
 
             <Icon
               size="2xs"
@@ -127,7 +127,7 @@ function chevronClass(open: boolean) {
             v-bind="monthSelectorBind"
             v-if="showMonthSelector && view === 'date'"
           >
-            <span>{{ monthLabel }}</span>
+            <span class="truncate">{{ monthLabel }}</span>
 
             <Icon
               size="2xs"
@@ -158,7 +158,7 @@ function chevronClass(open: boolean) {
       <template v-else>
         <div v-bind="startHeaderBind">
           <button v-if="showYearSelector" v-bind="yearSelectorBind">
-            <span>{{ yearLabel }}</span>
+            <span class="truncate">{{ yearLabel }}</span>
 
             <Icon
               size="2xs"
@@ -170,7 +170,7 @@ function chevronClass(open: boolean) {
 
           <div class="ml-auto">
             <button v-if="showMonthSelector" v-bind="monthSelectorBind">
-              <span>{{ monthLabel }}</span>
+              <span class="truncate">{{ monthLabel }}</span>
 
               <Icon
                 size="2xs"
@@ -184,7 +184,7 @@ function chevronClass(open: boolean) {
 
         <div v-bind="endHeaderBind">
           <button v-if="showMonthSelector" v-bind="endMonthSelectorBind">
-            <span>{{ endMonthLabel }}</span>
+            <span class="truncate">{{ endMonthLabel }}</span>
 
             <Icon
               size="2xs"
@@ -261,7 +261,7 @@ function chevronClass(open: boolean) {
             v-if="isVertical && view === 'date' && showMonthSelector"
           >
             <button v-bind="endMonthSelectorBind">
-              <span>{{ endMonthLabel }}</span>
+              <span class="truncate">{{ endMonthLabel }}</span>
 
               <Icon
                 size="2xs"

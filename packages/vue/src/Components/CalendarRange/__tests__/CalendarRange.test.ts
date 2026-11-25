@@ -295,3 +295,37 @@ test("it should emit a year range from year tiles", async () => {
   expect(range[0].getFullYear()).toBe(2018);
   expect(range[1].getFullYear()).toBe(2021);
 });
+
+test("it should close the year panel when the year selector is clicked again", async () => {
+  const wrapper = mountCalendarRange({
+    props: { viewDate: new Date(2021, 4, 1) },
+  });
+
+  const hasYearCell = () => {
+    return wrapper.findAll("button").some((node) => node.text() === "2022");
+  };
+
+  await wrapper.find('[aria-label="Select year"]').trigger("click");
+  expect(hasYearCell()).toBe(true);
+
+  await wrapper.find('[aria-label="Select year"]').trigger("click");
+  expect(hasYearCell()).toBe(false);
+});
+
+test("it should close the month panel when the month selector is clicked again", async () => {
+  const wrapper = mountCalendarRange({
+    props: { viewDate: new Date(2021, 4, 1) },
+  });
+
+  const hasMonthCell = () => {
+    return wrapper
+      .findAll("button")
+      .some((node) => /january/i.test(node.text()));
+  };
+
+  await wrapper.find('[aria-label="Select month"]').trigger("click");
+  expect(hasMonthCell()).toBe(true);
+
+  await wrapper.find('[aria-label="Select month"]').trigger("click");
+  expect(hasMonthCell()).toBe(false);
+});

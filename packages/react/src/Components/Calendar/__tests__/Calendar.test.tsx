@@ -33,6 +33,36 @@ test("it should open the year panel", () => {
   expect(screen.getByRole("button", { name: "2021" })).toBeTruthy();
 });
 
+test("it should return to the date panel when the year selector is clicked again", () => {
+  render(<Calendar viewDate={new Date(2021, 4, 1)} />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Select year" }));
+  fireEvent.click(screen.getByRole("button", { name: "Select year" }));
+
+  expect(screen.queryByRole("button", { name: "2021" })).toBeNull();
+  expect(screen.getByRole("button", { name: "21" })).toBeTruthy();
+});
+
+test("it should return to the date panel when the month selector is clicked again", () => {
+  render(<Calendar viewDate={new Date(2021, 4, 1)} />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Select month" }));
+  fireEvent.click(screen.getByRole("button", { name: "Select month" }));
+
+  expect(screen.queryByRole("button", { name: /january/i })).toBeNull();
+  expect(screen.getByRole("button", { name: "21" })).toBeTruthy();
+});
+
+test("it should return to the month panel when granularity is month", () => {
+  render(<Calendar granularity="month" viewDate={new Date(2021, 4, 1)} />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Select year" }));
+  fireEvent.click(screen.getByRole("button", { name: "Select year" }));
+
+  expect(screen.queryByRole("button", { name: "2021" })).toBeNull();
+  expect(screen.getByRole("button", { name: /january/i })).toBeTruthy();
+});
+
 test("it should call onChange when a day is selected", () => {
   const onChange = vi.fn();
 

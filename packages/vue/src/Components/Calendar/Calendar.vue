@@ -78,7 +78,7 @@ function chevronClass(open: boolean) {
   const navIconClass = toValue(navIconBind)?.class;
 
   return cn({
-    "size-3 transition-all duration-200 ease-in-out": true,
+    "size-3 shrink-0 transition-all duration-200 ease-in-out": true,
     [isString(navIconClass) ? navIconClass : ""]: true,
     "rotate-180": open,
   });
@@ -88,9 +88,9 @@ function chevronClass(open: boolean) {
 <template>
   <div v-bind="rootBind">
     <div v-bind="headerBind">
-      <div class="flex w-full min-w-0 items-center gap-x-2">
+      <div class="flex w-full min-w-0 items-center gap-x-1">
         <button v-if="showYearSelector" v-bind="yearSelectorBind">
-          <span>{{ yearLabel }}</span>
+          <span class="truncate">{{ yearLabel }}</span>
 
           <Icon
             size="2xs"
@@ -101,7 +101,7 @@ function chevronClass(open: boolean) {
         </button>
 
         <button v-if="showMonthSelector" v-bind="monthSelectorBind">
-          <span>{{ monthLabel }}</span>
+          <span class="truncate">{{ monthLabel }}</span>
 
           <Icon
             size="2xs"
@@ -112,7 +112,7 @@ function chevronClass(open: boolean) {
         </button>
       </div>
 
-      <div v-if="showNav" class="flex items-center">
+      <div v-if="showNav" class="flex shrink-0 items-center">
         <button v-bind="previousButtonBind">
           <Icon size="sm" icon="chevronLeft" v-bind="navIconBind" />
         </button>

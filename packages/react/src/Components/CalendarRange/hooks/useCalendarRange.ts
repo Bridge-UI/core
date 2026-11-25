@@ -271,9 +271,19 @@ export function useCalendarRange(
     setUncontrolledView(next);
   };
 
-  const openYearView = () => {
+  const toggleView = (next: CalendarView) => {
+    if (view === next) {
+      setView(calendarPanelViewFromGranularity(granularity));
+
+      return;
+    }
+
+    setView(next);
+  };
+
+  const toggleYearView = () => {
     setYearPageStart(getCalendarYearPageStart(viewYear));
-    setView("year");
+    toggleView("year");
   };
 
   const setViewDate = (next: Date) => {
@@ -380,8 +390,8 @@ export function useCalendarRange(
     setView(selection.view);
   };
 
-  const openMonthView = () => {
-    setView("month");
+  const toggleMonthView = () => {
+    toggleView("month");
   };
 
   const handleMonthSelect = (month: number) => {
@@ -559,7 +569,7 @@ export function useCalendarRange(
         disabled: merged.disabled,
       },
       cn({
-        "inline-flex cursor-pointer items-center gap-x-2 px-1.5 py-1 font-medium text-dark-600 hover:bg-dark-100 focus:outline-none disabled:cursor-not-allowed dark:text-dark-300 dark:hover:bg-dark-800": true,
+        "inline-flex min-w-0 cursor-pointer items-center gap-x-1 px-1.5 py-1 font-medium text-dark-600 hover:bg-dark-100 focus:outline-none disabled:cursor-not-allowed dark:text-dark-300 dark:hover:bg-dark-800": true,
         [roundedClass ?? ""]: true,
         [textSizeClass]: true,
         [mergedClasses.selector ?? ""]: true,
@@ -642,7 +652,7 @@ export function useCalendarRange(
   const yearSelectorBind = derived(() => {
     return mergePartBind(customProps?.selector, undefined, {
       ...selectorBind,
-      onClick: openYearView,
+      onClick: toggleYearView,
       type: "button" as const,
       "aria-label": resolveMessage("Select year"),
       disabled:
@@ -669,7 +679,7 @@ export function useCalendarRange(
 
     return {
       ...bind,
-      onClick: openMonthView,
+      onClick: toggleMonthView,
     };
   });
 
@@ -688,7 +698,7 @@ export function useCalendarRange(
 
     return {
       ...bind,
-      onClick: openMonthView,
+      onClick: toggleMonthView,
     };
   });
 

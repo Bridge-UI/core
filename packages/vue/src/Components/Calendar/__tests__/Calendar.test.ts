@@ -40,6 +40,48 @@ test("it should open the year panel", async () => {
   );
 });
 
+test("it should return to the date panel when the year selector is clicked again", async () => {
+  const wrapper = mount(Calendar, {
+    props: { viewDate: new Date(2021, 4, 1) },
+  });
+
+  await wrapper.find('[aria-label="Select year"]').trigger("click");
+  await wrapper.find('[aria-label="Select year"]').trigger("click");
+
+  const buttons = wrapper.findAll("button");
+
+  expect(buttons.some((node) => node.text() === "21")).toBe(true);
+  expect(buttons.some((node) => node.text() === "2022")).toBe(false);
+});
+
+test("it should return to the date panel when the month selector is clicked again", async () => {
+  const wrapper = mount(Calendar, {
+    props: { viewDate: new Date(2021, 4, 1) },
+  });
+
+  await wrapper.find('[aria-label="Select month"]').trigger("click");
+  await wrapper.find('[aria-label="Select month"]').trigger("click");
+
+  const buttons = wrapper.findAll("button");
+
+  expect(buttons.some((node) => node.text() === "21")).toBe(true);
+  expect(buttons.some((node) => /january/i.test(node.text()))).toBe(false);
+});
+
+test("it should return to the month panel when granularity is month", async () => {
+  const wrapper = mount(Calendar, {
+    props: { granularity: "month", viewDate: new Date(2021, 4, 1) },
+  });
+
+  await wrapper.find('[aria-label="Select year"]').trigger("click");
+  await wrapper.find('[aria-label="Select year"]').trigger("click");
+
+  const buttons = wrapper.findAll("button");
+
+  expect(buttons.some((node) => node.text() === "2022")).toBe(false);
+  expect(buttons.some((node) => /january/i.test(node.text()))).toBe(true);
+});
+
 test("it should emit change when a day is selected", async () => {
   const wrapper = mount(Calendar, {
     props: { viewDate: new Date(2021, 4, 1) },
