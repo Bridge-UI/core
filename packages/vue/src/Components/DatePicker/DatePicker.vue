@@ -58,6 +58,7 @@ const {
 <template>
   <div v-bind="rootBind">
     <Calendar
+      wheel-navigation
       :fill="merged.fill"
       :color="merged.color"
       :error="merged.error"

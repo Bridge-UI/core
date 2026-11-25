@@ -134,3 +134,13 @@ test("it should commit January 1 when granularity is year", () => {
   expect(selected.getMonth()).toBe(0);
   expect(selected.getFullYear()).toBe(2018);
 });
+
+test("it should step months with the wheel", () => {
+  render(<DatePicker defaultValue={new Date(2021, 4, 21)} />);
+
+  const month = screen.getByRole("button", { name: "Select month" });
+
+  fireEvent.wheel(month, { deltaY: 100 });
+
+  expect(month.textContent).toMatch(/june/i);
+});

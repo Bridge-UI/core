@@ -42,6 +42,7 @@ function DateTimePicker(props: DateTimePickerProps) {
       <div className={contentBind}>
         <div className={calendarBind}>
           <Calendar
+            wheelNavigation
             fill={merged.fill}
             color={merged.color}
             value={displayValue}

@@ -42,6 +42,7 @@ const {
   shared,
   merged,
   endBind,
+  rootRef,
   rootBind,
   bodyBind,
   viewDate,
@@ -103,7 +104,7 @@ function chevronClass(open: boolean) {
 </script>
 
 <template>
-  <div v-bind="rootBind">
+  <div ref="rootRef" v-bind="rootBind">
     <div v-bind="headerBind">
       <div
         v-if="view === 'year' || (isVertical && view === 'date')"

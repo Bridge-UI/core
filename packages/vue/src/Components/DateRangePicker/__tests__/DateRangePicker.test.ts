@@ -142,3 +142,21 @@ test("it should emit a year range when granularity is year", async () => {
   expect(range[0].getFullYear()).toBe(2018);
   expect(range[1].getFullYear()).toBe(2021);
 });
+
+test("it should step months with the wheel", async () => {
+  const wrapper = mountDateRangePicker({
+    props: { defaultValue: [new Date(2021, 4, 1), new Date(2021, 4, 10)] },
+  });
+
+  await flushPromises();
+
+  const month = wrapper.find('[aria-label="Select month"]');
+
+  month.element.dispatchEvent(
+    new WheelEvent("wheel", { deltaY: 100, bubbles: true, cancelable: true }),
+  );
+
+  await flushPromises();
+
+  expect(month.text().toLowerCase()).toContain("june");
+});

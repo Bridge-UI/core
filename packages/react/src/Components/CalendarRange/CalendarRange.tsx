@@ -17,6 +17,7 @@ function CalendarRange(props: CalendarRangeProps) {
     shared,
     merged,
     endBind,
+    rootRef,
     rootBind,
     bodyBind,
     viewDate,
@@ -128,7 +129,7 @@ function CalendarRange(props: CalendarRangeProps) {
   const centeredMonthButton = view === "date" ? startMonthButton : null;
 
   return (
-    <div {...rootBind}>
+    <div ref={rootRef} {...rootBind}>
       <div {...headerBind}>
         {showCenteredHeader ? (
           <div className="grid w-full grid-cols-[1fr_auto_1fr] items-center">

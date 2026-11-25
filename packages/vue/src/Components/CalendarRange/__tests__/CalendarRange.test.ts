@@ -27,6 +27,18 @@ function mountCalendarRange(optionsArg: Parameters<typeof mount>[1] = {}) {
   return wrapper;
 }
 
+function dispatchWheel(element: Element, deltaY: number) {
+  const event = new WheelEvent("wheel", {
+    deltaY,
+    bubbles: true,
+    cancelable: true,
+  });
+
+  element.dispatchEvent(event);
+
+  return event;
+}
+
 test("it should render a shared year selector and dual date panels", () => {
   mountCalendarRange({
     props: {
@@ -328,4 +340,40 @@ test("it should close the month panel when the month selector is clicked again",
 
   await wrapper.find('[aria-label="Select month"]').trigger("click");
   expect(hasMonthCell()).toBe(false);
+});
+
+test("it should step both panels with the wheel when wheelNavigation is set", async () => {
+  const wrapper = mountCalendarRange({
+    props: { wheelNavigation: true, viewDate: new Date(2021, 4, 1) },
+  });
+
+  await flushPromises();
+
+  const event = dispatchWheel(wrapper.element, 100);
+
+  await flushPromises();
+
+  const start = wrapper.find('[aria-label="Select month"]');
+  const end = wrapper.find('[aria-label="Select end month"]');
+
+  expect(event.defaultPrevented).toBe(true);
+  expect(end.text().toLowerCase()).toContain("july");
+  expect(start.text().toLowerCase()).toContain("june");
+});
+
+test("it should leave the wheel alone without wheelNavigation", async () => {
+  const wrapper = mountCalendarRange({
+    props: { viewDate: new Date(2021, 4, 1) },
+  });
+
+  await flushPromises();
+
+  const event = dispatchWheel(wrapper.element, 100);
+
+  await flushPromises();
+
+  const start = wrapper.find('[aria-label="Select month"]');
+
+  expect(event.defaultPrevented).toBe(false);
+  expect(start.text().toLowerCase()).toContain("may");
 });

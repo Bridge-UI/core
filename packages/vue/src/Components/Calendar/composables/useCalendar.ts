@@ -51,6 +51,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
   useDefaultTextSizeClass,
+  useWheelNavigation,
 } from "@/Utils";
 
 const calendarBridgeKeys = [
@@ -81,6 +82,7 @@ const calendarBridgeKeys = [
   "hideWeekdays",
   "disableMonths",
   "hideOutsideDays",
+  "wheelNavigation",
 ] as const satisfies readonly (keyof CalendarOwnProps)[];
 
 type CalendarLibDefaults = LibDefaultsShape<
@@ -193,6 +195,8 @@ export function useCalendar(
   );
 
   const yearPageStart = ref<null | number>(null);
+
+  const rootRef = ref<null | HTMLElement>(null);
 
   const granularity = computed(() => {
     return merged.value.granularity ?? "day";
@@ -321,6 +325,11 @@ export function useCalendar(
   const goToNext = () => {
     navigate(1);
   };
+
+  useWheelNavigation(rootRef, {
+    onNavigate: navigate,
+    enabled: () => !!merged.value.wheelNavigation && !merged.value.disabled,
+  });
 
   /**
    * Jumps to today's month on the commit panel without changing the selection.
@@ -593,6 +602,7 @@ export function useCalendar(
     merged,
     shared,
     showNav,
+    rootRef,
     timeZone,
     rootBind,
     viewDate,

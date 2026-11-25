@@ -85,3 +85,17 @@ test("it should commit a year range when granularity is year", () => {
   expect(range[0].getFullYear()).toBe(2018);
   expect(range[1].getFullYear()).toBe(2021);
 });
+
+test("it should step months with the wheel", () => {
+  render(
+    <DateRangePicker
+      defaultValue={[new Date(2021, 4, 1), new Date(2021, 4, 10)]}
+    />,
+  );
+
+  const month = screen.getByRole("button", { name: "Select month" });
+
+  fireEvent.wheel(month, { deltaY: 100 });
+
+  expect(month.textContent).toMatch(/june/i);
+});

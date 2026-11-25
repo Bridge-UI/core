@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, isNil, omit } from "es-toolkit/compat";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 // ** Core Imports
 import {
@@ -43,6 +43,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
   useDefaultTextSizeClass,
+  useWheelNavigation,
 } from "@/Utils";
 
 const calendarBridgeKeys = [
@@ -74,6 +75,7 @@ const calendarBridgeKeys = [
   "hideWeekdays",
   "disableMonths",
   "hideOutsideDays",
+  "wheelNavigation",
 ] as const satisfies readonly (keyof CalendarOwnProps)[];
 
 type CalendarLibDefaults = LibDefaultsShape<
@@ -180,6 +182,8 @@ export function useCalendar(
   });
 
   const [yearPageStart, setYearPageStart] = useState<null | number>(null);
+
+  const rootRef = useRef<HTMLDivElement>(null);
 
   const value = derived((): DatePickerModel => {
     if (isValueControlled) {
@@ -317,6 +321,11 @@ export function useCalendar(
   const goToNext = () => {
     navigate(1);
   };
+
+  useWheelNavigation(rootRef, {
+    onNavigate: navigate,
+    enabled: !!merged.wheelNavigation && !merged.disabled,
+  });
 
   /**
    * Jumps to today's month on the commit panel without changing the selection.
@@ -551,6 +560,7 @@ export function useCalendar(
     mode,
     value,
     merged,
+    rootRef,
     timeZone,
     rootBind,
     viewDate,

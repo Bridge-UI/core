@@ -1,7 +1,7 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
-import { h } from "vue";
+import { h, nextTick } from "vue";
 
 // ** Local Imports
 import { DatePicker } from "@/Components/DatePicker";
@@ -138,4 +138,22 @@ test("it should commit January 1 when granularity is year", async () => {
   expect(selected.getDate()).toBe(1);
   expect(selected.getMonth()).toBe(0);
   expect(selected.getFullYear()).toBe(2018);
+});
+
+test("it should step months with the wheel", async () => {
+  const wrapper = mount(DatePicker, {
+    props: { defaultValue: new Date(2021, 4, 21) },
+  });
+
+  await nextTick();
+
+  const month = wrapper.find('[aria-label="Select month"]');
+
+  month.element.dispatchEvent(
+    new WheelEvent("wheel", { deltaY: 100, bubbles: true, cancelable: true }),
+  );
+
+  await nextTick();
+
+  expect(month.text().toLowerCase()).toContain("june");
 });

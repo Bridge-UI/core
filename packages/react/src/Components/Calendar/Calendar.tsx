@@ -15,6 +15,7 @@ function Calendar(props: CalendarProps) {
     value,
     merged,
     showNav,
+    rootRef,
     rootBind,
     viewDate,
     viewYear,
@@ -65,7 +66,7 @@ function Calendar(props: CalendarProps) {
   };
 
   return (
-    <div {...rootBind}>
+    <div ref={rootRef} {...rootBind}>
       <div {...headerBind}>
         <div className="flex w-full min-w-0 items-center gap-x-1">
           {showYearSelector && (

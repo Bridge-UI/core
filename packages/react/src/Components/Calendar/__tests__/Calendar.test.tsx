@@ -39,8 +39,8 @@ test("it should return to the date panel when the year selector is clicked again
   fireEvent.click(screen.getByRole("button", { name: "Select year" }));
   fireEvent.click(screen.getByRole("button", { name: "Select year" }));
 
-  expect(screen.queryByRole("button", { name: "2021" })).toBeNull();
   expect(screen.getByRole("button", { name: "21" })).toBeTruthy();
+  expect(screen.queryByRole("button", { name: "2021" })).toBeNull();
 });
 
 test("it should return to the date panel when the month selector is clicked again", () => {
@@ -49,8 +49,8 @@ test("it should return to the date panel when the month selector is clicked agai
   fireEvent.click(screen.getByRole("button", { name: "Select month" }));
   fireEvent.click(screen.getByRole("button", { name: "Select month" }));
 
-  expect(screen.queryByRole("button", { name: /january/i })).toBeNull();
   expect(screen.getByRole("button", { name: "21" })).toBeTruthy();
+  expect(screen.queryByRole("button", { name: /january/i })).toBeNull();
 });
 
 test("it should return to the month panel when granularity is month", () => {
@@ -339,4 +339,58 @@ test("it should follow the Text size from the provider", () => {
 
   expect(button.classList.contains("text-xs")).toBe(true);
   expect(button.classList.contains("text-sm")).toBe(false);
+});
+
+test("it should step months with the wheel when wheelNavigation is set", () => {
+  render(<Calendar wheelNavigation viewDate={new Date(2021, 4, 1)} />);
+
+  const month = screen.getByRole("button", { name: "Select month" });
+
+  const handled = !fireEvent.wheel(month, { deltaY: 100 });
+
+  expect(handled).toBe(true);
+  expect(month.textContent).toMatch(/june/i);
+});
+
+test("it should step back with the wheel when scrolling up", () => {
+  render(<Calendar wheelNavigation viewDate={new Date(2021, 4, 1)} />);
+
+  const month = screen.getByRole("button", { name: "Select month" });
+
+  fireEvent.wheel(month, { deltaY: -100 });
+
+  expect(month.textContent).toMatch(/april/i);
+});
+
+test("it should page years with the wheel on the year panel", () => {
+  render(<Calendar wheelNavigation viewDate={new Date(2021, 4, 1)} />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Select year" }));
+  fireEvent.wheel(screen.getByRole("button", { name: "2021" }), {
+    deltaY: 100,
+  });
+
+  expect(screen.queryByRole("button", { name: "2021" })).toBeNull();
+});
+
+test("it should leave the wheel alone without wheelNavigation", () => {
+  render(<Calendar viewDate={new Date(2021, 4, 1)} />);
+
+  const month = screen.getByRole("button", { name: "Select month" });
+
+  const handled = !fireEvent.wheel(month, { deltaY: 100 });
+
+  expect(handled).toBe(false);
+  expect(month.textContent).toMatch(/may/i);
+});
+
+test("it should leave the wheel alone when disabled", () => {
+  render(<Calendar disabled wheelNavigation viewDate={new Date(2021, 4, 1)} />);
+
+  const month = screen.getByRole("button", { name: "Select month" });
+
+  const handled = !fireEvent.wheel(month, { deltaY: 100 });
+
+  expect(handled).toBe(false);
+  expect(month.textContent).toMatch(/may/i);
 });

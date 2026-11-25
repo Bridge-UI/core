@@ -39,6 +39,7 @@ const {
   merged,
   shared,
   showNav,
+  rootRef,
   rootBind,
   viewDate,
   viewYear,
@@ -86,7 +87,7 @@ function chevronClass(open: boolean) {
 </script>
 
 <template>
-  <div v-bind="rootBind">
+  <div ref="rootRef" v-bind="rootBind">
     <div v-bind="headerBind">
       <div class="flex w-full min-w-0 items-center gap-x-1">
         <button v-if="showYearSelector" v-bind="yearSelectorBind">

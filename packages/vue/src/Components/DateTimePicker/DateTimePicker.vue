@@ -72,6 +72,7 @@ const {
     <div :class="contentBind">
       <div :class="calendarBind">
         <Calendar
+          wheel-navigation
           :fill="merged.fill"
           :color="merged.color"
           :error="merged.error"
