@@ -2,7 +2,10 @@
 import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
-import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
+import type { ListSize } from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
+
+export interface ListSizeOverrides {}
 
 export interface ListClasses {
   /**
@@ -64,6 +67,14 @@ export interface ListOwnProps {
    * @default false
    */
   nested?: boolean;
+
+  /**
+   * Typography scale for items (`ListItem`) and section titles
+   * (`ListSection`). Items can override it with their own `size`.
+   *
+   * @default "md"
+   */
+  size?: MergeProps<ListSize, ListSizeOverrides>;
 }
 
 export type ListProps = MergeHtmlProps<

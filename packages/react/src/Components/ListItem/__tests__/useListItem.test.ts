@@ -5,7 +5,10 @@ import { createElement } from "react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
-import { ListContext } from "@/Components/List/ListContext";
+import {
+  ListContext,
+  type ListContextValue,
+} from "@/Components/List/ListContext";
 import {
   useListItem,
   type ListItemOwnProps,
@@ -19,7 +22,7 @@ const libDefaults = {
 
 function renderUseListItem(
   props: ListItemProps = {},
-  context: null | { dense: boolean } = null,
+  context: null | ListContextValue = null,
   options: { registrySelectedIcon?: null | typeof Star } = {},
 ) {
   return renderHook(() => useListItem(props, libDefaults), {
@@ -236,4 +239,46 @@ test("it should let the primary classes override the line height", () => {
 
   expect(result.current.primaryBind?.className).toContain("leading-5");
   expect(result.current.primaryBind?.className).not.toContain("leading-normal");
+});
+
+test("it should apply the md size classes by default", () => {
+  const { result } = renderUseListItem({
+    primary: "Inbox",
+    interactive: true,
+    secondary: "3 unread",
+  });
+
+  expect(result.current.primaryBind.className).toContain("text-sm");
+  expect(result.current.secondaryBind.className).toContain("text-xs");
+  expect(result.current.interactiveBind?.className).toContain("text-sm");
+});
+
+test("it should inherit size from parent List context", () => {
+  const { result } = renderUseListItem(
+    { primary: "Inbox", secondary: "3 unread" },
+    { size: "lg", dense: false },
+  );
+
+  expect(result.current.rowClassName).toContain("text-base");
+  expect(result.current.primaryBind.className).toContain("text-base");
+  expect(result.current.secondaryBind.className).toContain("text-sm");
+});
+
+test("it should let the item size override the List size", () => {
+  const { result } = renderUseListItem(
+    { size: "sm", primary: "Inbox", secondary: "3 unread" },
+    { size: "lg", dense: false },
+  );
+
+  expect(result.current.primaryBind.className).toContain("text-xs");
+  expect(result.current.secondaryBind.className).toContain("text-2xs");
+});
+
+test("it should size the selected icon with the list size", () => {
+  const { result } = renderUseListItem(
+    { selected: true, primary: "Inbox" },
+    { size: "lg", dense: false },
+  );
+
+  expect(result.current.selectedIconBind.className).toContain("size-4");
 });

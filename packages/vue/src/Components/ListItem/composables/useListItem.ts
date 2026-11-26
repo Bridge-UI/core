@@ -15,6 +15,7 @@ import {
 import {
   getListboxOptionId,
   listboxOptionFromComposedItem,
+  resolveListSizeClasses,
   type ListboxOption,
 } from "@bridge-ui/core/Domain";
 import {
@@ -45,6 +46,7 @@ const listItemBridgeKeys = [
   "rel",
   "href",
   "role",
+  "size",
   "dense",
   "value",
   "linkAs",
@@ -86,10 +88,11 @@ export function useListItem<T extends LinkAsTag = "a">(
     });
   });
 
-  const { merged, entry: bridgeListItem } = useBridgeUIComponent<
-    ListItemMerged<T>,
-    "ListItem"
-  >({
+  const {
+    merged,
+    components,
+    entry: bridgeListItem,
+  } = useBridgeUIComponent<ListItemMerged<T>, "ListItem">({
     libDefaults,
     componentName: "ListItem",
     props: () => split.value.componentProps,
@@ -192,6 +195,14 @@ export function useListItem<T extends LinkAsTag = "a">(
     }
 
     return listContext ? toValue(listContext).dense : false;
+  });
+
+  const sizeClasses = computed(() => {
+    return resolveListSizeClasses(
+      components.value,
+      merged.value.size ??
+        (listContext ? toValue(listContext).size : undefined),
+    );
   });
 
   const hasPrimary = computed(() => {
@@ -329,7 +340,8 @@ export function useListItem<T extends LinkAsTag = "a">(
             }
           : undefined,
         class: cn({
-          "flex w-full min-w-0 items-center gap-x-2 rounded-md text-left text-sm text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
+          "flex w-full min-w-0 items-center gap-x-2 rounded-md text-left text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
+          [sizeClasses.value.item]: !isListboxOption.value,
           "no-underline": isLink.value,
           "cursor-pointer select-none": !merged.value.disabled,
           "px-2": !isListboxOption.value,
@@ -383,6 +395,7 @@ export function useListItem<T extends LinkAsTag = "a">(
     return cn({
       "flex w-full min-w-0 items-center gap-x-2": true,
       "rounded-md text-dark-900 dark:text-dark-100": !isInteractiveRow.value,
+      [sizeClasses.value.item]: !isInteractiveRow.value,
       "px-2": !isInteractiveRow.value,
       "py-1.5": !isInteractiveRow.value && !isDense.value,
       "py-1": !isInteractiveRow.value && isDense.value,
@@ -416,7 +429,8 @@ export function useListItem<T extends LinkAsTag = "a">(
       customProps.value?.primary,
       {},
       cn({
-        "block truncate text-sm leading-normal font-medium": true,
+        "block truncate leading-normal font-medium": true,
+        [sizeClasses.value.primary]: !isListboxOption.value,
         [listboxContext.value?.sizeClasses?.primary ?? ""]:
           isListboxOption.value,
         [get(mergedClasses.value, "primary") ?? ""]: true,
@@ -429,7 +443,8 @@ export function useListItem<T extends LinkAsTag = "a">(
       customProps.value?.secondary,
       {},
       cn({
-        "mt-0.5 block truncate text-xs leading-normal text-dark-500 dark:text-dark-400": true,
+        "mt-0.5 block truncate leading-normal text-dark-500 dark:text-dark-400": true,
+        [sizeClasses.value.secondary]: !isListboxOption.value,
         [listboxContext.value?.sizeClasses?.secondary ?? ""]:
           isListboxOption.value,
         [get(mergedClasses.value, "secondary") ?? ""]: true,
@@ -453,9 +468,9 @@ export function useListItem<T extends LinkAsTag = "a">(
       customProps.value?.selectedIcon,
       {},
       {
-        ...(isListboxOption.value ? {} : { size: "sm" as const }),
         class: cn({
           "block shrink-0": true,
+          [sizeClasses.value.icon]: !isListboxOption.value,
           [listboxContext.value?.checkClass ?? ""]: isListboxOption.value,
           [get(mergedClasses.value, "selectedIcon") ?? ""]: true,
         }),

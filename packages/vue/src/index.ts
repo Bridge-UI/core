@@ -486,6 +486,7 @@ export type {
   ListCustomProps,
   ListOwnProps,
   ListProps,
+  ListSizeOverrides,
 } from "@/Components/List";
 export {
   Listbox,

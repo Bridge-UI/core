@@ -4,7 +4,10 @@ import { createElement } from "react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
-import { ListContext } from "@/Components/List/ListContext";
+import {
+  ListContext,
+  type ListContextValue,
+} from "@/Components/List/ListContext";
 import {
   useListSection,
   type ListSectionProps,
@@ -12,7 +15,7 @@ import {
 
 function renderUseListSection(
   props: ListSectionProps = {},
-  context: null | { dense: boolean } = null,
+  context: null | ListContextValue = null,
 ) {
   return renderHook(() => useListSection(props), {
     wrapper: ({ children }) =>
@@ -79,4 +82,14 @@ test("it should prefer title prop over children for label", () => {
   });
 
   expect(result.current.label).toBe("From title");
+});
+
+test("it should inherit the title size from parent List context", () => {
+  const { result } = renderUseListSection(
+    { title: "Large section" },
+    { size: "lg", dense: false },
+  );
+
+  expect(result.current.titleBind.className).toContain("text-sm");
+  expect(result.current.titleBind.className).not.toContain("text-xs");
 });

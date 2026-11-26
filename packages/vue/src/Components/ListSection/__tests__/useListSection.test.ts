@@ -100,3 +100,33 @@ test("it should apply list-none on root bind", () => {
   expect(rootBind.value.class).toContain("list-none");
   expect(rootBind.value.class).toContain("first:mt-0");
 });
+
+test("it should inherit the title size from parent List context", () => {
+  let result!: ReturnType<typeof useListSection>;
+
+  const Consumer = defineComponent({
+    setup() {
+      result = useListSection({ title: "Large section" });
+
+      return () => h("div");
+    },
+  });
+
+  const Wrapper = defineComponent({
+    setup() {
+      provide(
+        LIST_INJECTION_KEY,
+        computed(() => {
+          return { dense: false, size: "lg" as const };
+        }),
+      );
+
+      return () => h(Consumer);
+    },
+  });
+
+  mount(Wrapper);
+
+  expect(result.titleBind.value.class).toContain("text-sm");
+  expect(result.titleBind.value.class).not.toContain("text-xs");
+});
