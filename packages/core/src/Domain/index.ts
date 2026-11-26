@@ -400,6 +400,7 @@ export type {
   DateFormValueOptions,
   TimeFormValueOptions,
 } from "@/Domain/formValue";
+export { DEFAULT_LIST_SIZE, resolveListSizeClasses } from "@/Domain/list";
 export {
   findFirstEnabledOptionIndex,
   findLastEnabledOptionIndex,

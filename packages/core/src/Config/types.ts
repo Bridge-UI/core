@@ -138,6 +138,7 @@ import type {
   LinkSize,
   LinkUnderline,
 } from "@/Tokens/Link";
+import type { ListSize, ListSizeItem } from "@/Tokens/List";
 import type {
   ListboxColor,
   ListboxColorItem,
@@ -1240,6 +1241,12 @@ export interface LinkConfigBase {
 
 export interface ListConfigBase {
   classes: object;
+  defaultProps: Partial<{
+    size: keyof ListSize;
+  }>;
+  tokens: Partial<{
+    size: Record<string, ListSizeItem>;
+  }>;
 }
 
 export interface ListboxConfigBase {

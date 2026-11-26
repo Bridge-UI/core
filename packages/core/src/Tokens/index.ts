@@ -237,6 +237,8 @@ export type {
   LinkSize,
   LinkUnderline,
 } from "@/Tokens/Link";
+export { sizeProps as listSizeProps } from "@/Tokens/List";
+export type { ListSize, ListSizeItem } from "@/Tokens/List";
 export {
   colorProps as listboxColorProps,
   roundedProps as listboxRoundedProps,

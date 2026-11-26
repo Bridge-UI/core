@@ -146,6 +146,7 @@ export {
   DEFAULT_COLOR_FORMAT,
   DEFAULT_DATATABLE_PER_PAGE,
   DEFAULT_HSVA,
+  DEFAULT_LIST_SIZE,
   DEFAULT_OTP_LENGTH,
   DEFAULT_RESIZABLE_KEYBOARD_STEP,
   DEFAULT_RICH_TEXT_TOOLS,
@@ -372,6 +373,7 @@ export {
   resolveFieldOverlay,
   resolveFieldPickerClassName,
   resolveFieldShowFooter,
+  resolveListSizeClasses,
   resolveNumberFieldStepperIconSize,
   resolveOtpLength,
   resolvePickerFill,
@@ -893,6 +895,8 @@ export type {
   LinkSize,
   LinkUnderline,
 } from "@/Tokens/Link";
+export { sizeProps as listSizeProps } from "@/Tokens/List";
+export type { ListSize, ListSizeItem } from "@/Tokens/List";
 export {
   colorProps as listboxColorProps,
   roundedProps as listboxRoundedProps,
