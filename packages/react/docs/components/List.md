@@ -118,6 +118,20 @@ Set `href` to render the row as an anchor. The browser shows the URL on hover, a
 </List>
 ```
 
+### Size
+
+`size` sets the typography scale for every item and section title in the list. A `ListItem` can override it with its own `size`. Inside a `Listbox`, the `Listbox` size applies instead.
+
+```tsx
+<List size="lg">
+  <ListSection title="Account" />
+  <ListItem interactive primary="Profile" secondary="Name and avatar" />
+  <ListItem size="md" interactive primary="Billing" />
+</List>
+```
+
+Set the default for every list in the provider with `List: { defaultProps: { size: "lg" } }`.
+
 ### Sticky section
 
 With the default `as="li"`, sticky styles apply on the section root. The list (or a parent) needs a scroll container with a constrained height.
@@ -141,14 +155,15 @@ With the default `as="li"`, sticky styles apply on the section root. The list (o
 
 ## Props (`List`)
 
-| Prop          | Type                    | Default | Description                                                                        |
-| ------------- | ----------------------- | ------- | ---------------------------------------------------------------------------------- |
-| `as`          | `"nav" \| "ol" \| "ul"` | "ul"    | The element to render as.                                                          |
-| `children`    | `ReactNode`             | —       | The children to render.                                                            |
-| `classes`     | `ListClasses`           | —       | The classes to apply to the list.                                                  |
-| `customProps` | `ListCustomProps`       | —       | Props forwarded to each list part.                                                 |
-| `dense`       | `boolean`               | `false` | Compact vertical spacing on items (`ListItem` / `ListSection`), not the list root. |
-| `nested`      | `boolean`               | `false` | When true, indents the list for nested navigation/submenus.                        |
+| Prop          | Type                    | Default | Description                                                                                                              |
+| ------------- | ----------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `as`          | `"nav" \| "ol" \| "ul"` | "ul"    | The element to render as.                                                                                                |
+| `children`    | `ReactNode`             | —       | The children to render.                                                                                                  |
+| `classes`     | `ListClasses`           | —       | The classes to apply to the list.                                                                                        |
+| `customProps` | `ListCustomProps`       | —       | Props forwarded to each list part.                                                                                       |
+| `dense`       | `boolean`               | `false` | Compact vertical spacing on items (`ListItem` / `ListSection`), not the list root.                                       |
+| `nested`      | `boolean`               | `false` | When true, indents the list for nested navigation/submenus.                                                              |
+| `size`        | `"lg" \| "md" \| "sm"`  | "md"    | Typography scale for items (`ListItem`) and section titles (`ListSection`). Items can override it with their own `size`. |
 
 ## Props (`ListItem`)
 
@@ -171,6 +186,7 @@ With the default `as="li"`, sticky styles apply on the section root. The list (o
 | `secondary`    | `ReactNode`                          | —        | Secondary/description text below the primary line.                                                                                                                               |
 | `selected`     | `boolean`                            | `false`  | When true, highlights the item as selected.                                                                                                                                      |
 | `selectedIcon` | `null \| LucideIcon`                 | `Check`  | Icon shown when `selected` is true. Use `null` to hide it. Replaced by `slots.end`.                                                                                              |
+| `size`         | `"lg" \| "md" \| "sm"`               | —        | Typography scale for the row. Inherits `size` from parent `List` when omitted. Ignored inside a `Listbox`, which applies its own size.                                           |
 | `slots`        | `ListItemSlots`                      | —        | The slots to apply to the item.                                                                                                                                                  |
 | `target`       | `string`                             | —        | Where to open the URL. Forwarded to the anchor when `href` is set.                                                                                                               |
 | `value`        | `ListboxValue`                       | —        | When set inside a `Select` / `Listbox`, registers this row as a selectable option.                                                                                               |
