@@ -1,7 +1,7 @@
 {
   "type": "module",
   "license": "MIT",
-  "version": "0.25.0",
+  "version": "0.26.0",
   "author": "BridgeUI",
   "sideEffects": false,
   "name": "@bridge-ui/vue",
@@ -89,7 +89,7 @@
     "test:cy:open": "cypress open --component"
   },
   "dependencies": {
-    "@bridge-ui/core": "^0.25.0",
+    "@bridge-ui/core": "^0.26.0",
     "clsx": "^2.1.1",
     "es-toolkit": "^1.53.2",
     "tailwind-merge": "^3.7.1"
