@@ -26,7 +26,7 @@ describe("resolveListSizeClasses", () => {
       "md",
     );
 
-    expect(classes.primary).toBe("text-[15px]");
     expect(classes.secondary).toBe("text-xs");
+    expect(classes.primary).toBe("text-[15px]");
   });
 });

@@ -181,7 +181,7 @@ export function useListItem<T extends ElementType = "a">(
       : (merged.size ?? listContext?.size);
 
     return resolveListSizeClasses(components, size);
-  }, [components, merged.size, listContext?.size, hasListboxContext]);
+  }, [components, merged.size, hasListboxContext, listContext?.size]);
 
   const hasPrimary = derived(() => {
     return (
