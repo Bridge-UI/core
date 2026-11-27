@@ -6,6 +6,7 @@ import { useEffect, useMemo, type ElementType, type MouseEvent } from "react";
 import {
   getListboxOptionId,
   listboxOptionFromComposedItem,
+  resolveListSizeClasses,
   type ListboxOption,
 } from "@bridge-ui/core/Domain";
 import {
@@ -39,6 +40,7 @@ const listItemBridgeKeys = [
   "rel",
   "href",
   "role",
+  "size",
   "dense",
   "slots",
   "value",
@@ -78,10 +80,11 @@ export function useListItem<T extends ElementType = "a">(
     bridgeKeys: listItemBridgeKeys,
   });
 
-  const { merged, entry: bridgeListItem } = useBridgeUIComponent<
-    ListItemMerged<T>,
-    "ListItem"
-  >({
+  const {
+    merged,
+    components,
+    entry: bridgeListItem,
+  } = useBridgeUIComponent<ListItemMerged<T>, "ListItem">({
     libDefaults,
     props: componentProps,
     componentName: "ListItem",
@@ -170,6 +173,15 @@ export function useListItem<T extends ElementType = "a">(
   const isDense = derived(() => {
     return merged.dense ?? listContext?.dense ?? false;
   });
+
+  const sizeClasses = useMemo(() => {
+    // Listbox owns its own size scale; rows inside it keep the List default.
+    const size = hasListboxContext
+      ? undefined
+      : (merged.size ?? listContext?.size);
+
+    return resolveListSizeClasses(components, size);
+  }, [components, merged.size, hasListboxContext, listContext?.size]);
 
   const hasPrimary = derived(() => {
     return (
@@ -269,7 +281,8 @@ export function useListItem<T extends ElementType = "a">(
             }
           : undefined,
         className: cn({
-          "flex w-full min-w-0 items-center gap-x-2 rounded-md text-left text-sm text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
+          "flex w-full min-w-0 items-center gap-x-2 rounded-md text-left text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
+          [sizeClasses.item]: !isListboxOption,
           "no-underline": isLink,
           "cursor-pointer select-none": !merged.disabled,
           "px-2": !isListboxOption,
@@ -314,6 +327,7 @@ export function useListItem<T extends ElementType = "a">(
     return cn({
       "flex w-full min-w-0 items-center gap-x-2": true,
       "rounded-md text-dark-900 dark:text-dark-100": !isInteractiveRow,
+      [sizeClasses.item]: !isInteractiveRow,
       "px-2": !isInteractiveRow,
       "py-1.5": !isInteractiveRow && !isDense,
       "py-1": !isInteractiveRow && isDense,
@@ -347,7 +361,8 @@ export function useListItem<T extends ElementType = "a">(
       customProps?.primary,
       {},
       cn({
-        "block truncate text-sm leading-normal font-medium": true,
+        "block truncate leading-normal font-medium": true,
+        [sizeClasses.primary]: !isListboxOption,
         [listboxContext?.sizeClasses?.primary ?? ""]: isListboxOption,
         [get(mergedClasses, "primary") ?? ""]: true,
       }),
@@ -359,7 +374,8 @@ export function useListItem<T extends ElementType = "a">(
       customProps?.secondary,
       {},
       cn({
-        "mt-0.5 block truncate text-xs leading-normal text-dark-500 dark:text-dark-400": true,
+        "mt-0.5 block truncate leading-normal text-dark-500 dark:text-dark-400": true,
+        [sizeClasses.secondary]: !isListboxOption,
         [listboxContext?.sizeClasses?.secondary ?? ""]: isListboxOption,
         [get(mergedClasses, "secondary") ?? ""]: true,
       }),
@@ -382,9 +398,9 @@ export function useListItem<T extends ElementType = "a">(
       customProps?.selectedIcon,
       {},
       {
-        ...(isListboxOption ? {} : { size: "sm" as const }),
         className: cn({
           "block shrink-0": true,
+          [sizeClasses.icon]: !isListboxOption,
           [listboxContext?.checkClass ?? ""]: isListboxOption,
           [get(mergedClasses, "selectedIcon") ?? ""]: true,
         }),

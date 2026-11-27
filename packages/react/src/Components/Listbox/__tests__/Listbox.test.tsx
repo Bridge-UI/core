@@ -17,6 +17,7 @@ import { Listbox } from "@/Components/Listbox";
 import type { ListboxOption } from "@/Components/Listbox/listbox.types";
 import { ListItem } from "@/Components/ListItem";
 import { ListSection } from "@/Components/ListSection";
+import { BridgeUIProvider } from "@/Provider";
 
 afterEach(() => {
   cleanup();
@@ -658,4 +659,34 @@ test("it should let customProps.menu override matchWidth", async () => {
 
   expect(panel?.className).toContain("w-max");
   expect(panel?.className).not.toContain("w-full");
+});
+
+test("it should keep non-option rows off the global List size", async () => {
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox show anchorEl={anchorRef} listboxId="test-listbox">
+          <ListItem value="apple" primary="Apple" />
+          <ListItem interactive primary="Create fruit" />
+        </Listbox>
+      </div>
+    );
+  }
+
+  render(
+    <BridgeUIProvider components={{ List: { defaultProps: { size: "lg" } } }}>
+      <Host />
+    </BridgeUIProvider>,
+  );
+
+  await waitFor(() => {
+    expect(screen.getByText("Create fruit")).toBeTruthy();
+  });
+
+  const primary = screen.getByText("Create fruit");
+
+  expect(primary.className).toContain("text-sm");
+  expect(primary.className).not.toContain("text-base");
 });

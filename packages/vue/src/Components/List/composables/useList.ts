@@ -16,6 +16,7 @@ import {
 
 const listBridgeKeys = [
   "as",
+  "size",
   "dense",
   "nested",
   "classes",
@@ -51,6 +52,7 @@ export function useList(props: ListOwnProps) {
 
   const contextValue = computed(() => {
     return {
+      size: merged.value.size,
       dense: merged.value.dense === true,
     };
   });

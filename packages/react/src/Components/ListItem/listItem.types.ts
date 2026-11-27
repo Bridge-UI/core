@@ -13,6 +13,7 @@ import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";
 import type { IconProps } from "@/Components/Icon";
+import type { ListOwnProps } from "@/Components/List/list.types";
 import type { LinkHref, LinkPropsOf } from "@/Utils/linkAs";
 
 export interface ListItemClasses {
@@ -229,6 +230,14 @@ export interface ListItemOwnProps<T extends ElementType = "a"> {
    * @default Check
    */
   selectedIcon?: null | IconSource;
+
+  /**
+   * Typography scale for the row. Inherits `size` from parent `List` when
+   * omitted. Ignored inside a `Listbox`, which applies its own size.
+   *
+   * @default undefined
+   */
+  size?: ListOwnProps["size"];
 
   /**
    * The slots to apply to the item.

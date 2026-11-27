@@ -66,6 +66,32 @@ test("it should provide dense context to descendants", () => {
   expect(injectedDense).toBe("true");
 });
 
+test("it should provide size context to descendants", () => {
+  let injectedSize = "missing";
+
+  const Probe = defineComponent({
+    setup() {
+      const context = inject(LIST_INJECTION_KEY, null);
+
+      injectedSize = String(context ? toValue(context).size : "missing");
+
+      return () => h("div");
+    },
+  });
+
+  const Wrapper = defineComponent({
+    setup() {
+      useList({ size: "lg" });
+
+      return () => h(Probe);
+    },
+  });
+
+  mount(Wrapper);
+
+  expect(injectedSize).toBe("lg");
+});
+
 test("it should merge class into root bind", () => {
   const { rootBind } = mountUseList({ class: "custom-list" });
 

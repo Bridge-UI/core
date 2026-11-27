@@ -29,6 +29,12 @@ test("it should expose dense context value", () => {
   expect(result.current.contextValue.dense).toBe(true);
 });
 
+test("it should expose size context value", () => {
+  const { result } = renderUseList({ size: "lg" });
+
+  expect(result.current.contextValue.size).toBe("lg");
+});
+
 test("it should merge className into root bind", () => {
   const { result } = renderUseList({ className: "custom-list" });
 

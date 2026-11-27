@@ -3,6 +3,7 @@ import { get, isNil, omit } from "es-toolkit/compat";
 import { computed, inject, toValue, useAttrs } from "vue";
 
 // ** Core Imports
+import { resolveListSizeClasses } from "@bridge-ui/core/Domain";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -46,10 +47,11 @@ export function useListSection(props: ListSectionOwnProps) {
     });
   });
 
-  const { merged, entry: bridgeListSection } = useBridgeUIComponent<
-    ListSectionOwnProps,
-    "ListSection"
-  >({
+  const {
+    merged,
+    components,
+    entry: bridgeListSection,
+  } = useBridgeUIComponent<ListSectionOwnProps, "ListSection">({
     componentName: "ListSection",
     props: () => split.value.componentProps,
   });
@@ -65,6 +67,13 @@ export function useListSection(props: ListSectionOwnProps) {
 
   const isDense = computed(() => {
     return listContext ? toValue(listContext).dense : false;
+  });
+
+  const sizeClasses = computed(() => {
+    return resolveListSizeClasses(
+      components.value,
+      listContext ? toValue(listContext).size : undefined,
+    );
   });
 
   const isHidden = computed(() => {
@@ -106,7 +115,9 @@ export function useListSection(props: ListSectionOwnProps) {
           "py-1.5": isNil(listboxContextRef) && !isDense.value,
           [listboxContext.value?.sizeClasses?.option ?? ""]:
             !isNil(listboxContextRef),
-          "text-xs font-medium text-dark-500 dark:text-dark-400": true,
+          "font-medium text-dark-500 dark:text-dark-400": true,
+          [isNil(listboxContextRef) ? sizeClasses.value.section : "text-xs"]:
+            true,
           "pl-14": merged.value.inset,
           [get(mergedClasses.value, "title") ?? ""]: true,
         }),

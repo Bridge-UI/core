@@ -43,7 +43,7 @@ import type { HeadingClasses, HeadingProps } from "@/Components/Heading";
 import type { IconProps } from "@/Components/Icon";
 import type { LabelClasses, LabelProps } from "@/Components/Label";
 import type { LinkClasses, LinkProps } from "@/Components/Link";
-import type { ListClasses } from "@/Components/List";
+import type { ListClasses, ListProps } from "@/Components/List";
 import type { ListItemClasses, ListItemProps } from "@/Components/ListItem";
 import type { ListSectionClasses } from "@/Components/ListSection";
 import type { MenuClasses, MenuProps } from "@/Components/Menu";
@@ -344,6 +344,7 @@ declare module "@bridge-ui/core/Config" {
 
   interface ListConfigOverrides {
     classes: ListClasses;
+    defaultProps: Partial<Pick<ListProps, "size">>;
   }
 
   interface ListItemConfigOverrides {

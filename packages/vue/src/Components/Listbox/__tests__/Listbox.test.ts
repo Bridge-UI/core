@@ -10,6 +10,7 @@ import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 import { Listbox } from "@/Components/Listbox";
 import { ListItem } from "@/Components/ListItem";
 import { ListSection } from "@/Components/ListSection";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {
@@ -441,4 +442,44 @@ test("it should let customProps.menu override matchWidth", async () => {
 
   expect(panel?.className).toContain("w-max");
   expect(panel?.className).not.toContain("w-full");
+});
+
+test("it should keep non-option rows off the global List size", async () => {
+  const anchor = document.createElement("div");
+  document.body.appendChild(anchor);
+
+  const wrapper = mount(BridgeUIProvider, {
+    attachTo: document.body,
+    props: { components: { List: { defaultProps: { size: "lg" } } } },
+    slots: {
+      default: () => {
+        return h(
+          Listbox,
+          {
+            options: [],
+            anchorEl: anchor,
+            modelValue: true,
+            listboxId: "test-listbox",
+          },
+          {
+            default: () => [
+              h(ListItem, { value: "apple", primary: "Apple" }),
+              h(ListItem, { interactive: true, primary: "Create fruit" }),
+            ],
+          },
+        );
+      },
+    },
+  });
+
+  mountedWrappers.push(wrapper);
+
+  await flushPromises();
+
+  const primary = Array.from(document.body.querySelectorAll("span")).find(
+    (el) => el.textContent === "Create fruit",
+  );
+
+  expect(primary?.className).toContain("text-sm");
+  expect(primary?.className).not.toContain("text-base");
 });

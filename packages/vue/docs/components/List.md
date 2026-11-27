@@ -114,6 +114,20 @@ Set `href` to render the row as an anchor. The browser shows the URL on hover, a
 </List>
 ```
 
+### Size
+
+`size` sets the typography scale for every item and section title in the list. A `ListItem` can override it with its own `size`. Inside a `Listbox`, the `Listbox` size applies instead.
+
+```vue
+<List size="lg">
+  <ListSection title="Account" />
+  <ListItem interactive primary="Profile" secondary="Name and avatar" />
+  <ListItem size="md" interactive primary="Billing" />
+</List>
+```
+
+Set the default for every list in the provider with `List: { defaultProps: { size: "lg" } }`.
+
 ### Sticky section
 
 With the default `as="li"`, sticky styles apply on the section root. The list (or a parent) needs a scroll container with a constrained height.
@@ -137,36 +151,38 @@ With the default `as="li"`, sticky styles apply on the section root. The list (o
 
 ## Props (`List`)
 
-| Prop          | Type                    | Default | Description                                                                        |
-| ------------- | ----------------------- | ------- | ---------------------------------------------------------------------------------- |
-| `as`          | `"nav" \| "ol" \| "ul"` | "ul"    | The element to render as.                                                          |
-| `classes`     | `ListClasses`           | —       | The classes to apply to the list.                                                  |
-| `customProps` | `ListCustomProps`       | —       | Props forwarded to each list part.                                                 |
-| `dense`       | `boolean`               | `false` | Compact vertical spacing on items (`ListItem` / `ListSection`), not the list root. |
-| `nested`      | `boolean`               | `false` | When true, indents the list for nested navigation/submenus.                        |
+| Prop          | Type                    | Default | Description                                                                                                              |
+| ------------- | ----------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `as`          | `"nav" \| "ol" \| "ul"` | "ul"    | The element to render as.                                                                                                |
+| `classes`     | `ListClasses`           | —       | The classes to apply to the list.                                                                                        |
+| `customProps` | `ListCustomProps`       | —       | Props forwarded to each list part.                                                                                       |
+| `dense`       | `boolean`               | `false` | Compact vertical spacing on items (`ListItem` / `ListSection`), not the list root.                                       |
+| `nested`      | `boolean`               | `false` | When true, indents the list for nested navigation/submenus.                                                              |
+| `size`        | `"lg" \| "md" \| "sm"`  | "md"    | Typography scale for items (`ListItem`) and section titles (`ListSection`). Items can override it with their own `size`. |
 
 ## Props (`ListItem`)
 
-| Prop           | Type                                 | Default  | Description                                                                                                        |
-| -------------- | ------------------------------------ | -------- | ------------------------------------------------------------------------------------------------------------------ |
-| `as`           | `"div" \| "li"`                      | "li"     | The element to render as.                                                                                          |
-| `classes`      | `ListItemClasses`                    | —        | The classes to apply to the item.                                                                                  |
-| `customProps`  | `ListItemCustomProps`                | —        | Props forwarded to each item part.                                                                                 |
-| `dense`        | `boolean`                            | —        | Compact vertical padding. Inherits `dense` from parent `List` when omitted.                                        |
-| `disabled`     | `boolean`                            | `false`  | When true, the item is not interactive and appears muted.                                                          |
-| `divider`      | `boolean`                            | `false`  | When true, renders a bottom divider on the item.                                                                   |
-| `href`         | `string`                             | —        | URL for the interactive wrapper. Renders an anchor so hover shows the address and middle-click opens a new tab.    |
-| `interactive`  | `boolean`                            | `false`  | When true, applies hover/focus styles and `tabIndex={0}` on the inner wrapper. Implied when `href` is set.         |
-| `linkAs`       | `string \| Component`                | —        | Component rendered in place of the interactive `<a>`. The root stays `as` (`li` or `div`). Ignored while disabled. |
-| `linkProps`    | props of `linkAs`                    | —        | Props forwarded to `linkAs`. Checked against that component. Ignored while `linkAs` is not rendered.               |
-| `primary`      | `string`                             | —        | Primary label text.                                                                                                |
-| `rel`          | `string`                             | —        | Relationship of the linked URL. Forwarded to the anchor when `href` is set.                                        |
-| `role`         | `"button" \| "menuitem" \| "option"` | "button" | ARIA role for the interactive wrapper. Omitted when `href` is set.                                                 |
-| `secondary`    | `string`                             | —        | Secondary/description text below the primary line.                                                                 |
-| `selected`     | `boolean`                            | `false`  | When true, highlights the item as selected.                                                                        |
-| `selectedIcon` | `null \| LucideIcon`                 | `Check`  | Icon shown when `selected` is true. Use `null` to hide it. Replaced by `#end`.                                     |
-| `target`       | `string`                             | —        | Where to open the URL. Forwarded to the anchor when `href` is set.                                                 |
-| `value`        | `ListboxValue`                       | —        | When set inside a `Select` / `Listbox`, registers this row as a selectable option.                                 |
+| Prop           | Type                                 | Default  | Description                                                                                                                            |
+| -------------- | ------------------------------------ | -------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `as`           | `"div" \| "li"`                      | "li"     | The element to render as.                                                                                                              |
+| `classes`      | `ListItemClasses`                    | —        | The classes to apply to the item.                                                                                                      |
+| `customProps`  | `ListItemCustomProps`                | —        | Props forwarded to each item part.                                                                                                     |
+| `dense`        | `boolean`                            | —        | Compact vertical padding. Inherits `dense` from parent `List` when omitted.                                                            |
+| `disabled`     | `boolean`                            | `false`  | When true, the item is not interactive and appears muted.                                                                              |
+| `divider`      | `boolean`                            | `false`  | When true, renders a bottom divider on the item.                                                                                       |
+| `href`         | `string`                             | —        | URL for the interactive wrapper. Renders an anchor so hover shows the address and middle-click opens a new tab.                        |
+| `interactive`  | `boolean`                            | `false`  | When true, applies hover/focus styles and `tabIndex={0}` on the inner wrapper. Implied when `href` is set.                             |
+| `linkAs`       | `string \| Component`                | —        | Component rendered in place of the interactive `<a>`. The root stays `as` (`li` or `div`). Ignored while disabled.                     |
+| `linkProps`    | props of `linkAs`                    | —        | Props forwarded to `linkAs`. Checked against that component. Ignored while `linkAs` is not rendered.                                   |
+| `primary`      | `string`                             | —        | Primary label text.                                                                                                                    |
+| `rel`          | `string`                             | —        | Relationship of the linked URL. Forwarded to the anchor when `href` is set.                                                            |
+| `role`         | `"button" \| "menuitem" \| "option"` | "button" | ARIA role for the interactive wrapper. Omitted when `href` is set.                                                                     |
+| `secondary`    | `string`                             | —        | Secondary/description text below the primary line.                                                                                     |
+| `selected`     | `boolean`                            | `false`  | When true, highlights the item as selected.                                                                                            |
+| `selectedIcon` | `null \| LucideIcon`                 | `Check`  | Icon shown when `selected` is true. Use `null` to hide it. Replaced by `#end`.                                                         |
+| `size`         | `"lg" \| "md" \| "sm"`               | —        | Typography scale for the row. Inherits `size` from parent `List` when omitted. Ignored inside a `Listbox`, which applies its own size. |
+| `target`       | `string`                             | —        | Where to open the URL. Forwarded to the anchor when `href` is set.                                                                     |
+| `value`        | `ListboxValue`                       | —        | When set inside a `Select` / `Listbox`, registers this row as a selectable option.                                                     |
 
 ## Props (`ListSection`)
 

@@ -5,7 +5,7 @@ import { expect, test } from "vitest";
 import { computed, defineComponent, h, provide } from "vue";
 
 // ** Local Imports
-import { LIST_INJECTION_KEY } from "@/Components/List";
+import { LIST_INJECTION_KEY, type ListContextValue } from "@/Components/List";
 import { useListItem, type ListItemOwnProps } from "@/Components/ListItem";
 import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
@@ -264,4 +264,78 @@ test("it should let the primary classes override the line height", () => {
 
   expect(primaryBind.value?.class).toContain("leading-5");
   expect(primaryBind.value?.class).not.toContain("leading-normal");
+});
+
+function mountUseListItemInList(
+  props: Partial<ListItemOwnProps>,
+  context: ListContextValue,
+) {
+  let result!: ReturnType<typeof useListItem>;
+
+  const Consumer = defineComponent({
+    setup() {
+      result = useListItem(props, libDefaults, {});
+
+      return () => h("div");
+    },
+  });
+
+  const Wrapper = defineComponent({
+    setup() {
+      provide(
+        LIST_INJECTION_KEY,
+        computed(() => {
+          return context;
+        }),
+      );
+
+      return () => h(Consumer);
+    },
+  });
+
+  mount(Wrapper);
+
+  return result;
+}
+
+test("it should apply the md size classes by default", () => {
+  const { primaryBind, secondaryBind, interactiveBind } = mountUseListItem({
+    primary: "Inbox",
+    interactive: true,
+    secondary: "3 unread",
+  });
+
+  expect(primaryBind.value.class).toContain("text-sm");
+  expect(secondaryBind.value.class).toContain("text-xs");
+  expect(interactiveBind.value?.class).toContain("text-sm");
+});
+
+test("it should inherit size from parent List context", () => {
+  const { rowClass, primaryBind, secondaryBind } = mountUseListItemInList(
+    { primary: "Inbox", secondary: "3 unread" },
+    { size: "lg", dense: false },
+  );
+
+  expect(rowClass.value).toContain("text-base");
+  expect(primaryBind.value.class).toContain("text-base");
+  expect(secondaryBind.value.class).toContain("text-sm");
+});
+
+test("it should let the item size override the List size", () => {
+  const { primaryBind, secondaryBind } = mountUseListItemInList(
+    { size: "sm", primary: "Inbox", secondary: "3 unread" },
+    { size: "lg", dense: false },
+  );
+
+  expect(primaryBind.value.class).toContain("text-xs");
+  expect(secondaryBind.value.class).toContain("text-2xs");
+});
+
+test("it should size the selected icon with the list size", () => {
+  const { selectedIconBind } = mountUseListItemInList(
+    { selected: true, primary: "Inbox" },
+    { size: "lg", dense: false },
+  );
+
+  expect(selectedIconBind.value.class).toContain("size-4");
 });

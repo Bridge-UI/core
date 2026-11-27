@@ -5,6 +5,7 @@ export type {
   ListCustomProps,
   ListOwnProps,
   ListProps,
+  ListSizeOverrides,
 } from "@/Components/List/list.types";
 export { default as List } from "@/Components/List/List.vue";
 export { LIST_INJECTION_KEY } from "@/Components/List/listInjectionKey";

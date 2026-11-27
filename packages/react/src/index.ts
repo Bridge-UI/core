@@ -465,6 +465,7 @@ export type {
   ListCustomProps,
   ListOwnProps,
   ListProps,
+  ListSizeOverrides,
 } from "@/Components/List";
 export { ListItem, useListItem } from "@/Components/ListItem";
 export type {

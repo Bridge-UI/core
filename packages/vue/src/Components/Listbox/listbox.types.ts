@@ -109,7 +109,7 @@ export interface ListboxCustomProps {
    *
    * @default undefined
    */
-  list?: Partial<ListOwnProps>;
+  list?: Partial<Omit<ListOwnProps, "size">>;
 
   /**
    * Props forwarded to each mapped `ListItem` option.
@@ -117,7 +117,7 @@ export interface ListboxCustomProps {
    *
    * @default undefined
    */
-  listItem?: Partial<ListItemOwnProps>;
+  listItem?: Partial<Omit<ListItemOwnProps, "size">>;
 
   /**
    * Props forwarded to each mapped `ListSection`.

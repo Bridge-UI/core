@@ -1,7 +1,9 @@
 // ** External Imports
 import { get, isNil, omit } from "es-toolkit/compat";
+import { useMemo } from "react";
 
 // ** Core Imports
+import { resolveListSizeClasses } from "@bridge-ui/core/Domain";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -41,10 +43,11 @@ export function useListSection(props: ListSectionProps) {
     bridgeKeys: listSectionBridgeKeys,
   });
 
-  const { merged, entry: bridgeListSection } = useBridgeUIComponent<
-    ListSectionOwnProps,
-    "ListSection"
-  >({
+  const {
+    merged,
+    components,
+    entry: bridgeListSection,
+  } = useBridgeUIComponent<ListSectionOwnProps, "ListSection">({
     props: componentProps,
     componentName: "ListSection",
   });
@@ -69,6 +72,10 @@ export function useListSection(props: ListSectionProps) {
   const isDense = derived(() => {
     return listContext?.dense ?? false;
   });
+
+  const sizeClasses = useMemo(() => {
+    return resolveListSizeClasses(components, listContext?.size);
+  }, [components, listContext?.size]);
 
   const isHidden = derived(() => {
     return listSection?.hidden ?? false;
@@ -108,7 +115,8 @@ export function useListSection(props: ListSectionProps) {
           "py-1": isNil(listboxContext) && isDense,
           "py-1.5": isNil(listboxContext) && !isDense,
           [listboxContext?.sizeClasses?.option ?? ""]: !isNil(listboxContext),
-          "text-xs font-medium text-dark-500 dark:text-dark-400": true,
+          "font-medium text-dark-500 dark:text-dark-400": true,
+          [isNil(listboxContext) ? sizeClasses.section : "text-xs"]: true,
           "pl-14": merged.inset,
           [get(mergedClasses, "title") ?? ""]: true,
         }),
