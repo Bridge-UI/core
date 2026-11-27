@@ -175,8 +175,13 @@ export function useListItem<T extends ElementType = "a">(
   });
 
   const sizeClasses = useMemo(() => {
-    return resolveListSizeClasses(components, merged.size ?? listContext?.size);
-  }, [components, merged.size, listContext?.size]);
+    // Listbox owns its own size scale; rows inside it keep the List default.
+    const size = hasListboxContext
+      ? undefined
+      : (merged.size ?? listContext?.size);
+
+    return resolveListSizeClasses(components, size);
+  }, [components, merged.size, listContext?.size, hasListboxContext]);
 
   const hasPrimary = derived(() => {
     return (

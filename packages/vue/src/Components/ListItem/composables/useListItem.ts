@@ -198,11 +198,13 @@ export function useListItem<T extends LinkAsTag = "a">(
   });
 
   const sizeClasses = computed(() => {
-    return resolveListSizeClasses(
-      components.value,
-      merged.value.size ??
-        (listContext ? toValue(listContext).size : undefined),
-    );
+    // Listbox owns its own size scale; rows inside it keep the List default.
+    const size = hasListboxContext
+      ? undefined
+      : (merged.value.size ??
+        (listContext ? toValue(listContext).size : undefined));
+
+    return resolveListSizeClasses(components.value, size);
   });
 
   const hasPrimary = computed(() => {
