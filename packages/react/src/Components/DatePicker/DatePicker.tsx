@@ -25,6 +25,7 @@ function DatePicker(props: DatePickerProps) {
   return (
     <div {...rootBind}>
       <Calendar
+        wheelNavigation
         fill={merged.fill}
         color={merged.color}
         range={merged.range}

@@ -51,6 +51,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
   useDefaultTextSizeClass,
+  useWheelNavigation,
 } from "@/Utils";
 
 const calendarBridgeKeys = [
@@ -81,6 +82,7 @@ const calendarBridgeKeys = [
   "hideWeekdays",
   "disableMonths",
   "hideOutsideDays",
+  "wheelNavigation",
 ] as const satisfies readonly (keyof CalendarOwnProps)[];
 
 type CalendarLibDefaults = LibDefaultsShape<
@@ -194,6 +196,8 @@ export function useCalendar(
 
   const yearPageStart = ref<null | number>(null);
 
+  const rootRef = ref<null | HTMLElement>(null);
+
   const granularity = computed(() => {
     return merged.value.granularity ?? "day";
   });
@@ -262,9 +266,23 @@ export function useCalendar(
     emit("viewChange", next);
   };
 
-  const openYearView = () => {
+  const toggleView = (next: CalendarView) => {
+    if (view.value === next) {
+      setView(calendarPanelViewFromGranularity(granularity.value));
+
+      return;
+    }
+
+    setView(next);
+  };
+
+  const toggleYearView = () => {
     yearPageStart.value = getCalendarYearPageStart(viewYear.value);
-    setView("year");
+    toggleView("year");
+  };
+
+  const toggleMonthView = () => {
+    toggleView("month");
   };
 
   const setViewDate = (next: Date) => {
@@ -307,6 +325,11 @@ export function useCalendar(
   const goToNext = () => {
     navigate(1);
   };
+
+  useWheelNavigation(rootRef, {
+    onNavigate: navigate,
+    enabled: () => !!merged.value.wheelNavigation && !merged.value.disabled,
+  });
 
   /**
    * Jumps to today's month on the commit panel without changing the selection.
@@ -412,7 +435,7 @@ export function useCalendar(
       customProps.value?.header,
       {},
       cn({
-        "flex items-center justify-between p-2.5": true,
+        "flex items-center justify-between gap-x-1 p-2.5": true,
         [mergedClasses.value.header ?? ""]: true,
       }),
     );
@@ -442,7 +465,7 @@ export function useCalendar(
         disabled: merged.value.disabled,
       },
       cn({
-        "inline-flex cursor-pointer items-center gap-x-2 px-1.5 py-1 font-medium text-dark-600 hover:bg-dark-100 focus:outline-none disabled:cursor-not-allowed dark:text-dark-300 dark:hover:bg-dark-800": true,
+        "inline-flex min-w-0 cursor-pointer items-center gap-x-1 px-1.5 py-1 font-medium text-dark-600 hover:bg-dark-100 focus:outline-none disabled:cursor-not-allowed dark:text-dark-300 dark:hover:bg-dark-800": true,
         [roundedClass.value ?? ""]: true,
         [textSizeClass.value]: true,
         [mergedClasses.value.selector ?? ""]: true,
@@ -525,7 +548,7 @@ export function useCalendar(
   const yearSelectorBind = computed(() => {
     return mergePartBind(customProps.value?.selector, undefined, {
       ...selectorBind.value,
-      onClick: openYearView,
+      onClick: toggleYearView,
       type: "button" as const,
       "aria-label": resolveMessage("Select year"),
       disabled:
@@ -541,7 +564,7 @@ export function useCalendar(
     return mergePartBind(customProps.value?.selector, undefined, {
       ...selectorBind.value,
       type: "button" as const,
-      onClick: () => setView("month"),
+      onClick: toggleMonthView,
       "aria-label": resolveMessage("Select month"),
       disabled:
         merged.value.disabled ||
@@ -579,6 +602,7 @@ export function useCalendar(
     merged,
     shared,
     showNav,
+    rootRef,
     timeZone,
     rootBind,
     viewDate,

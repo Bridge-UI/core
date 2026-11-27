@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, isNil, omit } from "es-toolkit/compat";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 // ** Core Imports
 import {
@@ -44,6 +44,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
   useDefaultTextSizeClass,
+  useWheelNavigation,
 } from "@/Utils";
 
 const calendarRangeBridgeKeys = [
@@ -73,6 +74,7 @@ const calendarRangeBridgeKeys = [
   "hideWeekdays",
   "disableMonths",
   "hideOutsideDays",
+  "wheelNavigation",
 ] as const satisfies readonly (keyof CalendarRangeOwnProps)[];
 
 type CalendarRangeLibDefaults = LibDefaultsShape<
@@ -185,6 +187,8 @@ export function useCalendarRange(
 
   const [yearPageStart, setYearPageStart] = useState<null | number>(null);
 
+  const rootRef = useRef<HTMLDivElement>(null);
+
   const value = derived((): null | DateRangeValue => {
     if (isValueControlled) {
       return props.value ?? null;
@@ -271,9 +275,19 @@ export function useCalendarRange(
     setUncontrolledView(next);
   };
 
-  const openYearView = () => {
+  const toggleView = (next: CalendarView) => {
+    if (view === next) {
+      setView(calendarPanelViewFromGranularity(granularity));
+
+      return;
+    }
+
+    setView(next);
+  };
+
+  const toggleYearView = () => {
     setYearPageStart(getCalendarYearPageStart(viewYear));
-    setView("year");
+    toggleView("year");
   };
 
   const setViewDate = (next: Date) => {
@@ -338,6 +352,11 @@ export function useCalendarRange(
     navigate(1);
   };
 
+  useWheelNavigation(rootRef, {
+    onNavigate: navigate,
+    enabled: !!merged.wheelNavigation && !merged.disabled,
+  });
+
   /**
    * Jumps to today's month on the commit panel without changing the selection.
    */
@@ -380,8 +399,8 @@ export function useCalendarRange(
     setView(selection.view);
   };
 
-  const openMonthView = () => {
-    setView("month");
+  const toggleMonthView = () => {
+    toggleView("month");
   };
 
   const handleMonthSelect = (month: number) => {
@@ -559,7 +578,7 @@ export function useCalendarRange(
         disabled: merged.disabled,
       },
       cn({
-        "inline-flex cursor-pointer items-center gap-x-2 px-1.5 py-1 font-medium text-dark-600 hover:bg-dark-100 focus:outline-none disabled:cursor-not-allowed dark:text-dark-300 dark:hover:bg-dark-800": true,
+        "inline-flex min-w-0 cursor-pointer items-center gap-x-1 px-1.5 py-1 font-medium text-dark-600 hover:bg-dark-100 focus:outline-none disabled:cursor-not-allowed dark:text-dark-300 dark:hover:bg-dark-800": true,
         [roundedClass ?? ""]: true,
         [textSizeClass]: true,
         [mergedClasses.selector ?? ""]: true,
@@ -642,7 +661,7 @@ export function useCalendarRange(
   const yearSelectorBind = derived(() => {
     return mergePartBind(customProps?.selector, undefined, {
       ...selectorBind,
-      onClick: openYearView,
+      onClick: toggleYearView,
       type: "button" as const,
       "aria-label": resolveMessage("Select year"),
       disabled:
@@ -669,7 +688,7 @@ export function useCalendarRange(
 
     return {
       ...bind,
-      onClick: openMonthView,
+      onClick: toggleMonthView,
     };
   });
 
@@ -688,7 +707,7 @@ export function useCalendarRange(
 
     return {
       ...bind,
-      onClick: openMonthView,
+      onClick: toggleMonthView,
     };
   });
 
@@ -698,6 +717,7 @@ export function useCalendarRange(
     shared,
     merged,
     endBind,
+    rootRef,
     rootBind,
     bodyBind,
     viewDate,

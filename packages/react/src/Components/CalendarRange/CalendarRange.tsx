@@ -17,6 +17,7 @@ function CalendarRange(props: CalendarRangeProps) {
     shared,
     merged,
     endBind,
+    rootRef,
     rootBind,
     bodyBind,
     viewDate,
@@ -63,7 +64,7 @@ function CalendarRange(props: CalendarRangeProps) {
 
   const chevronClass = (open: boolean) => {
     return cn({
-      "size-3 transition-all duration-200 ease-in-out": true,
+      "size-3 shrink-0 transition-all duration-200 ease-in-out": true,
       [navIconBind?.className ?? ""]: true,
       "rotate-180": open,
     });
@@ -87,7 +88,7 @@ function CalendarRange(props: CalendarRangeProps) {
 
   const startMonthButton = showMonthSelector ? (
     <button {...monthSelectorBind}>
-      <span>{monthLabel}</span>
+      <span className="truncate">{monthLabel}</span>
 
       <Icon
         size="2xs"
@@ -100,7 +101,7 @@ function CalendarRange(props: CalendarRangeProps) {
 
   const endMonthButton = showMonthSelector ? (
     <button {...endMonthSelectorBind}>
-      <span>{endMonthLabel}</span>
+      <span className="truncate">{endMonthLabel}</span>
 
       <Icon
         size="2xs"
@@ -113,7 +114,7 @@ function CalendarRange(props: CalendarRangeProps) {
 
   const yearButton = showYearSelector ? (
     <button {...yearSelectorBind}>
-      <span>{yearLabel}</span>
+      <span className="truncate">{yearLabel}</span>
 
       <Icon
         size="2xs"
@@ -128,7 +129,7 @@ function CalendarRange(props: CalendarRangeProps) {
   const centeredMonthButton = view === "date" ? startMonthButton : null;
 
   return (
-    <div {...rootBind}>
+    <div ref={rootRef} {...rootBind}>
       <div {...headerBind}>
         {showCenteredHeader ? (
           <div className="grid w-full grid-cols-[1fr_auto_1fr] items-center">

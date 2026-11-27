@@ -276,6 +276,98 @@ export function getCalendarNavigationMessage(
 }
 
 /**
+ * Wheel distance in pixels that triggers one header previous / next step.
+ */
+export const CALENDAR_WHEEL_THRESHOLD = 50;
+
+/**
+ * Milliseconds after a wheel step during which wheel input is ignored, so the
+ * inertia of a trackpad flick does not skip several months at once. A pause of
+ * the same length also discards a partial, unfinished gesture.
+ */
+export const CALENDAR_WHEEL_COOLDOWN = 250;
+
+/**
+ * Subset of `WheelEvent` read by the calendar wheel navigator.
+ */
+export interface CalendarWheelInput {
+  deltaMode: number;
+  deltaX: number;
+  deltaY: number;
+}
+
+/**
+ * Wheel delta in pixels on the dominant axis. Positive means forward (scroll
+ * down or right). Line and page deltas are converted to approximate pixels.
+ */
+export function normalizeCalendarWheelDelta({
+  deltaX,
+  deltaY,
+  deltaMode,
+}: CalendarWheelInput) {
+  const delta = Math.abs(deltaX) > Math.abs(deltaY) ? deltaX : deltaY;
+
+  if (deltaMode === 1) {
+    return delta * 16;
+  }
+
+  if (deltaMode === 2) {
+    return delta * 400;
+  }
+
+  return delta;
+}
+
+/**
+ * Creates a stateful reducer that turns a stream of wheel events into header
+ * steps: `1` (next), `-1` (previous) or `0` (no step yet).
+ */
+export function createCalendarWheelNavigator({
+  now = Date.now,
+  cooldown = CALENDAR_WHEEL_COOLDOWN,
+  threshold = CALENDAR_WHEEL_THRESHOLD,
+}: {
+  cooldown?: number;
+  now?: () => number;
+  threshold?: number;
+} = {}) {
+  let accumulated = 0;
+  let lockedUntil = 0;
+  let lastEventAt = Number.NEGATIVE_INFINITY;
+
+  return (input: CalendarWheelInput): 0 | 1 | -1 => {
+    const time = now();
+    const delta = normalizeCalendarWheelDelta(input);
+
+    if (delta === 0) {
+      return 0;
+    }
+
+    const isStale = time - lastEventAt > cooldown;
+    const isReversed = Math.sign(delta) !== Math.sign(accumulated);
+
+    lastEventAt = time;
+
+    if (time < lockedUntil) {
+      return 0;
+    }
+
+    accumulated = isStale || isReversed ? delta : accumulated + delta;
+
+    if (Math.abs(accumulated) < threshold) {
+      return 0;
+    }
+
+    const direction = accumulated > 0 ? 1 : -1;
+
+    accumulated = 0;
+    lockedUntil = time + cooldown;
+
+    return direction;
+  };
+}
+
+/**
  * Result of picking a year or month in the panel: commit `date` when the
  * panel is the commit panel for `granularity`, otherwise drill into `view`.
  * `viewDate` is always the new visible date.

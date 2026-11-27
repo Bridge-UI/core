@@ -431,6 +431,15 @@ export interface CalendarRangeOwnProps {
    * @default undefined
    */
   viewDate?: Date;
+
+  /**
+   * When `true`, the mouse wheel or trackpad over the calendar steps previous /
+   * next like the header buttons, and does not scroll the page. Pickers
+   * (`DatePicker`, `DateRangePicker`, …) turn it on.
+   *
+   * @default false
+   */
+  wheelNavigation?: boolean;
 }
 
 export type CalendarRangeProps = MergeHtmlProps<

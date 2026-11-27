@@ -239,3 +239,47 @@ test("it should commit a year range from year tiles", () => {
   expect(range[0].getFullYear()).toBe(2018);
   expect(range[1].getFullYear()).toBe(2021);
 });
+
+test("it should close the year panel when the year selector is clicked again", () => {
+  render(<CalendarRange viewDate={new Date(2021, 4, 1)} />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Select year" }));
+  expect(screen.getByRole("button", { name: "2022" })).toBeTruthy();
+
+  fireEvent.click(screen.getByRole("button", { name: "Select year" }));
+  expect(screen.queryByRole("button", { name: "2022" })).toBeNull();
+});
+
+test("it should close the month panel when the month selector is clicked again", () => {
+  render(<CalendarRange viewDate={new Date(2021, 4, 1)} />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Select month" }));
+  expect(screen.getByRole("button", { name: /january/i })).toBeTruthy();
+
+  fireEvent.click(screen.getByRole("button", { name: "Select month" }));
+  expect(screen.queryByRole("button", { name: /january/i })).toBeNull();
+});
+
+test("it should step both panels with the wheel when wheelNavigation is set", () => {
+  render(<CalendarRange wheelNavigation viewDate={new Date(2021, 4, 1)} />);
+
+  const start = screen.getByRole("button", { name: "Select month" });
+  const end = screen.getByRole("button", { name: "Select end month" });
+
+  const handled = !fireEvent.wheel(start, { deltaY: 100 });
+
+  expect(handled).toBe(true);
+  expect(end.textContent).toMatch(/july/i);
+  expect(start.textContent).toMatch(/june/i);
+});
+
+test("it should leave the wheel alone without wheelNavigation", () => {
+  render(<CalendarRange viewDate={new Date(2021, 4, 1)} />);
+
+  const start = screen.getByRole("button", { name: "Select month" });
+
+  const handled = !fireEvent.wheel(start, { deltaY: 100 });
+
+  expect(handled).toBe(false);
+  expect(start.textContent).toMatch(/may/i);
+});

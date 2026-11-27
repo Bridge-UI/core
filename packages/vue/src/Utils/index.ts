@@ -312,3 +312,5 @@ export type {
   UseHoldRepeatOptions,
 } from "@/Utils/useHoldRepeat";
 export { useOptionalModel } from "@/Utils/useOptionalModel";
+export { useWheelNavigation } from "@/Utils/useWheelNavigation";
+export type { UseWheelNavigationOptions } from "@/Utils/useWheelNavigation";

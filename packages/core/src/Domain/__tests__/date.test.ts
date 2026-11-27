@@ -8,6 +8,7 @@ import {
   applyDateSelection,
   calendarPanelViewFromGranularity,
   clampCalendarPanelView,
+  createCalendarWheelNavigator,
   dateFromYear,
   dateFromYearMonth,
   formatDatePickerModel,
@@ -18,6 +19,7 @@ import {
   isDateDisabled,
   isDateInRangePreview,
   isDateSelected,
+  normalizeCalendarWheelDelta,
   normalizeDateToGranularity,
   resolveCalendarDayInteractionState,
   resolveCalendarFocusDate,
@@ -519,5 +521,102 @@ describe("resolveCalendarYearSelection / resolveCalendarMonthSelection", () => {
     expect(
       resolveCalendarMonthSelection({ adapter, viewDate, month: 8 }),
     ).toMatchObject({ type: "view", view: "date" });
+  });
+});
+
+describe("normalizeCalendarWheelDelta", () => {
+  test("it should use the dominant axis", () => {
+    const vertical = { deltaX: 4, deltaY: -30, deltaMode: 0 };
+    const horizontal = { deltaX: 40, deltaY: 10, deltaMode: 0 };
+
+    expect(normalizeCalendarWheelDelta(vertical)).toBe(-30);
+    expect(normalizeCalendarWheelDelta(horizontal)).toBe(40);
+  });
+
+  test("it should convert line and page deltas to pixels", () => {
+    const line = { deltaX: 0, deltaY: 3, deltaMode: 1 };
+    const page = { deltaX: 0, deltaY: -1, deltaMode: 2 };
+
+    expect(normalizeCalendarWheelDelta(line)).toBe(48);
+    expect(normalizeCalendarWheelDelta(page)).toBe(-400);
+  });
+});
+
+describe("createCalendarWheelNavigator", () => {
+  const wheel = (deltaY: number) => {
+    return { deltaY, deltaX: 0, deltaMode: 0 };
+  };
+
+  const createNavigator = () => {
+    let time = 1000;
+
+    const step = createCalendarWheelNavigator({ now: () => time });
+
+    const advance = (ms: number) => {
+      time += ms;
+    };
+
+    return { step, advance };
+  };
+
+  test("it should step once the threshold is reached", () => {
+    const { step, advance } = createNavigator();
+
+    expect(step(wheel(30))).toBe(0);
+
+    advance(16);
+
+    expect(step(wheel(30))).toBe(1);
+  });
+
+  test("it should step backwards on negative deltas", () => {
+    const { step } = createNavigator();
+
+    expect(step(wheel(-100))).toBe(-1);
+  });
+
+  test("it should ignore wheel input during the cooldown", () => {
+    const { step, advance } = createNavigator();
+
+    expect(step(wheel(100))).toBe(1);
+
+    advance(100);
+
+    expect(step(wheel(100))).toBe(0);
+
+    advance(200);
+
+    expect(step(wheel(100))).toBe(1);
+  });
+
+  test("it should discard a partial gesture after a pause", () => {
+    const { step, advance } = createNavigator();
+
+    expect(step(wheel(40))).toBe(0);
+
+    advance(300);
+
+    expect(step(wheel(40))).toBe(0);
+  });
+
+  test("it should restart accumulation when the direction reverses", () => {
+    const { step, advance } = createNavigator();
+
+    expect(step(wheel(40))).toBe(0);
+
+    advance(16);
+
+    expect(step(wheel(-40))).toBe(0);
+  });
+
+  test("it should ignore zero deltas", () => {
+    const { step, advance } = createNavigator();
+
+    expect(step(wheel(40))).toBe(0);
+
+    advance(16);
+
+    expect(step(wheel(0))).toBe(0);
+    expect(step(wheel(10))).toBe(1);
   });
 });

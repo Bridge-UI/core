@@ -80,6 +80,7 @@ const {
     <div :class="contentBind">
       <div :class="calendarBind">
         <CalendarRange
+          wheel-navigation
           :fill="merged.fill"
           :color="merged.color"
           :error="merged.error"

@@ -52,6 +52,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
   useDefaultTextSizeClass,
+  useWheelNavigation,
 } from "@/Utils";
 
 const calendarRangeBridgeKeys = [
@@ -80,6 +81,7 @@ const calendarRangeBridgeKeys = [
   "hideWeekdays",
   "disableMonths",
   "hideOutsideDays",
+  "wheelNavigation",
 ] as const satisfies readonly (keyof CalendarRangeOwnProps)[];
 
 type CalendarRangeLibDefaults = LibDefaultsShape<
@@ -195,6 +197,8 @@ export function useCalendarRange(
 
   const yearPageStart = ref<null | number>(null);
 
+  const rootRef = ref<null | HTMLElement>(null);
+
   const granularity = computed(() => {
     return merged.value.granularity ?? "day";
   });
@@ -275,9 +279,19 @@ export function useCalendarRange(
     uncontrolledView.value = next;
   };
 
-  const openYearView = () => {
+  const toggleView = (next: CalendarView) => {
+    if (view.value === next) {
+      setView(calendarPanelViewFromGranularity(granularity.value));
+
+      return;
+    }
+
+    setView(next);
+  };
+
+  const toggleYearView = () => {
     yearPageStart.value = getCalendarYearPageStart(viewYear.value);
-    setView("year");
+    toggleView("year");
   };
 
   const setViewDate = (next: Date) => {
@@ -339,6 +353,11 @@ export function useCalendarRange(
     navigate(1);
   };
 
+  useWheelNavigation(rootRef, {
+    onNavigate: navigate,
+    enabled: () => !!merged.value.wheelNavigation && !merged.value.disabled,
+  });
+
   /**
    * Jumps to today's month on the commit panel without changing the selection.
    */
@@ -384,8 +403,8 @@ export function useCalendarRange(
     setView(selection.view);
   };
 
-  const openMonthView = () => {
-    setView("month");
+  const toggleMonthView = () => {
+    toggleView("month");
   };
 
   const handleMonthSelect = (month: number) => {
@@ -563,7 +582,7 @@ export function useCalendarRange(
         disabled: merged.value.disabled,
       },
       cn({
-        "inline-flex cursor-pointer items-center gap-x-2 px-1.5 py-1 font-medium text-dark-600 hover:bg-dark-100 focus:outline-none disabled:cursor-not-allowed dark:text-dark-300 dark:hover:bg-dark-800": true,
+        "inline-flex min-w-0 cursor-pointer items-center gap-x-1 px-1.5 py-1 font-medium text-dark-600 hover:bg-dark-100 focus:outline-none disabled:cursor-not-allowed dark:text-dark-300 dark:hover:bg-dark-800": true,
         [roundedClass.value ?? ""]: true,
         [textSizeClass.value]: true,
         [mergedClasses.value.selector ?? ""]: true,
@@ -646,7 +665,7 @@ export function useCalendarRange(
   const yearSelectorBind = computed(() => {
     return mergePartBind(customProps.value?.selector, undefined, {
       ...selectorBind.value,
-      onClick: openYearView,
+      onClick: toggleYearView,
       type: "button" as const,
       "aria-label": resolveMessage("Select year"),
       disabled:
@@ -673,7 +692,7 @@ export function useCalendarRange(
 
     return {
       ...bind,
-      onClick: openMonthView,
+      onClick: toggleMonthView,
     };
   });
 
@@ -692,7 +711,7 @@ export function useCalendarRange(
 
     return {
       ...bind,
-      onClick: openMonthView,
+      onClick: toggleMonthView,
     };
   });
 
@@ -725,6 +744,7 @@ export function useCalendarRange(
     merged,
     showNav,
     endBind,
+    rootRef,
     rootBind,
     bodyBind,
     viewDate,

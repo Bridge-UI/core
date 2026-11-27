@@ -1,11 +1,23 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
-import { h } from "vue";
+import { h, nextTick } from "vue";
 
 // ** Local Imports
 import { Calendar } from "@/Components/Calendar";
 import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
+
+function dispatchWheel(element: Element, deltaY: number) {
+  const event = new WheelEvent("wheel", {
+    deltaY,
+    bubbles: true,
+    cancelable: true,
+  });
+
+  element.dispatchEvent(event);
+
+  return event;
+}
 
 test("it should render year and month selectors", () => {
   const wrapper = mount(Calendar, {
@@ -38,6 +50,48 @@ test("it should open the year panel", async () => {
   expect(wrapper.findAll("button").some((node) => node.text() === "2021")).toBe(
     true,
   );
+});
+
+test("it should return to the date panel when the year selector is clicked again", async () => {
+  const wrapper = mount(Calendar, {
+    props: { viewDate: new Date(2021, 4, 1) },
+  });
+
+  await wrapper.find('[aria-label="Select year"]').trigger("click");
+  await wrapper.find('[aria-label="Select year"]').trigger("click");
+
+  const buttons = wrapper.findAll("button");
+
+  expect(buttons.some((node) => node.text() === "21")).toBe(true);
+  expect(buttons.some((node) => node.text() === "2022")).toBe(false);
+});
+
+test("it should return to the date panel when the month selector is clicked again", async () => {
+  const wrapper = mount(Calendar, {
+    props: { viewDate: new Date(2021, 4, 1) },
+  });
+
+  await wrapper.find('[aria-label="Select month"]').trigger("click");
+  await wrapper.find('[aria-label="Select month"]').trigger("click");
+
+  const buttons = wrapper.findAll("button");
+
+  expect(buttons.some((node) => node.text() === "21")).toBe(true);
+  expect(buttons.some((node) => /january/i.test(node.text()))).toBe(false);
+});
+
+test("it should return to the month panel when granularity is month", async () => {
+  const wrapper = mount(Calendar, {
+    props: { granularity: "month", viewDate: new Date(2021, 4, 1) },
+  });
+
+  await wrapper.find('[aria-label="Select year"]').trigger("click");
+  await wrapper.find('[aria-label="Select year"]').trigger("click");
+
+  const buttons = wrapper.findAll("button");
+
+  expect(buttons.some((node) => node.text() === "2022")).toBe(false);
+  expect(buttons.some((node) => /january/i.test(node.text()))).toBe(true);
 });
 
 test("it should emit change when a day is selected", async () => {
@@ -284,4 +338,91 @@ test("it should follow the Text size from the provider", () => {
 
   expect(button.classes()).toContain("text-xs");
   expect(button.classes()).not.toContain("text-sm");
+});
+
+test("it should step months with the wheel when wheelNavigation is set", async () => {
+  const wrapper = mount(Calendar, {
+    props: { wheelNavigation: true, viewDate: new Date(2021, 4, 1) },
+  });
+
+  await nextTick();
+
+  const event = dispatchWheel(wrapper.element, 100);
+
+  await nextTick();
+
+  const month = wrapper.find('[aria-label="Select month"]');
+
+  expect(event.defaultPrevented).toBe(true);
+  expect(month.text().toLowerCase()).toContain("june");
+});
+
+test("it should step back with the wheel when scrolling up", async () => {
+  const wrapper = mount(Calendar, {
+    props: { wheelNavigation: true, viewDate: new Date(2021, 4, 1) },
+  });
+
+  await nextTick();
+
+  dispatchWheel(wrapper.element, -100);
+
+  await nextTick();
+
+  const month = wrapper.find('[aria-label="Select month"]');
+
+  expect(month.text().toLowerCase()).toContain("april");
+});
+
+test("it should page years with the wheel on the year panel", async () => {
+  const wrapper = mount(Calendar, {
+    props: { wheelNavigation: true, viewDate: new Date(2021, 4, 1) },
+  });
+
+  await wrapper.find('[aria-label="Select year"]').trigger("click");
+
+  dispatchWheel(wrapper.element, 100);
+
+  await nextTick();
+
+  const buttons = wrapper.findAll("button");
+
+  expect(buttons.some((node) => node.text() === "2022")).toBe(false);
+});
+
+test("it should leave the wheel alone without wheelNavigation", async () => {
+  const wrapper = mount(Calendar, {
+    props: { viewDate: new Date(2021, 4, 1) },
+  });
+
+  await nextTick();
+
+  const event = dispatchWheel(wrapper.element, 100);
+
+  await nextTick();
+
+  const month = wrapper.find('[aria-label="Select month"]');
+
+  expect(event.defaultPrevented).toBe(false);
+  expect(month.text().toLowerCase()).toContain("may");
+});
+
+test("it should leave the wheel alone when disabled", async () => {
+  const wrapper = mount(Calendar, {
+    props: {
+      disabled: true,
+      wheelNavigation: true,
+      viewDate: new Date(2021, 4, 1),
+    },
+  });
+
+  await nextTick();
+
+  const event = dispatchWheel(wrapper.element, 100);
+
+  await nextTick();
+
+  const month = wrapper.find('[aria-label="Select month"]');
+
+  expect(event.defaultPrevented).toBe(false);
+  expect(month.text().toLowerCase()).toContain("may");
 });

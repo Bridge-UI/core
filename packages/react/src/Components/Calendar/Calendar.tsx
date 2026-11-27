@@ -15,6 +15,7 @@ function Calendar(props: CalendarProps) {
     value,
     merged,
     showNav,
+    rootRef,
     rootBind,
     viewDate,
     viewYear,
@@ -58,19 +59,19 @@ function Calendar(props: CalendarProps) {
 
   const chevronClass = (open: boolean) => {
     return cn({
-      "size-3 transition-all duration-200 ease-in-out": true,
+      "size-3 shrink-0 transition-all duration-200 ease-in-out": true,
       [navIconBind?.className ?? ""]: true,
       "rotate-180": open,
     });
   };
 
   return (
-    <div {...rootBind}>
+    <div ref={rootRef} {...rootBind}>
       <div {...headerBind}>
-        <div className="flex w-full min-w-0 items-center gap-x-2">
+        <div className="flex w-full min-w-0 items-center gap-x-1">
           {showYearSelector && (
             <button {...yearSelectorBind}>
-              <span>{yearLabel}</span>
+              <span className="truncate">{yearLabel}</span>
 
               <Icon
                 size="2xs"
@@ -83,7 +84,7 @@ function Calendar(props: CalendarProps) {
 
           {showMonthSelector && (
             <button {...monthSelectorBind}>
-              <span>{monthLabel}</span>
+              <span className="truncate">{monthLabel}</span>
 
               <Icon
                 size="2xs"
@@ -96,7 +97,7 @@ function Calendar(props: CalendarProps) {
         </div>
 
         {showNav && (
-          <div className="flex items-center">
+          <div className="flex shrink-0 items-center">
             <button {...previousButtonBind}>
               <Icon size="sm" icon="chevronLeft" {...navIconBind} />
             </button>

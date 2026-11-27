@@ -282,3 +282,5 @@ export type {
   HoldRepeatAction,
   UseHoldRepeatOptions,
 } from "@/Utils/useHoldRepeat";
+export { useWheelNavigation } from "@/Utils/useWheelNavigation";
+export type { UseWheelNavigationOptions } from "@/Utils/useWheelNavigation";
